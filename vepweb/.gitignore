@@ -1,0 +1,17 @@
+.buildlog
+.DS_Store
+.idea
+.pub/
+build/
+packages
+pubspec.lock
+*.iml
+
+# All sass cache and generated css files (only sass files for developpement)
+.sass-cache
+*.css
+*.css.map
+
+# We ignore specifics files that are dependant on environment (dev, test or production)
+web/index.html
+/lib/constants.dart
