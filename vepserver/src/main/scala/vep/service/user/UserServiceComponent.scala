@@ -9,7 +9,7 @@ import vep.model.user.UserRegistration
 import vep.utils.{DB, StringUtils}
 
 trait UserServiceComponent {
-  val userService: UserService
+  def userService: UserService
 
   trait UserService {
     def register(userRegistration: UserRegistration): Unit
