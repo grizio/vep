@@ -3,8 +3,9 @@ package vep
 import akka.actor.Actor
 import spray.routing.HttpService
 import vep.router.{VepApiRouter, VepRouter, VepWebRouter}
+import vep.service.VepServicesProductionComponent
 
-trait VepActor extends Actor {
+trait VepActor extends Actor with FinalVepServicesProductionComponent {
   self: HttpService with VepRouter =>
 
   // The HttpService trait defines only one abstract member, which

@@ -1,0 +1,11 @@
+CREATE TABLE users
+(
+    uid INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    salt VARCHAR(255) NOT NULL,
+    firstname VARCHAR(255) NOT NULL,
+    lastname VARCHAR(255) NOT NULL,
+    city VARCHAR(255)
+);
+ALTER TABLE users ADD CONSTRAINT unique_email UNIQUE (email);
