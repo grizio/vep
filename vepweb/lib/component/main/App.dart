@@ -32,24 +32,3 @@ class BreadCrumbSubscriber {
     _listeners.forEach((_) => _(data));
   }
 }
-
-class BreadCrumb {
-  final List<BreadCrumbData> path;
-
-  const BreadCrumb([this.path=const[]]);
-
-  BreadCrumb child(String code, String url, String path) {
-    var data = <BreadCrumbData>[];
-    data.addAll(this.path);
-    data.add(new BreadCrumbData(code, url, path));
-    return new BreadCrumb(data);
-  }
-}
-
-class BreadCrumbData {
-  final String code;
-  final String url;
-  final String name;
-
-  const BreadCrumbData(this.code, this.url, this.name);
-}

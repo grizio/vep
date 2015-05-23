@@ -1,0 +1,10 @@
+<div class="row">
+    <div class="small-12 columns">
+        <ul class="breadcrumbs" ng-if="breadcrumb != null && breadcrumb.path.isNotEmpty">
+            <li><a href="/">Voir &amp; Entendre</a></li>
+            <li ng-repeat="data in breadcrumb.path" ng-class="{current: $last}">
+                <a href="{{ data.url }}">{{ data.name }}</a>
+            </li>
+        </ul>
+    </div>
+</div>
