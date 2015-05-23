@@ -7,7 +7,7 @@ abstract class UserRouter {
     'register': ngRoute(
         path: '/register',
         view: '/public/views/user/register.html',
-        preEnter: (_) => app.breadCrumb == new BreadCrumb().child('register', '/user/register', 'Inscription')
+        preEnter: (_) => app.breadCrumb = new BreadCrumb().child('register', '/user/register', 'Inscription')
     )
   };
 }
