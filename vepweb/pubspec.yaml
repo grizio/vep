@@ -7,10 +7,15 @@ homepage: http://voir-entendre-posso.fr
 environment:
   sdk: '>=1.0.0 <2.0.0'
 dependencies:
-  angular: ">=1.1.0 <2.0.0"
+  angular: "^1.1.2"
   web_components: ">=0.10.0 <0.11.0"
   browser: any
   klang: ">=0.1.0 <0.2.0"
+  jsonx: ">=2.0.0 <3.0.0"
+  http: ">=0.11.2 <0.12.0"
 dev_dependencies:
   unittest: ">=0.11.0+5 <0.12.0"
   mock: ">=0.11.0+2 <0.12.0"
+transformers:
+- angular:
+    html_files:

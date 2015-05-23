@@ -2,21 +2,53 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Voir &amp; Entendre</title>
 
+    <link rel="stylesheet" href="public/styles/normalize.css">
+    <link rel="stylesheet" href="public/styles/foundation.min.css">
     <link rel="stylesheet" href="public/styles/styles.css">
     <script src="packages/web_components/webcomponents.min.js"></script>
     <script src="packages/web_components/dart_support.js"></script>
 </head>
 <body>
 
-<header>
-    <a href="/">Home</a>
+<header class="header-background">
+    <div class="row">
+        <div class="small-12 columns">
+            LOGO + Voir & Entendre
+        </div>
+    </div>
 </header>
 
-<ng-view></ng-view>
+<div class="navbar-background">
+    <div class="row">
+        <div class="small-12 columns">
+            <nav class="top-bar" data-topbar role="navigation">
+                <ul class="title-area">
+                    <li class="name">
+                        <h1><a href="/">Voir &amp; Entendre</a></h1>
+                    </li>
+                    <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+                    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+                </ul>
+
+                <section class="top-bar-section">
+                    <ul class="left">
+                        <li><a href="/">Accueil</a></li>
+                        <li><a href="/user/register">Inscription</a></li>
+                    </ul>
+                </section>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="small-12 columns">
+        <ng-view></ng-view>
+    </div>
+</div>
 
 <script type="application/dart" src="main.js"></script>
-<script type="text/javascript" src="packages/browser/dart.js"></script>
 </body>
 </html>
