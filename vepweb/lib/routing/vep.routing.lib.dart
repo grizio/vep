@@ -1,24 +1,34 @@
 library vep.routing;
 
 import 'package:angular/angular.dart';
+import 'package:vepweb/component/main/vep.component.main.lib.dart';
 
 part 'user.dart';
 
-void routingInitializer(Router router, RouteViewFactory views) {
-  views.configure({
-    'user': ngRoute(
-        path: '/user',
-        mount: userRoute),
-    'home': ngRoute(
-        path: '/',
-        view: '/public/views/home.html',
-        defaultRoute: true)
-  });
+@Injectable()
+class VepRouter extends UserRouter {
+  final App app;
+
+  VepRouter(this.app);
+
+  call(Router router, RouteViewFactory views) {
+    views.configure({
+      'user': ngRoute(
+          path: '/user',
+          mount: userRoute),
+      'home': ngRoute(
+          path: '/',
+          view: '/public/views/home.html',
+          defaultRoute: true,
+          preEnter: (_) => app.breadCrumb = new BreadCrumb().child('home', '/', 'Accueil')
+      )
+    });
+  }
 }
 
 class VepRoutingModule extends Module {
   VepRoutingModule() {
-    bind(RouteInitializerFn, toValue: routingInitializer);
+    bind(RouteInitializerFn, toImplementation: VepRouter);
     bind(NgRoutingUsePushState, toValue: new NgRoutingUsePushState.value(true));
   }
 }
