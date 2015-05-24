@@ -12,7 +12,8 @@ fi
 
 # Constants
 root=$(pwd)
-resources=${root}/vepserver/src/main/resources
+server=${root}/vepserver
+resources=${server}/src/main/resources
 web=${root}/vepweb/web
 package=${resources}/packages/vepweb
 
@@ -63,8 +64,11 @@ rm index.*.html
 # We use main.js file, main.dart file is no longer needed.
 rm main.dart
 
+### We set the build value to sbt file ###
+
+sed 's/v0.0.0/'${1}'/g' a.txt > a.txt
 
 ### We can compile and launch the server ###
 
 cd ${root}/vepserver
-sbt run
+sbt assembly run

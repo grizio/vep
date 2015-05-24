@@ -41,3 +41,7 @@ vep {
 akka {
   loglevel = "DEBUG"
 }
+
+spray.can {
+  bind-timeout: 60s
+}
