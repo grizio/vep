@@ -1,0 +1,43 @@
+vep {
+  interface = "vep.test"
+  environment = "dev"
+  salt = "somethingHere"
+
+  web {
+    name = "vep-web-service"
+    interface = ${vep.interface}
+    port = 8080
+  }
+
+  api {
+    name = "vep-api-service"
+    interface = ${vep.interface}
+    port = 8081
+  }
+
+  dev {
+    database {
+      url = "jdbc:mysql://localhost:3306/vep"
+      user = "vep"
+      password = "vep"
+    }
+  }
+
+  prod {
+    database {
+      url = ""
+      user = ""
+      password = ""
+    }
+  }
+
+  test {
+    url = ""
+    user = ""
+    password = ""
+  }
+}
+
+akka {
+  loglevel = "DEBUG"
+}
