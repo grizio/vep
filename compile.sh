@@ -44,7 +44,7 @@ find . -type f -exec cp --parents {} ${resources} \;
 # path= /vepweb/lib
 cd ${root}/vepweb/lib
 mkdir -p ${package}
-find components -name *.html -type f -exec cp --parents {} ${package} \;
+find component -name *.html -type f -exec cp --parents {} ${package} \;
 
 
 ### Onced moved, we can remove development files which have been copied ###

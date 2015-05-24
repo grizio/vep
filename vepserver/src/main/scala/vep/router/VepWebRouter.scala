@@ -15,21 +15,25 @@ trait VepWebRouter extends HttpService with VepRouter {
 
   DebuggingDirectives.logRequest("vep-web-service")
 
+  lazy val end = {
+    ctx: RequestContext => ctx.complete(404, "Not Found")
+  }
+
   override lazy val route: Route = log {
     pathPrefix("public") {
-      getFromResourceDirectory("public")
+      getFromResourceDirectory("public") ~ end
     } ~
       pathPrefix("packages") {
-        getFromResourceDirectory("packages")
+        getFromResourceDirectory("packages") ~ end
       } ~
       path("favicon.ico") {
-        getFromResource("favicon.ico")
+        getFromResource("favicon.ico") ~ end
       } ~
       path("robots.txt") {
-        getFromResource("robots.txt")
+        getFromResource("robots.txt") ~ end
       } ~
       path("main.js") {
-        getFromResource("main.js")
+        getFromResource("main.js") ~ end
       } ~
       path(Segments) { seg =>
         getFromResource("index.html")
