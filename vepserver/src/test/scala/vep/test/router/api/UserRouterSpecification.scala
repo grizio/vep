@@ -48,7 +48,7 @@ class UserRouterSpecification extends Specification with Specs2RouteTest with Ve
       "return a code 200 with nothing when success" >> {
         Post("/user/register", UserRegistration("a.valid@email.com", "firs name", "last name", "passw0rd", None)) ~> route ~> check {
           (status === StatusCodes.OK) and
-            (responseAs[String] must beEmpty)
+            (responseAs[String] === "null")
         }
       }
     }
