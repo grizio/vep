@@ -37,6 +37,4 @@ object ResultImplicits extends DefaultJsonProtocol {
     // Should never be used
     override def read(json: JsValue): Result = null
   }
-  implicit val impResultError = jsonFormat1(ResultError)
-  implicit val impResultErrors = jsonFormat1(ResultErrors)
 }

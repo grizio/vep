@@ -1,6 +1,6 @@
 package vep.router
 
-import spray.routing.Route
+import spray.routing._
 import vep.controller.VepControllersComponent
 import vep.router.api.UserRouter
 
@@ -9,5 +9,5 @@ trait VepApiRouter
   with UserRouter
   with VepControllersComponent {
 
-  override lazy val route: Route = userRoute
+  override lazy val route: Route = cors { userRoute }
 }

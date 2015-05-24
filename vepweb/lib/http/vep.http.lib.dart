@@ -21,7 +21,7 @@ class VepHttpModule extends Module {
     if (constants.environment == 'dev') {
       bind(http.Client, toFactory: () => ClientInMemory);
     } else {
-      bind(http.Client, toImplementation: BrowserClient);
+      bind(http.Client, toFactory: () => new BrowserClient());
     }
   }
 }

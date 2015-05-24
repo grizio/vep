@@ -24,22 +24,39 @@ class HttpProduction implements IHttp {
 
   @override
   Future<HttpResult> get(String url) {
-    return client.get(url).then(complete);
+    logger.fine('GET ' + url);
+    return client.get(getUrl(url)).then(complete);
   }
 
   @override
   Future<HttpResult> post(String url, Object entity) {
-    return client.post(url, body: jsonx.encode(entity)).then(complete);
+    logger.fine('POST ' + url + ' (' + jsonx.encode(entity) + ')');
+    return client.post(getUrl(url), body: jsonx.encode(entity), headers: {'Content-Type': 'application/json'}).then(complete);
   }
 
   @override
   Future<HttpResult> put(String url, Object entity) {
-    return client.put(url, body: jsonx.encode(entity)).then(complete);
+    logger.fine('PUT ' + url + ' (' + jsonx.encode(entity) + ')');
+    return client.put(getUrl(url), body: jsonx.encode(entity), headers: {'Content-Type': 'application/json'}).then(complete);
   }
 
   @override
   Future<HttpResult> delete(String url) {
-    return client.delete(url).then(complete);
+    logger.fine('DELETE ' + url);
+    return client.delete(getUrl(url)).then(complete);
+  }
+
+  String getUrl(String url) {
+    String result = constants.host;
+    if (!result.endsWith('/')) {
+      result += '/';
+    }
+    if (url.startsWith('/')) {
+      result += url.substring(1);
+    } else {
+      result += url;
+    }
+    return result;
   }
 
   Future<HttpResult> complete(http.Response response) {
