@@ -18,7 +18,7 @@ class NavigationComponent {
     new NavigationLink('logout', '/logout', 'Déconnnexion')
   ];
 
-  bool loggedIn = false;
+  bool get loggedIn => app.isLoggedIn;
 
   NavigationComponent(this.app) {
     app.onBreadCrumbChange.listen((BreadCrumb breadCrumb){
@@ -30,14 +30,6 @@ class NavigationComponent {
           link.active = true;
         }
       }
-    });
-
-    app.onLogin.listen((_){
-      loggedIn = true;
-    });
-
-    app.onLogout.listen((_){
-      loggedIn = false;
     });
   }
 

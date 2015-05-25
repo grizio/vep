@@ -20,6 +20,8 @@ class App {
     onLogout.process(null);
   }
 
+  bool get isLoggedIn => window.sessionStorage.containsKey('loginUsername') && window.sessionStorage.containsKey('loginKey');
+
   Subscriber onLogin = new Subscriber<String>();
 
   Subscriber onLogout = new Subscriber();

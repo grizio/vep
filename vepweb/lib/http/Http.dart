@@ -19,31 +19,55 @@ abstract class IHttp {
 class HttpProduction implements IHttp {
   final logger = new Logger('vep.http.HttpProduction');
   final http.Client client;
+  final App app;
 
-  HttpProduction(this.client);
+  HttpProduction(this.client, this.app);
+
+  Map<String, String> buildHeaders({Map<String, String> headers:const{}, bool withSession: false}) {
+    var result = <String, String>{};
+    result.addAll(headers);
+    if (app.isLoggedIn) {
+      headers['authorization'] = 'Basic ' + CryptoUtils.bytesToBase64(UTF8.encode(app.username + ':' + app.key));
+    }
+    return headers;
+  }
 
   @override
-  Future<HttpResult> get(String url) {
+  Future<HttpResult> get(String url, {bool withSession: false}) {
     logger.fine('GET ' + url);
-    return client.get(getUrl(url)).then(complete);
+    return client.get(
+        getUrl(url),
+        headers: buildHeaders(withSession: withSession)
+    ).then(complete);
   }
 
   @override
-  Future<HttpResult> post(String url, Object entity) {
+  Future<HttpResult> post(String url, Object entity, {bool withSession: false}) {
     logger.fine('POST ' + url + ' (' + jsonx.encode(entity) + ')');
-    return client.post(getUrl(url), body: jsonx.encode(entity), headers: {'Content-Type': 'application/json'}).then(complete);
+    return client.post(
+        getUrl(url),
+        body: jsonx.encode(entity),
+        headers: buildHeaders(headers: {'Content-Type': 'application/json'}, withSession: withSession)
+    ).then(complete);
   }
 
   @override
-  Future<HttpResult> put(String url, Object entity) {
+  Future<HttpResult> put(String url, Object entity, {bool withSession: false}) {
     logger.fine('PUT ' + url + ' (' + jsonx.encode(entity) + ')');
-    return client.put(getUrl(url), body: jsonx.encode(entity), headers: {'Content-Type': 'application/json'}).then(complete);
+    return client.put(
+        getUrl(url),
+        body: jsonx.encode(entity),
+        headers: buildHeaders(headers: {'Content-Type': 'application/json'}, withSession: withSession)
+    ).then(complete);
   }
 
   @override
-  Future<HttpResult> delete(String url) {
+  Future<HttpResult> delete(String url, {bool withSession: false}) {
     logger.fine('DELETE ' + url);
-    return client.delete(getUrl(url)).then(complete);
+    return client.delete(
+        getUrl(url),
+        headers: buildHeaders(withSession: withSession)
+    ).then(complete);
   }
 
   String getUrl(String url) {
