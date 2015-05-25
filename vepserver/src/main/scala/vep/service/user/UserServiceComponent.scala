@@ -78,7 +78,7 @@ trait UserServiceProductionComponent extends UserServiceComponent {
           val expiration = DateTime.now + 86400000 // 24h = 86,400,000ms
           SQL("UPDATE users SET keylogin = {keylogin}, expiration = {expiration} WHERE email = {email}")
             .on("keylogin" -> keylogin)
-            .on("expiration" -> expiration.toIsoDateString)
+            .on("expiration" -> expiration.toIsoDateTimeString)
             .on("email" -> user.email)
             .executeUpdate()
           Some(user.copy(keyLogin = Some(keylogin), expiration = Some(expiration)))
@@ -88,12 +88,21 @@ trait UserServiceProductionComponent extends UserServiceComponent {
       }
     }
 
-    override def authenticate(userPass: UserPass): Option[User] = DB.withConnection { implicit c =>
-      SQL("SELECT * FROM users WHERE uid = {uid} AND keylogin = {keylogin} AND expiration < {expiration}")
+    override def authenticate(userPass: UserPass): Option[User] = DB.withTransaction { implicit c =>
+      val userOpt = SQL("SELECT * FROM users WHERE email = {email} AND keylogin = {keylogin} AND expiration < {expiration}")
         .on("uid" -> userPass.user)
         .on("keylogin" -> userPass.pass)
         .on("expiration" -> DateTime.now.toIsoDateString)
         .as(userParser.singleOpt)
+
+      userOpt foreach { u =>
+        SQL("UPDATE users SET expiration = {expiration} WHERE email = {email}")
+          .on("email" -> u.email)
+          .on("expiration" -> DateTime.now.toIsoDateTimeString)
+          .executeUpdate()
+      }
+
+      userOpt
     }
   }
 
