@@ -1,6 +1,6 @@
 name := "vepserver"
 
-version := "v0.1.3"
+version := "v0.0.0"
 
 scalaVersion := "2.11.6"
 
