@@ -1,5 +1,6 @@
 package vep.service
 
+import java.sql.Timestamp
 import java.sql.Date
 import java.text.SimpleDateFormat
 
@@ -11,6 +12,7 @@ trait AnormImplicits {
     try {
       value match {
         case date: Date => DateTime.fromIsoDateTimeString(new SimpleDateFormat("YYYY-MM-dd").format(date))
+        case time: Timestamp => DateTime.fromIsoDateTimeString(new SimpleDateFormat("YYYY-MM-dd'T'HH:mm:ss").format(time))
         case _ => None
       }
     }
@@ -23,8 +25,8 @@ trait AnormImplicits {
     Column.nonNull1[DateTime] { (value, meta) =>
       val MetaDataItem(qualified, nullable, clazz) = meta
       valueToDateTimeOption(value) match {
-        case Some(uuid) => Right(uuid)
-        case _ => Left(TypeDoesNotMatch("Cannot convert " + value + ":" + value.asInstanceOf[AnyRef].getClass + " to UUID for column " + qualified))
+        case Some(dateTime) => Right(dateTime)
+        case _ => Left(TypeDoesNotMatch("Cannot convert " + value + ":" + value.asInstanceOf[AnyRef].getClass + " to DateTime for column " + qualified))
       }
     }
   }
