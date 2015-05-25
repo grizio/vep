@@ -19,6 +19,9 @@ package=${resources}/packages/vepweb
 
 ### First of all, we get the given tag branch ###
 
+## Revert modification due to previous build
+git checkout vepserver/build.sbt
+
 # path= /
 git pull origin master
 git pull
@@ -66,7 +69,10 @@ rm main.dart
 
 ### We set the build value to sbt file ###
 
-sed 's/v0.0.0/'${1}'/g' a.txt > a.txt
+# path=/vepserver
+cd ${server}
+sed 's/v0.0.0/'${1}'/g' build.sbt > build2.sbt
+mv build2.sbt build.sbt
 
 ### We can compile and launch the server ###
 
