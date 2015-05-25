@@ -7,6 +7,7 @@ import spray.routing._
 import spray.routing.authentication.{BasicAuth, UserPass}
 import vep.model.user.User
 import vep.service.VepServicesComponent
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
 

@@ -1,6 +1,7 @@
 package vep.test.service.inmemory.user
 
 import spray.http.DateTime
+import spray.routing.authentication.UserPass
 import vep.exception.FieldErrorException
 import vep.model.common.ErrorCodes
 import vep.model.user.{User, UserLogin, UserRegistration}
@@ -37,6 +38,12 @@ trait UserServiceInMemoryComponent extends UserServiceComponent {
         } else {
           None
         }
+      }
+    }
+
+    override def authenticate(userPasse: UserPass): Option[User] = {
+      users find {
+        u => u.email == userPasse.user && u.keyLogin.getOrElse("") == userPasse.pass
       }
     }
   }

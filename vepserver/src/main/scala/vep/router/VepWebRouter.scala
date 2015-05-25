@@ -4,8 +4,9 @@ import java.util.logging.Logger
 
 import spray.routing._
 import spray.routing.directives.DebuggingDirectives
+import vep.service.VepServicesComponent
 
-trait VepWebRouter extends HttpService with VepRouter {
+trait VepWebRouter extends HttpService with VepRouter with VepServicesComponent {
   val logger = Logger.getLogger("RouterV1")
 
   def log[T]: Directive0 = mapRequestContext { ctx =>
