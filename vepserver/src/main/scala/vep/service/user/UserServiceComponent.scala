@@ -3,6 +3,7 @@ package vep.service.user
 import anorm.SqlParser._
 import anorm._
 import spray.http.DateTime
+import spray.routing.authentication.UserPass
 import vep.AnormClient
 import vep.exception.FieldErrorException
 import vep.model.common.ErrorCodes
@@ -17,6 +18,8 @@ trait UserServiceComponent {
     def register(userRegistration: UserRegistration): Unit
 
     def login(userLogin: UserLogin): Option[User]
+
+    def authenticate(userPasse: UserPass): Option[User]
   }
 
 }
@@ -64,7 +67,7 @@ trait UserServiceProductionComponent extends UserServiceComponent {
       }
     }
 
-    override def login(userLogin: UserLogin): Option[User] = DB.withConnection { implicit c =>
+    override def login(userLogin: UserLogin): Option[User] = DB.withTransaction { implicit c =>
       val userOpt = SQL("SELECT * FROM users WHERE email = {email}")
         .on("email" -> userLogin.email)
         .as(userParser.singleOpt)
@@ -83,6 +86,14 @@ trait UserServiceProductionComponent extends UserServiceComponent {
           None
         }
       }
+    }
+
+    override def authenticate(userPass: UserPass): Option[User] = DB.withConnection { implicit c =>
+      SQL("SELECT * FROM users WHERE uid = {uid} AND keylogin = {keylogin} AND expiration < {expiration}")
+        .on("uid" -> userPass.user)
+        .on("keylogin" -> userPass.pass)
+        .on("expiration" -> DateTime.now.toIsoDateString)
+        .as(userParser.singleOpt)
     }
   }
 

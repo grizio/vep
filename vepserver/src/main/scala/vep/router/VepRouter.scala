@@ -2,12 +2,17 @@ package vep.router
 
 import spray.http.HttpHeaders.{`Access-Control-Allow-Headers`, `Access-Control-Allow-Methods`, `Access-Control-Allow-Origin`, `Access-Control-Max-Age`}
 import spray.http._
-import spray.httpx.unmarshalling._
+import spray.routing
 import spray.routing._
-import vep.model.common.Result
+import spray.routing.authentication.{BasicAuth, UserPass}
+import vep.model.user.User
+import vep.service.VepServicesComponent
+
+import scala.concurrent.Future
 
 
 trait VepRouter extends HttpService {
+  self: VepServicesComponent =>
   val route: Route
 
   private val allowOriginHeader = `Access-Control-Allow-Origin`(AllOrigins)
@@ -31,4 +36,12 @@ trait VepRouter extends HttpService {
       allowOriginHeader :: headers
     }
   }
+
+  def vepUserPassAuthenticator(userPass: Option[UserPass]): Future[Option[User]] = Future {
+    userPass flatMap {
+      up => userService.authenticate(up)
+    }
+  }
+
+  def vepBasicAuth = BasicAuth(vepUserPassAuthenticator _, realm = "Private access")
 }
