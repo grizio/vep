@@ -71,9 +71,9 @@ class UserRouterSpecification extends Specification with Specs2RouteTest with Ve
           handled === false
         }
       }
-      "returns a code 400 with int when error" >> {
+      "returns a code 403 with int when error" >> {
         Post("/login", UserLogin("an@unknown.user", "an unknown password")) ~> route ~> check {
-          (status === StatusCodes.BadRequest) and
+          (status === StatusCodes.Forbidden) and
             (responseAs[String] must beMatching("[0-9+]"))
         }
       }
