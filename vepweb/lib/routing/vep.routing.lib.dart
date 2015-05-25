@@ -16,6 +16,18 @@ class VepRouter extends UserRouter {
       'user': ngRoute(
           path: '/user',
           mount: userRoute),
+      'login': ngRoute(
+          path: '/login',
+          view: '/public/views/user/login.html',
+          preEnter: (_) => app.breadCrumb = new BreadCrumb().child('login', '/login', 'Connexion')
+      ),
+      'logout': ngRoute(
+          path: '/logout',
+          enter: (_) {
+            app.logout();
+            router.gotoUrl('/');
+          }
+      ),
       'home': ngRoute(
           path: '/',
           view: '/public/views/home.html',

@@ -1,0 +1,20 @@
+<form method="post" action="/login" id="form-user-login" ng-submit="submit($event)">
+    <fieldset>
+        <legend>Connexion</legend>
+
+        <p class="alert-box alert" ng-if="errors.isNotEmpty">
+            {{ errors.join('&bull') }}
+        </p>
+
+        <input-email name="email" with-id="form-user-login-email" label="Email"
+                     placeholder="Votre adresse e-mail valide" required="true"></input-email>
+        <input-password name="password" with-id="form-user-login-password" label="Mot de passe"
+                        placeholder="Votre mot de passe (rappel: minimum 8 caractères dont un chiffre et une lettre)"
+                        required="true"></input-password>
+
+        <action-row>
+            <input type="submit" value="Se connecter" class="button success"/>
+            <a href="/" class="button alert">Revenir à l'accueil</a>
+        </action-row>
+    </fieldset>
+</form>

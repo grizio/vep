@@ -62,9 +62,9 @@ class HttpProduction implements IHttp {
   Future<HttpResult> complete(http.Response response) {
     if (response.statusCode == 0) {
       logger.warning("The returned status was 0. It seems it was not done by a server.");
-      return new Future.value(new HttpResultSuccess(response.statusCode));
+      return new Future.value(new HttpResultSuccess(response.statusCode, response.body));
     } else if (response.statusCode >= 200 && response.statusCode < 300) {
-      return new Future.value(new HttpResultSuccess(response.statusCode));
+      return new Future.value(new HttpResultSuccess(response.statusCode, response.body));
     } else if (response.statusCode >= 300 && response.statusCode < 400) {
       logger.severe('This kind of status is not managed by this implementation of Http.');
       return new Future.value(new HttpResultUnhandled(response.statusCode, response));

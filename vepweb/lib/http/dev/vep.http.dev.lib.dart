@@ -6,6 +6,7 @@ import 'package:http/testing.dart';
 import 'package:jsonx/jsonx.dart' as jsonx;
 import 'package:vepweb/model/vep.model.lib.dart';
 import 'package:vepweb/http/vep.http.lib.dart';
+import 'package:vepweb/errors.dart' as errors;
 
 part 'ClientInMemory.dart';
 part 'ClientInMemoryUser.dart';

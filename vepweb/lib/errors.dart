@@ -14,6 +14,7 @@ const emptyPassword = 5;
 const weakPassword = 6;
 const usedEmail = 7;
 const differentPasswords = 8;
+const unknownUser = 9;
 
 const i18n = const <int, String>{
   emptyEmail: "L'adresse e-mail n'a pas été renseignée.",
@@ -23,5 +24,6 @@ const i18n = const <int, String>{
   emptyPassword: "Le mot de passe n'a pas été renseigné.",
   weakPassword: "Le mot de passe ne respecte pas les critères de sécurité (8 caractères dont une lettre et un chiffre).",
   usedEmail: "L'adresse e-mail est déjà utilisée par un autre membre.",
-  differentPasswords: "Les mots de passe sont différents"
+  differentPasswords: "Les mots de passe sont différents",
+  unknownUser: "L'utilisateur ou le mot de passe est incorrect."
 };

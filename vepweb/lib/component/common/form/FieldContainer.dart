@@ -43,4 +43,8 @@ abstract class FieldContainer<A> {
       }
     }
   }
+
+  void setError(HttpResultError httpResultError) {
+    errors = [httpResultError.errorMessage];
+  }
 }

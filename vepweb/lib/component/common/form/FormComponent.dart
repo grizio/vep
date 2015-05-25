@@ -14,9 +14,13 @@ abstract class FormComponent<A> extends FieldContainer<A> {
       onSubmit().then((result) {
         if (result.isSuccess) {
           done = true;
-          onDone();
+          onDone(result);
         } else {
-          setErrors(result);
+          if (result is HttpResultErrors) {
+            setErrors(result);
+          } else if (result is HttpResultError) {
+            setError(result);
+          }
           processing = false;
         }
       });
@@ -25,5 +29,5 @@ abstract class FormComponent<A> extends FieldContainer<A> {
 
   Future<HttpResult> onSubmit();
 
-  void onDone(){}
+  void onDone(HttpResult httpResult){}
 }

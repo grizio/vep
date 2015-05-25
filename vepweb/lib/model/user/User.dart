@@ -7,6 +7,7 @@ class User {
   String firstName;
   String lastName;
   String city;
+  String key;
 }
 
 class UserRegistration {
@@ -17,4 +18,9 @@ class UserRegistration {
   String firstName;
   String lastName;
   String city;
+}
+
+class UserLogin {
+  String email;
+  String password;
 }

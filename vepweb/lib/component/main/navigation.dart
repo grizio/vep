@@ -7,6 +7,19 @@ part of vep.component.main;
 class NavigationComponent {
   final App app;
 
+  final leftLogout = <NavigationLink>[
+    new NavigationLink('home', '/', 'Accueil'),
+    new NavigationLink('register', '/user/register', 'Inscription'),
+    new NavigationLink('login', '/login', 'Connexion')
+  ];
+
+  final leftLogin = <NavigationLink>[
+    new NavigationLink('home', '/', 'Accueil'),
+    new NavigationLink('logout', '/logout', 'Déconnnexion')
+  ];
+
+  bool loggedIn = false;
+
   NavigationComponent(this.app) {
     app.onBreadCrumbChange.listen((BreadCrumb breadCrumb){
       left.forEach((_) => _.active = false);
@@ -18,12 +31,17 @@ class NavigationComponent {
         }
       }
     });
+
+    app.onLogin.listen((_){
+      loggedIn = true;
+    });
+
+    app.onLogout.listen((_){
+      loggedIn = false;
+    });
   }
 
-  List<NavigationLink> left = [
-    new NavigationLink('home', '/', 'Accueil'),
-    new NavigationLink('register', '/user/register', 'Inscription')
-  ];
+  List<NavigationLink> get left => loggedIn ? leftLogin : leftLogout;
 }
 
 class NavigationLink {

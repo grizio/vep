@@ -8,10 +8,11 @@ abstract class HttpResult {
 
 class HttpResultSuccess extends HttpResult {
   final int statusCode;
+  final String body;
 
   bool get isSuccess => true;
 
-  HttpResultSuccess(this.statusCode);
+  HttpResultSuccess(this.statusCode, this.body);
 }
 
 class HttpResultSuccessEntity extends HttpResult {
