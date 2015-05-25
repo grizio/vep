@@ -28,7 +28,7 @@ trait UserRouter extends HttpService {
     post {
       entity(as[UserLogin]) { userLogin => implicit ctx =>
         userController.login(userLogin) match {
-          case Left(error) => ctx.complete(StatusCodes.BadRequest, error)
+          case Left(error) => ctx.complete(StatusCodes.Forbidden, error)
           case Right(success) => ctx.complete(StatusCodes.OK, success.entity)
         }
       }
