@@ -1,17 +1,17 @@
 package vep.controller
 
-import spray.http.StatusCodes
-import spray.routing.RequestContext
 import vep.exception.FieldErrorException
-import vep.model.common.{ResultSuccess, Result}
-import vep.model.user.UserRegistration
+import vep.model.common._
+import vep.model.user.{UserLogin, UserRegistration}
 import vep.service.VepServicesComponent
 
 trait UserControllerComponent {
   val userController: UserController
 
   trait UserController {
-    def register(userRegistration: UserRegistration): Result
+    def register(userRegistration: UserRegistration): Either[ResultErrors, ResultSuccess]
+
+    def login(userLogin: UserLogin): Either[ResultError, ResultSuccessEntity[String]]
   }
 
 }
@@ -22,16 +22,27 @@ trait UserControllerProductionComponent extends UserControllerComponent {
   override val userController: UserController = new UserControllerProduction
 
   class UserControllerProduction extends UserController {
-    override def register(userRegistration: UserRegistration): Result = {
+    override def register(userRegistration: UserRegistration): Either[ResultErrors, ResultSuccess] = {
       if (userRegistration.verify) {
         try {
           userService.register(userRegistration)
-          ResultSuccess
+          Right(ResultSuccess)
         } catch {
-          case e: FieldErrorException => e.toResultErrors
+          case e: FieldErrorException => Left(e.toResultErrors)
         }
       } else {
-        userRegistration.toResult
+        Left(userRegistration.toResult.asInstanceOf[ResultErrors])
+      }
+    }
+
+    override def login(userLogin: UserLogin): Either[ResultError, ResultSuccessEntity[String]] = {
+      if (userLogin.verify) {
+        userService.login(userLogin) match {
+          case Some(user) => Right(ResultSuccessEntity(user.keyLogin.get))
+          case None => Left(ResultError(ErrorCodes.unknownUser))
+        }
+      } else {
+        Left(userLogin.toResult.asInstanceOf[ResultError])
       }
     }
   }

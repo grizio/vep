@@ -2,8 +2,8 @@ package vep.test.controller
 
 import org.specs2.mutable.Specification
 import vep.controller.UserControllerProductionComponent
-import vep.model.common.{ErrorCodes, ResultErrors, ResultSuccess}
-import vep.model.user.UserRegistration
+import vep.model.common._
+import vep.model.user.{UserLogin, UserRegistration}
 import vep.test.service.inmemory.VepServicesInMemoryComponent
 
 class UserControllerForSpecificationComponent
@@ -19,7 +19,7 @@ class UserControllerSpecification extends Specification {
 
         val result = ucComp.userController.register(userRegistration)
 
-        result === ResultSuccess
+        result must beAnInstanceOf[Right[_, ResultSuccess]]
       }
 
       "refuse an entity with invalid fields" >> {
@@ -28,7 +28,7 @@ class UserControllerSpecification extends Specification {
 
         val result = ucComp.userController.register(userRegistration)
 
-        result must beAnInstanceOf[ResultErrors]
+        result must beAnInstanceOf[Left[ResultErrors, _]]
       }
 
       "indicates an error about a field value" >> {
@@ -38,9 +38,9 @@ class UserControllerSpecification extends Specification {
 
           val result = ucComp.userController.register(userRegistration)
 
-          (result must beAnInstanceOf[ResultErrors]) and
-            (result.asInstanceOf[ResultErrors].errors must haveKey("email")) and
-            (result.asInstanceOf[ResultErrors].errors.get("email").get must contain(ErrorCodes.emptyEmail))
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("email")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("email").get must contain(ErrorCodes.emptyEmail))
         }
 
         "when invalid email" >> {
@@ -49,9 +49,9 @@ class UserControllerSpecification extends Specification {
 
           val result = ucComp.userController.register(userRegistration)
 
-          (result must beAnInstanceOf[ResultErrors]) and
-            (result.asInstanceOf[ResultErrors].errors must haveKey("email")) and
-            (result.asInstanceOf[ResultErrors].errors.get("email").get must contain(ErrorCodes.invalidEmail))
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("email")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("email").get must contain(ErrorCodes.invalidEmail))
         }
 
         "when empty first name" >> {
@@ -60,9 +60,9 @@ class UserControllerSpecification extends Specification {
 
           val result = ucComp.userController.register(userRegistration)
 
-          (result must beAnInstanceOf[ResultErrors]) and
-            (result.asInstanceOf[ResultErrors].errors must haveKey("firstName")) and
-            (result.asInstanceOf[ResultErrors].errors.get("firstName").get must contain(ErrorCodes.emptyFirstName))
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("firstName")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("firstName").get must contain(ErrorCodes.emptyFirstName))
         }
 
         "when empty last name" >> {
@@ -71,9 +71,9 @@ class UserControllerSpecification extends Specification {
 
           val result = ucComp.userController.register(userRegistration)
 
-          (result must beAnInstanceOf[ResultErrors]) and
-            (result.asInstanceOf[ResultErrors].errors must haveKey("lastName")) and
-            (result.asInstanceOf[ResultErrors].errors.get("lastName").get must contain(ErrorCodes.emptyLastName))
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("lastName")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("lastName").get must contain(ErrorCodes.emptyLastName))
         }
 
         "when empty password" >> {
@@ -82,9 +82,9 @@ class UserControllerSpecification extends Specification {
 
           val result = ucComp.userController.register(userRegistration)
 
-          (result must beAnInstanceOf[ResultErrors]) and
-            (result.asInstanceOf[ResultErrors].errors must haveKey("password")) and
-            (result.asInstanceOf[ResultErrors].errors.get("password").get must contain(ErrorCodes.emptyPassword))
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("password")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("password").get must contain(ErrorCodes.emptyPassword))
         }
 
         "when not secured password" >> {
@@ -93,9 +93,9 @@ class UserControllerSpecification extends Specification {
 
           val result = ucComp.userController.register(userRegistration)
 
-          (result must beAnInstanceOf[ResultErrors]) and
-            (result.asInstanceOf[ResultErrors].errors must haveKey("password")) and
-            (result.asInstanceOf[ResultErrors].errors.get("password").get must contain(ErrorCodes.weakPassword))
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("password")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("password").get must contain(ErrorCodes.weakPassword))
         }
       }
 
@@ -106,10 +106,39 @@ class UserControllerSpecification extends Specification {
 
           val result = ucComp.userController.register(userRegistration)
 
-          (result must beAnInstanceOf[ResultErrors]) and
-            (result.asInstanceOf[ResultErrors].errors must haveKey("email")) and
-            (result.asInstanceOf[ResultErrors].errors.get("email").get must contain(ErrorCodes.usedEmail))
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("email")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("email").get must contain(ErrorCodes.usedEmail))
         }
+      }
+    }
+
+    "login should" >> {
+      "returns a key on valid user" >> {
+        val ucComp = new UserControllerForSpecificationComponent
+        val userLogin = UserLogin("aui@aui.com", "abc")
+
+        val result = ucComp.userController.login(userLogin)
+
+        result must beAnInstanceOf[Right[_, ResultSuccessEntity[String]]]
+      }
+
+      "returns an error for invalid user" >> {
+        val ucComp = new UserControllerForSpecificationComponent
+        val userLogin = UserLogin("an@unknown.user", "an unknown password")
+
+        val result = ucComp.userController.login(userLogin)
+
+        result must beAnInstanceOf[Left[ResultError, _]]
+      }
+
+      "returns an error for valid user but invalid password" >> {
+        val ucComp = new UserControllerForSpecificationComponent
+        val userLogin = UserLogin("aui@aui.com", "an unknown password")
+
+        val result = ucComp.userController.login(userLogin)
+
+        result must beAnInstanceOf[Left[ResultError, _]]
       }
     }
   }

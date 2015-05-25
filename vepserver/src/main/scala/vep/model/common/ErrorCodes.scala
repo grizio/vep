@@ -8,4 +8,6 @@ object ErrorCodes {
   val emptyPassword = 5
   val weakPassword = 6
   val usedEmail = 7
+  val differentPasswords = 8
+  val unknownUser = 9
 }

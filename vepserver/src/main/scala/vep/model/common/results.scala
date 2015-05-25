@@ -1,14 +1,17 @@
 package vep.model.common
 
-import spray.json.{DefaultJsonProtocol, JsValue, _}
+import spray.json._
+import vep.model.JsonImplicits
 
 abstract class Result {
   def isValid: Boolean
 }
 
-case object ResultSuccess extends Result {
+abstract class ResultSuccess extends Result {
   override def isValid = true
 }
+
+case object ResultSuccess extends ResultSuccess
 
 final case class ResultError(code: Int) extends Result {
   override def isValid: Boolean = false
@@ -18,23 +21,22 @@ final case class ResultErrors(errors: Map[String, Seq[Int]]) extends Result {
   override def isValid: Boolean = false
 }
 
-object ResultImplicits extends DefaultJsonProtocol {
-  implicit val impResult: RootJsonFormat[Result] = new RootJsonFormat[Result] {
-    override def write(obj: Result): JsValue = {
-      if (obj.isValid) {
-        JsNull
-      } else obj match {
-        case error: ResultError =>
-          JsNumber(error.code)
-        case error: ResultErrors =>
-          JsObject(error.errors map {
-            entry => entry._1 -> JsArray(entry._2.map(v => JsNumber(v)): _*)
-          })
-        case _ => JsNull
-      }
-    }
+final case class ResultSuccessEntity[A](entity: A) extends Result {
+  override def isValid: Boolean = true
+}
 
-    // Should never be used
-    override def read(json: JsValue): Result = null
+object ResultImplicits extends JsonImplicits {
+  implicit val impResultSuccess: RootJsonWriter[ResultSuccess] = new RootJsonWriter[ResultSuccess] {
+    override def write(obj: ResultSuccess): JsValue = JsNull
+  }
+
+  implicit val impResultError: RootJsonWriter[ResultError] = new RootJsonWriter[ResultError] {
+    override def write(obj: ResultError): JsValue = JsNumber(obj.code)
+  }
+
+  implicit val impResultErrors: RootJsonWriter[ResultErrors] = new RootJsonWriter[ResultErrors] {
+    override def write(obj: ResultErrors): JsValue = JsObject(obj.errors map {
+      entry => entry._1 -> JsArray(entry._2.map(v => JsNumber(v)): _*)
+    })
   }
 }

@@ -2,6 +2,7 @@ package vep.router
 
 import spray.http.HttpHeaders.{`Access-Control-Allow-Headers`, `Access-Control-Allow-Methods`, `Access-Control-Allow-Origin`, `Access-Control-Max-Age`}
 import spray.http._
+import spray.httpx.unmarshalling._
 import spray.routing._
 import vep.model.common.Result
 
@@ -29,14 +30,5 @@ trait VepRouter extends HttpService {
     }).withHttpResponseHeadersMapped { headers =>
       allowOriginHeader :: headers
     }
-  }
-
-
-  import spray.httpx.SprayJsonSupport._
-  import vep.model.common.ResultImplicits._
-
-  def processResult(result: Result)(implicit ctx: RequestContext) = {
-    val status = if (result.isValid) StatusCodes.OK else StatusCodes.BadRequest
-    ctx.complete(status, result)
   }
 }

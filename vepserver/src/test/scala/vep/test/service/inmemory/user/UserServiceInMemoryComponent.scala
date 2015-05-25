@@ -1,8 +1,9 @@
 package vep.test.service.inmemory.user
 
+import spray.http.DateTime
 import vep.exception.FieldErrorException
 import vep.model.common.ErrorCodes
-import vep.model.user.{User, UserRegistration}
+import vep.model.user.{User, UserLogin, UserRegistration}
 import vep.service.user.UserServiceComponent
 import vep.utils.StringUtils
 
@@ -13,18 +14,31 @@ trait UserServiceInMemoryComponent extends UserServiceComponent {
 
   class UserServiceInMemory extends UserService {
     private var users = Seq[User](
-      User(1, "aui@aui.com", "abc", "def", "ghi", "jkl", None),
-      User(2, "cts@cts.com", "zyx", "wvu", "tsr", "qpo", Some("nml"))
+      User(1, "aui@aui.com", StringUtils.crypt("abc", "def"), "def", "ghi", "jkl", None, None, None),
+      User(2, "cts@cts.com", StringUtils.crypt("zyx", "wvu"), "wvu", "tsr", "qpo", Some("nml"), Some("a"), Some(DateTime(2000, 1, 1)))
     )
 
     override def register(userRegistration: UserRegistration): Unit = {
-      if (users.exists{ u => u.email == userRegistration.email }) {
+      if (users.exists { u => u.email == userRegistration.email }) {
         throw new FieldErrorException("email", ErrorCodes.usedEmail, "")
       } else {
         val salt = StringUtils.generateSalt(10)
         val p = StringUtils.crypt(userRegistration.password, salt)
-        users = users.+:(User(users.maxBy(u => u.uid).uid + 1, userRegistration.email, p, salt, userRegistration.firstName, userRegistration.lastName, userRegistration.city))
+        users = users.+:(User(users.maxBy(u => u.uid).uid + 1, userRegistration.email, p, salt, userRegistration.firstName, userRegistration.lastName, userRegistration.city, None, None))
+      }
+    }
+
+    override def login(userLogin: UserLogin): Option[User] = {
+      users.find {
+        u => userLogin.email == u.email
+      } flatMap { u =>
+        if (StringUtils.crypt(userLogin.password, u.salt) == u.password) {
+          Some(u.copy(keyLogin = Some("a"), expiration = Some(DateTime.apply(2000, 1, 1))))
+        } else {
+          None
+        }
       }
     }
   }
+
 }
