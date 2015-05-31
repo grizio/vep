@@ -3,15 +3,17 @@ package vep.router.api
 import spray.http.StatusCodes
 import spray.routing.HttpService
 import vep.controller.VepControllersComponent
+import vep.model.JsonImplicits
 import vep.model.user.{UserLogin, UserRegistration}
 import vep.router.VepRouter
+import scala.concurrent.ExecutionContext.Implicits.global
 
 trait UserRouter extends HttpService {
   self: VepControllersComponent with VepRouter =>
 
   import spray.httpx.SprayJsonSupport._
-  import vep.model.user.UserImplicits._
   import vep.model.common.ResultImplicits._
+  import vep.model.user.UserImplicits._
 
   val userRoute = pathPrefix("user") {
     path("register") {
@@ -20,6 +22,14 @@ trait UserRouter extends HttpService {
           userController.register(userRegistration) match {
             case Left(error) => ctx.complete(StatusCodes.BadRequest, error)
             case Right(success) => ctx.complete(StatusCodes.OK, success)
+          }
+        }
+      }
+    } ~ path("roles") {
+      get {
+        sealRoute {
+          authenticate(vepBasicUserAuthenticator) { implicit user => ctx =>
+            ctx.complete(JsonImplicits.seqToJson(userController.getCurrentUserRoles))
           }
         }
       }

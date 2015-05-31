@@ -2,7 +2,7 @@ package vep.controller
 
 import vep.exception.FieldErrorException
 import vep.model.common._
-import vep.model.user.{UserLogin, UserRegistration}
+import vep.model.user.{User, UserLogin, UserRegistration}
 import vep.service.VepServicesComponent
 
 trait UserControllerComponent {
@@ -12,6 +12,8 @@ trait UserControllerComponent {
     def register(userRegistration: UserRegistration): Either[ResultErrors, ResultSuccess]
 
     def login(userLogin: UserLogin): Either[ResultError, ResultSuccessEntity[String]]
+
+    def getCurrentUserRoles(implicit currentUser: User): Seq[String]
   }
 
 }
@@ -45,6 +47,8 @@ trait UserControllerProductionComponent extends UserControllerComponent {
         Left(userLogin.toResult.asInstanceOf[ResultError])
       }
     }
+
+    override def getCurrentUserRoles(implicit user: User): Seq[String] = user.roles
   }
 
 }

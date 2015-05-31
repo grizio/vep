@@ -19,6 +19,8 @@ object InvalidEntitiesImplicits extends DefaultJsonProtocol {
 
 class UserRouterSpecification extends Specification with Specs2RouteTest with VepApiRouter with VepControllersInMemoryComponent {
   override def actorRefFactory: ActorRefFactory = system
+  lazy val validCredentials = BasicHttpCredentials("abc@def.com", "abcd")
+  lazy val invalidCredentials = BasicHttpCredentials("abc@def.com", "unknown")
 
   import InvalidEntitiesImplicits._
   import spray.httpx.SprayJsonSupport._
@@ -81,6 +83,35 @@ class UserRouterSpecification extends Specification with Specs2RouteTest with Ve
         Post("/user/register", UserRegistration("a.valid@email.com", "firs name", "last name", "passw0rd", None)) ~> route ~> check {
           (status === StatusCodes.OK) and
             (responseAs[String] must not beEmpty)
+        }
+      }
+    }
+
+    "get roles" >> {
+      "intercept a request to /user/roles as GET with valid credentials" >> {
+        Get("/user/roles") ~>
+          addCredentials(validCredentials) ~>
+          route ~> check {
+          handled === true
+        }
+      }
+      "refuse a request to /user/roles as POST" >> {
+        Post("/user/roles") ~> route ~> check {
+          handled === false
+        }
+      }
+      "returns a code 401 when not authenticated" >> {
+        Get("/user/roles") ~> route ~> check {
+          status === StatusCodes.Unauthorized
+        }
+      }
+      "return a code 200 with a list of string (json) when success" >> {
+        Get("/user/roles") ~>
+          addCredentials(validCredentials) ~>
+          route ~> check {
+          (status === StatusCodes.OK) and
+            (responseAs[String] must not beEmpty) and
+            (responseAs[String] must beMatching("^\\[(\"[^\"]+\",?)*\\]$"))
         }
       }
     }

@@ -1,9 +1,10 @@
 package vep.test.controller
 
 import org.specs2.mutable.Specification
+import spray.http.DateTime
 import vep.controller.UserControllerProductionComponent
 import vep.model.common._
-import vep.model.user.{UserLogin, UserRegistration}
+import vep.model.user.{User, UserLogin, UserRegistration}
 import vep.test.service.inmemory.VepServicesInMemoryComponent
 
 class UserControllerForSpecificationComponent
@@ -139,6 +140,26 @@ class UserControllerSpecification extends Specification {
         val result = ucComp.userController.login(userLogin)
 
         result must beAnInstanceOf[Left[ResultError, _]]
+      }
+    }
+
+    "getCurrentUserRoles should" >> {
+      "returns a sequence of String" >> {
+        val ucComp = new UserControllerForSpecificationComponent
+        implicit val user = User(1, "", "", "", "", "", None, None, None, Seq())
+
+        val result = ucComp.userController.getCurrentUserRoles
+
+        result must beAnInstanceOf[Seq[String]]
+      }
+
+      "returns the list of roles of current user" >> {
+        val ucComp = new UserControllerForSpecificationComponent
+        implicit val user = User(1, "", "", "", "", "", None, None, None, Seq("a", "b"))
+
+        val result = ucComp.userController.getCurrentUserRoles
+
+        result must beEqualTo(Seq("a", "b"))
       }
     }
   }

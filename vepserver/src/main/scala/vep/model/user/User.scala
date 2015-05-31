@@ -1,13 +1,13 @@
 package vep.model.user
 
 import spray.http.DateTime
-import spray.json.DefaultJsonProtocol
 import vep.model.JsonImplicits
-import vep.model.common.{VerifiableUnique, ErrorCodes, VerifiableMultiple}
+import vep.model.common.{ErrorCodes, VerifiableMultiple, VerifiableUnique}
 import vep.utils.StringUtils
 
 
-case class User(uid: Int, email: String, password: String, salt: String, firstName: String, lastName: String, city: Option[String], keyLogin: Option[String], expiration: Option[DateTime])
+case class User(uid: Int, email: String, password: String, salt: String, firstName: String, lastName: String,
+                city: Option[String]=None, keyLogin: Option[String]=None, expiration: Option[DateTime]=None, roles: Seq[String]=Seq())
 
 case class UserRegistration(email: String, firstName: String, lastName: String, password: String, city: Option[String]) extends VerifiableMultiple {
   override def verify: Boolean = {
@@ -37,7 +37,7 @@ case class UserLogin(email: String, password: String) extends VerifiableUnique {
 }
 
 object UserImplicits extends JsonImplicits {
-  implicit val impUser = jsonFormat(User.apply, "uid", "email", "password", "salt", "firstName", "lastName", "city", "keyLogin", "expiration")
+  implicit val impUser = jsonFormat(User.apply, "uid", "email", "password", "salt", "firstName", "lastName", "city", "keyLogin", "expiration", "roles")
   implicit val impUserRegistration = jsonFormat(UserRegistration.apply, "email", "firstName", "lastName", "password", "city")
   implicit val impUserLogin = jsonFormat(UserLogin.apply, "email", "password")
 }

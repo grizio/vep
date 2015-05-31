@@ -2,14 +2,13 @@ package vep.router
 
 import spray.http.HttpHeaders.{`Access-Control-Allow-Headers`, `Access-Control-Allow-Methods`, `Access-Control-Allow-Origin`, `Access-Control-Max-Age`}
 import spray.http._
-import spray.routing
 import spray.routing._
 import spray.routing.authentication.{BasicAuth, UserPass}
+import spray.routing.directives.AuthMagnet
 import vep.model.user.User
 import vep.service.VepServicesComponent
-import scala.concurrent.ExecutionContext.Implicits.global
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 
 trait VepRouter extends HttpService {
@@ -38,11 +37,13 @@ trait VepRouter extends HttpService {
     }
   }
 
-  def vepUserPassAuthenticator(userPass: Option[UserPass]): Future[Option[User]] = Future {
-    userPass flatMap {
-      up => userService.authenticate(up)
+  def vepBasicUserAuthenticator(implicit ec: ExecutionContext): AuthMagnet[User] = {
+    def authenticator(userPass: Option[UserPass]): Future[Option[User]] = Future {
+      userPass flatMap {
+        up => userService.authenticate(up)
+      }
     }
-  }
 
-  def vepBasicAuth = BasicAuth(vepUserPassAuthenticator _, realm = "Private access")
+    BasicAuth(authenticator _, realm = "Private access")
+  }
 }

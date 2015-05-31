@@ -38,9 +38,10 @@ trait UserServiceProductionComponent extends UserServiceComponent {
         str("lastName") ~
         get[Option[String]]("city") ~
         get[Option[String]]("keyLogin") ~
-        get[Option[DateTime]]("expiration") map {
-        case uid ~ email ~ password ~ salt ~ firsName ~ lastName ~ city ~ keyLogin ~ expiration =>
-          User(uid, email, password, salt, firsName, lastName, city, keyLogin, expiration)
+        get[Option[DateTime]]("expiration") ~
+        get[String]("roles") map {
+        case uid ~ email ~ password ~ salt ~ firsName ~ lastName ~ city ~ keyLogin ~ expiration ~ roles =>
+          User(uid, email, password, salt, firsName, lastName, city, keyLogin, expiration, roles.split(","))
       }
 
     override def register(userRegistration: UserRegistration): Unit = DB.withTransaction { implicit c =>
@@ -56,13 +57,14 @@ trait UserServiceProductionComponent extends UserServiceComponent {
       if (nEmail > 0) {
         throw new FieldErrorException("email", ErrorCodes.usedEmail, "The email address is already used.")
       } else {
-        SQL("INSERT INTO users(email, firstName, lastName, password, salt, city) VALUES({email}, {firstName}, {lastName}, {password}, {salt}, {city})")
+        SQL("INSERT INTO users(email, firstName, lastName, password, salt, city, roles) VALUES({email}, {firstName}, {lastName}, {password}, {salt}, {city}, {roles})")
           .on("email" -> userRegistration.email)
           .on("firstName" -> userRegistration.firstName)
           .on("lastName" -> userRegistration.lastName)
           .on("password" -> password)
           .on("salt" -> salt)
           .on("city" -> userRegistration.city)
+          .on("roles" -> "user")
           .executeInsert()
       }
     }
@@ -89,8 +91,8 @@ trait UserServiceProductionComponent extends UserServiceComponent {
     }
 
     override def authenticate(userPass: UserPass): Option[User] = DB.withTransaction { implicit c =>
-      val userOpt = SQL("SELECT * FROM users WHERE email = {email} AND keylogin = {keylogin} AND expiration < {expiration}")
-        .on("uid" -> userPass.user)
+      val userOpt = SQL("SELECT * FROM users WHERE email = {email} AND keylogin = {keylogin} AND expiration > {expiration}")
+        .on("email" -> userPass.user)
         .on("keylogin" -> userPass.pass)
         .on("expiration" -> DateTime.now.toIsoDateString)
         .as(userParser.singleOpt)

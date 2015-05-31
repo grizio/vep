@@ -16,7 +16,8 @@ trait UserServiceInMemoryComponent extends UserServiceComponent {
   class UserServiceInMemory extends UserService {
     private var users = Seq[User](
       User(1, "aui@aui.com", StringUtils.crypt("abc", "def"), "def", "ghi", "jkl", None, None, None),
-      User(2, "cts@cts.com", StringUtils.crypt("zyx", "wvu"), "wvu", "tsr", "qpo", Some("nml"), Some("a"), Some(DateTime(2000, 1, 1)))
+      User(2, "cts@cts.com", StringUtils.crypt("zyx", "wvu"), "wvu", "tsr", "qpo", Some("nml"), Some("a"), Some(DateTime(2000, 1, 1))),
+      User(3, "abc@def.com", StringUtils.crypt("abc", "zyx"), "zyx", "firstname", "lastname", None, Some("abcd"), Some(DateTime.now), Seq("user", "admin"))
     )
 
     override def register(userRegistration: UserRegistration): Unit = {
