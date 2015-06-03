@@ -20,6 +20,10 @@ trait UserServiceComponent {
     def login(userLogin: UserLogin): Option[User]
 
     def authenticate(userPasse: UserPass): Option[User]
+
+    def find(uid: Long): Option[User]
+
+    def updateRoles(user: User): Unit
   }
 
 }
@@ -105,6 +109,19 @@ trait UserServiceProductionComponent extends UserServiceComponent {
       }
 
       userOpt
+    }
+
+    override def find(uid: Long): Option[User] = DB.withConnection { implicit c =>
+      SQL("SELECT * FROM users WHERE uid = {uid}")
+        .on("uid" -> uid)
+        .as(userParser.singleOpt)
+    }
+
+    override def updateRoles(user: User): Unit = DB.withTransaction { implicit c =>
+      SQL("UPDATE users SET roles = {roles} WHERE uid = {uid}")
+        .on("uid" -> user.uid)
+        .on("roles" -> user.roles.mkString(","))
+        .executeUpdate()
     }
   }
 

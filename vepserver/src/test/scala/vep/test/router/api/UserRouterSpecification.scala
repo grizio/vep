@@ -5,7 +5,8 @@ import org.specs2.mutable.Specification
 import spray.http._
 import spray.json.DefaultJsonProtocol
 import spray.testkit.Specs2RouteTest
-import vep.model.user.{UserLogin, UserRegistration}
+import vep.model.common.Roles
+import vep.model.user.{RolesSeq, UserLogin, UserRegistration}
 import vep.router.VepApiRouter
 import vep.test.controller.VepControllersInMemoryComponent
 
@@ -19,7 +20,8 @@ object InvalidEntitiesImplicits extends DefaultJsonProtocol {
 
 class UserRouterSpecification extends Specification with Specs2RouteTest with VepApiRouter with VepControllersInMemoryComponent {
   override def actorRefFactory: ActorRefFactory = system
-  lazy val validCredentials = BasicHttpCredentials("abc@def.com", "abcd")
+  lazy val validCredentialsUser = BasicHttpCredentials("abc@def.com", "abcd")
+  lazy val validCredentialsAdmin = BasicHttpCredentials("admin@admin.com", "admin")
   lazy val invalidCredentials = BasicHttpCredentials("abc@def.com", "unknown")
 
   import InvalidEntitiesImplicits._
@@ -90,7 +92,7 @@ class UserRouterSpecification extends Specification with Specs2RouteTest with Ve
     "get roles" >> {
       "intercept a request to /user/roles as GET with valid credentials" >> {
         Get("/user/roles") ~>
-          addCredentials(validCredentials) ~>
+          addCredentials(validCredentialsUser) ~>
           route ~> check {
           handled === true
         }
@@ -107,11 +109,67 @@ class UserRouterSpecification extends Specification with Specs2RouteTest with Ve
       }
       "return a code 200 with a list of string (json) when success" >> {
         Get("/user/roles") ~>
-          addCredentials(validCredentials) ~>
+          addCredentials(validCredentialsUser) ~>
           route ~> check {
           (status === StatusCodes.OK) and
             (responseAs[String] must not beEmpty) and
             (responseAs[String] must beMatching("^\\[(\"[^\"]+\",?)*\\]$"))
+        }
+      }
+    }
+
+    "update roles" >> {
+      val validEntity = RolesSeq(Seq(Roles.user, Roles.userManager))
+      val invalidEntity = InvalidUserLogin("")
+      val validEntityInvalidData = RolesSeq(Seq("unknown"))
+      "intercept a request to /user/roles/1 as POST with valid credentials" >> {
+        Post("/user/roles/1", validEntity) ~>
+          addCredentials(validCredentialsAdmin) ~>
+          route ~> check {
+          handled === true
+        }
+      }
+      "refuse a request to /user/roles/1 as Get" >> {
+        Get("/user/roles/1") ~> route ~> check {
+          handled === false
+        }
+      }
+      "refuse a request to /user/roles/1 as POST when invalid entity" >> {
+        Post("/user/roles/1", invalidEntity) ~> route ~> check {
+          handled === false
+        }
+      }
+      "returns a code 401 when not authenticated" >> {
+        Post("/user/roles/1", validEntity) ~> route ~> check {
+          status === StatusCodes.Unauthorized
+        }
+      }
+      "returns a code 403 when authenticated but not authorized" >> {
+        Post("/user/roles/1", validEntity) ~>
+          addCredentials(validCredentialsUser) ~>
+          route ~> check {
+          status === StatusCodes.Forbidden
+        }
+      }
+      "returns a code 400 when authenticated, authorized but invalid data" >> {
+        Post("/user/roles/1", validEntityInvalidData) ~>
+          addCredentials(validCredentialsAdmin) ~>
+          route ~> check {
+          status === StatusCodes.BadRequest
+        }
+      }
+      "returns a code 404 when authenticated, authorized but unknown user id" >> {
+        Post("/user/roles/1000000", validEntity) ~>
+          addCredentials(validCredentialsAdmin) ~>
+          route ~> check {
+          status === StatusCodes.NotFound
+        }
+      }
+      "return a code 200 when success" >> {
+        Post("/user/roles/1", validEntity) ~>
+          addCredentials(validCredentialsAdmin) ~>
+          route ~> check {
+          status === StatusCodes.OK
         }
       }
     }

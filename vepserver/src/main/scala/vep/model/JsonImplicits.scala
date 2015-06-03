@@ -1,7 +1,8 @@
 package vep.model
 
 import spray.http.DateTime
-import spray.json.{JsString, DefaultJsonProtocol, JsValue, RootJsonFormat}
+import spray.json._
+import vep.model.user.RolesSeq
 
 trait JsonImplicits extends DefaultJsonProtocol {
   implicit val impDateTime: RootJsonFormat[DateTime] = new RootJsonFormat[DateTime] {

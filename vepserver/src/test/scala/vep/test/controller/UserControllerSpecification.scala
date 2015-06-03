@@ -9,7 +9,9 @@ import vep.test.service.inmemory.VepServicesInMemoryComponent
 
 class UserControllerForSpecificationComponent
   extends UserControllerProductionComponent
-  with VepServicesInMemoryComponent
+  with VepServicesInMemoryComponent {
+  override def overrideUserService: Boolean = false
+}
 
 class UserControllerSpecification extends Specification {
   "Specifications of UserController" >> {
@@ -160,6 +162,43 @@ class UserControllerSpecification extends Specification {
         val result = ucComp.userController.getCurrentUserRoles
 
         result must beEqualTo(Seq("a", "b"))
+      }
+    }
+
+    "updatesRoles should" >> {
+      "return an error when the user does not exist" >> {
+        val ucComp = new UserControllerForSpecificationComponent
+        implicit val user = User(1, "", "", "", "", "", None, None, None, Seq())
+
+        val result = ucComp.userController.updateRoles(-1, Seq())
+
+        result must beAnInstanceOf[Left[ResultError, _]]
+      }
+
+      "return an error when the at least one role does not exist (Seq of one role)" >> {
+        val ucComp = new UserControllerForSpecificationComponent
+        implicit val user = User(1, "", "", "", "", "", None, None, None, Seq())
+
+        val result = ucComp.userController.updateRoles(1, Seq("unknown-role"))
+
+        result must beAnInstanceOf[Left[ResultError, _]]
+      }
+
+      "return an error when the at least one role does not exist (Seq of 3 roles)" >> {
+        val ucComp = new UserControllerForSpecificationComponent
+        implicit val user = User(1, "", "", "", "", "", None, None, None, Seq())
+
+        val result = ucComp.userController.updateRoles(1, Seq(Roles.user, "unknown-role", Roles.userManager))
+
+        result must beAnInstanceOf[Left[ResultError, _]]
+      }
+
+      "updates the roles of the user" >> {
+        val ucComp = new UserControllerForSpecificationComponent
+        implicit val user = User(2, "", "", "", "", "", None, None, None, Seq())
+
+        ucComp.userController.updateRoles(1, Seq(Roles.user, Roles.userManager))
+        ucComp.userService.find(1).get.roles mustEqual Seq(Roles.user, Roles.userManager)
       }
     }
   }

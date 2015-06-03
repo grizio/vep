@@ -10,4 +10,8 @@ object ErrorCodes {
   val usedEmail = 7
   val differentPasswords = 8
   val unknownUser = 9
+  val unauthenticated = 10
+  val unauthorized = 11
+  val roleUnknown = 12
+  val userUnknown = 13
 }

@@ -3,21 +3,24 @@ package vep.test.service.inmemory.user
 import spray.http.DateTime
 import spray.routing.authentication.UserPass
 import vep.exception.FieldErrorException
-import vep.model.common.ErrorCodes
+import vep.model.common.{Roles, ErrorCodes}
 import vep.model.user.{User, UserLogin, UserRegistration}
 import vep.service.user.UserServiceComponent
 import vep.utils.StringUtils
 
 trait UserServiceInMemoryComponent extends UserServiceComponent {
-  // foreach call, we create a new object
+  lazy val userServicePermanent = new UserServiceInMemory
+  // foreach call, we create a new object if overrideUserService is true.
   // It will permit to "clean database" for each test.
-  override def userService: UserService = new UserServiceInMemory
+  override def userService: UserService = if (overrideUserService) new UserServiceInMemory else userServicePermanent
+  def overrideUserService = true
 
   class UserServiceInMemory extends UserService {
     private var users = Seq[User](
       User(1, "aui@aui.com", StringUtils.crypt("abc", "def"), "def", "ghi", "jkl", None, None, None),
       User(2, "cts@cts.com", StringUtils.crypt("zyx", "wvu"), "wvu", "tsr", "qpo", Some("nml"), Some("a"), Some(DateTime(2000, 1, 1))),
-      User(3, "abc@def.com", StringUtils.crypt("abc", "zyx"), "zyx", "firstname", "lastname", None, Some("abcd"), Some(DateTime.now), Seq("user", "admin"))
+      User(3, "abc@def.com", StringUtils.crypt("abc", "zyx"), "zyx", "firstname", "lastname", None, Some("abcd"), Some(DateTime.now), Seq("user")),
+      User(4, "admin@admin.com", StringUtils.crypt("admin", "admin"), "admin", "admin", "admin", None, Some("admin"), Some(DateTime.now), Roles.acceptedRoles.toList)
     )
 
     override def register(userRegistration: UserRegistration): Unit = {
@@ -47,6 +50,21 @@ trait UserServiceInMemoryComponent extends UserServiceComponent {
         u => u.email == userPasse.user && u.keyLogin.getOrElse("") == userPasse.pass
       }
     }
-  }
 
+    override def find(uid: Long): Option[User] = {
+      users find {
+        u => u.uid == uid
+      }
+    }
+
+    override def updateRoles(user: User): Unit = {
+      users = users map { u=>
+        if (u.uid == user.uid) {
+          u.copy(roles = user.roles)
+        } else {
+          u
+        }
+      }
+    }
+  }
 }

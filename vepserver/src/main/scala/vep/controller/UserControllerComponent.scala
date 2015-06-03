@@ -14,6 +14,8 @@ trait UserControllerComponent {
     def login(userLogin: UserLogin): Either[ResultError, ResultSuccessEntity[String]]
 
     def getCurrentUserRoles(implicit currentUser: User): Seq[String]
+
+    def updateRoles(uid: Long, roles: Seq[String])(implicit currentUser: User): Either[ResultError, ResultSuccess]
   }
 
 }
@@ -49,6 +51,20 @@ trait UserControllerProductionComponent extends UserControllerComponent {
     }
 
     override def getCurrentUserRoles(implicit user: User): Seq[String] = user.roles
+
+    override def updateRoles(uid: Long, roles: Seq[String])(implicit currentUser: User): Either[ResultError, ResultSuccess] = {
+      if (roles exists { role => !Roles.acceptedRoles.contains(role) }) {
+        Left(ResultError(ErrorCodes.roleUnknown))
+      } else {
+        userService.find(uid) match {
+          case Some(user) =>
+            userService.updateRoles(user.copy(roles = roles))
+            Right(ResultSuccess)
+          case None =>
+            Left(ResultError(ErrorCodes.userUnknown))
+        }
+      }
+    }
   }
 
 }

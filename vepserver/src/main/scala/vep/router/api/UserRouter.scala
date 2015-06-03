@@ -4,8 +4,10 @@ import spray.http.StatusCodes
 import spray.routing.HttpService
 import vep.controller.VepControllersComponent
 import vep.model.JsonImplicits
-import vep.model.user.{UserLogin, UserRegistration}
+import vep.model.common.{ErrorCodes, Roles}
+import vep.model.user.{RolesSeq, UserLogin, UserRegistration}
 import vep.router.VepRouter
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 trait UserRouter extends HttpService {
@@ -30,6 +32,23 @@ trait UserRouter extends HttpService {
         sealRoute {
           authenticate(vepBasicUserAuthenticator) { implicit user => ctx =>
             ctx.complete(JsonImplicits.seqToJson(userController.getCurrentUserRoles))
+          }
+        }
+      }
+    } ~ pathPrefix("roles") {
+      path(LongNumber) { uid =>
+        post {
+          entity(as[RolesSeq]) { rolesSeq =>
+            sealRoute {
+              authenticate(vepBasicUserAuthenticator) { implicit user =>
+                authorize(user.roles.contains(Roles.userManager)) { ctx =>
+                  userController.updateRoles(uid, rolesSeq.roles) match {
+                    case Left(error) => ctx.complete(if (error.code == ErrorCodes.userUnknown) StatusCodes.NotFound else StatusCodes.BadRequest, error)
+                    case Right(success) => ctx.complete(StatusCodes.OK, success)
+                  }
+                }
+              }
+            }
           }
         }
       }
