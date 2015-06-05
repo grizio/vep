@@ -6,6 +6,10 @@ import spray.routing._
 import spray.routing.directives.DebuggingDirectives
 import vep.service.VepServicesComponent
 
+/**
+ * This trait defines the router for web application (resources).
+ * It will also defines routes for SEO.
+ */
 trait VepWebRouter extends HttpService with VepRouter with VepServicesComponent {
   val logger = Logger.getLogger("RouterV1")
 

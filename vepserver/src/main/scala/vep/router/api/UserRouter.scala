@@ -10,6 +10,9 @@ import vep.router.VepRouter
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
+/**
+ * This trait defines routes and rules for each possible action impacting users.
+ */
 trait UserRouter extends HttpService {
   self: VepControllersComponent with VepRouter =>
 
@@ -31,7 +34,7 @@ trait UserRouter extends HttpService {
       get {
         sealRoute {
           authenticate(vepBasicUserAuthenticator) { implicit user => ctx =>
-            ctx.complete(JsonImplicits.seqToJson(userController.getCurrentUserRoles))
+            ctx.complete(RolesSeq(userController.getCurrentUserRoles.entity))
           }
         }
       }
@@ -57,7 +60,7 @@ trait UserRouter extends HttpService {
         sealRoute {
           authenticate(vepBasicUserAuthenticator) { implicit user =>
             authorize(user.roles.contains(Roles.userManager)) { ctx =>
-              ctx.complete(StatusCodes.OK, userController.getUsers)
+              ctx.complete(StatusCodes.OK, userController.getUsers.entity)
             }
           }
         }

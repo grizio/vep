@@ -11,6 +11,9 @@ import vep.service.VepServicesComponent
 import scala.concurrent.{ExecutionContext, Future}
 
 
+/**
+ * This trait defines the specification for a router (route) and global directives.
+ */
 trait VepRouter extends HttpService {
   self: VepServicesComponent =>
   val route: Route
@@ -19,6 +22,9 @@ trait VepRouter extends HttpService {
   private val allowHeaders = `Access-Control-Allow-Headers`("Origin", "X-Requested-With", "Content-Type", "Accept", "Accept-Encoding", "Accept-Language", "Host", "Referer", "User-Agent")
   private val controlMaxAge = `Access-Control-Max-Age`(1728000)
 
+  /**
+   * Accepts a request from another domain
+   */
   def cors[T]: Directive0 = mapRequestContext { ctx =>
     ctx.withRouteResponseHandling({
       //It is an option request for a resource that responds to some other method
@@ -37,6 +43,9 @@ trait VepRouter extends HttpService {
     }
   }
 
+  /**
+   * Authenticator for all users in vep application.
+   */
   def vepBasicUserAuthenticator(implicit ec: ExecutionContext): AuthMagnet[User] = {
     def authenticator(userPass: Option[UserPass]): Future[Option[User]] = Future {
       userPass flatMap {

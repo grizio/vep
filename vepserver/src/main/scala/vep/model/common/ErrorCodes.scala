@@ -1,5 +1,8 @@
 package vep.model.common
 
+/**
+ * This object defines the list of errors identified by a key.
+ */
 object ErrorCodes {
   val emptyEmail = 1
   val invalidEmail = 2

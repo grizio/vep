@@ -10,10 +10,6 @@ trait JsonImplicits extends DefaultJsonProtocol {
 
     override def read(json: JsValue): DateTime = DateTime.fromIsoDateTimeString(json.toString()).get
   }
-
-  def seqToJson(col: Seq[String]): String = {
-    col map { s => s.replace("\"", "\\\"") } mkString ("[\"", "\",\"", "\"]")
-  }
 }
 
 object JsonImplicits extends JsonImplicits

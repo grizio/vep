@@ -7,6 +7,9 @@ import java.text.SimpleDateFormat
 import anorm.{TypeDoesNotMatch, MetaDataItem, Column}
 import spray.http.DateTime
 
+/**
+ * Helper class to convert data for Anorm.
+ */
 trait AnormImplicits {
   private def valueToDateTimeOption(value: Any): Option[DateTime] = {
     try {

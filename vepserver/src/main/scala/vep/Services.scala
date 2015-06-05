@@ -13,6 +13,9 @@ trait AnormClient {
   implicit val _selfAnormClient = this
 }
 
+/**
+ * This trait defines all services with all required components.
+ */
 trait FinalVepServicesProductionComponent
   extends VepServicesComponent
   with VepServicesProductionComponent

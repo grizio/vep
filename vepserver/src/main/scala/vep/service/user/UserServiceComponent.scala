@@ -11,20 +11,49 @@ import vep.model.user.{User, UserForAdmin, UserLogin, UserRegistration}
 import vep.service.AnormImplicits
 import vep.utils.{DB, StringUtils}
 
+/**
+ * Defines services impacting users.
+ */
 trait UserServiceComponent {
   def userService: UserService
 
   trait UserService {
+    /**
+     * Inserts a user into database
+     * @param userRegistration The user to insert
+     */
     def register(userRegistration: UserRegistration): Unit
 
+    /**
+     * Checks the authentication of the user and generate a session key.
+     * @param userLogin The user to log in
+     * @return The session key or nothing if the authentication is invalid.
+     */
     def login(userLogin: UserLogin): Option[User]
 
+    /**
+     * Checks if the session is valid (email, session key).
+     * @param userPasse The session identification.
+     * @return The corresponding user if the identification is valid, otherwise None.
+     */
     def authenticate(userPasse: UserPass): Option[User]
 
+    /**
+     * Finds a user by its id.
+     * @param uid The user id
+     * @return The user with this id or nothing.
+     */
     def find(uid: Long): Option[User]
 
+    /**
+     * Updates the roles of the user
+     * @param user The user with new roles.
+     */
     def updateRoles(user: User): Unit
 
+    /**
+     * Finds all users for administrator.
+     */
     def findAllForAdmin(): Seq[UserForAdmin]
   }
 

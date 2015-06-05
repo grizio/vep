@@ -5,6 +5,9 @@ import spray.routing.HttpService
 import vep.router.{VepApiRouter, VepRouter, VepWebRouter}
 import vep.service.VepServicesProductionComponent
 
+/**
+ * Base actor
+ */
 trait VepActor extends Actor with FinalVepServicesProductionComponent {
   self: HttpService with VepRouter =>
 
@@ -18,6 +21,12 @@ trait VepActor extends Actor with FinalVepServicesProductionComponent {
   override def receive = runRoute(route)
 }
 
+/**
+ * Actor for web route
+ */
 class VepWebActor extends VepActor with VepWebRouter
 
+/**
+ * Actor for api route
+ */
 class VepApiActor extends VepActor with VepApiRouter

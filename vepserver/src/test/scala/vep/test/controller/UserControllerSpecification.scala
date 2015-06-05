@@ -150,7 +150,7 @@ class UserControllerSpecification extends Specification {
         val ucComp = new UserControllerForSpecificationComponent
         implicit val user = User(1, "", "", "", "", "", None, None, None, Seq())
 
-        val result = ucComp.userController.getCurrentUserRoles
+        val result = ucComp.userController.getCurrentUserRoles.entity
 
         result must beAnInstanceOf[Seq[String]]
       }
@@ -159,7 +159,7 @@ class UserControllerSpecification extends Specification {
         val ucComp = new UserControllerForSpecificationComponent
         implicit val user = User(1, "", "", "", "", "", None, None, None, Seq("a", "b"))
 
-        val result = ucComp.userController.getCurrentUserRoles
+        val result = ucComp.userController.getCurrentUserRoles.entity
 
         result must beEqualTo(Seq("a", "b"))
       }
@@ -207,7 +207,7 @@ class UserControllerSpecification extends Specification {
         val ucComp = new UserControllerForSpecificationComponent
         implicit val user = User(1, "", "", "", "", "", None, None, None, Seq())
 
-        val result = ucComp.userController.getUsers
+        val result = ucComp.userController.getUsers.entity
 
         result must beAnInstanceOf[Seq[UserForAdmin]]
       }
