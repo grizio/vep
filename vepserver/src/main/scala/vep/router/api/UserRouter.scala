@@ -52,6 +52,16 @@ trait UserRouter extends HttpService {
           }
         }
       }
+    } ~ path("list") {
+      get {
+        sealRoute {
+          authenticate(vepBasicUserAuthenticator) { implicit user =>
+            authorize(user.roles.contains(Roles.userManager)) { ctx =>
+              ctx.complete(StatusCodes.OK, userController.getUsers)
+            }
+          }
+        }
+      }
     }
   } ~ path("login") {
     post {

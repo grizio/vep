@@ -173,5 +173,42 @@ class UserRouterSpecification extends Specification with Specs2RouteTest with Ve
         }
       }
     }
+
+    "get list of users" >> {
+      val validEntity = RolesSeq(Seq(Roles.user, Roles.userManager))
+      val invalidEntity = InvalidUserLogin("")
+
+      "intercept a request to /user/list as GET with valid credentials" >> {
+        Get("/user/list", validEntity) ~>
+          addCredentials(validCredentialsAdmin) ~>
+          route ~> check {
+          handled === true
+        }
+      }
+      "refuse a request to /user/list as POST" >> {
+        Post("/user/list") ~> route ~> check {
+          handled === false
+        }
+      }
+      "returns a code 401 when not authenticated" >> {
+        Get("/user/list", validEntity) ~> route ~> check {
+          status === StatusCodes.Unauthorized
+        }
+      }
+      "returns a code 403 when authenticated but not authorized" >> {
+        Get("/user/list", validEntity) ~>
+          addCredentials(validCredentialsUser) ~>
+          route ~> check {
+          status === StatusCodes.Forbidden
+        }
+      }
+      "return a code 200 when success" >> {
+        Get("/user/list", validEntity) ~>
+          addCredentials(validCredentialsAdmin) ~>
+          route ~> check {
+          status === StatusCodes.OK
+        }
+      }
+    }
   }
 }

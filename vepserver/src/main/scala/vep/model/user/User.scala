@@ -1,7 +1,7 @@
 package vep.model.user
 
 import spray.http.DateTime
-import spray.json.{JsString, JsArray, JsValue, RootJsonFormat}
+import spray.json._
 import vep.model.JsonImplicits
 import vep.model.common.{ErrorCodes, VerifiableMultiple, VerifiableUnique}
 import vep.utils.StringUtils
@@ -39,6 +39,8 @@ case class UserLogin(email: String, password: String) extends VerifiableUnique {
 
 case class RolesSeq(roles: Seq[String])
 
+case class UserForAdmin(uid: Int, email: String, firstName: String, lastName: String, roles: Seq[String])
+
 object UserImplicits extends JsonImplicits {
   implicit val impUser = jsonFormat(User.apply, "uid", "email", "password", "salt", "firstName", "lastName", "city", "keyLogin", "expiration", "roles")
   implicit val impUserRegistration = jsonFormat(UserRegistration.apply, "email", "firstName", "lastName", "password", "city")
@@ -47,5 +49,15 @@ object UserImplicits extends JsonImplicits {
   implicit val impRolesSeq = new RootJsonFormat[RolesSeq] {
     def read(value: JsValue) = RolesSeq(value.convertTo[Seq[String]])
     def write(f: RolesSeq) = JsArray(f.roles map { role => JsString(role) }: _*)
+  }
+
+  implicit val impUserForAdmin = jsonFormat(UserForAdmin.apply, "uid", "email", "firstName", "lastName", "roles")
+  implicit val impUserForAdminSeq = new RootJsonFormat[Seq[UserForAdmin]] {
+    def read(value: JsValue) = value match {
+      case value: JsArray => value.elements map { v => impUserForAdmin.read(v) } toSeq
+      case _ => throw new DeserializationException("Cannot convert Seq[UserForAdmin]")
+    }
+
+    override def write(obj: Seq[UserForAdmin]): JsValue = JsArray(obj map { o => impUserForAdmin.write(o) }: _*)
   }
 }

@@ -3,16 +3,18 @@ package vep.test.service.inmemory.user
 import spray.http.DateTime
 import spray.routing.authentication.UserPass
 import vep.exception.FieldErrorException
-import vep.model.common.{Roles, ErrorCodes}
-import vep.model.user.{User, UserLogin, UserRegistration}
+import vep.model.common.{ErrorCodes, Roles}
+import vep.model.user.{User, UserForAdmin, UserLogin, UserRegistration}
 import vep.service.user.UserServiceComponent
 import vep.utils.StringUtils
 
 trait UserServiceInMemoryComponent extends UserServiceComponent {
   lazy val userServicePermanent = new UserServiceInMemory
+
   // foreach call, we create a new object if overrideUserService is true.
   // It will permit to "clean database" for each test.
   override def userService: UserService = if (overrideUserService) new UserServiceInMemory else userServicePermanent
+
   def overrideUserService = true
 
   class UserServiceInMemory extends UserService {
@@ -58,7 +60,7 @@ trait UserServiceInMemoryComponent extends UserServiceComponent {
     }
 
     override def updateRoles(user: User): Unit = {
-      users = users map { u=>
+      users = users map { u =>
         if (u.uid == user.uid) {
           u.copy(roles = user.roles)
         } else {
@@ -66,5 +68,10 @@ trait UserServiceInMemoryComponent extends UserServiceComponent {
         }
       }
     }
+
+    override def findAllForAdmin(): Seq[UserForAdmin] = users.map {
+      u => UserForAdmin(u.uid, u.email, u.firstName, u.lastName, u.roles)
+    }
   }
+
 }

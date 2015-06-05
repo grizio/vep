@@ -2,7 +2,7 @@ package vep.controller
 
 import vep.exception.FieldErrorException
 import vep.model.common._
-import vep.model.user.{User, UserLogin, UserRegistration}
+import vep.model.user.{UserForAdmin, User, UserLogin, UserRegistration}
 import vep.service.VepServicesComponent
 
 trait UserControllerComponent {
@@ -16,6 +16,8 @@ trait UserControllerComponent {
     def getCurrentUserRoles(implicit currentUser: User): Seq[String]
 
     def updateRoles(uid: Long, roles: Seq[String])(implicit currentUser: User): Either[ResultError, ResultSuccess]
+
+    def getUsers(implicit currentUser: User): Seq[UserForAdmin]
   }
 
 }
@@ -64,6 +66,10 @@ trait UserControllerProductionComponent extends UserControllerComponent {
             Left(ResultError(ErrorCodes.userUnknown))
         }
       }
+    }
+
+    override def getUsers(implicit currentUser: User): Seq[UserForAdmin] = {
+      userService.findAllForAdmin()
     }
   }
 

@@ -7,7 +7,7 @@ import spray.routing.authentication.UserPass
 import vep.AnormClient
 import vep.exception.FieldErrorException
 import vep.model.common.ErrorCodes
-import vep.model.user.{User, UserLogin, UserRegistration}
+import vep.model.user.{User, UserForAdmin, UserLogin, UserRegistration}
 import vep.service.AnormImplicits
 import vep.utils.{DB, StringUtils}
 
@@ -24,6 +24,8 @@ trait UserServiceComponent {
     def find(uid: Long): Option[User]
 
     def updateRoles(user: User): Unit
+
+    def findAllForAdmin(): Seq[UserForAdmin]
   }
 
 }
@@ -46,6 +48,16 @@ trait UserServiceProductionComponent extends UserServiceComponent {
         get[String]("roles") map {
         case uid ~ email ~ password ~ salt ~ firsName ~ lastName ~ city ~ keyLogin ~ expiration ~ roles =>
           User(uid, email, password, salt, firsName, lastName, city, keyLogin, expiration, roles.split(","))
+      }
+
+    lazy val userForAdminParser =
+      int("uid") ~
+        str("email") ~
+        str("firstname") ~
+        str("lastname") ~
+        str("roles") map {
+        case uid ~ email ~ firstname ~ lastname ~ roles =>
+          UserForAdmin(uid, email, firstname, lastname, roles.split(","))
       }
 
     override def register(userRegistration: UserRegistration): Unit = DB.withTransaction { implicit c =>
@@ -122,6 +134,11 @@ trait UserServiceProductionComponent extends UserServiceComponent {
         .on("uid" -> user.uid)
         .on("roles" -> user.roles.mkString(","))
         .executeUpdate()
+    }
+
+    override def findAllForAdmin(): Seq[UserForAdmin] = DB.withConnection { implicit c =>
+      SQL("SELECT uid, email, firstName, lastName FROM users u")
+        .as(userForAdminParser *)
     }
   }
 

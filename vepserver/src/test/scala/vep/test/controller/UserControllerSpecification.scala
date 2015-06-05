@@ -4,7 +4,7 @@ import org.specs2.mutable.Specification
 import spray.http.DateTime
 import vep.controller.UserControllerProductionComponent
 import vep.model.common._
-import vep.model.user.{User, UserLogin, UserRegistration}
+import vep.model.user.{UserForAdmin, User, UserLogin, UserRegistration}
 import vep.test.service.inmemory.VepServicesInMemoryComponent
 
 class UserControllerForSpecificationComponent
@@ -199,6 +199,17 @@ class UserControllerSpecification extends Specification {
 
         ucComp.userController.updateRoles(1, Seq(Roles.user, Roles.userManager))
         ucComp.userService.find(1).get.roles mustEqual Seq(Roles.user, Roles.userManager)
+      }
+    }
+
+    "getUsers should" >> {
+      "returns a sequence of UserForAdmin" >> {
+        val ucComp = new UserControllerForSpecificationComponent
+        implicit val user = User(1, "", "", "", "", "", None, None, None, Seq())
+
+        val result = ucComp.userController.getUsers
+
+        result must beAnInstanceOf[Seq[UserForAdmin]]
       }
     }
   }
