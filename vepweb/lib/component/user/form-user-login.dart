@@ -9,6 +9,9 @@ class FormUserLoginComponent extends FormComponent<UserLogin> {
   final Router router;
   final App app;
 
+  @NgOneWay('redirect-back')
+  bool redirectBack = true;
+
   FormUserLoginComponent(this.userService, this.router, this.app);
 
   @override
@@ -22,9 +25,15 @@ class FormUserLoginComponent extends FormComponent<UserLogin> {
   @override
   void onDone(HttpResult httpResult) {
     var res = httpResult as HttpResultSuccess;
-    app.login(user.email, res.body);
+    userService.getRoles(user.email, res.body).then((_){
+      if (_.isSuccess) {
+        app.login(user.email, res.body, (_ as HttpResultSuccessEntity).entity);
+      } // else Should never happen
 
-    // We return on the previous page
-    window.history.back();
+      // We return on the previous page
+      if (redirectBack) {
+        window.history.back();
+      }
+    });
   }
 }

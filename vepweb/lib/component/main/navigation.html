@@ -11,10 +11,16 @@
                 </ul>
 
                 <section class="top-bar-section">
+                    <ul class="right">
+                        <navigation-link code="user-manager" name="Gestion des utilisateurs" required-role="user-manager" has-children="true">
+                            <navigation-link code="user-role-management" name="Gestion des rôles" url="/user/role/management" parent="user-manager"></navigation-link>
+                        </navigation-link>
+                    </ul>
                     <ul class="left">
-                        <li ng-repeat="link in left" ng-class="{active: link.active}">
-                            <a href="{{ link.url }}">{{ link.name }}</a>
-                        </li>
+                        <navigation-link code="home" name="Accueil" url="/"></navigation-link>
+                        <navigation-link code="register" name="Inscription" url="/user/register" ng-if="!loggedIn"></navigation-link>
+                        <navigation-link code="login" name="Connexion" url="/login" ng-if="!loggedIn"></navigation-link>
+                        <navigation-link code="logout" name="Déconnexion" url="/logout" ng-if="loggedIn"></navigation-link>
                     </ul>
                 </section>
             </nav>

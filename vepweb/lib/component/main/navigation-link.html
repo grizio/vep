@@ -1,0 +1,6 @@
+<li class="not-click" ng-class="{active: active, 'has-dropdown': hasChildren}" ng-if="isGranted">
+    <a href="{{ url }}">{{ name }}</a>
+    <ul class="dropdown" ng-if="hasChildren">
+        <content></content>
+    </ul>
+</li>

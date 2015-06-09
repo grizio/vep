@@ -8,6 +8,7 @@ class User {
   String lastName;
   String city;
   String key;
+  List<String> roles;
 }
 
 class UserRegistration {

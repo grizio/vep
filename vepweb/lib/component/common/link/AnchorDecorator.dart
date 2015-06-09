@@ -11,6 +11,5 @@ class AnchorDecorator {
 
   _goto(MouseEvent event) {
     event.preventDefault();
-    //window.history.pushState(null, '', (element as AnchorElement).href);
   }
 }

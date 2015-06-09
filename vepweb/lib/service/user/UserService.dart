@@ -13,4 +13,16 @@ class UserService {
   Future<HttpResult> login(UserLogin user) {
     return http.post('/login', user);
   }
+
+  Future<HttpResult> getRoles(String email, String key) {
+    return http.get('/user/roles', headers: {'authorization': 'Basic ' + CryptoUtils.bytesToBase64(UTF8.encode(email + ':' + key))});
+  }
+
+  Future<HttpResult> getUserList() {
+    return http.get('/user/list', withSession: true, type: const jsonx.TypeHelper<List<User>>().type);
+  }
+
+  Future<HttpResult> updateRoles(int uid, List<String> roles) {
+    return http.post('/user/roles/${uid}', roles, withSession: true);
+  }
 }

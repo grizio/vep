@@ -6,13 +6,13 @@ abstract class IHttp {
   static const PUT = 'PUT';
   static const DELETE = 'DELETE';
 
-  Future<HttpResult> get(String url);
+  Future<HttpResult> get(String url, {bool withSession: false, Map<String, String> headers, Type type: null});
 
-  Future<HttpResult> post(String url, Object entity);
+  Future<HttpResult> post(String url, Object entity, {bool withSession: false, Map<String, String> headers});
 
-  Future<HttpResult> put(String url, Object entity);
+  Future<HttpResult> put(String url, Object entity, {bool withSession: false, Map<String, String> headers});
 
-  Future<HttpResult> delete(String url);
+  Future<HttpResult> delete(String url, {bool withSession: false, Map<String, String> headers});
 }
 
 @Injectable()
@@ -24,50 +24,60 @@ class HttpProduction implements IHttp {
   HttpProduction(this.client, this.app);
 
   Map<String, String> buildHeaders({Map<String, String> headers:const{}, bool withSession: false}) {
-    var result = <String, String>{};
-    result.addAll(headers);
+    var result = merge(<String, String>{}, headers);
     if (app.isLoggedIn) {
-      headers['authorization'] = 'Basic ' + CryptoUtils.bytesToBase64(UTF8.encode(app.username + ':' + app.key));
+      result['authorization'] = 'Basic ' + CryptoUtils.bytesToBase64(UTF8.encode(app.username + ':' + app.key));
     }
-    return headers;
+    return result;
   }
 
   @override
-  Future<HttpResult> get(String url, {bool withSession: false}) {
+  Future<HttpResult> get(String url, {bool withSession: false, Map<String, String> headers, Type type: null}) {
     logger.fine('GET ' + url);
     return client.get(
         getUrl(url),
-        headers: buildHeaders(withSession: withSession)
-    ).then(complete);
+        headers: buildHeaders(headers: headers, withSession: withSession)
+    ).then((_) => complete(_, type));
   }
 
   @override
-  Future<HttpResult> post(String url, Object entity, {bool withSession: false}) {
+  Future<HttpResult> post(String url, Object entity, {bool withSession: false, Map<String, String> headers}) {
     logger.fine('POST ' + url + ' (' + jsonx.encode(entity) + ')');
     return client.post(
         getUrl(url),
         body: jsonx.encode(entity),
-        headers: buildHeaders(headers: {'Content-Type': 'application/json'}, withSession: withSession)
+        headers: buildHeaders(headers: merge(headers, {'Content-Type': 'application/json'}), withSession: withSession)
     ).then(complete);
   }
 
   @override
-  Future<HttpResult> put(String url, Object entity, {bool withSession: false}) {
+  Future<HttpResult> put(String url, Object entity, {bool withSession: false, Map<String, String> headers}) {
     logger.fine('PUT ' + url + ' (' + jsonx.encode(entity) + ')');
     return client.put(
         getUrl(url),
         body: jsonx.encode(entity),
-        headers: buildHeaders(headers: {'Content-Type': 'application/json'}, withSession: withSession)
+        headers: buildHeaders(headers: merge(headers, {'Content-Type': 'application/json'}), withSession: withSession)
     ).then(complete);
   }
 
   @override
-  Future<HttpResult> delete(String url, {bool withSession: false}) {
+  Future<HttpResult> delete(String url, {bool withSession: false, Map<String, String> headers}) {
     logger.fine('DELETE ' + url);
     return client.delete(
         getUrl(url),
-        headers: buildHeaders(withSession: withSession)
+        headers: buildHeaders(headers: headers, withSession: withSession)
     ).then(complete);
+  }
+
+  Map<String, String> merge(Map<String, String> map1, Map<String, String> map2) {
+    Map<String, String> result = {};
+    if (map2 != null) {
+      result.addAll(map2);
+    }
+    if (map1 != null) {
+      result.addAll(map1);
+    }
+    return result;
   }
 
   String getUrl(String url) {
@@ -83,12 +93,17 @@ class HttpProduction implements IHttp {
     return result;
   }
 
-  Future<HttpResult> complete(http.Response response) {
+  Future<HttpResult> complete(http.Response response, [Type type=null]) {
     if (response.statusCode == 0) {
       logger.warning("The returned status was 0. It seems it was not done by a server.");
       return new Future.value(new HttpResultSuccess(response.statusCode, response.body));
     } else if (response.statusCode >= 200 && response.statusCode < 300) {
-      return new Future.value(new HttpResultSuccess(response.statusCode, response.body));
+      try {
+        var result = type == null ? jsonx.decode(response.body) : jsonx.decode(response.body, type: type);
+        return new Future.value(new HttpResultSuccessEntity(200, result));
+      } catch (e) {
+        return new Future.value(new HttpResultSuccess(200, response.body));
+      }
     } else if (response.statusCode >= 300 && response.statusCode < 400) {
       logger.severe('This kind of status is not managed by this implementation of Http.');
       return new Future.value(new HttpResultUnhandled(response.statusCode, response));

@@ -1,0 +1,159 @@
+part of vep.component.common.table;
+
+@Component(
+    selector: 'table-search',
+    templateUrl: '/packages/vepweb/component/common/table/table-search.html',
+    useShadowDom: false)
+class TableSearchComponent implements ScopeAware {
+  @NgAttr('descriptor')
+  String descriptor;
+
+  @NgAttr('search')
+  String search;
+
+  @NgOneWay('max-result')
+  int maxResult;
+
+  @NgOneWay('show-pages')
+  bool showPages;
+
+  @NgOneWay('filter-in')
+  bool filterIn;
+
+  @NgTwoWay('page')
+  int page = 1;
+
+  int get pageMax => _data == null ? 1 : max(0, ((_data.length - 1) / maxResult).floor()) + 1;
+
+  TableSearchContext context;
+
+  TableDescriptor get tableDescriptor => context.tableDescriptor;
+
+  void set scope(Scope scope) {
+    var currentScope = scope;
+    while (currentScope != null && !(currentScope.context is TableSearchContext)) {
+      currentScope = currentScope.parentScope;
+    }
+    if (currentScope != null) {
+      context = currentScope.context;
+    } else {
+      throw 'The component table-search is not include into a scope with a TableSearchContext.';
+    }
+  }
+
+  Future<Map<String, Object>> _dataFuture;
+  List<Map<String, Object>> _data;
+
+  List<Map<String, Object>> get data {
+    if (_data == null && _dataFuture == null) {
+      _dataFuture = context.search(filter).then((_) {
+        _data = _;
+        _dataFuture = null;
+      });
+    }
+    return _data == null ? [] : _data;
+  }
+
+  Map<String, Object> filter = {};
+
+  List<Map<String, Object>> get filteredData {
+    List<Map<String, Object>> filtered;
+    if (filterIn) {
+      var columnsToCheck = tableDescriptor.columns.where((_) => filter.containsKey(_.code) && filter[_.code] != null);
+      var textColumns = columnsToCheck.where((_) => _.type == ColumnTypes.text);
+      // We filter only when checkbox is checked, otherwise, we do not include the checkbox in filter.
+      var checkboxColumns = columnsToCheck.where((_) => _.type == ColumnTypes.checkbox && filter[_.code] == true);
+      filtered = [];
+      int index = 0;
+      for (Map<String, Object> row in data) {
+        if (textColumns.every((_) => (row[_.code] as String).contains(filter[_.code])) &&
+            checkboxColumns.every((_) => row[_.code] == filter[_.code])) {
+          row['_index'] = index;
+          filtered.add(row);
+        }
+        index++;
+      }
+    } else {
+      filtered = data;
+    }
+
+    if (showPages) {
+      if (listUtilities.isEmpty(filtered) || (page - 1) * maxResult > filtered.length) {
+        return [];
+      } else {
+        return filtered.sublist((page - 1) * maxResult, min(page * maxResult, filtered.length));
+      }
+    } else {
+      return filtered;
+    }
+  }
+
+  void onFilterChange() {
+    if (!filterIn) {
+      _data = null;
+    }
+  }
+
+  void onChange(index, field, value) {
+    _data[index][field] = value;
+    context.onChange(_data[index]);
+  }
+}
+
+abstract class TableSearchContext {
+  TableDescriptor get tableDescriptor;
+
+  Future<List<Map<String, Object>>> search(Map<String, Object> filters);
+
+  void onChange(Map<String, Object> data);
+}
+
+class TableDescriptor {
+  List<ColumnDescriptor> _columns;
+
+  List<ColumnDescriptor> get columns => _columns;
+
+  TableDescriptor(List<ColumnDescriptor> columns) {
+    _columns = new List.from(columns, growable:false);
+  }
+}
+
+class ColumnDescriptor {
+  String _code;
+
+  String get code => _code;
+
+  String _name;
+
+  String get name => _name;
+
+  String _type;
+
+  String get type => _type;
+
+  bool _active;
+
+  bool get active => _active;
+
+  bool _hasFilter;
+
+  bool get hasFilter => _hasFilter;
+
+  void enable() {
+    _active = true;
+  }
+
+  void disable() {
+    _active = false;
+  }
+
+  ColumnDescriptor(this._code, this._name, this._type, {bool active, bool hasFilter}) {
+    _active = active;
+    _hasFilter = hasFilter;
+  }
+}
+
+abstract class ColumnTypes {
+  static const String text = 'text';
+  static const String checkbox = 'checkbox';
+}

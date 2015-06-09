@@ -1,0 +1,16 @@
+<div ng-class="{'pagination-centered': centered}">
+    <ul class="pagination">
+        <li class="arrow" ng-class="{unavailable: page == 1}">
+            <a href="" ng-if="page != 1" ng-click="page = page - 1">&laquo;</a>
+            <a href="" ng-if="page == 1">&laquo;</a>
+        </li>
+        <li ng-repeat="i in pageList" ng-class="{current: i == page, unavailable: i == 0}">
+            <a href="" ng-if="i == 0">&hellip;</a>
+            <a href="" ng-click="page = i" ng-if="i != 0">{{ i }}</a>
+        </li>
+        <li class="arrow" ng-class="{unavailable: page == pageMax}">
+            <a href="" ng-if="page != pageMax" ng-click="page = page + 1">&raquo;</a>
+            <a href="" ng-if="page == pageMax">&raquo;</a>
+        </li>
+    </ul>
+</div>
