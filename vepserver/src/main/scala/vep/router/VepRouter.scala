@@ -19,7 +19,7 @@ trait VepRouter extends HttpService {
   val route: Route
 
   private val allowOriginHeader = `Access-Control-Allow-Origin`(AllOrigins)
-  private val allowHeaders = `Access-Control-Allow-Headers`("Origin", "X-Requested-With", "Content-Type", "Accept", "Accept-Encoding", "Accept-Language", "Host", "Referer", "User-Agent")
+  private val allowHeaders = `Access-Control-Allow-Headers`("Origin", "X-Requested-With", "Content-Type", "Accept", "Accept-Encoding", "Accept-Language", "Host", "Referer", "User-Agent", "Authorization")
   private val controlMaxAge = `Access-Control-Max-Age`(1728000)
 
   /**

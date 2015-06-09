@@ -166,7 +166,7 @@ trait UserServiceProductionComponent extends UserServiceComponent {
     }
 
     override def findAllForAdmin(): Seq[UserForAdmin] = DB.withConnection { implicit c =>
-      SQL("SELECT uid, email, firstName, lastName FROM users u")
+      SQL("SELECT uid, email, firstName, lastName, roles FROM users u")
         .as(userForAdminParser *)
     }
   }
