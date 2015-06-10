@@ -25,7 +25,7 @@
                     <input type="text" name="{{ column.code }}" ng-switch-when="text" ng-model="row[column.code]"
                            ng-change="onChange(row['_index'], column.code, $event.target.value)"/>
                     <input type="checkbox" name="{{ column.code }}" ng-switch-when="checkbox"
-                           ng-model="row[column.code]" ng-change="onChange(row['_index'], column.code, $event.target.value == 'on')"/>
+                           ng-model="row[column.code]" ng-change="onChange(row['_index'], column.code, $event.target.checked)"/>
                 </span>
                 <span ng-if="!column.active" ng-switch="column.type">
                     <span ng-switch-when="text">{{ row[column.code] }}</span>
