@@ -9,6 +9,25 @@ class FormUserRegistrationComponent extends FormComponent<UserRegistration> {
 
   FormUserRegistrationComponent(this.userService);
 
+  InputEmailComponent _email;
+
+  InputEmailComponent get email => _email;
+
+  set email(InputEmailComponent email) {
+    _email = email;
+    _email.onValueChange.listen((_) => email2.verify());
+  }
+
+  InputEmailComponent _email2;
+
+  InputEmailComponent get email2 => _email2;
+
+  set email2(InputEmailComponent email2) {
+    _email2 = email2;
+    // String.isEmpty to avoid showing error because it is not already set.
+    _email2.addConstraint((v) => stringUtilities.isEmpty(v) || stringUtilities.equals(email.value, v), errorCodes.i18n[errorCodes.differentEmails]);
+  }
+
   InputPasswordComponent _password;
 
   InputPasswordComponent get password => _password;
