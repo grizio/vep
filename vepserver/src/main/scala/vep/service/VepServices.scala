@@ -1,6 +1,7 @@
 package vep.service
 
 import vep.AnormClient
+import vep.service.cms.{PageServiceComponent, PageServiceProductionComponent}
 import vep.service.user.{UserServiceComponent, UserServiceProductionComponent}
 
 /**
@@ -9,8 +10,10 @@ import vep.service.user.{UserServiceComponent, UserServiceProductionComponent}
  */
 trait VepServicesComponent
   extends UserServiceComponent
+  with PageServiceComponent
 
 trait VepServicesProductionComponent
   extends VepServicesComponent
   with UserServiceProductionComponent
+  with PageServiceProductionComponent
   with AnormClient

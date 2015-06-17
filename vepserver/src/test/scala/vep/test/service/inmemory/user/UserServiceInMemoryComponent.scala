@@ -6,16 +6,17 @@ import vep.exception.FieldErrorException
 import vep.model.common.{ErrorCodes, Roles}
 import vep.model.user.{User, UserForAdmin, UserLogin, UserRegistration}
 import vep.service.user.UserServiceComponent
+import vep.test.service.inmemory.VepServicesInMemoryComponent
 import vep.utils.StringUtils
 
 trait UserServiceInMemoryComponent extends UserServiceComponent {
+  self: VepServicesInMemoryComponent =>
+
   lazy val userServicePermanent = new UserServiceInMemory
 
   // foreach call, we create a new object if overrideUserService is true.
   // It will permit to "clean database" for each test.
-  override def userService: UserService = if (overrideUserService) new UserServiceInMemory else userServicePermanent
-
-  def overrideUserService = true
+  override def userService: UserService = if (overrideServices) new UserServiceInMemory else userServicePermanent
 
   class UserServiceInMemory extends UserService {
     private var users = Seq[User](

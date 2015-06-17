@@ -114,8 +114,25 @@ object StringUtils {
    * @param salt The salt to use
    * @return The Crypted string
    */
-  def crypt(str: String, salt: String) = {
+  def crypt(str: String, salt: String): String = {
     val completeSalt = salt + (if (config.hasPath("vep.salt")) config.getString("vep.salt") else "")
     Crypt.sha1(str + completeSalt)
   }
+
+  /**
+   * Checks is the given string is a canonical (contains only letters, numbers, _, + or -, does not start or end by a symbol).
+   * @param str The string to check
+   * @return True if the string is a canonical, otherwise false.
+   */
+  def isCanonical(str: String): Boolean = {
+    val symbols = List('+', '-', '_')
+    !str.isEmpty && str.matches("^[a-z0-9_+-]+$") && !symbols.contains(str.head) && !symbols.contains(str.last)
+  }
+
+  /**
+   * Checks is the given string is not a canonical.
+   * @param str The string to check
+   * @return True if the string is not a canonical, otherwise false.
+   */
+  def isNotCanonical(str: String): Boolean = !isCanonical(str)
 }

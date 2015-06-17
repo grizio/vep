@@ -10,7 +10,7 @@ import vep.test.service.inmemory.VepServicesInMemoryComponent
 class UserControllerForSpecificationComponent
   extends UserControllerProductionComponent
   with VepServicesInMemoryComponent {
-  override def overrideUserService: Boolean = false
+  override def overrideServices: Boolean = false
 }
 
 class UserControllerSpecification extends Specification {

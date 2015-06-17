@@ -17,4 +17,9 @@ object ErrorCodes {
   val unauthorized = 11
   val roleUnknown = 12
   val userUnknown = 13
+  val differentEmail = 14
+  val invalidCanonical = 15
+  val emptyField = 16
+  val negativeOrNull = 17
+  val usedCanonical = 18
 }

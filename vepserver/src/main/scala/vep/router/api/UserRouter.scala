@@ -3,7 +3,6 @@ package vep.router.api
 import spray.http.StatusCodes
 import spray.routing.HttpService
 import vep.controller.VepControllersComponent
-import vep.model.JsonImplicits
 import vep.model.common.{ErrorCodes, Roles}
 import vep.model.user.{RolesSeq, UserLogin, UserRegistration}
 import vep.router.VepRouter

@@ -1,30 +1,23 @@
 package vep.test.router.api
 
-import akka.actor.ActorRefFactory
 import org.specs2.mutable.Specification
 import spray.http._
 import spray.json.DefaultJsonProtocol
-import spray.testkit.Specs2RouteTest
 import vep.model.common.Roles
 import vep.model.user.{RolesSeq, UserLogin, UserRegistration}
-import vep.router.VepApiRouter
-import vep.test.controller.VepControllersInMemoryComponent
 
 case class InvalidUserRegistration(email: String, firstName: String)
+
 case class InvalidUserLogin(email: String)
 
-object InvalidEntitiesImplicits extends DefaultJsonProtocol {
+object InvalidUserEntitiesImplicits extends DefaultJsonProtocol {
   implicit val impInvalidUserRegistration = jsonFormat2(InvalidUserRegistration)
   implicit val impInvalidUserLogin = jsonFormat1(InvalidUserLogin)
 }
 
-class UserRouterSpecification extends Specification with Specs2RouteTest with VepApiRouter with VepControllersInMemoryComponent {
-  override def actorRefFactory: ActorRefFactory = system
-  lazy val validCredentialsUser = BasicHttpCredentials("abc@def.com", "abcd")
-  lazy val validCredentialsAdmin = BasicHttpCredentials("admin@admin.com", "admin")
-  lazy val invalidCredentials = BasicHttpCredentials("abc@def.com", "unknown")
+class UserRouterSpecification extends Specification with VepRouterSpecification {
 
-  import InvalidEntitiesImplicits._
+  import InvalidUserEntitiesImplicits._
   import spray.httpx.SprayJsonSupport._
   import vep.model.user.UserImplicits._
 
