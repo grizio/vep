@@ -2,9 +2,9 @@ package vep.test.controller
 
 import org.specs2.mutable.Specification
 import vep.controller.{PageControllerProductionComponent, UserControllerProductionComponent}
-import vep.model.cms.PageForm
+import vep.model.cms.{PageItem, PageForm}
 import vep.model.common._
-import vep.model.user.{UserLogin, UserRegistration}
+import vep.model.user.{UserForAdmin, User, UserLogin, UserRegistration}
 import vep.test.service.inmemory.VepServicesInMemoryComponent
 
 class PageControllerForSpecificationComponent
@@ -113,6 +113,15 @@ class PageControllerSpecification extends Specification {
             (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("canonical")) and
             (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("canonical").get must contain(ErrorCodes.usedCanonical))
         }
+      }
+    }
+
+    "list should" >> {
+      "returns a sequence of Page" >> {
+        val pcComp = new PageControllerForSpecificationComponent
+        val result = pcComp.pageController.list().entity
+
+        result must beAnInstanceOf[Seq[PageItem]]
       }
     }
   }

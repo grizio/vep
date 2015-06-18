@@ -68,5 +68,25 @@ class CmsRouterSpecification extends Specification with VepRouterSpecification {
         }
       }
     }
+
+    "list" >> {
+      val validUrl: String = "/cms/pages"
+      "intercept a request to /cms/pages as GET" >> {
+        Get(validUrl) ~> route ~> check {
+          handled === true
+        }
+      }
+      "refuse a request to /cms/pages as POST" >> {
+        Post(validUrl) ~> route ~> check {
+          handled === false
+        }
+      }
+      "return a code 200 with a list when success" >> {
+        Get(validUrl) ~> route ~> check {
+          (status === StatusCodes.OK) and
+            (responseAs[String] must startWith("["))
+        }
+      }
+    }
   }
 }

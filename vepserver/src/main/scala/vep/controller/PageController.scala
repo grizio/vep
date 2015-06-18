@@ -1,7 +1,7 @@
 package vep.controller
 
 import vep.exception.FieldErrorException
-import vep.model.cms.{PageForm, PageFormBody}
+import vep.model.cms.{PageItem, Page, PageForm, PageFormBody}
 import vep.model.common._
 import vep.service.VepServicesComponent
 
@@ -18,6 +18,11 @@ trait PageControllerComponent {
      * @return A list of errors if data are invalid or there is a database constraint error or a simple success
      */
     def create(pageForm: PageForm): Either[ResultErrors, ResultSuccess]
+
+    /**
+     * Returns the whole list of pages.
+     */
+    def list(): ResultSuccessEntity[Seq[PageItem]]
   }
 }
 
@@ -39,6 +44,9 @@ trait PageControllerProductionComponent extends PageControllerComponent {
         Left(pageFormCanonical.toResult.asInstanceOf[ResultErrors])
       }
     }
-  }
 
+    override def list(): ResultSuccessEntity[Seq[PageItem]] = {
+      ResultSuccessEntity(pageService.findAll())
+    }
+  }
 }

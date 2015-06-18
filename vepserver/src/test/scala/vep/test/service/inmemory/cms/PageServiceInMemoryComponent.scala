@@ -1,7 +1,7 @@
 package vep.test.service.inmemory.cms
 
 import vep.exception.FieldErrorException
-import vep.model.cms.{Page, PageForm}
+import vep.model.cms.{PageItem, Page, PageForm}
 import vep.model.common.ErrorCodes
 import vep.service.cms.PageServiceComponent
 import vep.test.service.inmemory.VepServicesInMemoryComponent
@@ -26,6 +26,8 @@ trait PageServiceInMemoryComponent extends PageServiceComponent {
         pages = pages.+:(Page(pages.maxBy(p => p.id).id, pageForm.canonical, pageForm.menu, pageForm.title, pageForm.content))
       }
     }
+
+    override def findAll(): Seq[PageItem] = pages map { p => PageItem(p.canonical, p.menu, p.title) }
   }
 
 }

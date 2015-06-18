@@ -3,7 +3,7 @@ package vep.router.api
 import spray.http.StatusCodes
 import spray.routing.HttpService
 import vep.controller.VepControllersComponent
-import vep.model.cms.{PageForm, PageFormBody}
+import vep.model.cms.{PageItemSeq, PageForm, PageFormBody}
 import vep.model.common.Roles
 import vep.router.VepRouter
 
@@ -36,6 +36,10 @@ trait CmsRouter extends HttpService {
             }
           }
         }
+      }
+    } ~ path("pages") {
+      get { ctx =>
+        ctx.complete(StatusCodes.OK, PageItemSeq(pageController.list().entity))
       }
     }
   }

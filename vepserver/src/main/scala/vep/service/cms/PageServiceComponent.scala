@@ -6,7 +6,7 @@ import spray.http.DateTime
 import spray.routing.authentication.UserPass
 import vep.AnormClient
 import vep.exception.FieldErrorException
-import vep.model.cms.PageForm
+import vep.model.cms.{PageItem, Page, PageForm}
 import vep.model.common.ErrorCodes
 import vep.model.user.{UserForAdmin, User, UserLogin, UserRegistration}
 import vep.service.AnormImplicits
@@ -24,6 +24,11 @@ trait PageServiceComponent {
      * @param pageForm: PageForm The user to insert
      */
     def create(pageForm: PageForm): Unit
+
+    /**
+     * Returns the whole list of pages
+     */
+    def findAll(): Seq[PageItem]
   }
 
 }
@@ -33,29 +38,22 @@ trait PageServiceProductionComponent extends PageServiceComponent {
   override lazy val pageService = new PageServiceProduction
 
   class PageServiceProduction extends PageService with AnormImplicits {
-    lazy val userParser =
-      int("uid") ~
-        str("email") ~
-        str("password") ~
-        str("salt") ~
-        str("firstName") ~
-        str("lastName") ~
-        get[Option[String]]("city") ~
-        get[Option[String]]("keyLogin") ~
-        get[Option[DateTime]]("expiration") ~
-        get[String]("roles") map {
-        case uid ~ email ~ password ~ salt ~ firsName ~ lastName ~ city ~ keyLogin ~ expiration ~ roles =>
-          User(uid, email, password, salt, firsName, lastName, city, keyLogin, expiration, roles.split(","))
+    lazy val pageParser =
+      int("id") ~
+        str("canonical") ~
+        get[Option[Int]]("menu") ~
+        str("title") ~
+        str("content") map {
+        case id ~ canonical ~ menu ~ title ~ content =>
+          Page(id, canonical, menu, title, content)
       }
 
-    lazy val userForAdminParser =
-      int("uid") ~
-        str("email") ~
-        str("firstname") ~
-        str("lastname") ~
-        str("roles") map {
-        case uid ~ email ~ firstname ~ lastname ~ roles =>
-          UserForAdmin(uid, email, firstname, lastname, roles.split(","))
+    lazy val pageItemParser =
+        str("canonical") ~
+        get[Option[Int]]("menu") ~
+        str("title") map {
+        case canonical ~ menu ~ title =>
+          PageItem(canonical, menu, title)
       }
 
     override def create(pageForm: PageForm): Unit = DB.withTransaction { implicit c =>
@@ -76,6 +74,9 @@ trait PageServiceProductionComponent extends PageServiceComponent {
           .executeInsert()
       }
     }
-  }
 
+    override def findAll(): Seq[PageItem] = DB.withConnection { implicit c =>
+      SQL("SELECT canonical, menu, title FROM page p").as(pageItemParser *)
+    }
+  }
 }
