@@ -22,13 +22,19 @@ part 'valueChange.dart';
 class VepComponentCommonFieldsModule extends Module {
   VepComponentCommonFieldsModule() {
     bind(ActionRowComponent);
+
     bind(InputEmailComponent);
+    bind(InputEmailDecorator);
+
     bind(InputHtmlComponent);
     bind(InputHtmlDecorator);
+
     bind(InputIntegerComponent);
     bind(InputIntegerDecorator);
+
     bind(InputPasswordComponent);
     bind(InputPasswordDecorator);
+
     bind(InputTextComponent);
     bind(InputTextDecorator);
   }
