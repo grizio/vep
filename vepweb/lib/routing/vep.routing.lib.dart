@@ -2,20 +2,27 @@ library vep.routing;
 
 import 'package:angular/angular.dart';
 import 'package:vepweb/component/main/vep.component.main.lib.dart';
+import 'package:vepweb/service/cms/vep.service.cms.lib.dart';
 
+part 'cms.dart';
 part 'user.dart';
 
 @Injectable()
-class VepRouter extends UserRouter {
+class VepRouter extends UserRouter with CmsRouter {
   final App app;
+  final PageService pageService;
 
-  VepRouter(this.app);
+  VepRouter(this.app, this.pageService);
 
   call(Router router, RouteViewFactory views) {
     views.configure({
       'user': ngRoute(
           path: '/user',
           mount: userRoute),
+      'cms': ngRoute(
+        path: '/cms',
+        mount: cmsRoute
+      ),
       'login': ngRoute(
           path: '/login',
           view: '/public/views/user/login.html',

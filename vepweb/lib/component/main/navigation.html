@@ -15,6 +15,9 @@
                         <navigation-link code="user-manager" name="Gestion des utilisateurs" required-role="user-manager" has-children="true">
                             <navigation-link code="user-role-management" name="Gestion des rôles" url="/user/role/management" parent="user-manager"></navigation-link>
                         </navigation-link>
+                        <navigation-link code="page-manager" name="Gestion des pages" required-role="page-manager" has-children="true">
+                            <navigation-link code="cms-page-management" name="Gestion des pages" url="/cms/pages" parent="page-manager"></navigation-link>
+                        </navigation-link>
                     </ul>
                     <ul class="left">
                         <navigation-link code="home" name="Accueil" url="/"></navigation-link>

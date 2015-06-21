@@ -11,7 +11,7 @@ abstract class UserRouter {
     ),
     'user-list-role': ngRoute(
       path: '/role/management',
-      view: 'public/views/user/role-management.html',
+      view: '/public/views/user/role-management.html',
       preEnter: (_) => app.breadCrumb = new BreadCrumb().child('user-role-management', '/user/role/management', 'Gestion des rôles')
     )
   };

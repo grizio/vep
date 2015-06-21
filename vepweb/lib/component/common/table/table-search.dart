@@ -5,12 +5,6 @@ part of vep.component.common.table;
     templateUrl: '/packages/vepweb/component/common/table/table-search.html',
     useShadowDom: false)
 class TableSearchComponent implements ScopeAware {
-  @NgAttr('descriptor')
-  String descriptor;
-
-  @NgAttr('search')
-  String search;
-
   @NgOneWay('max-result')
   int maxResult;
 
@@ -60,14 +54,16 @@ class TableSearchComponent implements ScopeAware {
     List<Map<String, Object>> filtered;
     if (filterIn) {
       var columnsToCheck = tableDescriptor.columns.where((_) => filter.containsKey(_.code) && filter[_.code] != null);
-      var textColumns = columnsToCheck.where((_) => _.type == ColumnTypes.text);
+      var textColumns = columnsToCheck.where((_) => [ColumnTypes.text, ColumnTypes.link].contains(_.type));
       // We filter only when checkbox is checked, otherwise, we do not include the checkbox in filter.
       var checkboxColumns = columnsToCheck.where((_) => _.type == ColumnTypes.checkbox && filter[_.code] == true);
+      var numberColumns = columnsToCheck.where((_) => [ColumnTypes.integer].contains(_.type) && !(filter[_.code] as num).isNaN);
       filtered = [];
       int index = 0;
       for (Map<String, Object> row in data) {
         if (textColumns.every((_) => (row[_.code] as String).contains(filter[_.code])) &&
-            checkboxColumns.every((_) => row[_.code] == filter[_.code])) {
+            checkboxColumns.every((_) => row[_.code] == filter[_.code]) &&
+            numberColumns.every((_) => row[_.code].toString().contains(filter[_.code].toString()))) {
           row['_index'] = index;
           filtered.add(row);
         }
@@ -139,6 +135,10 @@ class ColumnDescriptor {
 
   bool get hasFilter => _hasFilter;
 
+  String _url;
+
+  String get url => _url;
+
   void enable() {
     _active = true;
   }
@@ -147,13 +147,26 @@ class ColumnDescriptor {
     _active = false;
   }
 
-  ColumnDescriptor(this._code, this._name, this._type, {bool active, bool hasFilter}) {
+  ColumnDescriptor(this._code, this._name, this._type, {bool active, bool hasFilter, String url}) {
     _active = active;
     _hasFilter = hasFilter;
+    _url = url;
+  }
+
+  String link(Map<String, Object> data) {
+    String result = url;
+    data.forEach((k ,v){
+      if (k != null && v != null) {
+        result = result.replaceAll("{" + k + "}", v.toString());
+      }
+    });
+    return result;
   }
 }
 
 abstract class ColumnTypes {
   static const String text = 'text';
   static const String checkbox = 'checkbox';
+  static const String link = 'link';
+  static const String integer = 'integer';
 }
