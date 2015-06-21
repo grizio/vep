@@ -14,7 +14,8 @@ class UserListRolesComponent extends TableSearchContext {
     new ColumnDescriptor('lastName', 'Nom', 'text', hasFilter: true),
     new ColumnDescriptor('email', 'Adresse e-mail', 'text', hasFilter: true),
     new ColumnDescriptor('role-user', 'Utilisateur', 'checkbox', active: true),
-    new ColumnDescriptor('role-user-manager', 'Gestion des utilisateur', 'checkbox', active: true)
+    new ColumnDescriptor('role-user-manager', 'Gestion des utilisateur', 'checkbox', active: true),
+    new ColumnDescriptor('role-page-manager', 'Gestion des pages', 'checkbox', active: true)
   ]));
 
   @override
