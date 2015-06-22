@@ -21,14 +21,27 @@ trait PageServiceComponent {
   trait PageService {
     /**
      * Inserts a page into database
-     * @param pageForm: PageForm The user to insert
+     * @param pageForm The page to insert
      */
     def create(pageForm: PageForm): Unit
+
+    /**
+     * Updates an existing page from database.
+     * @param pageForm The page to update
+     */
+    def update(pageForm: PageForm): Unit
 
     /**
      * Returns the whole list of pages
      */
     def findAll(): Seq[PageItem]
+
+    /**
+     * Checks if the given page canonical exists in database.
+     * @param canonical The canonical to check
+     * @return True if there is a page with given canonical, otherwise false.
+     */
+    def exists(canonical: String): Boolean
   }
 
 }
@@ -75,8 +88,24 @@ trait PageServiceProductionComponent extends PageServiceComponent {
       }
     }
 
+    override def update(pageForm: PageForm): Unit = DB.withTransaction { implicit c =>
+        SQL("UPDATE page SET menu = {menu}, title = {title}, content = {content} WHERE canonical = {canonical}")
+          .on("canonical" -> pageForm.canonical)
+          .on("menu" -> pageForm.menu)
+          .on("title" -> pageForm.title)
+          .on("content" -> pageForm.content)
+          .executeUpdate()
+    }
+
     override def findAll(): Seq[PageItem] = DB.withConnection { implicit c =>
       SQL("SELECT canonical, menu, title FROM page p").as(pageItemParser *)
+    }
+
+    override def exists(canonical: String): Boolean = DB.withConnection { implicit c =>
+      val n = SQL("SELECT COUNT(*) FROM page WHERE canonical = {canonical}")
+        .on("canonical" -> canonical)
+        .as(scalar[Int].single)
+      n == 0
     }
   }
 }

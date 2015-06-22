@@ -22,4 +22,5 @@ object ErrorCodes {
   val emptyField = 16
   val negativeOrNull = 17
   val usedCanonical = 18
+  val unknownCanonical = 19
 }

@@ -1,7 +1,7 @@
 package vep.controller
 
 import vep.exception.FieldErrorException
-import vep.model.cms.{PageItem, Page, PageForm, PageFormBody}
+import vep.model.cms.{PageForm, PageItem}
 import vep.model.common._
 import vep.service.VepServicesComponent
 
@@ -20,10 +20,18 @@ trait PageControllerComponent {
     def create(pageForm: PageForm): Either[ResultErrors, ResultSuccess]
 
     /**
+     * Updates un existing page from database.
+     * @param pageForm The page to update
+     * @return A list of errors if data are invalid or there is a database constraint error or a simple success.
+     */
+    def update(pageForm: PageForm): Either[ResultErrors, ResultSuccess]
+
+    /**
      * Returns the whole list of pages.
      */
     def list(): ResultSuccessEntity[Seq[PageItem]]
   }
+
 }
 
 trait PageControllerProductionComponent extends PageControllerComponent {
@@ -32,16 +40,35 @@ trait PageControllerProductionComponent extends PageControllerComponent {
   override val pageController: PageController = new PageControllerProduction
 
   class PageControllerProduction extends PageController {
-    override def create(pageFormCanonical: PageForm): Either[ResultErrors, ResultSuccess] = {
-      if (pageFormCanonical.verify) {
+    override def create(pageForm: PageForm): Either[ResultErrors, ResultSuccess] = {
+      if (pageForm.verify) {
         try {
-          pageService.create(pageFormCanonical)
+          pageService.create(pageForm)
           Right(ResultSuccess)
         } catch {
           case e: FieldErrorException => Left(e.toResultErrors)
         }
       } else {
-        Left(pageFormCanonical.toResult.asInstanceOf[ResultErrors])
+        Left(pageForm.toResult.asInstanceOf[ResultErrors])
+      }
+    }
+
+    override def update(pageForm: PageForm): Either[ResultErrors, ResultSuccess] = {
+      if (pageService.exists(pageForm.canonical)) {
+        if (pageForm.verify) {
+          try {
+            pageService.update(pageForm)
+            Right(ResultSuccess)
+          } catch {
+            case e: FieldErrorException => Left(e.toResultErrors)
+          }
+        } else {
+          Left(pageForm.toResult.asInstanceOf[ResultErrors])
+        }
+      } else {
+        Left(ResultErrors(Map(
+          "canonical" -> Seq(ErrorCodes.unknownCanonical)
+        )))
       }
     }
 
@@ -49,4 +76,5 @@ trait PageControllerProductionComponent extends PageControllerComponent {
       ResultSuccessEntity(pageService.findAll())
     }
   }
+
 }

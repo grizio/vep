@@ -116,6 +116,81 @@ class PageControllerSpecification extends Specification {
       }
     }
 
+    "update should" >> {
+      "update a valid existing entity" >> {
+        val pcComp = new PageControllerForSpecificationComponent
+        val pageForm = PageForm("my-first-page", Some(3), "My first page updated", "This page is updated")
+
+        val result = pcComp.pageController.update(pageForm)
+
+        result must beAnInstanceOf[Right[_, ResultSuccess]]
+      }
+
+      "refuse an entity which does not exist in database" >> {
+        val pcComp = new PageControllerForSpecificationComponent
+        val pageForm = PageForm("my-unknown-canonical", None, "", "")
+
+        val result = pcComp.pageController.update(pageForm)
+
+        result must beAnInstanceOf[Left[ResultErrors, _]]
+      }
+
+      "refuse an entity with invalid fields" >> {
+        val pcComp = new PageControllerForSpecificationComponent
+        val pageForm = PageForm("my-first-page", None, "", "")
+
+        val result = pcComp.pageController.update(pageForm)
+
+        result must beAnInstanceOf[Left[ResultErrors, _]]
+      }
+
+      "indicates an error about a field value" >> {
+        "when empty title" >> {
+          val pcComp = new PageControllerForSpecificationComponent
+          val pageForm = PageForm("my-first-page", None, "", "")
+
+          val result = pcComp.pageController.update(pageForm)
+
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("title")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("title").get must contain(ErrorCodes.emptyField))
+        }
+
+        "when empty content" >> {
+          val pcComp = new PageControllerForSpecificationComponent
+          val pageForm = PageForm("my-first-page", None, "", "")
+
+          val result = pcComp.pageController.update(pageForm)
+
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("content")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("content").get must contain(ErrorCodes.emptyField))
+        }
+
+        "when negative menu" >> {
+          val pcComp = new PageControllerForSpecificationComponent
+          val pageForm = PageForm("my-first-page", Some(-1), "", "")
+
+          val result = pcComp.pageController.update(pageForm)
+
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("menu")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("menu").get must contain(ErrorCodes.negativeOrNull))
+        }
+
+        "when menu as 0" >> {
+          val pcComp = new PageControllerForSpecificationComponent
+          val pageForm = PageForm("my-first-page", Some(0), "", "")
+
+          val result = pcComp.pageController.update(pageForm)
+
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("menu")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("menu").get must contain(ErrorCodes.negativeOrNull))
+        }
+      }
+    }
+
     "list should" >> {
       "returns a sequence of Page" >> {
         val pcComp = new PageControllerForSpecificationComponent

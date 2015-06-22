@@ -23,11 +23,25 @@ trait PageServiceInMemoryComponent extends PageServiceComponent {
       if (pages.exists(p => p.canonical == pageForm.canonical)) {
         throw new FieldErrorException("canonical", ErrorCodes.usedCanonical, "The canonical is already used.")
       } else {
-        pages = pages.+:(Page(pages.maxBy(p => p.id).id, pageForm.canonical, pageForm.menu, pageForm.title, pageForm.content))
+        pages = pages.+:(Page(pages.maxBy(p => p.id).id + 1, pageForm.canonical, pageForm.menu, pageForm.title, pageForm.content))
+      }
+    }
+
+    override def update(pageForm: PageForm): Unit = {
+      pages = pages map { p =>
+        if (p.canonical == pageForm.canonical) {
+          p.copy(menu = p.menu, content = p.content, title = p.title)
+        } else {
+          p
+        }
       }
     }
 
     override def findAll(): Seq[PageItem] = pages map { p => PageItem(p.canonical, p.menu, p.title) }
+
+    override def exists(canonical: String): Boolean = {
+      pages exists { p => p.canonical == canonical }
+    }
   }
 
 }
