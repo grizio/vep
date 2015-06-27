@@ -16,10 +16,12 @@ import 'package:vepweb/component/main/vep.component.main.lib.dart';
 
 part 'cms-form-page.dart';
 part 'cms-page-list.dart';
+part 'cms-page-read.dart';
 
 class VepComponentCmsPageModule extends Module {
   VepComponentCmsPageModule() {
     bind(CmsFormPageComponent);
     bind(CmsPageListComponent);
+    bind(CmsPageReadComponent);
   }
 }

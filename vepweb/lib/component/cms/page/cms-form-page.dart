@@ -11,6 +11,7 @@ class CmsFormPageComponent extends FormComponent<PageForm> {
   final PageService pageService;
   final Router router;
   final App app;
+  final NavigationComponent navigationComponent;
 
   final List<String> fields = ['title', 'canonical'];
 
@@ -20,7 +21,7 @@ class CmsFormPageComponent extends FormComponent<PageForm> {
   bool loaded = true;
   String state;
 
-  CmsFormPageComponent(this.pageService, this.router, this.app, RouteProvider routeProvider) {
+  CmsFormPageComponent(this.pageService, this.router, this.app, this.navigationComponent, RouteProvider routeProvider) {
     if (routeProvider.route.name == 'page-update') {
       state = stateUpdate;
       _load(routeProvider);
@@ -88,5 +89,6 @@ class CmsFormPageComponent extends FormComponent<PageForm> {
   @override
   void onDone(HttpResult httpResult) {
     router.gotoUrl('/cms/pages');
+    navigationComponent.invalidatePageList();
   }
 }

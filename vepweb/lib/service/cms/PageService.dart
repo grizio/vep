@@ -42,6 +42,18 @@ class PageService {
     });
   }
 
+  Future<List<Page>> findForMenu() {
+    return _prepare().then((_){
+      if (_) {
+        var pages = _pages.where((p) => p.menu != null).toList();
+        pages.sort((Page p1, Page p2) => p2.menu - p1.menu);
+        return pages;
+      } else {
+        return [];
+      }
+    });
+  }
+
   Future _loading;
 
   /// Checks if the list of pages was previously loaded.

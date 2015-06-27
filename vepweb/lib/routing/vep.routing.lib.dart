@@ -20,8 +20,8 @@ class VepRouter extends UserRouter with CmsRouter {
           path: '/user',
           mount: userRoute),
       'cms': ngRoute(
-        path: '/cms',
-        mount: cmsRoute
+          path: '/cms',
+          mount: cmsRoute
       ),
       'login': ngRoute(
           path: '/login',
@@ -40,6 +40,11 @@ class VepRouter extends UserRouter with CmsRouter {
           view: '/public/views/home.html',
           defaultRoute: true,
           preEnter: (_) => app.breadCrumb = new BreadCrumb().child('home', '/', 'Accueil')
+      ),
+      'page-read': ngRoute(
+          path: '/page/:canonical',
+          view: '/public/views/cms/page/read.html',
+          preEnter: (_) => app.breadCrumb = new BreadCrumb().child('cms-page-read', '/page/' + _.parameters['canonical'], '')
       )
     });
   }

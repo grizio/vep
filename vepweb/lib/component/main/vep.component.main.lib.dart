@@ -4,7 +4,9 @@ import 'dart:html';
 import 'package:angular/angular.dart';
 import 'package:vepweb/component/vep.component.lib.dart';
 import 'package:vepweb/http/vep.http.lib.dart';
+import 'package:vepweb/service/cms/vep.service.cms.lib.dart';
 import 'dart:async';
+import 'package:vepweb/model/vep.model.lib.dart';
 
 part 'App.dart';
 part 'breadcrumb.dart';
