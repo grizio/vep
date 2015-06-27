@@ -34,7 +34,7 @@ trait PageServiceComponent {
     /**
      * Returns the whole list of pages
      */
-    def findAll(): Seq[PageItem]
+    def findAll(): Seq[Page]
 
     /**
      * Checks if the given page canonical exists in database.
@@ -97,15 +97,15 @@ trait PageServiceProductionComponent extends PageServiceComponent {
           .executeUpdate()
     }
 
-    override def findAll(): Seq[PageItem] = DB.withConnection { implicit c =>
-      SQL("SELECT canonical, menu, title FROM page p").as(pageItemParser *)
+    override def findAll(): Seq[Page] = DB.withConnection { implicit c =>
+      SQL("SELECT id, canonical, menu, title, content FROM page p").as(pageParser *)
     }
 
     override def exists(canonical: String): Boolean = DB.withConnection { implicit c =>
       val n = SQL("SELECT COUNT(*) FROM page WHERE canonical = {canonical}")
         .on("canonical" -> canonical)
         .as(scalar[Int].single)
-      n == 0
+      n == 1
     }
   }
 }

@@ -37,7 +37,7 @@ trait PageServiceInMemoryComponent extends PageServiceComponent {
       }
     }
 
-    override def findAll(): Seq[PageItem] = pages map { p => PageItem(p.canonical, p.menu, p.title) }
+    override def findAll(): Seq[Page] = pages map { p => p.copy() }
 
     override def exists(canonical: String): Boolean = {
       pages exists { p => p.canonical == canonical }

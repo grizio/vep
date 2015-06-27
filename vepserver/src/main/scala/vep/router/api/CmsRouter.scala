@@ -3,7 +3,7 @@ package vep.router.api
 import spray.http.StatusCodes
 import spray.routing.HttpService
 import vep.controller.VepControllersComponent
-import vep.model.cms.{PageForm, PageFormBody, PageItemSeq}
+import vep.model.cms.{PageSeq, PageForm, PageFormBody, PageItemSeq}
 import vep.model.common.Roles
 import vep.router.VepRouter
 
@@ -41,13 +41,12 @@ trait CmsRouter extends HttpService {
               authenticate(vepBasicUserAuthenticator) { implicit user =>
                 authorize(user.roles.contains(Roles.pageManager)) { ctx =>
                   pageController.update(PageForm.fromPageFormBody(pageCanonical, pageFormBody)) match {
-                    case Left(error) => {
+                    case Left(error) =>
                       if (error.errors.contains("canonical")) {
                         ctx.complete(StatusCodes.NotFound, error)
                       } else {
                         ctx.complete(StatusCodes.BadRequest, error)
                       }
-                    }
                     case Right(success) => ctx.complete(StatusCodes.OK, success)
                   }
                 }
@@ -58,7 +57,7 @@ trait CmsRouter extends HttpService {
       }
     } ~ path("pages") {
       get { ctx =>
-        ctx.complete(StatusCodes.OK, PageItemSeq(pageController.list().entity))
+        ctx.complete(StatusCodes.OK, PageSeq(pageController.list().entity))
       }
     }
   }

@@ -1,7 +1,7 @@
 package vep.controller
 
 import vep.exception.FieldErrorException
-import vep.model.cms.{PageForm, PageItem}
+import vep.model.cms.{Page, PageForm, PageItem}
 import vep.model.common._
 import vep.service.VepServicesComponent
 
@@ -29,7 +29,7 @@ trait PageControllerComponent {
     /**
      * Returns the whole list of pages.
      */
-    def list(): ResultSuccessEntity[Seq[PageItem]]
+    def list(): ResultSuccessEntity[Seq[Page]]
   }
 
 }
@@ -72,7 +72,7 @@ trait PageControllerProductionComponent extends PageControllerComponent {
       }
     }
 
-    override def list(): ResultSuccessEntity[Seq[PageItem]] = {
+    override def list(): ResultSuccessEntity[Seq[Page]] = {
       ResultSuccessEntity(pageService.findAll())
     }
   }
