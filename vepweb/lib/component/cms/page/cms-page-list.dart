@@ -11,7 +11,7 @@ class CmsPageListComponent extends TableSearchContext {
   bool processing;
 
   Lazy<TableDescriptor> _tableDescriptor = lazy(() => new TableDescriptor([
-    new ColumnDescriptor('canonical', 'URL', 'link', url: '/cms/page/{canonical}', hasFilter: true),
+    new ColumnDescriptor('canonical', 'URL', 'link', url: '/cms/page/update/{canonical}', hasFilter: true),
     new ColumnDescriptor('title', 'Titre', 'text', hasFilter: true),
     new ColumnDescriptor('menu', 'Ordre dans le menu', 'integer', hasFilter: true),
   ]));
@@ -23,28 +23,13 @@ class CmsPageListComponent extends TableSearchContext {
 
   @override
   Future<List<Map<String, Object>>> search(Map<String, Object> filters) {
-    return pageService.findAll().then((_){
-      if (_.isSuccess) {
-        var httpResult = _ as HttpResultSuccessEntity;
-        var pageList = utils.objectToListOfMap(httpResult.entity);
-        return pageList;
-      } else {
-        return [];
-      }
+    return pageService.findAll().then((pageList){
+      return utils.objectToListOfMap(pageList);
     });
   }
 
   @override
   void onChange(Map<String, Object> data) {
-    processing = true;
-    var pageForm = new PageForm();
-    pageForm.canonical = data['canonical'];
-    pageForm.content = data['content'];
-    pageForm.menu = data['menu'];
-    pageForm.title = data['title'];
-    pageService.create(pageForm).then((_){
-      processing = false;
-      // TODO: goto list
-    });
+    // Do nothing
   }
 }

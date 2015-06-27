@@ -13,6 +13,7 @@ class User {
 
 class UserRegistration {
   String email;
+  String email2;
   String password;
   @jsonIgnore
   String password2;

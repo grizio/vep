@@ -9,25 +9,24 @@ class FormUserLoginComponent extends FormComponent<UserLogin> {
   final Router router;
   final App app;
 
+  final List<String> fields = [];
+
   @NgOneWay('redirect-back')
   bool redirectBack = true;
 
-  FormUserLoginComponent(this.userService, this.router, this.app);
+  FormUserLoginComponent(this.userService, this.router, this.app) {
+    formData = new UserLogin();
+  }
 
   @override
-  UserLogin get formData => user;
-
-  UserLogin user = new UserLogin();
-
-  @override
-  Future<HttpResult> onSubmit() => userService.login(user);
+  Future<HttpResult> onSubmit(UserLogin data) => userService.login(data);
 
   @override
   void onDone(HttpResult httpResult) {
     var res = httpResult as HttpResultSuccess;
-    userService.getRoles(user.email, res.body).then((_){
+    userService.getRoles(formData.email, res.body).then((_){
       if (_.isSuccess) {
-        app.login(user.email, res.body, (_ as HttpResultSuccessEntity).entity);
+        app.login(formData.email, res.body, (_ as HttpResultSuccessEntity).entity);
       } // else Should never happen
 
       // We return on the previous page

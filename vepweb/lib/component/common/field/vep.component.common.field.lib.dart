@@ -1,12 +1,9 @@
 library vep.component.common.field;
 
 import 'dart:html';
-import 'dart:mirrors';
-import 'dart:async';
 import 'dart:js';
 import 'package:angular/angular.dart';
 import 'package:klang/klang.dart';
-import 'package:vepweb/http/vep.http.lib.dart';
 import 'package:vepweb/component/common/form/vep.component.form.lib.dart';
 
 part 'action-row.dart';

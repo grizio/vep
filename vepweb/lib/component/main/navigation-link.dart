@@ -48,8 +48,11 @@ class NavigationLinkComponent implements ScopeAware {
 
   NavigationLinkComponent(this.app) {
     app.onBreadCrumbChange.listen((BreadCrumb breadCrumb){
-      active = breadCrumb.path.isEmpty && code == 'home' ||
-               breadCrumb.path.isNotEmpty && breadCrumb.path.last.code == code;
+      if (breadCrumb.path.isEmpty) {
+        active = code == 'home';
+      } else {
+        active = breadCrumb.path.any((_) => _.code == code);
+      }
     });
   }
 

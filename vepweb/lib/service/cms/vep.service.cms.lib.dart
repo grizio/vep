@@ -7,6 +7,8 @@ import 'dart:async';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'package:jsonx/jsonx.dart' as jsonx;
+import 'dart:html';
+import 'package:logging/logging.dart';
 
 part 'PageService.dart';
 

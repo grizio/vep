@@ -5,34 +5,52 @@ part of vep.component.cms.page;
     templateUrl: '/packages/vepweb/component/cms/page/cms-form-page.html',
     useShadowDom: false)
 class CmsFormPageComponent extends FormComponent<PageForm> {
+  static const stateUpdate = 'update';
+  static const stateCreate = 'create';
+
   final PageService pageService;
   final Router router;
+  final App app;
 
-  CmsFormPageComponent(this.pageService, this.router);
+  final List<String> fields = ['title', 'canonical'];
 
-  @override
-  PageForm get formData => page;
+  InputTextComponent get title => getField('title');
+  InputTextComponent get canonical => getField('canonical');
 
-  PageForm page = new PageForm();
+  bool loaded = true;
+  String state;
 
-  String _oldTitle;
-
-  InputTextComponent _title;
-
-  InputTextComponent get title => _title;
-
-  set title(InputTextComponent title) {
-    _title = title;
-    title.onValueChange.listen((_) {
-      var oldCanonical = _canonicalize(_oldTitle);
-      if (stringUtilities.isEmpty(oldCanonical) && stringUtilities.isEmpty(canonical.value) || stringUtilities.equals(oldCanonical, canonical.value)) {
-        canonical.value = _canonicalize(title.value);
-      }
-      _oldTitle = title.value;
-    });
+  CmsFormPageComponent(this.pageService, this.router, this.app, RouteProvider routeProvider) {
+    if (routeProvider.route.name == 'page-update') {
+      state = stateUpdate;
+      _load(routeProvider);
+    } else {
+      state = stateCreate;
+      formData = new PageForm();
+    }
   }
 
-  InputTextComponent canonical;
+  String _oldCanonical;
+
+  @override
+  void initialize() {
+    title.onValueChange.listen((_) {
+      if (stringUtilities.isEmpty(_oldCanonical) && stringUtilities.isEmpty(canonical.value) || stringUtilities.equals(_oldCanonical, canonical.value)) {
+        canonical.value = _canonicalize(title.value);
+      }
+      _oldCanonical = _canonicalize(title.value);
+    });
+    canonical.enableWhen = () => state == stateCreate;
+  }
+
+  void _load(RouteProvider routeProvider) {
+    loaded = false;
+    pageService.find(routeProvider.parameters['canonical']).then((_){
+      formData = _;
+      app.breadCrumb.path.last.name = 'Mise à jour de la page ${formData.title}';
+      loaded = true;
+    });
+  }
 
   // TODO: optimize and externalize to utilities.
   String _canonicalize(String str) {
@@ -59,8 +77,12 @@ class CmsFormPageComponent extends FormComponent<PageForm> {
   }
 
   @override
-  Future<HttpResult> onSubmit() {
-    return pageService.create(page);
+  Future<HttpResult> onSubmit(PageForm data) {
+    if (state == stateCreate) {
+      return pageService.create(data);
+    } else {
+      return pageService.update(data);
+    }
   }
 
   @override

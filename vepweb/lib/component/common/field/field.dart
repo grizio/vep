@@ -1,6 +1,7 @@
 part of vep.component.common.field;
 
 typedef bool Constraint<A>(A element);
+typedef bool EnableWhen();
 
 abstract class FieldComponent<A> implements ScopeAware, AttachAware {
   Scope scope;
@@ -26,17 +27,29 @@ abstract class FieldComponent<A> implements ScopeAware, AttachAware {
   @NgTwoWay('errors')
   List<String> errors;
 
+  bool get enabled => enableWhen();
+
+  EnableWhen enableWhen = () => true;
+
   A _value;
 
   @NgTwoWay('value')
   A get value => _value;
 
   set value(A newValue) {
+    if (enabled) {
+      forceSetValue(newValue);
+    }
+  }
+
+  void forceSetValue(A newValue) {
     var oldValue = _value;
-    _value = newValue;
-    fieldContainer.forEach((FieldContainer fc) => fc.setValue(name, newValue));
-    verify();
-    onValueChange.process(new ValueChangeEvent(oldValue, newValue, isValid));
+    if (oldValue != newValue) {
+      _value = newValue;
+      fieldContainer.forEach((FieldContainer fc) => fc.updateModelFromField(name));
+      verify();
+      onValueChange.process(new ValueChangeEvent(oldValue, newValue, isValid));
+    }
   }
 
   bool get isValid => errors.isEmpty;
@@ -69,11 +82,15 @@ abstract class FieldComponent<A> implements ScopeAware, AttachAware {
 
 abstract class FieldDecorator implements ScopeAware {
   final Element element;
+  Scope _scope;
 
   FieldDecorator(this.element);
 
+  Scope get scope => _scope;
+
   @override
   set scope(Scope scope) {
+    _scope = scope;
     includeAttributes(scope);
   }
 
@@ -82,6 +99,9 @@ abstract class FieldDecorator implements ScopeAware {
       var ctx = scope.context as FieldComponent;
       addAttribute('name', ctx.name);
       addAttribute('id', ctx.id);
+      if (!ctx.enabled) {
+        element.attributes['disabled'] = 'disabled';
+      }
       if (ctx.required != null && ctx.required) {
         element.attributes['required'] = 'required';
       }

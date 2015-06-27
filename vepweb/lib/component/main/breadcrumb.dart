@@ -29,9 +29,10 @@ class BreadCrumb {
 }
 
 class BreadCrumbData {
-  final String code;
-  final String url;
-  final String name;
+  // Not final because controllers could change these values.
+  String code;
+  String url;
+  String name;
 
-  const BreadCrumbData(this.code, this.url, this.name);
+  BreadCrumbData(this.code, this.url, this.name);
 }

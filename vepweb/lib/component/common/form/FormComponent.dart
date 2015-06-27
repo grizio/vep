@@ -11,7 +11,8 @@ abstract class FormComponent<A> extends FieldContainer<A> {
     e.preventDefault();
     if (isValid) {
       processing = true;
-      onSubmit().then((result) {
+      var data = (formData as FormDataProxy).innerObject;
+      onSubmit(data).then((result) {
         if (result.isSuccess) {
           done = true;
           onDone(result);
@@ -27,7 +28,7 @@ abstract class FormComponent<A> extends FieldContainer<A> {
     }
   }
 
-  Future<HttpResult> onSubmit();
+  Future<HttpResult> onSubmit(A data);
 
   void onDone(HttpResult httpResult){}
 }

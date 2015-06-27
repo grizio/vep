@@ -1,6 +1,10 @@
 <form method="post" action="/cms/pages/create" id="form-page" ng-submit="submit($event)">
-    <fieldset>
-        <legend>Création d'une page</legend>
+    <p ng-if="!loaded">
+        Chargement en cours, veuillez patienter…
+    </p>
+    <fieldset ng-if="loaded">
+        <legend ng-if="state == 'create'">Création d'une page</legend>
+        <legend ng-if="state == 'update'">Modification de la page {{ formData.title }}</legend>
 
         <input-text name="title" with-id="form-page-title" label="Titre"
                      placeholder="Titre de la page (et nom du menu si fourni)" required="true"></input-text>
@@ -12,8 +16,9 @@
                     placeholder="Contenu de votre page, sous forme HTML"></input-html>
 
         <action-row>
-            <input type="submit" value="Créer" class="button success"/>
-            <a href="/" class="button alert">Revenir à la liste des pages</a>
+            <input type="submit" value="Créer" class="button success" ng-if="state == 'create'" />
+            <input type="submit" value="Modifier" class="button success" ng-if="state == 'update'" />
+            <a href="/cms/pages" class="button alert">Revenir à la liste des pages</a>
         </action-row>
     </fieldset>
 </form>
