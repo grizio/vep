@@ -1,7 +1,7 @@
 part of vep.component.common.field;
 
 abstract class InputPatternComponent {
-  @NgTwoWay('pattern')
+  @NgAttr('pattern')
   String pattern;
 }
 
