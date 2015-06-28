@@ -1,0 +1,1 @@
+INSERT INTO page (id, canonical, menu, title, content) VALUES (1, 'homepage', null, 'Bienvenue sur le site de Voir & Entendre', 'Nous vous retrouverons dès septembre pour une nouvelle saison.');

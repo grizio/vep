@@ -1,4 +1,4 @@
-CREATE TABLE vep.page
+CREATE TABLE page
 (
   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   canonical VARCHAR(255) NOT NULL,
@@ -6,4 +6,4 @@ CREATE TABLE vep.page
   title VARCHAR(255) NOT NULL,
   content TEXT NOT NULL
 );
-ALTER TABLE vep.page ADD CONSTRAINT unique_canonical UNIQUE (canonical);
+ALTER TABLE page ADD CONSTRAINT unique_canonical UNIQUE (canonical);
