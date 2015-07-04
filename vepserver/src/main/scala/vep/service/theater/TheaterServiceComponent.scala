@@ -5,7 +5,7 @@ import anorm._
 import vep.AnormClient
 import vep.exception.FieldErrorException
 import vep.model.common.ErrorCodes
-import vep.model.theater.TheaterForm
+import vep.model.theater.{Theater, TheaterForm}
 import vep.service.AnormImplicits
 import vep.utils.DB
 
@@ -34,6 +34,11 @@ trait TheaterServiceComponent {
      * @return True if there is a theater with given canonical, otherwise false
      */
     def exists(canonical: String): Boolean
+
+    /**
+     * Returns the list of all theaters
+     */
+    def findAll(): Seq[Theater]
   }
 
 }
@@ -43,6 +48,19 @@ trait TheaterServiceProductionComponent extends TheaterServiceComponent {
   override lazy val theaterService = new TheaterServiceProduction
 
   class TheaterServiceProduction extends TheaterService with AnormImplicits {
+    lazy val theaterParser =
+      int("id") ~
+        str("canonical") ~
+        str("name") ~
+        str("address") ~
+        get[Option[String]]("content") ~
+        get[Boolean]("fixed") ~
+        get[Option[String]]("plan") ~
+        get[Option[Int]]("maxSeats") map {
+        case id ~ canonical ~ name ~ address ~ content ~ fixed ~ plan ~ maxSeats =>
+          Theater(id, canonical, name, address, content, fixed, plan, maxSeats)
+      }
+
     override def create(theaterForm: TheaterForm): Unit = DB.withTransaction { implicit c =>
       // The use of SELECT FOR UPDATE provides a way to block other transactions
       // and to not throw any exception for because of canonical duplication.
@@ -91,6 +109,13 @@ trait TheaterServiceProductionComponent extends TheaterServiceComponent {
         .on("canonical" -> canonical)
         .as(scalar[Long].single)
       n == 1
+    }
+
+    /**
+     * Returns the list of all theaters
+     */
+    override def findAll(): Seq[Theater] = DB.withConnection { implicit c =>
+      SQL("SELECT id, canonical, name, address, content, fixed, plan, maxSeats FROM theater").as(theaterParser *)
     }
   }
 

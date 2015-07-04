@@ -132,5 +132,25 @@ class TheaterRouterSpecification extends Specification with VepRouterSpecificati
         }
       }
     }
+
+    "list" >> {
+      val validUrl: String = "/theaters"
+      "intercept a request to /theaters as GET" >> {
+        Get(validUrl) ~> route ~> check {
+          handled === true
+        }
+      }
+      "refuse a request to /theaters as POST" >> {
+        Post(validUrl) ~> route ~> check {
+          handled === false
+        }
+      }
+      "return a code 200 with a list when success" >> {
+        Get(validUrl) ~> route ~> check {
+          (status === StatusCodes.OK) and
+            (responseAs[String] must startWith("["))
+        }
+      }
+    }
   }
 }

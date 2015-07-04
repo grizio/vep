@@ -2,7 +2,7 @@ package vep.controller
 
 import vep.exception.FieldErrorException
 import vep.model.common._
-import vep.model.theater.TheaterForm
+import vep.model.theater.{Theater, TheaterForm}
 import vep.service.VepServicesComponent
 
 /**
@@ -25,6 +25,11 @@ trait TheaterControllerComponent {
      * @return A list of errors if data are invalid or there is a database constraint error or a simple success
      */
     def update(theaterForm: TheaterForm): Either[ResultErrors, ResultSuccess]
+
+    /**
+     * Returns the whole list of theaters.
+     */
+    def list(): ResultSuccessEntity[Seq[Theater]]
   }
 
 }
@@ -65,6 +70,10 @@ trait TheaterControllerProductionComponent extends TheaterControllerComponent {
           "canonical" -> Seq(ErrorCodes.unknownCanonical)
         )))
       }
+    }
+
+    override def list(): ResultSuccessEntity[Seq[Theater]] = {
+      ResultSuccessEntity(theaterService.findAll())
     }
   }
 

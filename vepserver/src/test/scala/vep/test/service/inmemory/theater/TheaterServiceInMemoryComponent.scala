@@ -53,6 +53,8 @@ trait TheaterServiceInMemoryComponent extends TheaterServiceComponent {
     }
 
     override def exists(canonical: String): Boolean = theaters exists { t =>  t.canonical == canonical }
+
+    override def findAll(): Seq[Theater] = theaters map { t => t.copy() }
   }
 
 }

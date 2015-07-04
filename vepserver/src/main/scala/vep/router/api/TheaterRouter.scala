@@ -4,7 +4,7 @@ import spray.http.StatusCodes
 import spray.routing.HttpService
 import vep.controller.VepControllersComponent
 import vep.model.common.Roles
-import vep.model.theater.{TheaterForm, TheaterFormBody}
+import vep.model.theater.{TheaterSeq, TheaterForm, TheaterFormBody}
 import vep.router.VepRouter
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -50,6 +50,10 @@ trait TheaterRouter extends HttpService {
           }
         }
       }
+    }
+  } ~ path("theaters") {
+    get {
+      ctx => ctx.complete(StatusCodes.OK, TheaterSeq(theaterController.list().entity))
     }
   }
 }
