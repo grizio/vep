@@ -75,5 +75,62 @@ class TheaterRouterSpecification extends Specification with VepRouterSpecificati
         }
       }
     }
+
+    "update" >> {
+      val validUrl = "/theater/my-theater"
+      val validEntity = TheaterFormBody(
+        name = "My existing theater",
+        address = "Somewhere in the middle",
+        content = Some("A sample content"),
+        fixed = false,
+        plan = None,
+        maxSeats = Some(10)
+      )
+      val validEntityWithErrors = validEntity.copy(name = "")
+      val invalidEntity = InvalidTheaterFormBody("")
+
+      "intercept a request to /theater/<canonical> as PUT with valid entity" >> {
+        Put(validUrl, validEntity) ~>
+          addCredentials(validCredentialsAdmin) ~>
+          route ~> check {
+          handled === true
+        }
+      }
+      "refuse a request to /theater/<canonical> as PUT when invalid entity" >> {
+        Put(validUrl, invalidEntity) ~>
+          addCredentials(validCredentialsAdmin) ~>
+          route ~> check {
+          handled === false
+        }
+      }
+      "returns a code 401 when not authenticated" >> {
+        Put(validUrl, validEntity) ~> route ~> check {
+          status === StatusCodes.Unauthorized
+        }
+      }
+      "returns a code 403 when authenticated but not authorized" >> {
+        Put(validUrl, validEntity) ~>
+          addCredentials(validCredentialsUser) ~>
+          route ~> check {
+          status === StatusCodes.Forbidden
+        }
+      }
+      "returns a code 400 with map when error(s)" >> {
+        Put(validUrl, validEntityWithErrors) ~>
+          addCredentials(validCredentialsAdmin) ~>
+          route ~> check {
+          (status === StatusCodes.BadRequest) and
+            (responseAs[String] must startWith("{"))
+        }
+      }
+      "return a code 200 with nothing when success" >> {
+        Put(validUrl, validEntity) ~>
+          addCredentials(validCredentialsAdmin) ~>
+          route ~> check {
+          (status === StatusCodes.OK) and
+            (responseAs[String] === "null")
+        }
+      }
+    }
   }
 }

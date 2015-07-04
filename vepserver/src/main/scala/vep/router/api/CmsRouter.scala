@@ -26,7 +26,7 @@ trait CmsRouter extends HttpService {
           entity(as[PageFormBody]) { pageFormBody =>
             sealRoute {
               authenticate(vepBasicUserAuthenticator) { implicit user =>
-                authorize(user.roles.contains(Roles.pageManager)) { ctx =>
+                authorize(user.roles.contains(Roles.theaterManager)) { ctx =>
                   pageController.create(PageForm.fromPageFormBody(pageCanonical, pageFormBody)) match {
                     case Left(error) => ctx.complete(StatusCodes.BadRequest, error)
                     case Right(success) => ctx.complete(StatusCodes.OK, success)
@@ -39,7 +39,7 @@ trait CmsRouter extends HttpService {
           entity(as[PageFormBody]) { pageFormBody =>
             sealRoute {
               authenticate(vepBasicUserAuthenticator) { implicit user =>
-                authorize(user.roles.contains(Roles.pageManager)) { ctx =>
+                authorize(user.roles.contains(Roles.theaterManager)) { ctx =>
                   pageController.update(PageForm.fromPageFormBody(pageCanonical, pageFormBody)) match {
                     case Left(error) =>
                       if (error.errors.contains("canonical")) {

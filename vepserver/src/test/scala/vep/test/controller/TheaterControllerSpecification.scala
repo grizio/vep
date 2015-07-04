@@ -2,7 +2,6 @@ package vep.test.controller
 
 import org.specs2.mutable.Specification
 import vep.controller.TheaterControllerProductionComponent
-import vep.model.cms.PageForm
 import vep.model.common.{ErrorCodes, ResultErrors, ResultSuccess}
 import vep.model.theater.TheaterForm
 import vep.test.service.inmemory.VepServicesInMemoryComponent
@@ -157,6 +156,126 @@ class TheaterControllerSpecification extends Specification {
           (result must beAnInstanceOf[Left[ResultErrors, _]]) and
             (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("canonical")) and
             (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("canonical").get must contain(ErrorCodes.usedCanonical))
+        }
+      }
+    }
+
+    "update should" >> {
+      val validTheaterForm = TheaterForm(
+        canonical = "my-theater",
+        name = "My existing theater",
+        address = "2 road of the fun, Somewhere",
+        content = Some("One content"),
+        fixed = true,
+        plan = Some( """[{"name":"A1","x":0,"y":0,"w":50,"h":50},{"name":"A2","x":50,"y":0,"w":50,"h":50}]"""),
+        maxSeats = None
+      )
+      val invalidTheaterForm = TheaterForm(
+        canonical = "my-theater",
+        name = "",
+        address = "",
+        content = None,
+        fixed = true,
+        plan = None,
+        maxSeats = None
+      )
+
+      "update a valid entity" >> {
+        val tcComp = new TheaterControllerForSpecificationComponent
+        val result = tcComp.theaterController.update(validTheaterForm)
+        result must beAnInstanceOf[Right[_, ResultSuccess]]
+      }
+
+      "refuse an entity which does not exist in database" >> {
+        val tcComp = new TheaterControllerForSpecificationComponent
+        val result = tcComp.theaterController.update(validTheaterForm.copy(canonical = "unknown-theater"))
+        result must beAnInstanceOf[Left[ResultErrors, _]]
+      }
+
+      "refuse an entity with invalid fields" >> {
+        val tcComp = new TheaterControllerForSpecificationComponent
+        val result = tcComp.theaterController.update(invalidTheaterForm)
+        result must beAnInstanceOf[Left[ResultErrors, _]]
+      }
+
+      "refuse an entity with invalid fields" >> {
+        val tcComp = new TheaterControllerForSpecificationComponent
+        val result = tcComp.theaterController.update(invalidTheaterForm)
+        result must beAnInstanceOf[Left[ResultErrors, _]]
+      }
+
+      "indicates an error about a field value" >> {
+        "when empty name" >> {
+          val tcComp = new TheaterControllerForSpecificationComponent
+          val result = tcComp.theaterController.update(validTheaterForm.copy(name = ""))
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("name")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("name").get must contain(ErrorCodes.emptyField))
+        }
+
+        "when big name" >> {
+          val tcComp = new TheaterControllerForSpecificationComponent
+          val result = tcComp.theaterController.update(validTheaterForm.copy(name = "a" * 256))
+
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("name")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("name").get must contain(ErrorCodes.bigString))
+        }
+
+        "when empty address" >> {
+          val tcComp = new TheaterControllerForSpecificationComponent
+          val result = tcComp.theaterController.update(validTheaterForm.copy(address = ""))
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("address")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("address").get must contain(ErrorCodes.emptyField))
+        }
+
+        "when fixed = false and maxSeats is not defined" >> {
+          val tcComp = new TheaterControllerForSpecificationComponent
+          val result = tcComp.theaterController.update(validTheaterForm.copy(fixed = false, maxSeats = None))
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("maxSeats")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("maxSeats").get must contain(ErrorCodes.emptyField))
+        }
+
+        "when fixed = false and maxSeats is negative" >> {
+          val tcComp = new TheaterControllerForSpecificationComponent
+          val result = tcComp.theaterController.update(validTheaterForm.copy(fixed = false, maxSeats = Some(-1)))
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("maxSeats")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("maxSeats").get must contain(ErrorCodes.negativeOrNull))
+        }
+
+        "when fixed = false and maxSeats is 0" >> {
+          val tcComp = new TheaterControllerForSpecificationComponent
+          val result = tcComp.theaterController.update(validTheaterForm.copy(fixed = false, maxSeats = Some(0)))
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("maxSeats")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("maxSeats").get must contain(ErrorCodes.negativeOrNull))
+        }
+
+        "when fixed = true and plan is not defined" >> {
+          val tcComp = new TheaterControllerForSpecificationComponent
+          val result = tcComp.theaterController.update(validTheaterForm.copy(fixed = true, plan = None))
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("plan")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("plan").get must contain(ErrorCodes.emptyField))
+        }
+
+        "when fixed = true and plan is empty" >> {
+          val tcComp = new TheaterControllerForSpecificationComponent
+          val result = tcComp.theaterController.update(validTheaterForm.copy(fixed = true, plan = Some("")))
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("plan")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("plan").get must contain(ErrorCodes.emptyField))
+        }
+
+        "when fixed = true and plan is invalid json" >> {
+          val tcComp = new TheaterControllerForSpecificationComponent
+          val result = tcComp.theaterController.update(validTheaterForm.copy(fixed = true, plan = Some("abcd ' , ef")))
+          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("plan")) and
+            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("plan").get must contain(ErrorCodes.invalidJson))
         }
       }
     }

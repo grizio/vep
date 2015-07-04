@@ -34,6 +34,25 @@ trait TheaterServiceInMemoryComponent extends TheaterServiceComponent {
         ))
       }
     }
+
+    override def update(theaterForm: TheaterForm): Unit = theaters = theaters map {
+      t => if (t.canonical == theaterForm.canonical) {
+        Theater(
+          t.id,
+          t.canonical,
+          theaterForm.name,
+          theaterForm.address,
+          theaterForm.content,
+          theaterForm.fixed,
+          theaterForm.plan,
+          theaterForm.maxSeats
+        )
+      } else {
+        t
+      }
+    }
+
+    override def exists(canonical: String): Boolean = theaters exists { t =>  t.canonical == canonical }
   }
 
 }

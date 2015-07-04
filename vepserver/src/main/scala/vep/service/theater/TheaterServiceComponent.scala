@@ -21,6 +21,19 @@ trait TheaterServiceComponent {
      * @param theaterForm The theater to insert
      */
     def create(theaterForm: TheaterForm): Unit
+
+    /**
+     * Updates an existing theater from database
+     * @param theaterForm The theater to update
+     */
+    def update(theaterForm: TheaterForm): Unit
+
+    /**
+     * Checks if the theater with given canonical exists
+     * @param canonical The canonical check
+     * @return True if there is a theater with given canonical, otherwise false
+     */
+    def exists(canonical: String): Boolean
   }
 
 }
@@ -50,6 +63,34 @@ trait TheaterServiceProductionComponent extends TheaterServiceComponent {
           .on("maxSeats" -> theaterForm.maxSeats)
           .executeInsert()
       }
+    }
+
+    override def update(theaterForm: TheaterForm): Unit = DB.withTransaction { implicit c =>
+      SQL( """
+             | UPDATE theater
+             | SET name = {name},
+             | address = {address},
+             | content = {content},
+             | fixed = {fixed},
+             | plan = {plan},
+             | maxSeats = {maxSeats}
+             | WHERE canonical = {canonical}
+             | """.stripMargin)
+        .on("canonical" -> theaterForm.canonical)
+        .on("name" -> theaterForm.name)
+        .on("address" -> theaterForm.address)
+        .on("content" -> theaterForm.content)
+        .on("fixed" -> theaterForm.fixed)
+        .on("plan" -> theaterForm.plan)
+        .on("maxSeats" -> theaterForm.maxSeats)
+        .executeUpdate()
+    }
+
+    override def exists(canonical: String): Boolean = DB.withConnection { implicit c =>
+      val n = SQL("SELECT COUNT(*) FROM theater WHERE canonical = {canonical}")
+        .on("canonical" -> canonical)
+        .as(scalar[Long].single)
+      n == 1
     }
   }
 

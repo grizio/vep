@@ -22,9 +22,27 @@ trait TheaterRouter extends HttpService {
         entity(as[TheaterFormBody]) { theaterFormBody =>
           sealRoute {
             authenticate(vepBasicUserAuthenticator) { implicit user =>
-              authorize(user.roles.contains(Roles.pageManager)) { ctx =>
+              authorize(user.roles.contains(Roles.theaterManager)) { ctx =>
                 theaterController.create(TheaterForm.fromTheaterFormBody(theaterCanonical, theaterFormBody)) match {
                   case Left(error) => ctx.complete(StatusCodes.BadRequest, error)
+                  case Right(success) => ctx.complete(StatusCodes.OK, success)
+                }
+              }
+            }
+          }
+        }
+      } ~ put {
+        entity(as[TheaterFormBody]) { theaterFormBody =>
+          sealRoute {
+            authenticate(vepBasicUserAuthenticator) { implicit user =>
+              authorize(user.roles.contains(Roles.theaterManager)) { ctx =>
+                theaterController.update(TheaterForm.fromTheaterFormBody(theaterCanonical, theaterFormBody)) match {
+                  case Left(error) =>
+                    if (error.errors.contains("canonical")) {
+                      ctx.complete(StatusCodes.NotFound, error)
+                    } else {
+                      ctx.complete(StatusCodes.BadRequest, error)
+                    }
                   case Right(success) => ctx.complete(StatusCodes.OK, success)
                 }
               }
