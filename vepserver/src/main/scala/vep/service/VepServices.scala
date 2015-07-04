@@ -2,6 +2,7 @@ package vep.service
 
 import vep.AnormClient
 import vep.service.cms.{PageServiceComponent, PageServiceProductionComponent}
+import vep.service.theater.{TheaterServiceComponent, TheaterServiceProductionComponent}
 import vep.service.user.{UserServiceComponent, UserServiceProductionComponent}
 
 /**
@@ -11,9 +12,11 @@ import vep.service.user.{UserServiceComponent, UserServiceProductionComponent}
 trait VepServicesComponent
   extends UserServiceComponent
   with PageServiceComponent
+  with TheaterServiceComponent
 
 trait VepServicesProductionComponent
   extends VepServicesComponent
   with UserServiceProductionComponent
   with PageServiceProductionComponent
+  with TheaterServiceProductionComponent
   with AnormClient

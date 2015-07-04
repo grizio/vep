@@ -6,6 +6,7 @@ import org.apache.commons.lang3.{StringUtils => BaseStringUtils}
 import org.apache.commons.validator.routines.EmailValidator
 
 import scala.util.Random
+import scala.util.parsing.json.JSON
 
 /**
  * This class grups all String utilities.
@@ -135,4 +136,18 @@ object StringUtils {
    * @return True if the string is not a canonical, otherwise false.
    */
   def isNotCanonical(str: String): Boolean = !isCanonical(str)
+
+  /**
+   * Checks if the given string is in JSON format.
+   * @param str The string to check
+   * @return True if the string is in JSON format, otherwise false.
+   */
+  def isJson(str: String): Boolean = JSON.parseRaw(str).isDefined
+
+  /**
+   * Checks if the given string is not in JSON format.
+   * @param str The string to check
+   * @return True if the string is not in JSON format, otherwise false.
+   */
+  def isNotJson(str: String): Boolean = !isJson(str)
 }

@@ -2,7 +2,7 @@ package vep.router
 
 import spray.routing._
 import vep.controller.VepControllersComponent
-import vep.router.api.{CmsRouter, UserRouter}
+import vep.router.api.{CmsRouter, TheaterRouter, UserRouter}
 import vep.service.VepServicesComponent
 
 /**
@@ -13,7 +13,10 @@ trait VepApiRouter
   with VepServicesComponent
   with UserRouter
   with CmsRouter
+  with TheaterRouter
   with VepControllersComponent {
 
-  override lazy val route: Route = cors { userRoute ~ cmsRoute }
+  override lazy val route: Route = cors {
+    userRoute ~ cmsRoute ~ theaterRoute
+  }
 }

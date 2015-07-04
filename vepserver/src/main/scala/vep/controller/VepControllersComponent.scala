@@ -9,6 +9,7 @@ import vep.service.VepServicesComponent
 trait VepControllersComponent
   extends UserControllerComponent
   with PageControllerComponent
+  with TheaterControllerComponent
 
 /**
  * This trait is the production trait grouping the whole list of production controllers.
@@ -18,3 +19,4 @@ trait VepControllersProductionComponent
   with UserControllerProductionComponent
   with VepServicesComponent
   with PageControllerProductionComponent
+  with TheaterControllerProductionComponent

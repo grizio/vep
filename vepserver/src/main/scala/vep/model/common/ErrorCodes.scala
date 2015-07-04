@@ -23,4 +23,6 @@ object ErrorCodes {
   val negativeOrNull = 17
   val usedCanonical = 18
   val unknownCanonical = 19
+  val invalidJson = 20
+  val bigString = 21
 }

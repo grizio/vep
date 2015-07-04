@@ -7,6 +7,7 @@ object Roles {
   val user = "user"
   val userManager = "user-manager"
   val pageManager = "page-manager"
+  val theaterManager = "theater-manager"
 
   /**
    * This val groups all roles defined above.
@@ -14,6 +15,7 @@ object Roles {
   lazy val acceptedRoles = Set(
     user,
     userManager,
-    pageManager
+    pageManager,
+    theaterManager
   )
 }
