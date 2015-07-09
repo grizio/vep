@@ -95,14 +95,14 @@ trait UserServiceProductionComponent extends UserServiceComponent {
 
       // The use of SELECT FOR UPDATE provides a way to block other transactions
       // and to not throw any exception for because of email duplication.
-      val nEmail = SQL("SELECT count(*) FROM users WHERE email = {email} FOR UPDATE")
+      val nEmail = SQL("SELECT count(*) FROM users WHERE email = {email} FOR UPDATE")
         .on("email" -> userRegistration.email)
         .as(scalar[Long].single)
 
       if (nEmail > 0) {
         throw new FieldErrorException("email", ErrorCodes.usedEmail, "The email address is already used.")
       } else {
-        SQL("INSERT INTO users(email, firstName, lastName, password, salt, city, roles) VALUES({email}, {firstName}, {lastName}, {password}, {salt}, {city}, {roles})")
+        SQL("INSERT INTO users(email, firstName, lastName, password, salt, city, roles) VALUES({email}, {firstName}, {lastName}, {password}, {salt}, {city}, {roles})")
           .on("email" -> userRegistration.email)
           .on("firstName" -> userRegistration.firstName)
           .on("lastName" -> userRegistration.lastName)
