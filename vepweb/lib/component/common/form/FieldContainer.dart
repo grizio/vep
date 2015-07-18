@@ -2,9 +2,9 @@ part of vep.component.common.form;
 
 class FormDataProxy {
   final Object innerObject;
-  final FieldContainer fieldContainer;
+  final FormComponent formComponent;
 
-  FormDataProxy(this.innerObject, this.fieldContainer);
+  FormDataProxy(this.innerObject, this.formComponent);
 
   @override
   dynamic noSuchMethod(Invocation invocation) {
@@ -19,7 +19,7 @@ class FormDataProxy {
         Object newValue = invocation.positionalArguments.first;
         if (oldValue != newValue) {
           var result = mirror.setField(field, newValue);
-          fieldContainer.updateFieldFromModel(fieldName);
+          formComponent.updateFieldFromModel(fieldName);
           return result;
         }
       }
@@ -29,73 +29,52 @@ class FormDataProxy {
   }
 }
 
-abstract class FieldContainer<A> {
+abstract class FieldContainer {
   @NgTwoWay('errors')
   List<String> errors = [];
 
-  /// This attribute is used to list fields which need to be initialized.
-  /// It bypass the limitation of angular which do not aware when child components are loaded.
-  List<String> get fields;
-  A _formData;
-  A get formData => _formData;
-  set formData(A value) {
-    _formData = new FormDataProxy(value, this);
-    var mirror = reflect(_formData);
-    for (FieldComponent field in _fields.values) {
-      field.value = mirror.getField(MirrorSystem.getSymbol(field.name));
-    }
-  }
-
-  /// Used to initialize components.
-  void initialize(){}
-
-  Map<String, FieldComponent> _fields = {};
+  List<FieldComponent> fields = [];
   List<String> _initializedFields = [];
 
-  FieldComponent getField(String name) {
-    return _fields[name];
+  void addField(FieldComponent fieldComponent) {
+    fields.add(fieldComponent);
+    _initializedFields.add(fieldComponent.name);
   }
 
-  void addField(String name, FieldComponent fieldComponent) {
-    _fields[name] = fieldComponent;
-    updateFieldFromModel(name);
-    _initializedFields.add(name);
-    if (fields.contains(name) && fields.every((_) => _initializedFields.contains(_))) {
-      initialize();
+  bool get isValid => fields.every((_) => _.verify());
+
+  void updateFromModel(Object data, String fieldName) {
+    var field = fields.firstWhere((_) => _.name == fieldName, orElse: () => null);
+    if (field != null) {
+      var valueMirror = reflect(data).getField(MirrorSystem.getSymbol(fieldName));
+      field.forceSetValue(valueMirror.hasReflectee ? valueMirror.reflectee : null);
     }
   }
 
-  bool get isValid => _fields.values.every((_) => _.verify());
-
-  void setErrors(HttpResultErrors httpResultErrors) {
-    errors = [];
-    for (var field in _fields.values) {
-      field.errors = [];
+  void updateToModel(Object data, String fieldName) {
+    var field = fields.firstWhere((_) => _.name == fieldName, orElse: () => null);
+    if (field != null) {
+      reflect(data).setField(MirrorSystem.getSymbol(fieldName), field.value);
     }
-    var errorMessages = httpResultErrors.errorMessages;
-    for (var key in errorMessages.keys) {
-      if (_fields.containsKey(key)) {
-        _fields[key].errors = errorMessages[key];
+  }
+
+  void updateAllFromModel(Object data) {
+    for (var field in fields) {
+      updateFromModel(data, field.name);
+    }
+  }
+
+  FieldComponent operator[](String name) {
+    return fields.firstWhere((_) => _.name == name, orElse: () => null);
+  }
+
+  void propagateErrors(Map<String, List<String>> errors) {
+    for (var field in fields) {
+      if (errors.containsKey(field.name)) {
+        field.errors = errors[field.name];
       } else {
-        errors.addAll(errorMessages[key]);
+        field.errors = [];
       }
-    }
-  }
-
-  void setError(HttpResultError httpResultError) {
-    errors = [httpResultError.errorMessage];
-  }
-
-  void updateFieldFromModel(String field) {
-    if (_fields.containsKey(field) && formData != null) {
-      var valueMirror = reflect(formData).getField(MirrorSystem.getSymbol(field));
-      _fields[field].forceSetValue(valueMirror.hasReflectee ? valueMirror.reflectee : null);
-    }
-  }
-
-  void updateModelFromField(String field) {
-    if (_fields.containsKey(field) && formData != null) {
-      reflect(formData).setField(MirrorSystem.getSymbol(field), _fields[field].value);
     }
   }
 }

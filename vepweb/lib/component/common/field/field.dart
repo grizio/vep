@@ -1,12 +1,12 @@
 part of vep.component.common.field;
 
 typedef bool Constraint<A>(A element);
+
 typedef bool EnableWhen();
 
 abstract class FieldComponent<A> implements ScopeAware, AttachAware {
-  Scope scope;
-
-  Option<FieldContainer> fieldContainer;
+  FormComponent formComponent;
+  FieldContainer fieldContainer;
 
   List<Constraint<A>> constraints = [];
   List<String> constraintErrors = [];
@@ -27,6 +27,43 @@ abstract class FieldComponent<A> implements ScopeAware, AttachAware {
   @NgTwoWay('errors')
   List<String> errors;
 
+  @NgAttr('parent')
+  String parent;
+
+  Scope _scope;
+  Scope get scope => _scope;
+  set scope(Scope scope) {
+    _scope = scope;
+    var ctx = utils.getContext(scope, FormComponentContainer) as FormComponentContainer;
+    if (ctx != null) {
+      formComponent = ctx.form;
+      formComponent.waitingField();
+    }
+  }
+
+  @override
+  void attach() {
+    if (formComponent != null) {
+      if (formComponent is FormSimpleComponent) {
+        fieldContainer = formComponent as FieldContainer;
+      } else {
+        if (parent != null) {
+          if (formComponent is FormSectionsComponent) {
+            fieldContainer = (formComponent as FormSectionsComponent)[parent];
+          } else if (formComponent is FormStepsComponent) {
+            fieldContainer = (formComponent as FormStepsComponent)[parent];
+          }
+        }
+      }
+
+      if (fieldContainer != null) {
+        fieldContainer.fields.add(this);
+      }
+
+      formComponent.fieldInitialized();
+    }
+  }
+
   bool get enabled => enableWhen();
 
   EnableWhen enableWhen = () => true;
@@ -46,23 +83,15 @@ abstract class FieldComponent<A> implements ScopeAware, AttachAware {
     var oldValue = _value;
     if (oldValue != newValue) {
       _value = newValue;
-      fieldContainer.forEach((FieldContainer fc) => fc.updateModelFromField(name));
+      if (fieldContainer != null) {
+        fieldContainer.updateToModel(formComponent.data, name);
+      }
       verify();
       onValueChange.process(new ValueChangeEvent(oldValue, newValue, isValid));
     }
   }
 
   bool get isValid => errors.isEmpty;
-
-  @override
-  void attach() {
-    var parentScope = scope.parentScope;
-    while (parentScope != null && !(parentScope.context is FieldContainer)) {
-      parentScope = parentScope.parentScope;
-    }
-    fieldContainer = Some(parentScope != null ? parentScope.context : null);
-    fieldContainer.forEach((FieldContainer fc) => fc.addField(name, this));
-  }
 
   void addConstraint(Constraint<A> constraint, String constraintError) {
     constraints.add(constraint);
@@ -71,7 +100,7 @@ abstract class FieldComponent<A> implements ScopeAware, AttachAware {
 
   bool verify() {
     errors = <String>[];
-    for (var i = 0, c = constraints.length ; i < c ; i++) {
+    for (var i = 0, c = constraints.length; i < c; i++) {
       if (!constraints[i](value)) {
         errors.add(constraintErrors[i]);
       }
@@ -95,8 +124,8 @@ abstract class FieldDecorator implements ScopeAware {
   }
 
   void includeAttributes(Scope scope) {
-    if (scope.context is FieldComponent) {
-      var ctx = scope.context as FieldComponent;
+    var ctx = utils.getContext(scope, FieldComponent) as FieldComponent;
+    if (ctx != null) {
       addAttribute('name', ctx.name);
       addAttribute('id', ctx.id);
       if (!ctx.enabled) {

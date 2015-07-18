@@ -2,6 +2,9 @@ part of vep.service.cms;
 
 @Injectable()
 class PageService {
+  static const pagesCacheStart = 'pages-cache-start';
+  static const pagesCache = 'pages-cache';
+
   static final logger = new Logger('vep.service.cms.PageService');
 
   final IHttp http;
@@ -64,7 +67,7 @@ class PageService {
         _loading = http.get('/cms/pages', type: const jsonx.TypeHelper<List<Page>>().type).then((httpResult){
           if (httpResult.isSuccess) {
             _pages = (httpResult as HttpResultSuccessEntity).entity as List<Page>;
-            window.localStorage['page-cache-start'] = new DateTime.now().millisecondsSinceEpoch.toString();
+            window.localStorage[pagesCacheStart] = new DateTime.now().millisecondsSinceEpoch.toString();
             return true;
           } else {
             logger.severe('Error when loading list of pages', httpResult);
@@ -82,8 +85,8 @@ class PageService {
   }
 
   bool _isCacheExpired() {
-    if (window.localStorage.containsKey('pages-cache-start')) {
-      var pageCache = JSON.decode(window.localStorage['pages-cache-start']);
+    if (window.localStorage.containsKey(pagesCacheStart)) {
+      var pageCache = JSON.decode(window.localStorage[pagesCacheStart]);
       var expire = new DateTime.fromMillisecondsSinceEpoch(pageCache).add(new Duration(hours: 1));
       if (expire.isAfter(new DateTime.now())) {
         _clearCache();
@@ -97,19 +100,19 @@ class PageService {
   }
 
   List<Page> get _pages {
-    if (window.localStorage.containsKey('pages-cache')) {
-      return jsonx.decode(window.localStorage['pages-cache'], type: const jsonx.TypeHelper<List<Page>>().type);
+    if (window.localStorage.containsKey(pagesCache)) {
+      return jsonx.decode(window.localStorage[pagesCache], type: const jsonx.TypeHelper<List<Page>>().type);
     } else {
       return [];
     }
   }
 
   set _pages(List<Page> pages) {
-    window.localStorage['pages-cache'] = jsonx.encode(pages);
+    window.localStorage[pagesCache] = jsonx.encode(pages);
   }
 
   void _clearCache() {
-    window.localStorage.remove('pages-cache');
-    window.localStorage.remove('pages-cache-start');
+    window.localStorage.remove(pagesCache);
+    window.localStorage.remove(pagesCacheStart);
   }
 }

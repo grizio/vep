@@ -4,21 +4,18 @@ part of vep.component.user;
     selector: 'form-user-registration',
     templateUrl: '/packages/vepweb/component/user/form-user-registration.html',
     useShadowDom: false)
-class FormUserRegistrationComponent extends FormComponent<UserRegistration> {
+class FormUserRegistrationComponent extends FormSimpleComponentContainer {
   final UserService userService;
 
-  final List<String> fields = ['email', 'email2', 'password', 'password2'];
+  UserRegistration user = new UserRegistration();
 
-  InputEmailComponent get email => getField('email');
-  InputEmailComponent get email2 => getField('email2');
-  InputPasswordComponent get password => getField('password');
-  InputPasswordComponent get password2 => getField('password2');
+  InputEmailComponent get email => form['email'];
+  InputEmailComponent get email2 => form['email2'];
+  InputPasswordComponent get password => form['password'];
+  InputPasswordComponent get password2 => form['password2'];
 
-  FormUserRegistrationComponent(this.userService) {
-    formData = new UserRegistration();
-  }
+  FormUserRegistrationComponent(this.userService);
 
-  @override
   void initialize() {
     email.onValueChange.listen((_) => email2.verify());
 
@@ -32,6 +29,7 @@ class FormUserRegistrationComponent extends FormComponent<UserRegistration> {
     password2.addConstraint((v) => stringUtilities.isEmpty(v) || stringUtilities.equals(password.value, v), errorCodes.i18n[errorCodes.differentPasswords]);
   }
 
-  @override
-  Future<HttpResult> onSubmit(UserRegistration data) => userService.register(data);
+  Future<HttpResult> onSubmit(UserRegistration data) {
+    return userService.register(data);
+  }
 }

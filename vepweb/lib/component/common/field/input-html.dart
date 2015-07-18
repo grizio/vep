@@ -49,8 +49,8 @@ class InputHtmlDecorator extends FieldDecorator {
   @override
   void includeAttributes(Scope scope) {
     super.includeAttributes(scope);
-    if (scope.context is InputHtmlComponent) {
-      var ctx = scope.context as InputHtmlComponent;
+    var ctx = utils.getContext(scope, InputHtmlComponent) as InputHtmlComponent;
+    if (ctx != null) {
       addAttribute('maxlength', ctx.maxLength);
       addAttribute('placeholder', ctx.placeholder);
     }

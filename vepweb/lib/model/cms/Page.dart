@@ -6,6 +6,15 @@ class Page {
   String title;
   String content;
   int menu;
+
+  PageForm toPageForm() {
+    var pageForm = new PageForm();
+    pageForm.canonical = canonical;
+    pageForm.title = title;
+    pageForm.content = content;
+    pageForm.menu = menu;
+    return pageForm;
+  }
 }
 
 class PageForm {

@@ -1,3 +1,6 @@
+@import 'common/common';
+@import 'map';
+@import 'ng';
 @import 'table-search';
 
 .header {
@@ -12,4 +15,8 @@
     letter-spacing: 1ex;
     text-align: center;
   }
+}
+
+textarea {
+  min-height: 200px;
 }

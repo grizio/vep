@@ -4,7 +4,7 @@ part of vep.component.user;
     selector: 'form-user-login',
     templateUrl: '/packages/vepweb/component/user/form-user-login.html',
     useShadowDom: false)
-class FormUserLoginComponent extends FormComponent<UserLogin> {
+class FormUserLoginComponent extends FormSimpleComponentContainer {
   final UserService userService;
   final Router router;
   final App app;
@@ -14,19 +14,17 @@ class FormUserLoginComponent extends FormComponent<UserLogin> {
   @NgOneWay('redirect-back')
   bool redirectBack = true;
 
-  FormUserLoginComponent(this.userService, this.router, this.app) {
-    formData = new UserLogin();
-  }
+  UserLogin userLogin = new UserLogin();
 
-  @override
+  FormUserLoginComponent(this.userService, this.router, this.app);
+
   Future<HttpResult> onSubmit(UserLogin data) => userService.login(data);
 
-  @override
-  void onDone(HttpResult httpResult) {
+  Future onDone(HttpResult httpResult) {
     var res = httpResult as HttpResultSuccess;
-    userService.getRoles(formData.email, res.body).then((_){
+    userService.getRoles(userLogin.email, res.body).then((_){
       if (_.isSuccess) {
-        app.login(formData.email, res.body, (_ as HttpResultSuccessEntity).entity);
+        app.login(userLogin.email, res.body, (_ as HttpResultSuccessEntity).entity);
       } // else Should never happen
 
       // We return on the previous page
@@ -34,5 +32,6 @@ class FormUserLoginComponent extends FormComponent<UserLogin> {
         window.history.back();
       }
     });
+    return new Future.value();
   }
 }

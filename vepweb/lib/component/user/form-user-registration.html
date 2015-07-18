@@ -1,4 +1,4 @@
-<div ng-if="done">
+<div ng-if="form.done">
     <h1>Inscription réussie</h1>
 
     <p>
@@ -8,32 +8,28 @@
 
     <ul class="button-group even-2">
         <li><a href="/" class="button">Retourner à l'accueil</a></li>
-        <li><a href="/user/login" class="button">Se connecter</a></li>
+        <li><a href="/login" class="button">Se connecter</a></li>
     </ul>
 </div>
-<form method="post" action="/user/register" id="form-user-registration" ng-submit="submit($event)" ng-if="!done">
-    <fieldset>
-        <legend>Inscription</legend>
+<form-simple ng-if="!form.done" data="user" label="'Inscription'" on-loaded="initialize" on-submit="onSubmit">
+    <input-email name="email" with-id="form-user-registration-email" label="Email"
+                 placeholder="Votre adresse e-mail valide" required="true"></input-email>
+    <input-email name="email2" with-id="form-user-registration-email2" label="Confirmation"
+                 placeholder="Veuillez confirmer votre adresse e-mail" required="true"></input-email>
+    <input-password name="password" with-id="form-user-registration-password" label="Mot de passe"
+                    placeholder="Minimum 8 caractères et composé d'au moins une lettre et un chiffre"
+                    required="true"></input-password>
+    <input-password name="password2" with-id="form-user-registration-password2" label="Confirmation"
+                    placeholder="Confirmation du mot de passe" required="true"></input-password>
+    <input-text name="firstName" with-id="form-user-registration-firstName" label="Prénom"
+                placeholder="Votre prénom" required="true"></input-text>
+    <input-text name="lastName" with-id="form-user-registration-lastName" label="Nom" placeholder="Votre nom"
+                required="true"></input-text>
+    <input-text name="city" with-id="form-user-registration-city" label="Ville"
+                placeholder="Votre ville (optionnel)"></input-text>
 
-        <input-email name="email" with-id="form-user-registration-email" label="Email"
-                     placeholder="Votre adresse e-mail valide" required="true"></input-email>
-        <input-email name="email2" with-id="form-user-registration-email2" label="Confirmation"
-                     placeholder="Veuillez confirmer votre adresse e-mail" required="true"></input-email>
-        <input-password name="password" with-id="form-user-registration-password" label="Mot de passe"
-                        placeholder="Minimum 8 caractères et composé d'au moins une lettre et un chiffre"
-                        required="true"></input-password>
-        <input-password name="password2" with-id="form-user-registration-password2" label="Confirmation"
-                        placeholder="Confirmation du mot de passe" required="true"></input-password>
-        <input-text name="firstName" with-id="form-user-registration-firstName" label="Prénom"
-                    placeholder="Votre prénom" required="true"></input-text>
-        <input-text name="lastName" with-id="form-user-registration-lastName" label="Nom" placeholder="Votre nom"
-                    required="true"></input-text>
-        <input-text name="city" with-id="form-user-registration-city" label="Ville"
-                    placeholder="Votre ville (optionnel)"></input-text>
-
-        <action-row>
-            <input type="submit" value="S'inscrire" class="button success"/>
-            <a href="/" class="button alert">Revenir à l'accueil</a>
-        </action-row>
-    </fieldset>
-</form>
+    <action-row>
+        <input type="submit" value="S'inscrire" class="button success"/>
+        <a href="/" class="button alert">Revenir à l'accueil</a>
+    </action-row>
+</form-simple>

@@ -1,34 +1,140 @@
 part of vep.component.common.form;
 
-abstract class FormComponent<A> extends FieldContainer<A> {
-  @NgTwoWay('processing')
-  bool processing = false;
+typedef Future OnFormLoaded();
 
-  @NgTwoWay('done')
-  bool done = false;
+typedef Future<HttpResult> OnFormSubmit(Object data);
 
-  void submit(Event e) {
-    e.preventDefault();
-    if (isValid) {
-      processing = true;
-      var data = (formData as FormDataProxy).innerObject;
-      onSubmit(data).then((result) {
-        if (result.isSuccess) {
-          done = true;
-          onDone(result);
-        } else {
-          if (result is HttpResultErrors) {
-            setErrors(result);
-          } else if (result is HttpResultError) {
-            setError(result);
-          }
-          processing = false;
-        }
-      });
+typedef Future OnFormValid(HttpResult httpResult);
+
+typedef Future OnFormError(HttpResult httpResult);
+
+typedef Future OnFormDone();
+
+abstract class FormComponentContainer<A extends FormComponent> {
+  A form;
+}
+
+abstract class FormComponent implements ScopeAware, AttachAware {
+  @NgOneWayOneTime('on-submit')
+  OnFormSubmit onFormSubmit;
+
+  @NgOneWayOneTime('on-valid')
+  OnFormValid onFormValid;
+
+  @NgOneWayOneTime('on-error')
+  OnFormError onFormError;
+
+  @NgOneWayOneTime('on-loaded')
+  OnFormLoaded onFormLoaded;
+
+  @NgOneWayOneTime('on-done')
+  OnFormDone onFormDone;
+
+  FormDataProxy dataProxy;
+
+  @NgTwoWay('data')
+  Object get data => dataProxy;
+
+  set data(Object value) {
+    if (value is FormDataProxy) {
+      if (value != dataProxy) {
+        dataProxy = value;
+        updateAllFieldsFromModel();
+      }
+    } else {
+      dataProxy = new FormDataProxy(value, this);
+      updateAllFieldsFromModel();
     }
   }
 
-  Future<HttpResult> onSubmit(A data);
+  @override
+  set scope(Scope scope) {
+    var ctx = utils.getContext(scope, FormComponentContainer) as FormComponentContainer;
+    if (ctx != null) {
+      ctx.form = this;
+    }
+  }
 
-  void onDone(HttpResult httpResult){}
+  bool processing = false;
+  bool done = false;
+  bool initialized = false;
+
+  bool get isValid;
+
+  // The usage of this attribute is because of angular creation cycle :
+  // parent set scope -> children set scope -> parent attach -> children attach
+  // So we need to inform the parent to wait until all children are attached.
+  int fieldsToWait = 0;
+
+  void waitingField() {
+    fieldsToWait++;
+  }
+
+  void fieldInitialized() {
+    fieldsToWait--;
+    if (fieldsToWait == 0) {
+      initialize();
+    }
+  }
+
+  @override
+  void attach() {
+    if (fieldsToWait == 0) {
+      initialize();
+    }
+  }
+
+  void initialize() {
+    initialized = true;
+    updateAllFieldsFromModel();
+    if (onFormLoaded != null) {
+      onFormLoaded();
+    }
+  }
+
+  Future submit(Event e) {
+    var defaultFuture = new Future.value();
+    if (e != null) {
+      e.preventDefault();
+    }
+    processing = true;
+    Future future;
+    if (isValid) {
+      var innerData = (data as FormDataProxy).innerObject;
+      future = onFormSubmit != null ? onFormSubmit(innerData) : defaultFuture;
+      future = future.then((HttpResult result) {
+        if (result != null) {
+          if (result.isSuccess) {
+            var futureValid = onFormValid != null ? onFormValid(result) : defaultFuture;
+            return futureValid.then((_) => done = true);
+          } else {
+            var errors;
+            if (result is HttpResultError) {
+              errors = {'_root_': [(result as HttpResultError).errorMessage]};
+            } else if (result is HttpResultErrors) {
+              errors = (result as HttpResultErrors).errorMessages;
+            }
+            propagateErrors(errors);
+            return onFormError != null ? onFormError(result) : defaultFuture;
+          }
+        }
+      });
+    } else {
+      future = defaultFuture;
+    }
+    return future.whenComplete(() {
+      processing = false;
+      if (onFormDone != null) {
+        onFormDone();
+      }
+    });
+
+
+  }
+
+  void propagateErrors(Map<String, List<String>> errors);
+
+  void updateFieldFromModel(String fieldName);
+
+  void updateAllFieldsFromModel();
 }

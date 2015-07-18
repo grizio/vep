@@ -4,7 +4,7 @@ part of vep.component.cms.page;
     selector: 'cms-form-page',
     templateUrl: '/packages/vepweb/component/cms/page/cms-form-page.html',
     useShadowDom: false)
-class CmsFormPageComponent extends FormComponent<PageForm> {
+class CmsFormPageComponent extends FormSimpleComponentContainer {
   static const stateUpdate = 'update';
   static const stateCreate = 'create';
 
@@ -13,13 +13,24 @@ class CmsFormPageComponent extends FormComponent<PageForm> {
   final App app;
   final NavigationComponent navigationComponent;
 
-  final List<String> fields = ['title', 'canonical'];
+  String get formTitle {
+    if (state == stateCreate) {
+      return "Création d'une page";
+    } else if (page.title != null) {
+      return "Modification de la page " + page.title;
+    } else {
+      return "Modification de la page";
+    }
+  }
 
-  InputTextComponent get title => getField('title');
-  InputTextComponent get canonical => getField('canonical');
+  InputTextComponent get title => form['title'];
+
+  InputTextComponent get canonical => form['canonical'];
 
   bool loaded = true;
   String state;
+
+  PageForm page = new PageForm();
 
   CmsFormPageComponent(this.pageService, this.router, this.app, this.navigationComponent, RouteProvider routeProvider) {
     if (routeProvider.route.name == 'page-update') {
@@ -27,13 +38,11 @@ class CmsFormPageComponent extends FormComponent<PageForm> {
       _load(routeProvider);
     } else {
       state = stateCreate;
-      formData = new PageForm();
     }
   }
 
   String _oldCanonical;
 
-  @override
   void initialize() {
     title.onValueChange.listen((_) {
       if (stringUtilities.isEmpty(_oldCanonical) && stringUtilities.isEmpty(canonical.value) || stringUtilities.equals(_oldCanonical, canonical.value)) {
@@ -46,9 +55,9 @@ class CmsFormPageComponent extends FormComponent<PageForm> {
 
   void _load(RouteProvider routeProvider) {
     loaded = false;
-    pageService.find(routeProvider.parameters['canonical']).then((_){
-      formData = _;
-      app.breadCrumb.path.last.name = 'Mise à jour de la page ${formData.title}';
+    pageService.find(routeProvider.parameters['canonical']).then((_) {
+      page = _.toPageForm();
+      app.breadCrumb.path.last.name = 'Mise à jour de la page ${page.title}';
       loaded = true;
     });
   }
@@ -77,7 +86,6 @@ class CmsFormPageComponent extends FormComponent<PageForm> {
     }
   }
 
-  @override
   Future<HttpResult> onSubmit(PageForm data) {
     if (state == stateCreate) {
       return pageService.create(data);
@@ -86,8 +94,7 @@ class CmsFormPageComponent extends FormComponent<PageForm> {
     }
   }
 
-  @override
-  void onDone(HttpResult httpResult) {
+  Future onDone(HttpResult httpResult) {
     router.gotoUrl('/cms/pages');
     navigationComponent.invalidatePageList();
   }
