@@ -12,21 +12,21 @@ class PageService {
   PageService(this.http);
 
   Future<HttpResult> create(PageForm pageForm) {
-    return http.post('/cms/page/${pageForm.canonical}', pageForm, withSession: true).then((_){
+    return http.post('/cms/page/${pageForm.canonical}', pageForm, withSession: true).then((_) {
       _clearCache();
       return _;
     });
   }
 
   Future<HttpResult> update(PageForm pageForm) {
-    return http.put('/cms/page/${pageForm.canonical}', pageForm, withSession: true).then((_){
+    return http.put('/cms/page/${pageForm.canonical}', pageForm, withSession: true).then((_) {
       _clearCache();
       return _;
     });
   }
 
   Future<List<Page>> findAll() {
-    return _prepare().then((_){
+    return _prepare().then((_) {
       if (_) {
         return _pages;
       } else {
@@ -36,7 +36,7 @@ class PageService {
   }
 
   Future<Page> find(String canonical) {
-    return _prepare().then((_){
+    return _prepare().then((_) {
       if (_) {
         return _pages.firstWhere((p) => p.canonical == canonical, orElse: () => null);
       } else {
@@ -46,7 +46,7 @@ class PageService {
   }
 
   Future<List<Page>> findForMenu() {
-    return _prepare().then((_){
+    return _prepare().then((_) {
       if (_) {
         var pages = _pages.where((p) => p.menu != null).toList();
         pages.sort((Page p1, Page p2) => p2.menu - p1.menu);
@@ -64,7 +64,7 @@ class PageService {
   Future<bool> _prepare() {
     if (_loading == null) {
       if (_isCacheExpired()) {
-        _loading = http.get('/cms/pages', type: const jsonx.TypeHelper<List<Page>>().type).then((httpResult){
+        _loading = http.get('/cms/pages', type: const jsonx.TypeHelper<List<Page>>().type).then((httpResult) {
           if (httpResult.isSuccess) {
             _pages = (httpResult as HttpResultSuccessEntity).entity as List<Page>;
             window.localStorage[pagesCacheStart] = new DateTime.now().millisecondsSinceEpoch.toString();
@@ -78,7 +78,7 @@ class PageService {
         _loading = new Future.value(true);
       }
     }
-    return _loading.then((_){
+    return _loading.then((_) {
       _loading = null;
       return _;
     });

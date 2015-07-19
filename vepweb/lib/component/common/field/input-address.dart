@@ -1,5 +1,7 @@
 part of vep.component.common.field;
 
+/// This component provides an input for the user to enter an address and check its existence on [Google Map].
+/// It will not block the user if the address is not found.
 @Component(
     selector: 'input-address',
     templateUrl: '/packages/vepweb/component/common/field/input-address.html',
@@ -13,7 +15,7 @@ class InputAddressComponent extends InputTextComponent implements MapContainer {
   @override
   set mapComponent(MapComponent mapComponent) {
     _mapComponent = mapComponent;
-    _mapComponent.mapInitializedSubscriber.listen((){
+    _mapComponent.mapInitializedSubscriber.listen(() {
       if (inputAddressDecorator != null) {
         inputAddressDecorator.init();
       }
@@ -26,6 +28,8 @@ class InputAddressComponent extends InputTextComponent implements MapContainer {
   }
 }
 
+/// This decorator is used to add attributes in [input] tag.
+/// It will be used to link on Google Map with autocompletion too.
 @Decorator(selector: '.input-address')
 class InputAddressDecorator extends InputDecorator {
   InputAddressDecorator(Element element) : super(element);

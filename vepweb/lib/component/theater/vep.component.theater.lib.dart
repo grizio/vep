@@ -9,7 +9,7 @@ import 'package:klang/klang.dart';
 import 'package:vepweb/component/common/table/vep.component.common.table.lib.dart';
 import 'dart:async';
 import 'package:vepweb/utils.dart' as utils;
-import 'package:jsonx/jsonx.dart'as jsonx;
+import 'package:jsonx/jsonx.dart' as jsonx;
 import 'dart:html';
 import 'dart:math';
 import 'package:vepweb/http/vep.http.lib.dart';

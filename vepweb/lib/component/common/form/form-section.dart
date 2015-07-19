@@ -1,8 +1,10 @@
 part of vep.component.common.form;
 
+/// This component describes a section in a [form-sections] component.
+/// It is a simple field container specific to [form-sections].
 @Component(
-    selector: 'form-sections',
-    templateUrl: '/packages/vepweb/component/common/form/form-sections.html',
+    selector: 'form-section',
+    templateUrl: '/packages/vepweb/component/common/form/form-section.html',
     useShadowDom: false
 )
 class FormSectionComponent extends FieldContainer implements ScopeAware, AttachAware {

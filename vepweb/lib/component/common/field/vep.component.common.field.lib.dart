@@ -3,10 +3,8 @@ library vep.component.common.field;
 import 'dart:html';
 import 'dart:js';
 import 'package:angular/angular.dart';
-import 'package:klang/klang.dart';
 import 'package:vepweb/component/common/form/vep.component.form.lib.dart';
 import 'package:vepweb/component/common/misc/vep.component.common.misc.lib.dart';
-import 'package:google_maps/google_maps.dart';
 import 'package:google_maps/google_maps_places.dart';
 import 'package:vepweb/utils.dart' as utils;
 

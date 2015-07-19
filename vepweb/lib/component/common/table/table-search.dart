@@ -1,5 +1,7 @@
 part of vep.component.common.table;
 
+/// This component is used to display a table where the user can search objects
+/// and manipulate them in terms of developer configuration.
 @Component(
     selector: 'table-search',
     templateUrl: '/packages/vepweb/component/common/table/table-search.html',
@@ -62,8 +64,8 @@ class TableSearchComponent implements ScopeAware {
       int index = 0;
       for (Map<String, Object> row in data) {
         if (textColumns.every((_) => (row[_.code] as String).contains(filter[_.code])) &&
-            checkboxColumns.every((_) => row[_.code] == filter[_.code]) &&
-            numberColumns.every((_) => row[_.code].toString().contains(filter[_.code].toString()))) {
+        checkboxColumns.every((_) => row[_.code] == filter[_.code]) &&
+        numberColumns.every((_) => row[_.code].toString().contains(filter[_.code].toString()))) {
           row['_index'] = index;
           filtered.add(row);
         }
@@ -96,6 +98,8 @@ class TableSearchComponent implements ScopeAware {
   }
 }
 
+/// This class has to be used as an interface by component including the table search.
+/// It defines some methods needed by [TableSearchComponent].
 abstract class TableSearchContext {
   TableDescriptor get tableDescriptor;
 
@@ -104,6 +108,7 @@ abstract class TableSearchContext {
   void onChange(Map<String, Object> data);
 }
 
+/// Describes a table with columns.
 class TableDescriptor {
   List<ColumnDescriptor> _columns;
 
@@ -114,6 +119,7 @@ class TableDescriptor {
   }
 }
 
+/// Describes a column of a table descriptor.
 class ColumnDescriptor {
   String _code;
 
@@ -155,7 +161,7 @@ class ColumnDescriptor {
 
   String link(Map<String, Object> data) {
     String result = url;
-    data.forEach((k ,v){
+    data.forEach((k, v) {
       if (k != null && v != null) {
         result = result.replaceAll("{" + k + "}", v.toString());
       }

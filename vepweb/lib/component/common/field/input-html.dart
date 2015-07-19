@@ -1,5 +1,6 @@
 part of vep.component.common.field;
 
+/// This component provides a field for the user to enter HTML content.
 @Component(
     selector: 'input-html',
     templateUrl: '/packages/vepweb/component/common/field/input-html.html',
@@ -28,6 +29,7 @@ class InputHtmlComponent extends FieldComponent<String> {
   }
 }
 
+/// Decorates the input to add attributes in terms of developer configuration.
 @Decorator(selector: 'textarea.input-html')
 class InputHtmlDecorator extends FieldDecorator {
   InputHtmlDecorator(Element element) : super(element);

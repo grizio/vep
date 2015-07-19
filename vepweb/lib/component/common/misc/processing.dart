@@ -1,5 +1,6 @@
 part of vep.component.common.misc;
 
+/// This component is used to display a message when an action is processing or done.
 @Component(
     selector: 'processing',
     templateUrl: '/packages/vepweb/component/common/misc/processing.html',

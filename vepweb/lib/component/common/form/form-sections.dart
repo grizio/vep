@@ -1,17 +1,21 @@
 part of vep.component.common.form;
 
+/// This class describes components containing a [FormSectionsComponent].
+/// All component using the previous one should extends (or implements) this class.
+/// In the other cases, the [FormSectionsComponent] could have unwanted behaviors.
 abstract class FormSectionsComponentContainer extends FormComponentContainer<FormSectionsComponent> {
 }
 
+/// This component describes a form containing several sections (see [FormSectionComponent]).
 @Component(
-  selector: 'form-sections',
-  templateUrl: '/packages/vepweb/component/common/form/form-sections.html',
-  useShadowDom: false
+    selector: 'form-sections',
+    templateUrl: '/packages/vepweb/component/common/form/form-sections.html',
+    useShadowDom: false
 )
 class FormSectionsComponent extends FormComponent {
   List<FormSectionComponent> sections = [];
 
-  FormSectionComponent operator[](String name) {
+  FormSectionComponent operator [](String name) {
     return sections.firstWhere((_) => _.name == name, orElse: () => null);
   }
 

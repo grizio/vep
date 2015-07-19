@@ -6,7 +6,6 @@ import 'package:vepweb/http/vep.http.lib.dart';
 import 'package:vepweb/component/common/field/vep.component.common.field.lib.dart';
 import 'dart:async';
 import 'dart:html';
-import 'package:klang/klang.dart';
 import 'package:vepweb/utils.dart' as utils;
 
 part 'FieldContainer.dart';

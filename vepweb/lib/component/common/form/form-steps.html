@@ -1,7 +1,8 @@
 <form class="form-steps" ng-submit="prevent($event)">
     <progress value="{{ currentStepIndex }}" max="{{ availableSteps.length }}" class="form-steps-progress"></progress>
     <ul class="form-steps-list">
-        <li ng-repeat="step in availableSteps" class="form-steps-item" ng-class="{'form-steps-active': step.name == current}">
+        <li ng-repeat="step in availableSteps" class="form-steps-item"
+            ng-class="{'form-steps-active': step.name == current}">
             {{ $index + 1 }}.
             {{ step.title }}
         </li>
@@ -9,17 +10,20 @@
 
     <ul class="button-group even-2">
         <li>
-            <button ng-click="previous($event)" class="button small form-steps-previous" ng-class="{'disabled': isFirstStep}">
+            <button ng-click="previous($event)" class="button small form-steps-previous"
+                    ng-class="{'disabled': isFirstStep}">
                 &lt;&lt; Précédent &lt;&lt;
             </button>
         </li>
         <li ng-if="isNotLastStep">
-            <button ng-click="next($event)" class="button small form-steps-next" ng-class="{'disabled': isCurrentStepNotValid}">
+            <button ng-click="next($event)" class="button small form-steps-next"
+                    ng-class="{'disabled': isCurrentStepNotValid}">
                 &gt;&gt; Suivant &gt;&gt;
             </button>
         </li>
         <li ng-if="isLastStep">
-            <button ng-click="submit($event)" class="button small form-steps-validate" ng-class="{'disabled': isCurrentStepNotValid}">
+            <button ng-click="submit($event)" class="button small form-steps-validate"
+                    ng-class="{'disabled': isCurrentStepNotValid}">
                 Valider
             </button>
         </li>
@@ -29,17 +33,20 @@
 
     <ul class="button-group even-2">
         <li>
-            <button ng-click="previous($event)" class="button small form-steps-previous" ng-class="{'disabled': isFirstStep}">
+            <button ng-click="previous($event)" class="button small form-steps-previous"
+                    ng-class="{'disabled': isFirstStep}">
                 &lt;&lt; Précédent &lt;&lt;
             </button>
         </li>
         <li ng-if="isNotLastStep">
-            <button ng-click="next($event)" class="button small form-steps-next" ng-class="{'disabled': isCurrentStepNotValid}">
+            <button ng-click="next($event)" class="button small form-steps-next"
+                    ng-class="{'disabled': isCurrentStepNotValid}">
                 &gt;&gt; Suivant &gt;&gt;
             </button>
         </li>
         <li ng-if="isLastStep">
-            <button ng-click="submit($event)" class="button small form-steps-validate" ng-class="{'disabled': isCurrentStepNotValid}">
+            <button ng-click="submit($event)" class="button small form-steps-validate"
+                    ng-class="{'disabled': isCurrentStepNotValid}">
                 Valider
             </button>
         </li>

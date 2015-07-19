@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:angular/application_factory.dart';
 import 'package:logging/logging.dart';
 

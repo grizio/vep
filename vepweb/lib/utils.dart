@@ -5,9 +5,8 @@ import 'package:angular/angular.dart';
 import 'dart:mirrors';
 import 'package:klang/utilities/string.dart' as stringUtilities;
 
-// TODO: how to convert properly an object into a map?
-
 Map<String, Object> objectToMap(Object data) {
+  // TODO: how to convert properly an object into a map?
   return jsonx.decode(jsonx.encode(data)) as Map<String, Object>;
 }
 
@@ -23,8 +22,8 @@ Object getContext(Scope scope, Type contextType) {
   return currentScope != null ? currentScope.context : null;
 }
 
-// TODO: optimize
 String canonicalize(String str) {
+  // TODO: optimize
   if (stringUtilities.isBlank(str)) {
     return '';
   } else {

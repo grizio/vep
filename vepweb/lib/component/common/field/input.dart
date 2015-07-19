@@ -1,10 +1,13 @@
 part of vep.component.common.field;
 
+/// This interface provides a simple attribute [pattern] used to add a [pattern] attribute in [input] component.
 abstract class InputPatternComponent {
   @NgAttr('pattern')
   String pattern;
 }
 
+/// This class is the parent for all components using [input] HTML tag as text format.
+/// It provides some common attributes copied from [input] HTML tag.
 abstract class InputComponent<A> extends FieldComponent<A> {
   @NgOneWay('maxlength')
   int maxLength;
@@ -24,6 +27,8 @@ abstract class InputComponent<A> extends FieldComponent<A> {
   }
 }
 
+/// This decorator is common for all [input] fields in this application.
+/// It will be used to add attribute in HTML in terms of developer configuration.
 abstract class InputDecorator extends FieldDecorator implements AttachAware {
   InputDecorator(Element element): super(element);
 

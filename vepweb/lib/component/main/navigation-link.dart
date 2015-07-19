@@ -58,7 +58,7 @@ class NavigationLinkComponent implements ScopeAware, AttachAware {
   }
 
   updateActive(BreadCrumb breadCrumb) {
-    if (breadCrumb != null ) {
+    if (breadCrumb != null) {
       if (breadCrumb.path.isEmpty) {
         active = code == 'home';
       } else {

@@ -1,11 +1,22 @@
 part of vep.component.common.form;
 
+/// Describes a function called when the user come into current step from the previous one.
 typedef Future ComingFromPreviousStep();
+
+/// Describes a function called when the user leave current step to the previous one.
 typedef Future LeavingToPreviousStep();
+
+/// Describes a function called when the user come into current step from the next one.
 typedef Future ComingFromNextStep();
+
+/// Describes a function called when the user leave current step to the previous one.
 typedef Future LeavingToNextStep();
+
+/// Describes a function to call when the user asks to leave to next step.
+/// It will validate if the user can really pass (checking some values in remote server, for instance).
 typedef Future<bool> ValidateNextStep();
 
+/// This class describes a step in a [FormStepsComponent].
 @Component(
     selector: 'form-step',
     templateUrl: '/packages/vepweb/component/common/form/form-step.html',
@@ -37,7 +48,9 @@ class FormStepComponent extends FieldContainer implements ScopeAware {
   bool when;
 
   Scope _scope;
+
   Scope get scope => _scope;
+
   set scope(Scope scope) {
     var ctx = utils.getContext(scope, FormStepsComponentContainer) as FormStepsComponentContainer;
     if (ctx != null) {

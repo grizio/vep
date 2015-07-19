@@ -1,6 +1,7 @@
 part of vep.component;
 
 typedef void Listener<A>(A data);
+
 class Subscriber<A> {
   List<Listener<A>> _listeners = [];
 

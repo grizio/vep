@@ -12,7 +12,7 @@ class TheaterService {
   TheaterService(this.http);
 
   Future<List<Page>> findAll() {
-    return _prepare().then((_){
+    return _prepare().then((_) {
       if (_) {
         return _theaters;
       } else {
@@ -22,21 +22,21 @@ class TheaterService {
   }
 
   Future<HttpResult> create(TheaterForm theater) {
-    return http.post('/theater/' + theater.canonical, theater, withSession: true).then((_){
+    return http.post('/theater/' + theater.canonical, theater, withSession: true).then((_) {
       _clearCache();
       return _;
     });
   }
 
   Future<HttpResult> update(TheaterForm theater) {
-    return http.put('/theater/${theater.canonical}', theater, withSession: true).then((_){
+    return http.put('/theater/${theater.canonical}', theater, withSession: true).then((_) {
       _clearCache();
       return _;
     });
   }
 
   Future<Theater> find(String canonical) {
-    return _prepare().then((_){
+    return _prepare().then((_) {
       if (_) {
         return _theaters.firstWhere((t) => t.canonical == canonical, orElse: () => null);
       } else {
@@ -52,7 +52,7 @@ class TheaterService {
   Future<bool> _prepare() {
     if (_loading == null) {
       if (_isCacheExpired()) {
-        _loading = http.get('/theaters', type: const jsonx.TypeHelper<List<Theater>>().type).then((httpResult){
+        _loading = http.get('/theaters', type: const jsonx.TypeHelper<List<Theater>>().type).then((httpResult) {
           if (httpResult.isSuccess) {
             _theaters = (httpResult as HttpResultSuccessEntity).entity as List<Theater>;
             window.localStorage[theatersCacheStart] = new DateTime.now().millisecondsSinceEpoch.toString();
@@ -66,7 +66,7 @@ class TheaterService {
         _loading = new Future.value(true);
       }
     }
-    return _loading.then((_){
+    return _loading.then((_) {
       _loading = null;
       return _;
     });

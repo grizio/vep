@@ -27,8 +27,8 @@ class VepRouter extends UserRouter with CmsRouter, TheaterRouter {
           mount: cmsRoute
       ),
       'theater': ngRoute(
-        path: '/theater',
-        mount: theaterRoute
+          path: '/theater',
+          mount: theaterRoute
       ),
       'login': ngRoute(
           path: '/login',

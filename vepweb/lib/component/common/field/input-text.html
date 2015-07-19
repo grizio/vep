@@ -3,7 +3,7 @@
         <label for="{{ id }}" class="right inline" ng-class="{error: errors.isNotEmpty}">{{ label }}</label>
     </div>
     <div class="small-9 columns">
-        <input type="text" class="input-text" ng-model="value" ng-class="{error: errors.isNotEmpty}" ng-if="!area" />
+        <input type="text" class="input-text" ng-model="value" ng-class="{error: errors.isNotEmpty}" ng-if="!area"/>
         <textarea class="input-text" ng-model="value" ng-class="{error: errors.isNotEmpty}" ng-if="area"></textarea>
         <small class="error" ng-if="errors.isNotEmpty">{{ errors.join(' &bull; ') }}</small>
     </div>

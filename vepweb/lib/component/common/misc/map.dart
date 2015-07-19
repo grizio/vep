@@ -1,11 +1,14 @@
 part of vep.component.common.misc;
 
+/// This class describes a component containing a map.
 abstract class MapContainer {
   set mapComponent(MapComponent map);
 }
 
+/// Describes a function to be initialized when the map is loaded.
 typedef void OnMapInitialized();
 
+/// Provides a simple way to developer to listen and trigger map initialization events.
 class MapInitializedSubscriber {
   List<OnMapInitialized> _listeners = [];
 
@@ -20,6 +23,7 @@ class MapInitializedSubscriber {
   }
 }
 
+/// This component is used to manipulate a Google Map.
 @Component(
     selector: 'map',
     templateUrl: '/packages/vepweb/component/common/misc/map.html',
@@ -92,6 +96,7 @@ class MapComponent implements ScopeAware {
   void removeMarker(int id) => mapDecorator.forEach((_) => _.removeMarker(id));
 }
 
+/// This decorator is a helper to manipulate the Google Map.
 @Decorator(selector: '.map')
 class MapDecorator implements ScopeAware, AttachAware {
   static int _currentId = 0;

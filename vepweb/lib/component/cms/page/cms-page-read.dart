@@ -30,7 +30,7 @@ class CmsPageReadComponent implements AttachAware {
   }
 
   void _load(String canonical) {
-    pageService.find(canonical).then((_){
+    pageService.find(canonical).then((_) {
       page = _;
       if (routeProvider.routeName == 'page-read') {
         app.breadCrumb.path.last.name = page.title;

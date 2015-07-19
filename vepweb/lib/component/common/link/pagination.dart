@@ -1,5 +1,6 @@
 part of vep.component.common.link;
 
+/// This component is used to create a list of links as a pagination system.
 @Component(
     selector: 'pagination',
     templateUrl: '/packages/vepweb/component/common/link/pagination.html',

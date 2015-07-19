@@ -1,34 +1,6 @@
 part of vep.component.common.form;
 
-class FormDataProxy {
-  final Object innerObject;
-  final FormComponent formComponent;
-
-  FormDataProxy(this.innerObject, this.formComponent);
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) {
-    InstanceMirror mirror = reflect(innerObject);
-    if (invocation.isSetter) {
-      var fieldName = MirrorSystem.getName(invocation.memberName);
-      fieldName = fieldName.substring(0, fieldName.length - 1); //remove "=" of setter.
-      var field = MirrorSystem.getSymbol(fieldName);
-
-      if (mirror.type.declarations.containsKey(field)) {
-        Object oldValue = mirror.getField(field).hasReflectee ? mirror.getField(field).reflectee : null;
-        Object newValue = invocation.positionalArguments.first;
-        if (oldValue != newValue) {
-          var result = mirror.setField(field, newValue);
-          formComponent.updateFieldFromModel(fieldName);
-          return result;
-        }
-      }
-    } else {
-      return mirror.delegate(invocation);
-    }
-  }
-}
-
+/// This class describes a component containing several fields.
 abstract class FieldContainer {
   @NgTwoWay('errors')
   List<String> errors = [];
@@ -64,7 +36,7 @@ abstract class FieldContainer {
     }
   }
 
-  FieldComponent operator[](String name) {
+  FieldComponent operator [](String name) {
     return fields.firstWhere((_) => _.name == name, orElse: () => null);
   }
 

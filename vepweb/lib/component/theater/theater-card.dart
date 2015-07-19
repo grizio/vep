@@ -46,7 +46,7 @@ class TheaterCardComponent implements AttachAware {
   }
 
   void initializeMapPosition() {
-    geocodingService.findLatLngByAddress(theater.address).then((_){
+    geocodingService.findLatLngByAddress(theater.address).then((_) {
       theaterLat = _.lat;
       theaterLng = _.lng;
     });

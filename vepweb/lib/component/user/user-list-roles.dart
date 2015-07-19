@@ -26,11 +26,11 @@ class UserListRolesComponent extends TableSearchContext {
 
   @override
   Future<List<Map<String, Object>>> search(Map<String, Object> filters) {
-    return userService.getUserList().then((_){
+    return userService.getUserList().then((_) {
       if (_.isSuccess) {
         var httpResult = _ as HttpResultSuccessEntity;
         var userList = utils.objectToListOfMap(httpResult.entity);
-        userList = userList.map((user){
+        userList = userList.map((user) {
           for (String role in roles.all) {
             user['role-' + role] = (user['roles'] as List<String>).contains(role);
           }
@@ -52,7 +52,7 @@ class UserListRolesComponent extends TableSearchContext {
         roles.add(key.substring(5));
       }
     }
-    userService.updateRoles(data['uid'], roles).then((_){
+    userService.updateRoles(data['uid'], roles).then((_) {
       processing = false;
     });
   }

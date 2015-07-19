@@ -1,9 +1,18 @@
 part of vep.component.common.field;
 
+/// Function typed by this typedef should be used to check if an element verify a condition.
+/// Return [true] when the element is valid.
 typedef bool Constraint<A>(A element);
 
+/// Functions typed by this typedef should describe the context where an element is enabled.
+/// Returns true when the element is enabled.
+/// Example
+///
+///     bool myCheck() => sth != null; // When sth in current class is not null;
 typedef bool EnableWhen();
 
+/// This class is the parent of all field components in the application.
+/// It provides common attributes and behavior for all fields.
 abstract class FieldComponent<A> implements ScopeAware, AttachAware {
   FormComponent formComponent;
   FieldContainer fieldContainer;
@@ -31,7 +40,9 @@ abstract class FieldComponent<A> implements ScopeAware, AttachAware {
   String parent;
 
   Scope _scope;
+
   Scope get scope => _scope;
+
   set scope(Scope scope) {
     _scope = scope;
     var ctx = utils.getContext(scope, FormComponentContainer) as FormComponentContainer;
@@ -109,6 +120,8 @@ abstract class FieldComponent<A> implements ScopeAware, AttachAware {
   }
 }
 
+/// This decorator is common for all fields in this application.
+/// It will be used to add attribute in HTML in terms of developer configuration.
 abstract class FieldDecorator implements ScopeAware {
   final Element element;
   Scope _scope;

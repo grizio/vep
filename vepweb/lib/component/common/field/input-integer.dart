@@ -1,5 +1,6 @@
 part of vep.component.common.field;
 
+/// This component provides the user to enter an integer value.
 @Component(
     selector: 'input-integer',
     templateUrl: '/packages/vepweb/component/common/field/input-integer.html',
@@ -15,6 +16,7 @@ class InputIntegerComponent extends InputComponent<int> {
   int step;
 }
 
+/// Decorates the input with attributes in terms of developer configuration.
 @Decorator(selector: 'input.input-integer')
 class InputIntegerDecorator extends InputDecorator {
   InputIntegerDecorator(Element element) : super(element);

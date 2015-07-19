@@ -1,6 +1,5 @@
 library vep.component.cms.page;
 
-import 'dart:html';
 import 'package:angular/angular.dart';
 import 'package:vepweb/component/common/form/vep.component.form.lib.dart';
 import 'package:vepweb/model/vep.model.lib.dart';

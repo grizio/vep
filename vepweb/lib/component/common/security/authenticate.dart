@@ -1,5 +1,8 @@
 part of vep.component.common.security;
 
+/// This component is used to provide security by hiding a component
+/// when the user is not logged or has not the right to see it.
+/// When the user is not logged in, show the login form.
 @Component(
     selector: 'authenticate',
     templateUrl: '/packages/vepweb/component/common/security/authenticate.html',
@@ -11,6 +14,7 @@ class Authenticate {
 
   @NgAttr("role")
   String get role => _role;
+
   set role(String value) {
     _role = value;
     updateState();

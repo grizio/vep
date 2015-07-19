@@ -1,8 +1,14 @@
 part of vep.component.common.form;
 
+/// This class describes components containing a [FormStepsComponentContainer].
+/// All component using the previous one should extends (or implements) this class.
+/// In the other cases, the [FormStepsComponentContainer] could have unwanted behaviors.
 abstract class FormStepsComponentContainer extends FormComponentContainer<FormStepsComponent> {
 }
 
+/// This class describes a form having several steps before posting information.
+/// The form should contain several steps which can be inserted into or removed from the flow.
+/// Each step is describe as a [FormStepComponent].
 @Component(
     selector: 'form-steps',
     templateUrl: '/packages/vepweb/component/common/form/form-steps.html',
@@ -184,6 +190,8 @@ class FormStepsComponent extends FormComponent {
   }
 }
 
+/// This class si used to manipulate DOM adding or removing an element blocking the user to change data.
+/// It avoids the user to change data during a step change or after sending it.
 @Decorator(selector: '.form-steps')
 class FormStepsDecorator implements ScopeAware {
   final Element element;

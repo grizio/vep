@@ -10,8 +10,11 @@ class FormUserRegistrationComponent extends FormSimpleComponentContainer {
   UserRegistration user = new UserRegistration();
 
   InputEmailComponent get email => form['email'];
+
   InputEmailComponent get email2 => form['email2'];
+
   InputPasswordComponent get password => form['password'];
+
   InputPasswordComponent get password2 => form['password2'];
 
   FormUserRegistrationComponent(this.userService);

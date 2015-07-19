@@ -1,5 +1,6 @@
 part of vep.component.common.field;
 
+/// Provides a way for the user to provides one value in terms of a list of choices.
 @Component(
     selector: 'input-one-choice',
     templateUrl: '/packages/vepweb/component/common/field/input-one-choice.html',
@@ -33,6 +34,7 @@ class InputOneChoiceComponent extends FieldComponent<Object> {
   }
 }
 
+/// Decorates the input with attributes in terms of developer configuration.
 @Decorator(selector: '.input-one-choice')
 class InputOneChoiceDecorator extends FieldDecorator implements AttachAware {
   InputOneChoiceDecorator(Element element) : super(element);

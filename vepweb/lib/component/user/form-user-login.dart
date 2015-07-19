@@ -22,10 +22,11 @@ class FormUserLoginComponent extends FormSimpleComponentContainer {
 
   Future onDone(HttpResult httpResult) {
     var res = httpResult as HttpResultSuccess;
-    userService.getRoles(userLogin.email, res.body).then((_){
+    userService.getRoles(userLogin.email, res.body).then((_) {
       if (_.isSuccess) {
         app.login(userLogin.email, res.body, (_ as HttpResultSuccessEntity).entity);
-      } // else Should never happen
+      }
+      // else Should never happen
 
       // We return on the previous page
       if (redirectBack) {

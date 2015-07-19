@@ -1,5 +1,6 @@
 part of vep.component.common.link;
 
+/// Helper to avoid links sending the user into another page and refreshing the site.
 @Decorator(selector: 'a')
 class AnchorDecorator {
   final Element element;

@@ -21,7 +21,7 @@ class TheaterListComponent implements TableSearchContext {
 
   @override
   Future<List<Map<String, Object>>> search(Map<String, Object> filters) {
-    return theaterService.findAll().then((theaterList){
+    return theaterService.findAll().then((theaterList) {
       return utils.objectToListOfMap(theaterList);
     });
   }

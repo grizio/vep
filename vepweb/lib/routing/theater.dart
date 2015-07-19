@@ -2,6 +2,7 @@ part of vep.routing;
 
 abstract class TheaterRouter {
   App get app;
+
   TheaterService get theaterService;
 
   get theaterRoute => {
@@ -25,9 +26,9 @@ abstract class TheaterRouter {
         preEnter: (_) => app.breadCrumb = new BreadCrumb().child('theater-management', '/theaters', 'Gestion des théâtres')
     ),
     'theater-read': ngRoute(
-      path: '/:canonical',
-      view: '/public/views/theater/read.html',
-      preEnter: (_) => app.breadCrumb = new BreadCrumb().child('theater-read', '/theater/${_.parameters['canonical']}', '')
+        path: '/:canonical',
+        view: '/public/views/theater/read.html',
+        preEnter: (_) => app.breadCrumb = new BreadCrumb().child('theater-read', '/theater/${_.parameters['canonical']}', '')
     )
   };
 }

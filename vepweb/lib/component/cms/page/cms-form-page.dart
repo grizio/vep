@@ -73,5 +73,6 @@ class CmsFormPageComponent extends FormSimpleComponentContainer {
   Future onDone(HttpResult httpResult) {
     router.gotoUrl('/cms/pages');
     navigationComponent.invalidatePageList();
+    return new Future.value();
   }
 }

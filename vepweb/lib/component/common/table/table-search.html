@@ -2,13 +2,13 @@
     <pagination pageMax="pageMax" centered="true" page="page" ng-if="showPages"></pagination>
     <table>
         <thead>
-            <tr>
-                <th ng-repeat="column in tableDescriptor.columns">
-                    {{ column.name }}
-                </th>
-            </tr>
-            <tr>
-                <th ng-repeat="column in tableDescriptor.columns">
+        <tr>
+            <th ng-repeat="column in tableDescriptor.columns">
+                {{ column.name }}
+            </th>
+        </tr>
+        <tr>
+            <th ng-repeat="column in tableDescriptor.columns">
                 <span ng-switch="column.type" ng-if="column.hasFilter">
                     <input type="text" name="{{ column.code }}" ng-switch-when="text" ng-model="filter[column.code]"
                            ng-change="onFilterChange()"/>
@@ -16,23 +16,26 @@
                            ng-model="filter[column.code]" ng-click="onFilterChange()"/>
                     <input type="text" name="{{ column.code }}" ng-switch-when="link" ng-model="filter[column.code]"
                            ng-change="onFilterChange()"/>
-                    <input type="number" name="{{ column.code }}" ng-switch-when="integer" ng-model="filter[column.code]"
+                    <input type="number" name="{{ column.code }}" ng-switch-when="integer"
+                           ng-model="filter[column.code]"
                            ng-change="onFilterChange()"/>
                 </span>
-                </th>
-            </tr>
+            </th>
+        </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="row in filteredData">
-                <td ng-repeat="column in tableDescriptor.columns">
+        <tr ng-repeat="row in filteredData">
+            <td ng-repeat="column in tableDescriptor.columns">
                     <span ng-if="column.active" ng-switch="column.type">
                         <input type="text" name="{{ column.code }}" ng-switch-when="text" ng-model="row[column.code]"
                                ng-change="onChange(row['_index'], column.code, $event.target.value)"/>
                         <input type="checkbox" name="{{ column.code }}" ng-switch-when="checkbox"
                                ng-model="row[column.code]"
                                ng-change="onChange(row['_index'], column.code, $event.target.checked)"/>
-                        <a href="{{ column.link(row) }}" ng-switch-when="link">{{ row[column.code] }}{{ column.link(row) }}</a>
-                        <input type="number" name="{{ column.code }}" ng-switch-when="integer" ng-model="row[column.code]"
+                        <a href="{{ column.link(row) }}" ng-switch-when="link">{{ row[column.code] }}{{ column.link(row)
+                            }}</a>
+                        <input type="number" name="{{ column.code }}" ng-switch-when="integer"
+                               ng-model="row[column.code]"
                                ng-change="onChange(row['_index'], column.code, $event.target.value)"/>
                     </span>
                     <span ng-if="!column.active" ng-switch="column.type">
@@ -42,8 +45,8 @@
                         <a href="{{ column.link(row) }}" ng-switch-when="link">{{ row[column.code] }}</a>
                         <span ng-switch-when="integer">{{ row[column.code] }}</span>
                     </span>
-                </td>
-            </tr>
+            </td>
+        </tr>
         </tbody>
     </table>
     <pagination pageMax="pageMax" centered="true" page="page" ng-if="showPages"></pagination>

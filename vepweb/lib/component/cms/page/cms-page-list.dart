@@ -23,7 +23,7 @@ class CmsPageListComponent extends TableSearchContext {
 
   @override
   Future<List<Map<String, Object>>> search(Map<String, Object> filters) {
-    return pageService.findAll().then((pageList){
+    return pageService.findAll().then((pageList) {
       return utils.objectToListOfMap(pageList);
     });
   }

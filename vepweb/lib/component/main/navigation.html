@@ -12,24 +12,35 @@
 
                 <section class="top-bar-section">
                     <ul class="right">
-                        <navigation-link code="management" name="'Administration'" role="user-manager|page-manager|theater-manager" has-children="true">
-                            <navigation-link code="user-manager" name="'Gestion des utilisateurs'" role="user-manager" has-children="true" parent="management">
-                                <navigation-link code="user-role-management" name="'Gestion des rôles'" url="'/user/role/management'" parent="user-manager"></navigation-link>
+                        <navigation-link code="management" name="'Administration'"
+                                         role="user-manager|page-manager|theater-manager" has-children="true">
+                            <navigation-link code="user-manager" name="'Gestion des utilisateurs'" role="user-manager"
+                                             has-children="true" parent="management">
+                                <navigation-link code="user-role-management" name="'Gestion des rôles'"
+                                                 url="'/user/role/management'" parent="user-manager"></navigation-link>
                             </navigation-link>
-                            <navigation-link code="page-manager" name="'Gestion des pages'" role="page-manager" has-children="true" parent="management">
-                                <navigation-link code="cms-page-management" name="'Gestion des pages'" url="'/cms/pages'" parent="page-manager"></navigation-link>
+                            <navigation-link code="page-manager" name="'Gestion des pages'" role="page-manager"
+                                             has-children="true" parent="management">
+                                <navigation-link code="cms-page-management" name="'Gestion des pages'"
+                                                 url="'/cms/pages'" parent="page-manager"></navigation-link>
                             </navigation-link>
-                            <navigation-link code="theater-manager" name="'Gestion des théâtres'" role="theater-manager" has-children="true" parent="management">
-                                <navigation-link code="theater-management" name="'Gestion des théâtres'" url="'/theaters'" parent="theater-manager"></navigation-link>
+                            <navigation-link code="theater-manager" name="'Gestion des théâtres'" role="theater-manager"
+                                             has-children="true" parent="management">
+                                <navigation-link code="theater-management" name="'Gestion des théâtres'"
+                                                 url="'/theaters'" parent="theater-manager"></navigation-link>
                             </navigation-link>
                         </navigation-link>
                     </ul>
                     <ul class="left">
                         <navigation-link code="home" name="'Accueil'" url="'/'"></navigation-link>
-                        <navigation-link code="register" name="'Inscription'" url="'/user/register'" ng-if="!loggedIn"></navigation-link>
-                        <navigation-link code="login" name="'Connexion'" url="'/login'" ng-if="!loggedIn"></navigation-link>
-                        <navigation-link code="logout" name="'Déconnexion'" url="'/logout'" ng-if="loggedIn"></navigation-link>
-                        <navigation-link ng-repeat="page in pages" code="page.canonical" name="page.title" url="'/page/' + page.canonical"></navigation-link>
+                        <navigation-link code="register" name="'Inscription'" url="'/user/register'"
+                                         ng-if="!loggedIn"></navigation-link>
+                        <navigation-link code="login" name="'Connexion'" url="'/login'"
+                                         ng-if="!loggedIn"></navigation-link>
+                        <navigation-link code="logout" name="'Déconnexion'" url="'/logout'"
+                                         ng-if="loggedIn"></navigation-link>
+                        <navigation-link ng-repeat="page in pages" code="page.canonical" name="page.title"
+                                         url="'/page/' + page.canonical"></navigation-link>
                     </ul>
                 </section>
             </nav>
