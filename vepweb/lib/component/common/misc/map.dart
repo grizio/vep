@@ -10,7 +10,7 @@ class MapInitializedSubscriber {
   List<OnMapInitialized> _listeners = [];
 
   void process() {
-    _listeners.forEach((listener){
+    _listeners.forEach((listener) {
       listener();
     });
   }
@@ -27,23 +27,51 @@ class MapInitializedSubscriber {
 class MapComponent implements ScopeAware {
   static const defaultLat = 47.00;
   static const defaultLng = 03.00;
+  static const defaultInnerClass = 'map-250';
+  static const defaultZoom = 8;
 
   double _lat = defaultLat;
+  double _lng = defaultLng;
+  String _innerClass = defaultInnerClass;
+  int _zoom = defaultZoom;
+
+  @NgOneWayOneTime('mark-center')
+  bool markCenter = false;
 
   @NgAttr('innerClass')
-  String innerClass = "map-250";
+  String get innerClass => _innerClass;
+
+  set innerClass(String value) {
+    if (value != null) {
+      _innerClass = value;
+    } else {
+      _innerClass = defaultInnerClass;
+    }
+  }
 
   @NgTwoWay('lat')
   double get lat => _lat;
 
-  set lat(double lat) => _lat = lat != null ? lat : defaultLat;
-
-  double _lng = defaultLng;
+  set lat(double lat) {
+    _lat = lat != null ? lat : defaultLat;
+    mapDecorator.forEach((_) => _.update());
+  }
 
   @NgTwoWay('lng')
   double get lng => _lng;
 
-  set lng(double lng) => _lng = lng != null ? lng : defaultLng;
+  set lng(double lng) {
+    _lng = lng != null ? lng : defaultLng;
+    mapDecorator.forEach((_) => _.update());
+  }
+
+  @NgTwoWay('zoom')
+  int get zoom => _zoom;
+
+  set zoom(int zoom) {
+    _zoom = zoom != null ? zoom : defaultZoom;
+    mapDecorator.forEach((_) => _.update());
+  }
 
   Option<MapDecorator> mapDecorator = None;
 
@@ -90,12 +118,20 @@ class MapDecorator implements ScopeAware, AttachAware {
 
   @override
   void attach() {
+    update();
+  }
+
+  void update() {
     if (mapComponent != null) {
       var options = new MapOptions();
-      options.zoom = 8;
-      options.center = new LatLng(mapComponent.lat, mapComponent.lng);
+      var center = new LatLng(mapComponent.lat, mapComponent.lng);
+      options.zoom = mapComponent.zoom;
+      options.center = center;
       options.mapTypeId = MapTypeId.ROADMAP;
       gmap = new GMap(element, options);
+      if (mapComponent.markCenter) {
+        addMarker(center, null);
+      }
       mapComponent.mapInitializedSubscriber.process();
     }
   }

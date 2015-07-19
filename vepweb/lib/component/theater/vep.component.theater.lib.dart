@@ -15,9 +15,11 @@ import 'dart:math';
 import 'package:vepweb/http/vep.http.lib.dart';
 import 'package:klang/utilities/string.dart' as stringUtilities;
 import 'package:vepweb/component/main/vep.component.main.lib.dart';
+import 'package:vepweb/service/common/vep.service.common.lib.dart';
 
 part 'form-theater.dart';
 part 'input-theater.dart';
+part 'theater-card.dart';
 part 'theater-list.dart';
 part 'theater-plan.dart';
 
@@ -29,5 +31,6 @@ class VepComponentTheaterModule extends Module {
     bind(TheaterListComponent);
     bind(TheaterPlanComponent);
     bind(TheaterPlanMapDecorator);
+    bind(TheaterCardComponent);
   }
 }

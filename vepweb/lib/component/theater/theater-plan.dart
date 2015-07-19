@@ -12,6 +12,10 @@ class TheaterPlanComponent {
   @NgOneWay('enabled')
   bool enabled;
 
+  /// "all", "none", "description"
+  @NgOneWay('legend')
+  String legend = "all";
+
   @NgOneWay('json-plan')
   String get jsonPlan => _jsonPlan;
 
@@ -19,7 +23,9 @@ class TheaterPlanComponent {
     _jsonPlan = value;
     try {
       seats = jsonx.decode(value, type: const jsonx.TypeHelper<List<Seat>>().type);
-      decorator.update();
+      if (decorator != null) {
+        decorator.update();
+      }
     } catch (e) {
       seats = null;
     }
@@ -28,15 +34,14 @@ class TheaterPlanComponent {
   List<String> get selected => seats.where((_) => _.selected).map((_) => _.c);
 
   void toggle(Seat seat) {
-    if (seat.t != 'taken') {
+    if (enabled && seat.t != 'taken') {
       seat.selected = !seat.selected;
     }
-    // else nothing, we cannot select a taken seat
   }
 }
 
 @Decorator(selector: '.theater-plan-map')
-class TheaterPlanMapDecorator {
+class TheaterPlanMapDecorator implements AttachAware {
   TheaterPlanComponent component;
   Element element;
 
@@ -66,5 +71,10 @@ class TheaterPlanMapDecorator {
     } else {
       element.style.overflow = 'auto';
     }
+  }
+
+  @override
+  void attach() {
+    update();
   }
 }

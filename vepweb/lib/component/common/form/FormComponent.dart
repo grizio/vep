@@ -85,10 +85,13 @@ abstract class FormComponent implements ScopeAware, AttachAware {
   }
 
   void initialize() {
-    var future = new Future.value();
+    var future = null;
     updateAllFieldsFromModel();
     if (onFormLoaded != null) {
       future = onFormLoaded();
+    }
+    if (future == null) {
+      future = new Future.value();
     }
     future.then((_) {
       initialized = true;

@@ -21,8 +21,16 @@
         position: absolute;
         text-align: center;
         transition: all ease 250ms;
+      }
 
-        &:not(.theater-plan-seat-taken){
+      &.theater-plan-map-disabled {
+        &:not(.theater-plan-seat-taken) {
+          cursor: default!important;
+        }
+      }
+
+      &:not(.theater-plan-map-disabled) {
+        .theater-plan-seat:not(.theater-plan-seat-taken) {
           cursor: pointer;
         }
       }

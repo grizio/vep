@@ -1,25 +1,25 @@
 <div class="theater-plan">
-    <div class="row theater-plan-legend">
-        <div class="small-3 columns">
+    <div class="row theater-plan-legend" ng-if="legend != 'none'">
+        <div class="small-3 columns" ng-class="{'small-offset-3': legend == 'description'}">
             <div class="theater-plan-seat theater-plan-seat-normal"></div>
             Normal
         </div>
-        <div class="small-3 columns">
+        <div class="small-3 columns" ng-class="{'end': legend == 'description'}">
             <div class="theater-plan-seat theater-plan-seat-strap"></div>
             Strapontin
         </div>
-        <div class="small-3 columns">
+        <div class="small-3 columns" ng-if="legend == 'all'">
             <div class="theater-plan-seat theater-plan-seat-taken"></div>
             Déjà réservé
         </div>
-        <div class="small-3 columns">
+        <div class="small-3 columns" ng-if="legend == 'all'">
             <div class="theater-plan-seat theater-plan-seat-selected"></div>
             Sélectionné
         </div>
     </div>
     <hr>
     <div class="theater-plan-map-box">
-        <div class="theater-plan-map">
+        <div class="theater-plan-map" ng-class="{'theater-plan-map-disabled': !enabled}">
             <div class="theater-plan-seat" ng-repeat="seat in seats" ng-click="toggle(seat)"
                  ng-class="[seat.className]"
                  style="top: {{ seat.y }}px;left: {{ seat.x }}px;width: {{ seat.w }}px;height: {{ seat.h }}px">

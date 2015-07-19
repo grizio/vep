@@ -23,6 +23,11 @@ abstract class TheaterRouter {
         path: 's', // ="/theaters"
         view: '/public/views/theater/list.html',
         preEnter: (_) => app.breadCrumb = new BreadCrumb().child('theater-management', '/theaters', 'Gestion des théâtres')
+    ),
+    'theater-read': ngRoute(
+      path: '/:canonical',
+      view: '/public/views/theater/read.html',
+      preEnter: (_) => app.breadCrumb = new BreadCrumb().child('theater-read', '/theater/${_.parameters['canonical']}', '')
     )
   };
 }
