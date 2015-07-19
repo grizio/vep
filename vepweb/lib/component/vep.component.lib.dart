@@ -6,6 +6,7 @@ import 'common/vep.component.common.lib.dart';
 import 'main/vep.component.main.lib.dart';
 import 'user/vep.component.user.lib.dart';
 import 'cms/vep.component.cms.lib.dart';
+import 'theater/vep.component.theater.lib.dart';
 
 part 'Subscriber.dart';
 
@@ -15,5 +16,6 @@ class VepComponentModule extends Module {
     install(new VepComponentMainModule());
     install(new VepComponentUserModule());
     install(new VepComponentCmsModule());
+    install(new VepComponentTheaterModule());
   }
 }

@@ -37,7 +37,7 @@
                     </span>
                     <span ng-if="!column.active" ng-switch="column.type">
                         <span ng-switch-when="text">{{ row[column.code] }}</span>
-                        <input type="checkbox" name="{{ column.code }}" readonly ng-switch-when="checkbox"
+                        <input type="checkbox" name="{{ column.code }}" disabled ng-switch-when="checkbox"
                                ng-model="row[column.code]"/>
                         <a href="{{ column.link(row) }}" ng-switch-when="link">{{ row[column.code] }}</a>
                         <span ng-switch-when="integer">{{ row[column.code] }}</span>

@@ -85,11 +85,14 @@ abstract class FormComponent implements ScopeAware, AttachAware {
   }
 
   void initialize() {
-    initialized = true;
+    var future = new Future.value();
     updateAllFieldsFromModel();
     if (onFormLoaded != null) {
-      onFormLoaded();
+      future = onFormLoaded();
     }
+    future.then((_) {
+      initialized = true;
+    });
   }
 
   Future submit(Event e) {
@@ -108,13 +111,11 @@ abstract class FormComponent implements ScopeAware, AttachAware {
             var futureValid = onFormValid != null ? onFormValid(result) : defaultFuture;
             return futureValid.then((_) => done = true);
           } else {
-            var errors;
             if (result is HttpResultError) {
-              errors = {'_root_': [(result as HttpResultError).errorMessage]};
+              propagateErrors({'_root_': [(result as HttpResultError).errorMessage]});
             } else if (result is HttpResultErrors) {
-              errors = (result as HttpResultErrors).errorMessages;
+              propagateErrors((result as HttpResultErrors).errorMessages);
             }
-            propagateErrors(errors);
             return onFormError != null ? onFormError(result) : defaultFuture;
           }
         }

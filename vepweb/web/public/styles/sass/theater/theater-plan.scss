@@ -1,0 +1,59 @@
+.theater-plan {
+  .theater-plan-legend {
+    .theater-plan-seat {
+      display: inline-block;
+      vertical-align: middle;
+      width: 2em;
+      height: 2em;
+    }
+  }
+
+  .theater-plan-map-box {
+    padding: 5px;
+    box-shadow: 0 0 5px #888;
+
+    .theater-plan-map {
+      position: relative;
+      overflow: auto;
+      margin: auto;
+
+      .theater-plan-seat {
+        position: absolute;
+        text-align: center;
+        transition: all ease 250ms;
+
+        &:not(.theater-plan-seat-taken){
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .theater-plan-seat {
+    &.theater-plan-seat-normal {
+      background-color: #fff;
+      color: #000;
+      border: 1px solid black;
+    }
+
+    &.theater-plan-seat-strap {
+      background-color: #07a;
+      color: #fff;
+      border-radius: 100%;
+      border: 1px solid #046;
+    }
+
+    &.theater-plan-seat-taken {
+      background-color: #d43;
+      color: #fff;
+      cursor: not-allowed;
+      border: 1px solid #832;
+    }
+
+    &.theater-plan-seat-selected {
+      background-color: #484;
+      color: #fff;
+      border: 1px solid #252;
+    }
+  }
+}

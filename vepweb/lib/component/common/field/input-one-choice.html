@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="small-3 columns">
+        <label class="right inline" ng-class="{error: errors.isNotEmpty}" ng-if="explode">{{ label }}</label>
+        <label class="right inline" for="{{ id }}" ng-class="{error: errors.isNotEmpty}" ng-if="!explode">
+            {{ label }}
+        </label>
+    </div>
+    <div class="small-9 columns" ng-if="explode">
+        <label ng-repeat="choice in choices">
+            <input type="radio" name="name" ng-model="innerValue" ng-value="$index" class="input-one-choice"
+                   ng-class="{error: errors.isNotEmpty}">
+            {{ choice.label }}
+        </label>
+        <small class="error" ng-if="errors.isNotEmpty">{{ errors.join(' &bull; ') }}</small>
+    </div>
+    <div class="small-9 columns" ng-if="!explode">
+        <select ng-options="$index as choice.label for choice in choices" ng-model="innerValue"
+                ng-class="{error: errors.isNotEmpty}">
+            <option value="" ng-if="!required">Aucun(e)</option>
+        </select>
+        <small class="error" ng-if="errors.isNotEmpty">{{ errors.join(' &bull; ') }}</small>
+    </div>
+</div>

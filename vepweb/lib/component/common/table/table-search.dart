@@ -147,7 +147,7 @@ class ColumnDescriptor {
     _active = false;
   }
 
-  ColumnDescriptor(this._code, this._name, this._type, {bool active, bool hasFilter, String url}) {
+  ColumnDescriptor(this._code, this._name, this._type, {bool active:false, bool hasFilter:false, String url:null}) {
     _active = active;
     _hasFilter = hasFilter;
     _url = url;
