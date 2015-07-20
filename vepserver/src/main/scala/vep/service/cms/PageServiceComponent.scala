@@ -2,15 +2,11 @@ package vep.service.cms
 
 import anorm.SqlParser._
 import anorm._
-import spray.http.DateTime
-import spray.routing.authentication.UserPass
-import vep.AnormClient
 import vep.exception.FieldErrorException
-import vep.model.cms.{PageItem, Page, PageForm}
+import vep.model.cms.{Page, PageForm, PageItem}
 import vep.model.common.ErrorCodes
-import vep.model.user.{UserForAdmin, User, UserLogin, UserRegistration}
 import vep.service.AnormImplicits
-import vep.utils.{StringUtils, DB}
+import vep.utils.DB
 
 /**
  * Defines services impacting presentation pages.
@@ -72,14 +68,14 @@ trait PageServiceProductionComponent extends PageServiceComponent {
     override def create(pageForm: PageForm): Unit = DB.withTransaction { implicit c =>
       // The use of SELECT FOR UPDATE provides a way to block other transactions
       // and to not throw any exception for because of email duplication.
-      val nCanonical = SQL("SELECT count(*) FROM page WHERE canonical = {canonical} FOR UPDATE")
+      val nCanonical = SQL("SELECT count(*) FROM page WHERE canonical = {canonical} FOR UPDATE")
         .on("canonical" -> pageForm.canonical)
         .as(scalar[Int].single)
 
       if (nCanonical > 0) {
         throw new FieldErrorException("canonical", ErrorCodes.usedCanonical, "The canonical is already used.")
       } else {
-        SQL("INSERT INTO page(canonical, menu, title, content) VALUES ({canonical}, {menu}, {title}, {content})")
+        SQL("INSERT INTO page(canonical, menu, title, content) VALUES ({canonical}, {menu}, {title}, {content})")
           .on("canonical" -> pageForm.canonical)
           .on("menu" -> pageForm.menu)
           .on("title" -> pageForm.title)
@@ -102,7 +98,7 @@ trait PageServiceProductionComponent extends PageServiceComponent {
     }
 
     override def exists(canonical: String): Boolean = DB.withConnection { implicit c =>
-      val n = SQL("SELECT COUNT(*) FROM page WHERE canonical = {canonical}")
+      val n = SQL("SELECT COUNT(*) FROM page WHERE canonical = {canonical}")
         .on("canonical" -> canonical)
         .as(scalar[Int].single)
       n == 1

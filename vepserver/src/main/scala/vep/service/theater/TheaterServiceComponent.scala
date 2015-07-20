@@ -2,7 +2,6 @@ package vep.service.theater
 
 import anorm.SqlParser._
 import anorm._
-import vep.AnormClient
 import vep.exception.FieldErrorException
 import vep.model.common.ErrorCodes
 import vep.model.theater.{Theater, TheaterForm}
@@ -54,24 +53,24 @@ trait TheaterServiceProductionComponent extends TheaterServiceComponent {
         str("name") ~
         str("address") ~
         get[Option[String]]("content") ~
-        get[Boolean]("fixed") ~
+        int("fixed") ~ // not boolean in database
         get[Option[String]]("plan") ~
         get[Option[Int]]("maxSeats") map {
         case id ~ canonical ~ name ~ address ~ content ~ fixed ~ plan ~ maxSeats =>
-          Theater(id, canonical, name, address, content, fixed, plan, maxSeats)
+          Theater(id, canonical, name, address, content, fixed == 1, plan, maxSeats)
       }
 
     override def create(theaterForm: TheaterForm): Unit = DB.withTransaction { implicit c =>
       // The use of SELECT FOR UPDATE provides a way to block other transactions
       // and to not throw any exception for because of canonical duplication.
-      val nCanonical = SQL("SELECT count(*) FROM theater WHERE canonical = {canonical} FOR UPDATE")
+      val nCanonical = SQL("SELECT count(*) FROM theater WHERE canonical = {canonical} FOR UPDATE")
         .on("canonical" -> theaterForm.canonical)
         .as(scalar[Long].single)
 
       if (nCanonical > 0) {
         throw new FieldErrorException("canonical", ErrorCodes.usedCanonical, "The canonical is already used.")
       } else {
-        SQL("INSERT INTO theater(canonical, name, address, content, fixed, plan, maxSeats) VALUES({canonical}, {name}, {address}, {content}, {fixed}, {plan}, {maxSeats})")
+        SQL("INSERT INTO theater(canonical, name, address, content, fixed, plan, maxSeats) VALUES({canonical}, {name}, {address}, {content}, {fixed}, {plan}, {maxSeats})")
           .on("canonical" -> theaterForm.canonical)
           .on("name" -> theaterForm.name)
           .on("address" -> theaterForm.address)
