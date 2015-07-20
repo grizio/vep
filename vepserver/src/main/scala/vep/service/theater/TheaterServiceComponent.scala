@@ -2,6 +2,7 @@ package vep.service.theater
 
 import anorm.SqlParser._
 import anorm._
+import vep.AnormClient
 import vep.exception.FieldErrorException
 import vep.model.common.ErrorCodes
 import vep.model.theater.{Theater, TheaterForm}

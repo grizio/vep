@@ -2,6 +2,7 @@ package vep.service.cms
 
 import anorm.SqlParser._
 import anorm._
+import vep.AnormClient
 import vep.exception.FieldErrorException
 import vep.model.cms.{Page, PageForm, PageItem}
 import vep.model.common.ErrorCodes
