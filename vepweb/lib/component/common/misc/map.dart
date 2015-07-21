@@ -81,7 +81,7 @@ class MapComponent implements ScopeAware {
 
   @override
   set scope(Scope scope) {
-    var ctx = utils.getContext(scope, MapContainer) as MapContainer;
+    var ctx = utils.getContext(scope, (_) => _ is MapContainer) as MapContainer;
     if (ctx != null) {
       ctx.mapComponent = this;
     }
@@ -113,7 +113,7 @@ class MapDecorator implements ScopeAware, AttachAware {
   @override
   set scope(Scope scope) {
     _scope = scope;
-    mapComponent = utils.getContext(scope, MapComponent) as MapComponent;
+    mapComponent = utils.getContext(scope, (_) => _ is MapComponent) as MapComponent;
     if (mapComponent != null) {
       mapComponent.mapDecorator = Some(this);
     }

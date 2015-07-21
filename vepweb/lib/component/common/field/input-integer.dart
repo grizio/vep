@@ -24,7 +24,7 @@ class InputIntegerDecorator extends InputDecorator {
   @override
   void includeAttributes(Scope scope) {
     super.includeAttributes(scope);
-    var ctx = utils.getContext(scope, InputIntegerComponent) as InputIntegerComponent;
+    var ctx = utils.getContext(scope, (_) => _ is InputIntegerComponent) as InputIntegerComponent;
     if (ctx != null) {
       addAttribute('min', ctx.min.toString());
       addAttribute('max', ctx.max.toString());

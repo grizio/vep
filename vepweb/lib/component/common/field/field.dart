@@ -45,7 +45,7 @@ abstract class FieldComponent<A> implements ScopeAware, AttachAware {
 
   set scope(Scope scope) {
     _scope = scope;
-    var ctx = utils.getContext(scope, FormComponentContainer) as FormComponentContainer;
+    var ctx = utils.getContext(scope, (_) => _ is FormComponentContainer) as FormComponentContainer;
     if (ctx != null) {
       formComponent = ctx.form;
       formComponent.waitingField();
@@ -137,7 +137,7 @@ abstract class FieldDecorator implements ScopeAware {
   }
 
   void includeAttributes(Scope scope) {
-    var ctx = utils.getContext(scope, FieldComponent) as FieldComponent;
+    var ctx = utils.getContext(scope, (_) => _ is FieldComponent) as FieldComponent;
     if (ctx != null) {
       addAttribute('name', ctx.name);
       addAttribute('id', ctx.id);
@@ -152,7 +152,7 @@ abstract class FieldDecorator implements ScopeAware {
 
   void addAttribute(String attribute, Object value) {
     if (value != null) {
-      element.attributes[attribute] = value;
+      element.attributes[attribute] = value.toString();
     }
   }
 }

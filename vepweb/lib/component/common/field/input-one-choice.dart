@@ -41,7 +41,7 @@ class InputOneChoiceDecorator extends FieldDecorator implements AttachAware {
 
   @override
   void attach() {
-    var ctx = utils.getContext(scope, InputOneChoiceComponent) as InputOneChoiceComponent;
+    var ctx = utils.getContext(scope, (_) => _ is InputOneChoiceComponent) as InputOneChoiceComponent;
     if (ctx != null) {
       ctx.elements.add(element);
     }

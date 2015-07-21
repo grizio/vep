@@ -52,7 +52,7 @@ class FormStepComponent extends FieldContainer implements ScopeAware {
   Scope get scope => _scope;
 
   set scope(Scope scope) {
-    var ctx = utils.getContext(scope, FormStepsComponentContainer) as FormStepsComponentContainer;
+    var ctx = utils.getContext(scope, (_) => _ is FormStepsComponentContainer) as FormStepsComponentContainer;
     if (ctx != null) {
       ctx.form.steps.add(this);
       formStepsComponent = ctx.form;

@@ -40,7 +40,7 @@ class InputAddressDecorator extends InputDecorator {
   @override
   set scope(Scope scope) {
     super.scope = scope;
-    ctx = utils.getContext(scope, InputAddressComponent) as InputAddressComponent;
+    ctx = utils.getContext(scope, (_) => _ is InputAddressComponent) as InputAddressComponent;
     ctx.inputAddressDecorator = this;
     init();
   }

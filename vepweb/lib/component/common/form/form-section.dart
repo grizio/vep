@@ -18,7 +18,7 @@ class FormSectionComponent extends FieldContainer implements ScopeAware, AttachA
 
   @override
   void attach() {
-    var ctx = utils.getContext(scope, FormSectionsComponentContainer) as FormSectionsComponentContainer;
+    var ctx = utils.getContext(scope, (_) => _ is FormSectionsComponentContainer) as FormSectionsComponentContainer;
     if (ctx != null) {
       ctx.form.sections.add(this);
     }

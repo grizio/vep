@@ -199,7 +199,7 @@ class FormStepsDecorator implements ScopeAware {
 
   @override
   set scope(Scope scope) {
-    var ctx = utils.getContext(scope, FormStepsComponentContainer) as FormStepsComponentContainer;
+    var ctx = utils.getContext(scope, (_) => _ is FormStepsComponentContainer) as FormStepsComponentContainer;
     if (ctx != null) {
       ctx.form.formStepsDecorator = this;
     }

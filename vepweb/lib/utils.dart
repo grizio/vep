@@ -2,7 +2,6 @@ library vep.utils;
 
 import 'package:jsonx/jsonx.dart' as jsonx;
 import 'package:angular/angular.dart';
-import 'dart:mirrors';
 import 'package:klang/utilities/string.dart' as stringUtilities;
 
 Map<String, Object> objectToMap(Object data) {
@@ -14,12 +13,25 @@ List<Map<String, Object>> objectToListOfMap(Object data) {
   return jsonx.decode(jsonx.encode(data)) as List<Map<String, Object>>;
 }
 
-Object getContext(Scope scope, Type contextType) {
+/// This function is used to check the type of given object.
+/// The returning value must be [true] if the object if the given type.
+/// The usage of this function avoids Mirror.
+/// Common use:
+///
+///     (obj) => obj is MyType
+typedef bool checkType(Object o);
+
+/// Gets the context of the scope of type checked by given [checker].
+/// It is useful when components are included one into another
+/// because it will check all parent scopes until it gets the wanted type (or no parent scope anymore).
+Object getContext(Scope scope, checkType checker) {
   var currentScope = scope;
-  while (currentScope != null && !reflect(currentScope.context).type.isAssignableTo(reflectType(contextType))) {
-    currentScope = currentScope.parentScope;
+  while (currentScope != null) {
+    if (currentScope.context != null && checker(currentScope.context)) {
+      return currentScope.context;
+    }
   }
-  return currentScope != null ? currentScope.context : null;
+  return null;
 }
 
 String canonicalize(String str) {

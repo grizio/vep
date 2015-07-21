@@ -55,7 +55,7 @@ abstract class FormComponent implements ScopeAware, AttachAware {
 
   @override
   set scope(Scope scope) {
-    var ctx = utils.getContext(scope, FormComponentContainer) as FormComponentContainer;
+    var ctx = utils.getContext(scope, (_) => _ is FormComponentContainer) as FormComponentContainer;
     if (ctx != null) {
       ctx.form = this;
     }

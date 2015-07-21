@@ -35,7 +35,7 @@ abstract class InputDecorator extends FieldDecorator implements AttachAware {
   @override
   void includeAttributes(Scope scope) {
     super.includeAttributes(scope);
-    var ctx = utils.getContext(scope, InputComponent) as InputComponent;
+    var ctx = utils.getContext(scope, (_) => _ is InputComponent) as InputComponent;
     if (ctx != null) {
       addAttribute('maxlength', ctx.maxLength);
       addAttribute('placeholder', ctx.placeholder);
@@ -48,7 +48,7 @@ abstract class InputDecorator extends FieldDecorator implements AttachAware {
 
   @override
   void attach() {
-    var ctx = utils.getContext(scope, InputComponent) as InputComponent;
+    var ctx = utils.getContext(scope, (_) => _ is InputComponent) as InputComponent;
     if (ctx != null) {
       ctx.input = element;
     }
