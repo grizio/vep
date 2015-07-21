@@ -30,6 +30,7 @@ Object getContext(Scope scope, checkType checker) {
     if (currentScope.context != null && checker(currentScope.context)) {
       return currentScope.context;
     }
+    currentScope = currentScope.parentScope;
   }
   return null;
 }
