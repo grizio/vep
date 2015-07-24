@@ -11,6 +11,8 @@ pubspec.lock
 .sass-cache
 style.css
 style.css.map
+styles.css
+styles.css.map
 
 # We ignore specifics files that are dependant on environment (dev, test or production)
 web/index.html
