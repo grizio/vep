@@ -60,11 +60,11 @@ task standaloneJar(type: OneJar) {
   mainClass = 'vep.Boot'
 }
 
-task make(dependsOn: ['importWeb', 'jar', 'standaloneJar', 'test'])
-
 task copySqlToTest(type: Copy) {
   from('src/main/sql')
   into('src/test/resources/sql/mount')
 }
 
 test.dependsOn('copySqlToTest')
+
+task make(dependsOn: ['importWeb', 'jar', 'standaloneJar', 'test'])

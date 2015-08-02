@@ -36,6 +36,14 @@ vep {
     user = ""
     password = ""
   }
+
+  in-memory {
+    database {
+      url = "jdbc:mysql://localhost:3306/veptest"
+      user = "veptest"
+      password = "veptest"
+    }
+  }
 }
 
 akka {

@@ -7,6 +7,17 @@ def pubServeHost = 'vep.dev'
 def pubServePort = '8079'
 
 // Tasks for dart
+task pubGet(type: Exec) {
+  workingDir '.'
+
+  if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+    commandLine 'cmd', '/c', 'pub.bat get'
+  } else {
+    commandLine 'pub get'
+  }
+}
+
+// Tasks for dart
 task pubServe(type: Exec) {
   workingDir '.'
   
@@ -17,7 +28,7 @@ task pubServe(type: Exec) {
   }
 }
 
-task dartBuild(type: Exec) {
+task dartBuild(type: Exec, dependsOn: 'pubGet') {
   workingDir '.'
   
   if (Os.isFamily(Os.FAMILY_WINDOWS)) {
