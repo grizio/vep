@@ -29,6 +29,11 @@
                                 <navigation-link code="theater-management" name="'Gestion des théâtres'"
                                                  url="'/theaters'" parent="theater-manager"></navigation-link>
                             </navigation-link>
+                            <navigation-link code="company-manager" name="'Gestion des troupes'" role="company-manager"
+                                             has-children="true" parent="management">
+                                <navigation-link code="company-management" name="'Gestion des troupes'"
+                                                 url="'/companies'" parent="company-manager"></navigation-link>
+                            </navigation-link>
                         </navigation-link>
                     </ul>
                     <ul class="left">

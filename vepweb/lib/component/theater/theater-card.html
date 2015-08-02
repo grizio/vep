@@ -16,9 +16,7 @@
         <div class="small-6 columns">
             <h1>{{ theater.name }}</h1>
 
-            <p>
-                {{ theater.content }}
-            </p>
+            <div ng-bind-html="theater.content"></div>
         </div>
         <div class="small-6 columns">
             <h3>Adresse</h3>

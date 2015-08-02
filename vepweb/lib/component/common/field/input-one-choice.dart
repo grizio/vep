@@ -27,8 +27,8 @@ class InputOneChoiceComponent extends FieldComponent<Object> {
   @override
   bool verify() {
     super.verify();
-    if (required && elements.every((_) => !_.checked)) {
-      errors.add('Veuillez séléctionner au moins un élément.');
+    if (required && innerValue < 0) {
+      errors.add('Veuillez sélectionner au moins un élément.');
     }
     return errors.isEmpty;
   }

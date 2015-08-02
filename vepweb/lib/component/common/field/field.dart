@@ -73,6 +73,7 @@ abstract class FieldComponent<A> implements ScopeAware, AttachAware {
 
       formComponent.fieldInitialized();
     }
+    verify();
   }
 
   bool get enabled => enableWhen();

@@ -4,18 +4,21 @@ import 'package:angular/angular.dart';
 import 'package:vepweb/component/main/vep.component.main.lib.dart';
 import 'package:vepweb/service/cms/vep.service.cms.lib.dart';
 import 'package:vepweb/service/theater/vep.service.theater.lib.dart';
+import 'package:vepweb/service/company/vep.service.company.lib.dart';
 
 part 'cms.dart';
+part 'company.dart';
 part 'theater.dart';
 part 'user.dart';
 
 @Injectable()
-class VepRouter extends UserRouter with CmsRouter, TheaterRouter {
+class VepRouter extends UserRouter with CmsRouter, TheaterRouter, CompanyRouter {
   final App app;
   final PageService pageService;
   final TheaterService theaterService;
+  final CompanyService companyService;
 
-  VepRouter(this.app, this.pageService, this.theaterService);
+  VepRouter(this.app, this.pageService, this.theaterService, this.companyService);
 
   call(Router router, RouteViewFactory views) {
     views.configure({
@@ -29,6 +32,10 @@ class VepRouter extends UserRouter with CmsRouter, TheaterRouter {
       'theater': ngRoute(
           path: '/theater',
           mount: theaterRoute
+      ),
+      'company': ngRoute(
+          path: '/compan',
+          mount: companyRoute
       ),
       'login': ngRoute(
           path: '/login',

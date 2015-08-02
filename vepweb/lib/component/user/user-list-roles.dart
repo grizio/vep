@@ -9,15 +9,17 @@ class UserListRolesComponent extends TableSearchContext {
 
   @NgTwoWay('processing')
   bool processing;
-  Lazy<TableDescriptor> _tableDescriptor = lazy(() => new TableDescriptor([
-    new ColumnDescriptor('firstName', 'Prénom', 'text', hasFilter: true),
-    new ColumnDescriptor('lastName', 'Nom', 'text', hasFilter: true),
-    new ColumnDescriptor('email', 'Adresse e-mail', 'text', hasFilter: true),
-    new ColumnDescriptor('role-user', 'Utilisateur', 'checkbox', active: true),
-    new ColumnDescriptor('role-user-manager', 'Gestion des utilisateur', 'checkbox', active: true),
-    new ColumnDescriptor('role-page-manager', 'Gestion des pages', 'checkbox', active: true),
-    new ColumnDescriptor('role-theater-manager', 'Gestion des théâtres', 'checkbox', active: true)
-  ]));
+  Lazy<TableDescriptor> _tableDescriptor = lazy(() {
+    var columns = [
+      new ColumnDescriptor('firstName', 'Prénom', 'text', hasFilter: true),
+      new ColumnDescriptor('lastName', 'Nom', 'text', hasFilter: true),
+      new ColumnDescriptor('email', 'Adresse e-mail', 'text', hasFilter: true)
+    ];
+    for (var role in roles.all) {
+      columns.add(new ColumnDescriptor('role-' + role, roles.roleI18n[role], 'checkbox', active: true));
+    }
+    return columns;
+  });
 
   @override
   TableDescriptor get tableDescriptor => _tableDescriptor.value;

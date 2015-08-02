@@ -51,6 +51,7 @@ abstract class InputDecorator extends FieldDecorator implements AttachAware {
     var ctx = utils.getContext(scope, (_) => _ is InputComponent) as InputComponent;
     if (ctx != null) {
       ctx.input = element;
+      ctx.verify();
     }
   }
 }

@@ -1,0 +1,32 @@
+<div class="company-card company-card-small" ng-if="small">
+    <dl>
+        <dt>Nom</dt>
+        <dd>{{ company.name }}</dd>
+
+        <dt ng-if="company.address != null">Adresse</dt>
+        <dd ng-if="company.address != null">{{ company.address }}</dd>
+
+        <dt>Voir &amp; Entendre</dt>
+        <dd ng-if="company.isVep">Oui</dd>
+        <dd ng-if="!company.isVep">Non</dd>
+    </dl>
+</div>
+<div class="company-card company-card-big" ng-if="!small">
+    <div class="row">
+        <div class="columns" ng-class="{'small-6': company.address != null, 'small-12': company.address == null}">
+            <h1>{{ company.name }}</h1>
+            <h6 ng-if="company.isVep">Troupe de voir &amp; Entendre</h6>
+            <h6 ng-if="!company.isVep">Troupe extérieure</h6>
+
+            <div ng-bind-html="company.content"></div>
+        </div>
+        <div class="small-6 columns" ng-if="company.address != null">
+            <h3>Adresse</h3>
+
+            <p>
+                {{ company.address }}
+            </p>
+            <map lat="companyLat" lng="companyLng" mark-center="true" zoom="16"></map>
+        </div>
+    </div>
+</div>
