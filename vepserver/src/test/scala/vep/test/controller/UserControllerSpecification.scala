@@ -1,6 +1,8 @@
 package vep.test.controller
 
+import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
+import org.specs2.runner.JUnitRunner
 import spray.http.DateTime
 import vep.controller.UserControllerProductionComponent
 import vep.model.common._
@@ -13,6 +15,7 @@ class UserControllerForSpecificationComponent
   override def overrideServices: Boolean = false
 }
 
+@RunWith(classOf[JUnitRunner])
 class UserControllerSpecification extends Specification {
   "Specifications of UserController" >> {
     "register should" >> {

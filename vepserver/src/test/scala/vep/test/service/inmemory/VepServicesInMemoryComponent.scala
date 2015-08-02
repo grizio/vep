@@ -5,6 +5,10 @@ import vep.test.service.inmemory.cms.PageServiceInMemoryComponent
 import vep.test.service.inmemory.theater.TheaterServiceInMemoryComponent
 import vep.test.service.inmemory.user.UserServiceInMemoryComponent
 
+/**
+ * @deprecated Use [[vep.test.service.inmemory.VepServicesDBInMemoryComponent]] instead.
+ */
+@Deprecated
 trait VepServicesInMemoryComponent
   extends VepServicesComponent
   with UserServiceInMemoryComponent
@@ -12,4 +16,6 @@ trait VepServicesInMemoryComponent
   with TheaterServiceInMemoryComponent
 {
   def overrideServices = true
+
+  override def companyService: CompanyService = ???
 }

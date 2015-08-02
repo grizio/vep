@@ -1,6 +1,8 @@
 package vep.test.controller
 
+import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
+import org.specs2.runner.JUnitRunner
 import vep.controller.TheaterControllerProductionComponent
 import vep.model.common.{ErrorCodes, ResultErrors, ResultSuccess}
 import vep.model.theater.TheaterForm
@@ -12,6 +14,7 @@ class TheaterControllerForSpecificationComponent
   override def overrideServices: Boolean = false
 }
 
+@RunWith(classOf[JUnitRunner])
 class TheaterControllerSpecification extends Specification {
   "Specifications of TheaterController" >> {
     "create should" >> {

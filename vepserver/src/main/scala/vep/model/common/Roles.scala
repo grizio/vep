@@ -8,6 +8,7 @@ object Roles {
   val userManager = "user-manager"
   val pageManager = "page-manager"
   val theaterManager = "theater-manager"
+  val companyManager = "company-manager"
 
   /**
    * This val groups all roles defined above.
@@ -16,6 +17,7 @@ object Roles {
     user,
     userManager,
     pageManager,
-    theaterManager
+    theaterManager,
+    companyManager
   )
 }

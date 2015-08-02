@@ -22,5 +22,7 @@ libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-nop" % "1.7.+",
 
   "io.spray" %% "spray-testkit" % "1.3.3",
-  "org.specs2" %% "specs2" % "2.4.17"
+  "org.specs2" %% "specs2" % "2.4.17",
+  "com.h2database" % "h2" % "1.4.187",
+  "org.dbunit" % "dbunit" % "2.5.1"
 )

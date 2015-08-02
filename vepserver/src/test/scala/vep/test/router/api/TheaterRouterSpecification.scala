@@ -1,6 +1,8 @@
 package vep.test.router.api
 
+import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
+import org.specs2.runner.JUnitRunner
 import spray.http.StatusCodes
 import spray.json.DefaultJsonProtocol
 import vep.model.theater.TheaterFormBody
@@ -12,6 +14,7 @@ object InvalidTheaterEntitiesImplicits extends DefaultJsonProtocol {
   implicit val impInvalidTheaterFormBody = jsonFormat1(InvalidTheaterFormBody)
 }
 
+@RunWith(classOf[JUnitRunner])
 class TheaterRouterSpecification extends Specification with VepRouterSpecification {
 
   import spray.httpx.SprayJsonSupport._

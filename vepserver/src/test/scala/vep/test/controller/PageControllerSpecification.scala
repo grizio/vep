@@ -1,6 +1,8 @@
 package vep.test.controller
 
+import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
+import org.specs2.runner.JUnitRunner
 import vep.controller.{PageControllerProductionComponent, UserControllerProductionComponent}
 import vep.model.cms.{PageItem, PageForm}
 import vep.model.common._
@@ -13,6 +15,7 @@ class PageControllerForSpecificationComponent
   override def overrideServices: Boolean = false
 }
 
+@RunWith(classOf[JUnitRunner])
 class PageControllerSpecification extends Specification {
   "Specifications of PagerController" >> {
     "create should" >> {

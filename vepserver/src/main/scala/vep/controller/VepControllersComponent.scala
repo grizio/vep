@@ -10,6 +10,7 @@ trait VepControllersComponent
   extends UserControllerComponent
   with PageControllerComponent
   with TheaterControllerComponent
+  with CompanyControllerComponent
 
 /**
  * This trait is the production trait grouping the whole list of production controllers.
@@ -20,3 +21,4 @@ trait VepControllersProductionComponent
   with VepServicesComponent
   with PageControllerProductionComponent
   with TheaterControllerProductionComponent
+  with CompanyControllerProductionComponent

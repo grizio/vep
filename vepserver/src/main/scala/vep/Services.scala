@@ -1,10 +1,10 @@
 package vep
 
-import java.sql.{Connection, DriverManager}
-
+import anorm._
 import com.typesafe.config.ConfigFactory
 import vep.controller.VepControllersProductionComponent
 import vep.service.{VepServicesComponent, VepServicesProductionComponent}
+import vep.utils.DB
 
 case class DBConfig(url: String, user: String, password: String)
 

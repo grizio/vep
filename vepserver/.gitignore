@@ -3,3 +3,4 @@
 /project/target
 /project/project
 application.conf
+/src/test/resources/sql/mount

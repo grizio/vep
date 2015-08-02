@@ -5,37 +5,46 @@ import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
 import spray.http.StatusCodes
 import spray.json.DefaultJsonProtocol
-import vep.model.cms.PageFormBody
+import vep.model.company.CompanyFormBody
+import vep.model.theater.TheaterFormBody
 
 
-case class InvalidPageFormBody(title: String)
+case class InvalidCompanyFormBody(name: String)
 
-object InvalidCmsEntitiesImplicits extends DefaultJsonProtocol {
-  implicit val impInvalidPageFormBody = jsonFormat1(InvalidPageFormBody)
+object InvalidCompanyEntitiesImplicits extends DefaultJsonProtocol {
+  implicit val impInvalidCompanyFormBody = jsonFormat1(InvalidCompanyFormBody)
 }
 
 @RunWith(classOf[JUnitRunner])
-class CmsRouterSpecification extends Specification with VepRouterSpecification {
+class CompanyRouterSpecification extends Specification with VepRouterDBInMemorySpecification {
+  def prepare() = prepareDB("user/users-with-roles", "company/company-default")
 
-  import InvalidCmsEntitiesImplicits._
   import spray.httpx.SprayJsonSupport._
-  import vep.model.cms.PageImplicits._
+  import vep.model.company.CompanyImplicits._
+  import InvalidCompanyEntitiesImplicits._
 
-  "Specification of PageRouter" >> {
+  sequential ^ "Specification of CompanyRouter" >> {
     "create" >> {
-      val validUrl = "/cms/page/my-test-page"
-      val validEntity = PageFormBody(None, "title", "content")
-      val validEntityWithErrors = PageFormBody(None, "", "")
-      val invalidEntity = InvalidPageFormBody("")
+      val validUrl = "/company/my-new-company"
+      val validEntity = CompanyFormBody(
+        name = "My new theater",
+        address = Some("Somewhere in the middle"),
+        isVep = false,
+        content = Some("A sample content")
+      )
+      val validEntityWithErrors = validEntity.copy(name = "")
+      val invalidEntity = InvalidCompanyFormBody("")
 
-      "intercept a request to /cms/page/<canonical> as POST with valid entity" >> {
+      "intercept a request to /company/<canonical> as POST with valid entity" >> {
+        prepare
         Post(validUrl, validEntity) ~>
           addCredentials(validCredentialsAdmin) ~>
           route ~> check {
           handled === true
         }
       }
-      "refuse a request to /cms/page/<canonical> as POST when invalid entity" >> {
+      "refuse a request to /company/<canonical> as POST when invalid entity" >> {
+        prepare
         Post(validUrl, invalidEntity) ~>
           addCredentials(validCredentialsAdmin) ~>
           route ~> check {
@@ -43,11 +52,13 @@ class CmsRouterSpecification extends Specification with VepRouterSpecification {
         }
       }
       "returns a code 401 when not authenticated" >> {
+        prepare
         Post(validUrl, validEntity) ~> route ~> check {
           status === StatusCodes.Unauthorized
         }
       }
       "returns a code 403 when authenticated but not authorized" >> {
+        prepare
         Post(validUrl, validEntity) ~>
           addCredentials(validCredentialsUser) ~>
           route ~> check {
@@ -55,6 +66,7 @@ class CmsRouterSpecification extends Specification with VepRouterSpecification {
         }
       }
       "returns a code 400 with map when error(s)" >> {
+        prepare
         Post(validUrl, validEntityWithErrors) ~>
           addCredentials(validCredentialsAdmin) ~>
           route ~> check {
@@ -63,6 +75,7 @@ class CmsRouterSpecification extends Specification with VepRouterSpecification {
         }
       }
       "return a code 200 with nothing when success" >> {
+        prepare
         Post(validUrl, validEntity) ~>
           addCredentials(validCredentialsAdmin) ~>
           route ~> check {
@@ -73,20 +86,26 @@ class CmsRouterSpecification extends Specification with VepRouterSpecification {
     }
 
     "update" >> {
-      val validUrl = "/cms/page/my-first-page"
-      val invalidUrl = "/cms/page/my-unknown-page"
-      val validEntity = PageFormBody(None, "My updated title", "My updated content")
-      val validEntityWithErrors = PageFormBody(None, "", "")
-      val invalidEntity = InvalidPageFormBody("")
+      val validUrl = "/company/existing-company"
+      val validEntity = CompanyFormBody(
+        name = "Updated company",
+        address = Some("Somewhere in the middle"),
+        isVep = true,
+        content = Some("A sample content")
+      )
+      val validEntityWithErrors = validEntity.copy(name = "")
+      val invalidEntity = InvalidCompanyFormBody("")
 
-      "intercept a request to /cms/page/<canonical> as PUT with valid entity" >> {
+      "intercept a request to /company/<canonical> as PUT with valid entity" >> {
+        prepare
         Put(validUrl, validEntity) ~>
           addCredentials(validCredentialsAdmin) ~>
           route ~> check {
           handled === true
         }
       }
-      "refuse a request to /cms/page/<canonical> as PUT when invalid entity" >> {
+      "refuse a request to /company/<canonical> as PUT when invalid entity" >> {
+        prepare
         Put(validUrl, invalidEntity) ~>
           addCredentials(validCredentialsAdmin) ~>
           route ~> check {
@@ -94,11 +113,13 @@ class CmsRouterSpecification extends Specification with VepRouterSpecification {
         }
       }
       "returns a code 401 when not authenticated" >> {
+        prepare
         Put(validUrl, validEntity) ~> route ~> check {
           status === StatusCodes.Unauthorized
         }
       }
       "returns a code 403 when authenticated but not authorized" >> {
+        prepare
         Put(validUrl, validEntity) ~>
           addCredentials(validCredentialsUser) ~>
           route ~> check {
@@ -106,6 +127,7 @@ class CmsRouterSpecification extends Specification with VepRouterSpecification {
         }
       }
       "returns a code 400 with map when error(s)" >> {
+        prepare
         Put(validUrl, validEntityWithErrors) ~>
           addCredentials(validCredentialsAdmin) ~>
           route ~> check {
@@ -114,6 +136,7 @@ class CmsRouterSpecification extends Specification with VepRouterSpecification {
         }
       }
       "return a code 200 with nothing when success" >> {
+        prepare
         Put(validUrl, validEntity) ~>
           addCredentials(validCredentialsAdmin) ~>
           route ~> check {
@@ -121,29 +144,24 @@ class CmsRouterSpecification extends Specification with VepRouterSpecification {
             (responseAs[String] === "null")
         }
       }
-      "return a code 404 with map when unknown page" >> {
-        Put(invalidUrl, validEntity) ~>
-          addCredentials(validCredentialsAdmin) ~>
-          route ~> check {
-          (status === StatusCodes.NotFound) and
-            (responseAs[String] must startWith("{"))
-        }
-      }
     }
 
     "list" >> {
-      val validUrl: String = "/cms/pages"
-      "intercept a request to /cms/pages as GET" >> {
+      val validUrl: String = "/companies"
+      "intercept a request to /companies as GET" >> {
+        prepare
         Get(validUrl) ~> route ~> check {
           handled === true
         }
       }
-      "refuse a request to /cms/pages as POST" >> {
+      "refuse a request to /companies as POST" >> {
+        prepare
         Post(validUrl) ~> route ~> check {
           handled === false
         }
       }
       "return a code 200 with a list when success" >> {
+        prepare
         Get(validUrl) ~> route ~> check {
           (status === StatusCodes.OK) and
             (responseAs[String] must startWith("["))

@@ -1,6 +1,8 @@
 package vep.test.router.api
 
+import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
+import org.specs2.runner.JUnitRunner
 import spray.http._
 import spray.json.DefaultJsonProtocol
 import vep.model.common.Roles
@@ -15,6 +17,7 @@ object InvalidUserEntitiesImplicits extends DefaultJsonProtocol {
   implicit val impInvalidUserLogin = jsonFormat1(InvalidUserLogin)
 }
 
+@RunWith(classOf[JUnitRunner])
 class UserRouterSpecification extends Specification with VepRouterSpecification {
 
   import InvalidUserEntitiesImplicits._

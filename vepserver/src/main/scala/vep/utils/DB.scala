@@ -4,6 +4,7 @@ import java.sql.{DriverManager, Connection}
 
 import vep.AnormClient
 import vep.exception.InvalidDatabaseException
+import anorm._
 
 /**
  * This class defines some utility methods for transaction management.
@@ -62,7 +63,10 @@ object DB {
         connection.commit()
         r
       } catch {
-        case e: Throwable => connection.rollback(); throw e
+        case e: Throwable =>
+          connection.rollback()
+          println("ERROR SQL:" + e.getMessage)
+          throw e
       }
     }
   }
@@ -74,4 +78,42 @@ object DB {
    * @return The result of the block
    */
   def withTransaction[A](block: Connection => A)(implicit anormClient: AnormClient): A = withTransaction()(block)
+
+  /**
+   * Disables all foreign key constraints in database.
+   *
+   * @param dbName The database name
+   * @param anormClient The anorm client
+   */
+  def disableFK(dbName: String = "default")(implicit anormClient: AnormClient): Unit = {
+    withTransaction(dbName) { implicit c =>
+      SQL("SET FOREIGN_KEY_CHECKS = 0")
+    }
+  }
+
+  /**
+   * Disables all foreign key constraints in default database.
+   *
+   * @param anormClient The anorm client
+   */
+  def disableFK(implicit anormClient: AnormClient): Unit = disableFK()
+
+  /**
+   * Enables all foreign key constraints in database.
+   *
+   * @param dbName The databasename
+   * @param anormClient The anorm client
+   */
+  def enableFK(dbName: String = "default")(implicit anormClient: AnormClient): Unit = {
+    withTransaction(dbName) { implicit c =>
+      SQL("SET FOREIGN_KEY_CHECKS = 1")
+    }
+  }
+
+  /**
+   * Enables all foreign key constraints in default database.
+   *
+   * @param anormClient The anorm client
+   */
+  def enableFK(implicit anormClient: AnormClient): Unit = enableFK()
 }

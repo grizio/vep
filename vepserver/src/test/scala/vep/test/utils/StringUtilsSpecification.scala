@@ -1,8 +1,11 @@
 package vep.test.utils
 
+import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
+import org.specs2.runner.JUnitRunner
 import vep.utils.StringUtils
 
+@RunWith(classOf[JUnitRunner])
 class StringUtilsSpecification extends Specification {
   "Specifications of StringUtils functions" >> {
     "StringUtils.isEmail should" >> {
