@@ -1,0 +1,5 @@
+@import "../common/common";
+
+.company-card.company-card-small {
+  @extend .card-small;
+}
