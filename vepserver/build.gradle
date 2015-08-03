@@ -1,8 +1,10 @@
-version = 'v0.5.0'
+version = 'v0.6.2'
 group   = 'vep'
 
-apply plugin: 'gradle-one-jar'
 apply plugin: 'scala'
+apply plugin: 'application'
+
+mainClassName = 'vep.Boot'
 
 // Configuration of build
 buildscript {
@@ -55,11 +57,6 @@ task importWeb(dependsOn: ':vepweb:assemble', type: Copy) {
   into 'src/main/resources'
 }
 
-// Creates a single jar for standalone application
-task standaloneJar(type: OneJar) {
-  mainClass = 'vep.Boot'
-}
-
 task copySqlToTest(type: Copy) {
   from('src/main/sql')
   into('src/test/resources/sql/mount')
@@ -67,4 +64,6 @@ task copySqlToTest(type: Copy) {
 
 test.dependsOn('copySqlToTest')
 
-task make(dependsOn: ['importWeb', 'jar', 'standaloneJar', 'test'])
+jar.dependsOn('importWeb')
+
+task make(dependsOn: ['distZip', 'test'])

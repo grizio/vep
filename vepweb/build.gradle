@@ -1,6 +1,6 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
-version = 'v0.5.0'
+version = 'v0.6.2'
 group   = 'vep'
 
 def pubServeHost = 'vep.dev'
