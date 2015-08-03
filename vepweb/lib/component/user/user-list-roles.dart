@@ -18,7 +18,7 @@ class UserListRolesComponent extends TableSearchContext {
     for (var role in roles.all) {
       columns.add(new ColumnDescriptor('role-' + role, roles.roleI18n[role], 'checkbox', active: true));
     }
-    return columns;
+    return new TableDescriptor(columns);
   });
 
   @override
