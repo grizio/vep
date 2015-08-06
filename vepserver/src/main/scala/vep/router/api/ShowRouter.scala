@@ -31,7 +31,21 @@ trait ShowRouter extends HttpService {
             }
           }
         }
-      }
+      } ~
+        put {
+          entity(as[ShowFormBody]) { showFormBody =>
+            sealRoute {
+              authenticate(vepBasicUserAuthenticator) { implicit user =>
+                authorize(user.roles.contains(Roles.showManager)) { ctx =>
+                  showController.update(showFormBody.toShowForm(showCanonical)) match {
+                    case Left(error) => ctx.complete(StatusCodes.BadRequest, error)
+                    case Right(success) => ctx.complete(StatusCodes.OK, success)
+                  }
+                }
+              }
+            }
+          }
+        }
     }
   }
 }

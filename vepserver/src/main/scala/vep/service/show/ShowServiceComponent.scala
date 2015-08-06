@@ -29,7 +29,14 @@ trait ShowServiceComponent {
      * @return True if a show exists, otherwise false.
      */
     def exists(canonical: String): Boolean
+
+    /**
+     * Updates an existing show from database.
+     * @param showForm The show to update
+     */
+    def update(showForm: ShowForm): Unit
   }
+
 }
 
 trait ShowServiceProductionComponent extends ShowServiceComponent {
@@ -62,6 +69,32 @@ trait ShowServiceProductionComponent extends ShowServiceComponent {
         .on("canonical" -> canonical)
         .as(scalar[Long].single)
       n == 1
+    }
+
+    override def update(showForm: ShowForm): Unit = DB.withConnection { implicit c =>
+      companyService.find(showForm.company) match {
+        case Some(company) =>
+          SQL(
+            """
+              | UPDATE shows SET
+              | title = {title},
+              | author = {author},
+              | director = {director},
+              | company = {company},
+              | duration = {duration},
+              | content = {content}
+              | WHERE canonical = {canonical}
+            """.stripMargin)
+            .on("title" -> showForm.title)
+            .on("author" -> showForm.author)
+            .on("director" -> showForm.director)
+            .on("company" -> company.id)
+            .on("duration" -> showForm.duration)
+            .on("content" -> showForm.content)
+            .on("canonical" -> showForm.canonical)
+            .execute()
+        case None => throw new FieldErrorException("company", ErrorCodes.undefinedCompany, "The company does not exists.")
+      }
     }
   }
 

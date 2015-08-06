@@ -19,6 +19,13 @@ trait ShowControllerComponent {
      * @return A list of errors if data are invalid or there is a database constraint error or a simple success
      */
     def create(showForm: ShowForm): Either[ResultErrors, ResultSuccess]
+
+    /**
+     * Updates an existing show from database
+     * @param showForm The show to update
+     * @return A list of errors if data are invalid or there is a database constraint error or simple success.
+     */
+    def update(showForm: ShowForm): Either[ResultErrors, ResultSuccess]
   }
 }
 
@@ -32,6 +39,19 @@ trait ShowControllerProductionComponent extends ShowControllerComponent {
       if (showForm.verify) {
         try {
           showService.create(showForm)
+          Right(ResultSuccess)
+        } catch {
+          case e: FieldErrorException => Left(e.toResultErrors)
+        }
+      } else {
+        Left(showForm.toResult.asInstanceOf[ResultErrors])
+      }
+    }
+
+    override def update(showForm: ShowForm): Either[ResultErrors, ResultSuccess] = {
+      if (showForm.verify) {
+        try {
+          showService.update(showForm)
           Right(ResultSuccess)
         } catch {
           case e: FieldErrorException => Left(e.toResultErrors)
