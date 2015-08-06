@@ -25,4 +25,6 @@ object ErrorCodes {
   val unknownCanonical = 19
   val invalidJson = 20
   val bigString = 21
+  val undefinedCompany = 22
+  val negative = 23
 }

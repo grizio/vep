@@ -6,22 +6,8 @@ import vep.AnormClient
 import vep.exception.FieldErrorException
 import vep.model.common.ErrorCodes
 import vep.model.company.{Company, CompanyForm}
-import vep.model.theater.{Theater, TheaterForm}
 import vep.service.AnormImplicits
 import vep.utils.DB
-
-object CompanyParsers {
-  lazy val company =
-    int("id") ~
-      str("canonical") ~
-      str("name") ~
-      get[Option[String]]("address") ~
-      int("isvep") ~ // not boolean in database
-      get[Option[String]]("content") map {
-      case id ~ canonical ~ name ~ address ~ isVep ~ content =>
-        Company(id, canonical, name, address, isVep == 1, content)
-    }
-}
 
 /**
  * Defines services impacting users.
@@ -53,6 +39,13 @@ trait CompanyServiceComponent {
      * Returns the list of all companies
      */
     def findAll(): Seq[Company]
+
+    /**
+     * Finds a company by its canonical.
+     * @param canonical The company canonical
+     * @return The company with this canonical if exists.
+     */
+    def find(canonical: String): Option[Company]
   }
 
 }
@@ -109,5 +102,25 @@ trait CompanyServiceProductionComponent extends CompanyServiceComponent {
     override def findAll(): Seq[Company] = DB.withConnection { implicit c =>
       SQL("SELECT id, canonical, name, address, isvep, content FROM company").as(CompanyParsers.company *)
     }
+
+    override def find(canonical: String): Option[Company] = DB.withConnection { implicit c =>
+      SQL("SELECT id, canonical, name, address, isvep, content FROM company WHERE canonical = {canonical}")
+        .on("canonical" -> canonical)
+        .as(CompanyParsers.company.singleOpt)
+    }
   }
+
+}
+
+object CompanyParsers {
+  lazy val company =
+    int("id") ~
+      str("canonical") ~
+      str("name") ~
+      get[Option[String]]("address") ~
+      int("isvep") ~ // not boolean in database
+      get[Option[String]]("content") map {
+      case id ~ canonical ~ name ~ address ~ isVep ~ content =>
+        Company(id, canonical, name, address, isVep == 1, content)
+    }
 }

@@ -11,6 +11,7 @@ trait VepControllersComponent
   with PageControllerComponent
   with TheaterControllerComponent
   with CompanyControllerComponent
+  with ShowControllerComponent
 
 /**
  * This trait is the production trait grouping the whole list of production controllers.
@@ -22,3 +23,4 @@ trait VepControllersProductionComponent
   with PageControllerProductionComponent
   with TheaterControllerProductionComponent
   with CompanyControllerProductionComponent
+  with ShowControllerProductionComponent
