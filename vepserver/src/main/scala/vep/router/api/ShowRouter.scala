@@ -3,7 +3,7 @@ package vep.router.api
 import spray.http.StatusCodes
 import spray.routing.HttpService
 import vep.controller.VepControllersComponent
-import vep.model.common.Roles
+import vep.model.common.{ErrorCodes, Roles}
 import vep.model.show.{ShowFormBody, ShowSearch}
 import vep.router.VepRouter
 
@@ -44,6 +44,12 @@ trait ShowRouter extends HttpService {
                 }
               }
             }
+          }
+        } ~
+        get { ctx =>
+          showController.detail(showCanonical) match {
+            case Left(error) => ctx.complete(if (error.code == ErrorCodes.undefinedShow) StatusCodes.NotFound else StatusCodes.BadRequest, error)
+            case Right(success) => ctx.complete(StatusCodes.OK, success.entity)
           }
         }
     }

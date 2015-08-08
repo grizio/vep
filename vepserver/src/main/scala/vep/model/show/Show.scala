@@ -49,3 +49,5 @@ case class ShowFormBody(title: String, author: String, director: String, company
   def toShowForm(canonical: String) = ShowForm(canonical, title, author, director, company, duration, content)
 }
 
+// We do not use ShowForm because model of one could change instead of the other
+case class ShowDetail(canonical: String, title: String, author: String, director: String, company: String, duration: Option[Int], content: Option[String])

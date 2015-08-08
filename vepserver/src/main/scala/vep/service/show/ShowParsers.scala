@@ -2,7 +2,7 @@ package vep.service.show
 
 import anorm.SqlParser._
 import anorm.~
-import vep.model.show.{Show, ShowSearchResult}
+import vep.model.show.{Show, ShowDetail, ShowSearchResult}
 
 object ShowParsers {
   lazy val show =
@@ -26,5 +26,17 @@ object ShowParsers {
       str("company") map {
       case canonical ~ title ~ author ~ director ~ company =>
         ShowSearchResult(canonical, title, author, director, company)
+    }
+
+  lazy val showDetail =
+    str("shows.canonical") ~
+      str("title") ~
+      str("author") ~
+      str("director") ~
+      str("company") ~
+      get[Option[Int]]("duration") ~
+      get[Option[String]]("content") map {
+      case canonical ~ title ~ author ~ director ~ company ~ duration ~ content =>
+        ShowDetail(canonical, title, author, director, company, duration, content)
     }
 }

@@ -2,7 +2,7 @@ package vep.controller
 
 import vep.exception.FieldErrorException
 import vep.model.common._
-import vep.model.show.{ShowForm, ShowSearch, ShowSearchResponse}
+import vep.model.show.{ShowDetail, ShowForm, ShowSearch, ShowSearchResponse}
 import vep.service.VepServicesComponent
 
 /**
@@ -32,6 +32,13 @@ trait ShowControllerComponent {
      * @return
      */
     def search(showSearch: ShowSearch): Either[ResultError, ResultSuccessEntity[ShowSearchResponse]]
+
+    /**
+     * Returns detail of show by given canonical.
+     * @param canonical The show canonical
+     * @return The show with given canonical or an error when it does not exist
+     */
+    def detail(canonical: String): Either[ResultError, ResultSuccessEntity[ShowDetail]]
   }
 
 }
@@ -84,6 +91,13 @@ trait ShowControllerProductionComponent extends ShowControllerComponent {
         )))
       } else {
         Left(showSearch.toResult.asInstanceOf[ResultError])
+      }
+    }
+
+    override def detail(canonical: String): Either[ResultError, ResultSuccessEntity[ShowDetail]] = {
+      showService.findDetail(canonical) match {
+        case Some(show) => Right(ResultSuccessEntity(show))
+        case None => Left(ResultError(ErrorCodes.undefinedShow))
       }
     }
   }

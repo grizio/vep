@@ -5,7 +5,7 @@ import anorm._
 import vep.AnormClient
 import vep.exception.FieldErrorException
 import vep.model.common.ErrorCodes
-import vep.model.show.ShowForm
+import vep.model.show.{ShowDetail, ShowForm}
 import vep.service.AnormImplicits
 import vep.service.company.CompanyServiceComponent
 import vep.utils.DB
@@ -35,6 +35,13 @@ trait ShowServiceComponent {
      * @param showForm The show to update
      */
     def update(showForm: ShowForm): Unit
+
+    /**
+     * Returns the show with given canonical if exists.
+     * @param canonical The show canonical
+     * @return The show with given canonical
+     */
+    def findDetail(canonical: String): Option[ShowDetail]
   }
 
 }
@@ -95,6 +102,16 @@ trait ShowServiceProductionComponent extends ShowServiceComponent {
             .execute()
         case None => throw new FieldErrorException("company", ErrorCodes.undefinedCompany, "The company does not exists.")
       }
+    }
+
+    override def findDetail(canonical: String): Option[ShowDetail] = DB.withConnection { implicit c =>
+      SQL(
+        """SELECT s.canonical, s.title, s.author, s.director, c.canonical as company, s.duration, s.content
+          |FROM shows s
+          |LEFT JOIN company c ON s.company = c.id
+          |WHERE s.canonical = {canonical}""".stripMargin
+      ).on("canonical" -> canonical)
+        .as(ShowParsers.showDetail.singleOpt)
     }
   }
 

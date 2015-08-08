@@ -9,4 +9,6 @@ object ShowImplicits {
   implicit val impShowSearchResult: RootJsonFormat[ShowSearchResult] = jsonFormat(ShowSearchResult, "canonical", "title", "author", "director", "company")
 
   implicit val impShowSearchResponse: RootJsonFormat[ShowSearchResponse] = jsonFormat(ShowSearchResponse, "shows", "pageMax")
+
+  implicit val impShowDetail: RootJsonFormat[ShowDetail] = jsonFormat(ShowDetail.apply, "canonical", "title", "author", "director", "company", "duration", "content")
 }
