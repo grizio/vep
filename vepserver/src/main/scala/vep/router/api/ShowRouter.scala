@@ -4,7 +4,7 @@ import spray.http.StatusCodes
 import spray.routing.HttpService
 import vep.controller.VepControllersComponent
 import vep.model.common.Roles
-import vep.model.show.ShowFormBody
+import vep.model.show.{ShowFormBody, ShowSearch}
 import vep.router.VepRouter
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -46,6 +46,15 @@ trait ShowRouter extends HttpService {
             }
           }
         }
+    }
+  } ~ path("shows") {
+    get {
+      parameters('p.as[Int] ?, 't.as[String] ?, 'a.as[String] ?, 'd.as[String] ?, 'c.as[String] ?, 'o.as[String] ?).as(ShowSearch) { showSearch => ctx =>
+        showController.search(showSearch) match {
+          case Left(error) => ctx.complete(StatusCodes.BadRequest, error)
+          case Right(success) => ctx.complete(StatusCodes.OK, success.entity)
+        }
+      }
     }
   }
 }

@@ -5,7 +5,7 @@ import anorm._
 import vep.AnormClient
 import vep.exception.FieldErrorException
 import vep.model.common.ErrorCodes
-import vep.model.show.{Show, ShowForm}
+import vep.model.show.ShowForm
 import vep.service.AnormImplicits
 import vep.service.company.CompanyServiceComponent
 import vep.utils.DB
@@ -98,19 +98,4 @@ trait ShowServiceProductionComponent extends ShowServiceComponent {
     }
   }
 
-}
-
-object ShowParsers {
-  lazy val show =
-    int("id") ~
-      str("canonical") ~
-      str("title") ~
-      str("author") ~
-      str("director") ~
-      int("company") ~
-      get[Option[Int]]("duration") ~
-      get[Option[String]]("content") map {
-      case id ~ canonical ~ title ~ author ~ director ~ company ~ duration ~ content =>
-        Show(id, canonical, title, author, director, company, duration, content)
-    }
 }

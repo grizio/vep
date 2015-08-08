@@ -1,8 +1,6 @@
 package vep.model.show
 
-import spray.json.RootJsonFormat
 import vep.model.common.{ErrorCodes, VerifiableMultiple}
-import vep.model.company.CompanyImplicits._
 import vep.utils.StringUtils
 
 case class Show(id: Int, canonical: String, title: String, author: String, director: String, company: Int, duration: Option[Int], content: Option[String])
@@ -51,6 +49,3 @@ case class ShowFormBody(title: String, author: String, director: String, company
   def toShowForm(canonical: String) = ShowForm(canonical, title, author, director, company, duration, content)
 }
 
-object ShowImplicits {
-  implicit val impShowFormBody: RootJsonFormat[ShowFormBody] = jsonFormat(ShowFormBody.apply, "title", "author", "director", "company", "duration", "content")
-}

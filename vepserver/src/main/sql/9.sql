@@ -1,0 +1,1 @@
+ALTER TABLE shows ADD FOREIGN KEY fk_company (company) REFERENCES company (id);

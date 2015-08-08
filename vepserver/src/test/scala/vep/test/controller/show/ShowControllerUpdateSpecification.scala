@@ -186,6 +186,15 @@ class ShowControllerUpdateSpecification extends Specification with VepController
             (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("company").get must contain(ErrorCodes.undefinedCompany))
         }
       }
+
+      "indicates an error when entity does not exist" >> {
+        prepare()
+        val result = showController.update(undefinedShowForm)
+
+        (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+          (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("canonical")) and
+          (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("canonical").get must contain(ErrorCodes.undefinedShow))
+      }
     }
   }
 }

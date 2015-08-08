@@ -27,4 +27,7 @@ object ErrorCodes {
   val bigString = 21
   val undefinedCompany = 22
   val negative = 23
+  val undefinedShow = 24
+  val notANumber = 25
+  val unknownOrder = 26
 }

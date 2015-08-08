@@ -9,7 +9,7 @@ import vep.test.router.api.VepRouterDBInMemorySpecification
 
 @RunWith(classOf[JUnitRunner])
 class ShowRouterUpdateSpecification extends Specification with VepRouterDBInMemorySpecification {
-   def prepare() = prepareDB("user/users-with-roles", "company/company-default")
+  def prepare() = prepareDB("user/users-with-roles", "show/show-default")
 
    import InvalidShowEntitiesImplicits._
    import spray.httpx.SprayJsonSupport._

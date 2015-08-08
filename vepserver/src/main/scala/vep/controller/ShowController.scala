@@ -1,9 +1,8 @@
 package vep.controller
 
 import vep.exception.FieldErrorException
-import vep.model.common.{ErrorCodes, ResultSuccessEntity, ResultSuccess, ResultErrors}
-import vep.model.company.{Company, CompanyForm}
-import vep.model.show.ShowForm
+import vep.model.common._
+import vep.model.show.{ShowForm, ShowSearch, ShowSearchResponse}
 import vep.service.VepServicesComponent
 
 /**
@@ -26,7 +25,15 @@ trait ShowControllerComponent {
      * @return A list of errors if data are invalid or there is a database constraint error or simple success.
      */
     def update(showForm: ShowForm): Either[ResultErrors, ResultSuccess]
+
+    /**
+     * Searches all shows from database validating given search constraints.
+     * @param showSearch The criteria of the search
+     * @return
+     */
+    def search(showSearch: ShowSearch): Either[ResultError, ResultSuccessEntity[ShowSearchResponse]]
   }
+
 }
 
 trait ShowControllerProductionComponent extends ShowControllerComponent {
@@ -35,6 +42,8 @@ trait ShowControllerProductionComponent extends ShowControllerComponent {
   override val showController: ShowController = new ShowControllerProduction
 
   class ShowControllerProduction extends ShowController {
+    lazy val maxPerPage = 20
+
     override def create(showForm: ShowForm): Either[ResultErrors, ResultSuccess] = {
       if (showForm.verify) {
         try {
@@ -50,15 +59,33 @@ trait ShowControllerProductionComponent extends ShowControllerComponent {
 
     override def update(showForm: ShowForm): Either[ResultErrors, ResultSuccess] = {
       if (showForm.verify) {
-        try {
-          showService.update(showForm)
-          Right(ResultSuccess)
-        } catch {
-          case e: FieldErrorException => Left(e.toResultErrors)
+        if (showService.exists(showForm.canonical)) {
+          try {
+            showService.update(showForm)
+            Right(ResultSuccess)
+          } catch {
+            case e: FieldErrorException => Left(e.toResultErrors)
+          }
+        } else {
+          Left(ResultErrors(Map(
+            "canonical" -> Seq(ErrorCodes.undefinedShow)
+          )))
         }
       } else {
         Left(showForm.toResult.asInstanceOf[ResultErrors])
       }
     }
+
+    override def search(showSearch: ShowSearch): Either[ResultError, ResultSuccessEntity[ShowSearchResponse]] = {
+      if (showSearch.verify) {
+        Right(ResultSuccessEntity(ShowSearchResponse(
+          shows = showSearchService.search(showSearch, maxResult = maxPerPage),
+          pageMax = Math.ceil(showSearchService.count(showSearch).toDouble / maxPerPage.toDouble).toInt
+        )))
+      } else {
+        Left(showSearch.toResult.asInstanceOf[ResultError])
+      }
+    }
   }
+
 }
