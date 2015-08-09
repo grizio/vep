@@ -16,10 +16,21 @@ class TableSearchComponent implements ScopeAware {
   @NgOneWay('filter-in')
   bool filterIn;
 
-  @NgTwoWay('page')
-  int page = 1;
+  int _page = 1;
 
-  int get pageMax => _data == null ? 1 : max(0, ((_data.length - 1) / maxResult).floor()) + 1;
+  @NgTwoWay('page')
+  int get page => _page;
+
+  set page(int page) {
+    _page = page == null ? 1 : page;
+    // Usage of timer avoids errors because model of parent scope is not reloaded yet.
+    timerReload(new Duration(milliseconds: 1));
+  }
+
+  @NgOneWay('page-max')
+  int pageMaxFormParent = null;
+
+  int get pageMax => pageMaxFormParent != null ? pageMaxFormParent : _data == null ? 1 : max(0, ((_data.length - 1) / maxResult).floor()) + 1;
 
   TableSearchContext context;
 
@@ -39,10 +50,11 @@ class TableSearchComponent implements ScopeAware {
 
   Future<Map<String, Object>> _dataFuture;
   List<Map<String, Object>> _data;
+  Timer timer = null;
 
   List<Map<String, Object>> get data {
     if (_data == null && _dataFuture == null) {
-      _dataFuture = context.search(filter).then((_) {
+      _dataFuture = context.search(new Map.unmodifiable(filter.internal)).then((_) {
         _data = _;
         _dataFuture = null;
       });
@@ -50,7 +62,20 @@ class TableSearchComponent implements ScopeAware {
     return _data == null ? [] : _data;
   }
 
-  Map<String, Object> filter = {};
+  MapFilter _filter = null;
+
+  MapFilter get filter {
+    if (_filter == null) {
+      if (context != null) {
+        _filter = new MapFilter(tableDescriptor, this);
+        return _filter;
+      } else {
+        return new MapFilter(null, this);
+      }
+    } else {
+      return _filter;
+    }
+  }
 
   List<Map<String, Object>> get filteredData {
     List<Map<String, Object>> filtered;
@@ -76,10 +101,15 @@ class TableSearchComponent implements ScopeAware {
     }
 
     if (showPages) {
-      if (listUtilities.isEmpty(filtered) || (page - 1) * maxResult > filtered.length) {
-        return [];
+      if (filterIn) {
+        if (listUtilities.isEmpty(filtered) || (page - 1) * maxResult > filtered.length) {
+          return [];
+        } else {
+          return filtered.sublist((page - 1) * maxResult, min(page * maxResult, filtered.length));
+        }
       } else {
-        return filtered.sublist((page - 1) * maxResult, min(page * maxResult, filtered.length));
+        // It is the container which do the filter.
+        return filtered;
       }
     } else {
       return filtered;
@@ -88,13 +118,28 @@ class TableSearchComponent implements ScopeAware {
 
   void onFilterChange() {
     if (!filterIn) {
-      _data = null;
+      timerReload();
     }
   }
 
   void onChange(index, field, value) {
     _data[index][field] = value;
     context.onChange(_data[index]);
+  }
+
+  void timerReload([Duration duration=const Duration(seconds: 1)]) {
+    // We use a timer to update data only 1 second of inactivity.
+    if (timer != null) {
+      timer.cancel();
+    }
+    timer = new Timer(duration, timerDone);
+  }
+
+  void timerDone() {
+    _data = null;
+    if (timer != null) {
+      timer = null;
+    }
   }
 }
 
@@ -116,6 +161,10 @@ class TableDescriptor {
 
   TableDescriptor(List<ColumnDescriptor> columns) {
     _columns = new List.from(columns, growable:false);
+  }
+
+  ColumnDescriptor operator [](Object key){
+    return _columns.firstWhere((_) => _.code == key, orElse: () => null);
   }
 }
 
@@ -145,6 +194,17 @@ class ColumnDescriptor {
 
   String get url => _url;
 
+  List<Choice> choices = [];
+
+  String getLabelOfChoice(Object value) {
+    var choice = choices.firstWhere((_) => _.value == value, orElse: () => null);
+    if (choice != null) {
+      return choice.label;
+    } else {
+      return '';
+    }
+  }
+
   void enable() {
     _active = true;
   }
@@ -153,7 +213,7 @@ class ColumnDescriptor {
     _active = false;
   }
 
-  ColumnDescriptor(this._code, this._name, this._type, {bool active:false, bool hasFilter:false, String url:null}) {
+  ColumnDescriptor(this._code, this._name, this._type, {bool active:false, bool hasFilter:false, String url:null, this.choices}) {
     _active = active;
     _hasFilter = hasFilter;
     _url = url;
@@ -175,4 +235,74 @@ abstract class ColumnTypes {
   static const String checkbox = 'checkbox';
   static const String link = 'link';
   static const String integer = 'integer';
+  static const String choices = 'choices';
+}
+
+class MapFilter {
+  final TableDescriptor tableDescriptor;
+  final TableSearchComponent context;
+  final Map<String, Object> internal = {};
+
+  MapFilter(this.tableDescriptor, this.context);
+
+  Object operator [](Object key) {
+    if (tableDescriptor != null) {
+      var column = tableDescriptor[key];
+      if (column != null) {
+        if (column.type == ColumnTypes.choices) {
+          var value = internal[key];
+          var i = 0;
+          for (var choice in column.choices) {
+            if (choice.value == value) {
+              return i.toString();
+            }
+            i++;
+          }
+          return "-1";
+        }
+      }
+    }
+    return internal[key];
+  }
+
+  void operator []=(String key, Object value) {
+    if (tableDescriptor != null) {
+      var column = tableDescriptor[key];
+      if (column != null) {
+        if (column.type == ColumnTypes.choices) {
+          var intValue = int.parse(value);
+          if (intValue >= 0) {
+            internal[key] = column.choices[intValue].value;
+          } else {
+            internal[key] = null;
+          }
+        } else {
+          internal[key] = value;
+        }
+      }
+    }
+    context.timerReload();
+  }
+
+  // Delegates to internal
+
+  bool containsValue(Object value) => internal.containsValue(value);
+
+  bool containsKey(Object key) => internal.containsKey(key);
+
+  Object remove(Object key) => internal.remove(key);
+
+  void clear() => internal.clear();
+
+  void forEach(void f(String key, Object value)) => internal.forEach(f);
+
+  Iterable<String> get keys => internal.keys;
+
+  Iterable<Object> get values => internal.values;
+
+  int get length => internal.length;
+
+  bool get isEmpty => internal.isEmpty;
+
+  bool get isNotEmpty => internal.isNotEmpty;
 }

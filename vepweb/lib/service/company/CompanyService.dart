@@ -87,7 +87,7 @@ class CompanyService {
     }
   }
 
-  List<Theater> get _companies {
+  List<Company> get _companies {
     if (window.localStorage.containsKey(companiesCache)) {
       return jsonx.decode(window.localStorage[companiesCache], type: const jsonx.TypeHelper<List<Company>>().type);
     } else {

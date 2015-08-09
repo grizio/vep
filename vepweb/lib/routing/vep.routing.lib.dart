@@ -8,11 +8,12 @@ import 'package:vepweb/service/company/vep.service.company.lib.dart';
 
 part 'cms.dart';
 part 'company.dart';
+part 'show.dart';
 part 'theater.dart';
 part 'user.dart';
 
 @Injectable()
-class VepRouter extends UserRouter with CmsRouter, TheaterRouter, CompanyRouter {
+class VepRouter extends UserRouter with CmsRouter, TheaterRouter, CompanyRouter, ShowRouter {
   final App app;
   final PageService pageService;
   final TheaterService theaterService;
@@ -36,6 +37,10 @@ class VepRouter extends UserRouter with CmsRouter, TheaterRouter, CompanyRouter 
       'company': ngRoute(
           path: '/compan',
           mount: companyRoute
+      ),
+      'show': ngRoute(
+        path: '/show',
+        mount: showRoute
       ),
       'login': ngRoute(
           path: '/login',

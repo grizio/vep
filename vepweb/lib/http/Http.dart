@@ -6,13 +6,13 @@ abstract class IHttp {
   static const PUT = 'PUT';
   static const DELETE = 'DELETE';
 
-  Future<HttpResult> get(String url, {bool withSession: false, Map<String, String> headers, Type type: null});
+  Future<HttpResult> get(String url, {bool withSession: false, Map<String, String> headers, Type type: null, bool doNotLog: false});
 
-  Future<HttpResult> post(String url, Object entity, {bool withSession: false, Map<String, String> headers});
+  Future<HttpResult> post(String url, Object entity, {bool withSession: false, Map<String, String> headers, bool doNotLog: false});
 
-  Future<HttpResult> put(String url, Object entity, {bool withSession: false, Map<String, String> headers});
+  Future<HttpResult> put(String url, Object entity, {bool withSession: false, Map<String, String> headers, bool doNotLog: false});
 
-  Future<HttpResult> delete(String url, {bool withSession: false, Map<String, String> headers});
+  Future<HttpResult> delete(String url, {bool withSession: false, Map<String, String> headers, bool doNotLog: false});
 }
 
 @Injectable()
@@ -32,8 +32,10 @@ class HttpProduction implements IHttp {
   }
 
   @override
-  Future<HttpResult> get(String url, {bool withSession: false, Map<String, String> headers, Type type: null}) {
-    logger.fine('GET ' + url);
+  Future<HttpResult> get(String url, {bool withSession: false, Map<String, String> headers, Type type: null, bool doNotLog: false}) {
+    if (!doNotLog) {
+      logger.fine('GET ' + url);
+    }
     return client.get(
         getUrl(url),
         headers: buildHeaders(headers: headers, withSession: withSession)
@@ -41,8 +43,10 @@ class HttpProduction implements IHttp {
   }
 
   @override
-  Future<HttpResult> post(String url, Object entity, {bool withSession: false, Map<String, String> headers}) {
-    logger.fine('POST ' + url + ' (' + jsonx.encode(entity) + ')');
+  Future<HttpResult> post(String url, Object entity, {bool withSession: false, Map<String, String> headers, bool doNotLog: false}) {
+    if (!doNotLog) {
+      logger.fine('POST ' + url + ' (' + jsonx.encode(entity) + ')');
+    }
     return client.post(
         getUrl(url),
         body: jsonx.encode(entity),
@@ -51,8 +55,10 @@ class HttpProduction implements IHttp {
   }
 
   @override
-  Future<HttpResult> put(String url, Object entity, {bool withSession: false, Map<String, String> headers}) {
-    logger.fine('PUT ' + url + ' (' + jsonx.encode(entity) + ')');
+  Future<HttpResult> put(String url, Object entity, {bool withSession: false, Map<String, String> headers, bool doNotLog: false}) {
+    if (!doNotLog) {
+      logger.fine('PUT ' + url + ' (' + jsonx.encode(entity) + ')');
+    }
     return client.put(
         getUrl(url),
         body: jsonx.encode(entity),
@@ -61,8 +67,10 @@ class HttpProduction implements IHttp {
   }
 
   @override
-  Future<HttpResult> delete(String url, {bool withSession: false, Map<String, String> headers}) {
-    logger.fine('DELETE ' + url);
+  Future<HttpResult> delete(String url, {bool withSession: false, Map<String, String> headers, bool doNotLog: false}) {
+    if (!doNotLog) {
+      logger.fine('DELETE ' + url);
+    }
     return client.delete(
         getUrl(url),
         headers: buildHeaders(headers: headers, withSession: withSession)

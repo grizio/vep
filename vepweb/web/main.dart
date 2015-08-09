@@ -3,6 +3,7 @@ import 'package:logging/logging.dart';
 
 import 'package:vepweb/constants.dart' as constants;
 import 'package:vepweb/vep.lib.dart';
+import 'package:vepweb/model/vep.model.lib.dart';
 
 void main() {
   Logger.root.level = constants.loggerLevel;
@@ -11,4 +12,6 @@ void main() {
   });
 
   applicationFactory().addModule(new VepModule()).run();
+
+  prepareJsonx();
 }

@@ -3,13 +3,15 @@ const userManager = 'user-manager';
 const pageManager = "page-manager";
 const theaterManager = "theater-manager";
 const companyManager = "company-manager";
+const showManager = 'show-manager';
 
 const all = const[
   user,
   userManager,
   pageManager,
   theaterManager,
-  companyManager
+  companyManager,
+  showManager
 ];
 
 const roleI18n = const<String, String>{
@@ -17,5 +19,6 @@ const roleI18n = const<String, String>{
   userManager: 'Gestion des utilisateur',
   pageManager: 'Gestion des pages',
   theaterManager: 'Gestion des théâtres',
-  companyManager: 'Gestion des troupes'
+  companyManager: 'Gestion des troupes',
+  showManager: 'Gestion des spectacles'
 };

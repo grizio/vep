@@ -7,11 +7,11 @@ class UserService {
   UserService(this.http);
 
   Future<HttpResult> register(UserRegistration user) {
-    return http.post('/user/register', user);
+    return http.post('/user/register', user, doNotLog: true);
   }
 
   Future<HttpResult> login(UserLogin user) {
-    return http.post('/login', user);
+    return http.post('/login', user, doNotLog: true);
   }
 
   Future<HttpResult> getRoles(String email, String key) {

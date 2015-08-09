@@ -19,6 +19,12 @@
                     <input type="number" name="{{ column.code }}" ng-switch-when="integer"
                            ng-model="filter[column.code]"
                            ng-change="onFilterChange()"/>
+                    <select name="{{ column.code }}" ng-switch-when="choices" ng-model="filter[column.code]"
+                            ng-change="onFilterChange()">
+                        <!-- TODO: use ng-options instead (How  it works?) -->
+                        <option value="-1">Tous</option>
+                        <option ng-repeat="choice in column.choices" value="{{ $index }}">{{ choice.label }}</option>
+                    </select>
                 </span>
             </th>
         </tr>
@@ -26,25 +32,30 @@
         <tbody>
         <tr ng-repeat="row in filteredData">
             <td ng-repeat="column in tableDescriptor.columns">
-                    <span ng-if="column.active" ng-switch="column.type">
-                        <input type="text" name="{{ column.code }}" ng-switch-when="text" ng-model="row[column.code]"
-                               ng-change="onChange(row['_index'], column.code, $event.target.value)"/>
-                        <input type="checkbox" name="{{ column.code }}" ng-switch-when="checkbox"
-                               ng-model="row[column.code]"
-                               ng-change="onChange(row['_index'], column.code, $event.target.checked)"/>
-                        <a href="{{ column.link(row) }}" ng-switch-when="link">{{ row[column.code] }}{{ column.link(row)
-                            }}</a>
-                        <input type="number" name="{{ column.code }}" ng-switch-when="integer"
-                               ng-model="row[column.code]"
-                               ng-change="onChange(row['_index'], column.code, $event.target.value)"/>
-                    </span>
-                    <span ng-if="!column.active" ng-switch="column.type">
-                        <span ng-switch-when="text">{{ row[column.code] }}</span>
-                        <input type="checkbox" name="{{ column.code }}" disabled ng-switch-when="checkbox"
-                               ng-model="row[column.code]"/>
-                        <a href="{{ column.link(row) }}" ng-switch-when="link">{{ row[column.code] }}</a>
-                        <span ng-switch-when="integer">{{ row[column.code] }}</span>
-                    </span>
+                <span ng-if="column.active" ng-switch="column.type">
+                    <input type="text" name="{{ column.code }}" ng-switch-when="text" ng-model="row[column.code]"
+                           ng-change="onChange(row['_index'], column.code, $event.target.value)"/>
+                    <input type="checkbox" name="{{ column.code }}" ng-switch-when="checkbox"
+                           ng-model="row[column.code]"
+                           ng-change="onChange(row['_index'], column.code, $event.target.checked)"/>
+                    <a href="{{ column.link(row) }}" ng-switch-when="link">
+                        {{ row[column.code] }}{{ column.link(row) }}
+                    </a>
+                    <input type="number" name="{{ column.code }}" ng-switch-when="integer"
+                           ng-model="row[column.code]"
+                           ng-change="onChange(row['_index'], column.code, $event.target.value)"/>
+                    <select name="{{ column.code }}" ng-switch-when="choices" ng-model="filter[column.code]"
+                            ng-change="onChange(row['_index'], column.code, $event.target.value)"
+                            ng-options="$index as choice.label for choice in column.choices"></select>
+                </span>
+                <span ng-if="!column.active" ng-switch="column.type">
+                    <span ng-switch-when="text">{{ row[column.code] }}</span>
+                    <input type="checkbox" name="{{ column.code }}" disabled ng-switch-when="checkbox"
+                           ng-model="row[column.code]"/>
+                    <a href="{{ column.link(row) }}" ng-switch-when="link">{{ row[column.code] }}</a>
+                    <span ng-switch-when="integer">{{ row[column.code] }}</span>
+                    <span ng-switch-when="choices">{{ column.getLabelOfChoice(row[column.code]) }}</span>
+                </span>
             </td>
         </tr>
         </tbody>

@@ -8,4 +8,8 @@ class Choice<A> {
   const Choice(this.value, this.label);
 
   bool operator ==(Choice c) => value == c.value;
+
+  String toString() {
+    return '(${value.toString()} => ${label.toString()})';
+  }
 }
