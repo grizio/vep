@@ -1,0 +1,38 @@
+<div class="show-card show-card-small" ng-if="small && show != null">
+    <dl>
+        <dt>Titre</dt>
+        <dd>{{ show.title }}</dd>
+
+        <dt>Auteur</dt>
+        <dd>{{ show.author }}</dd>
+
+        <dt>Metteur en scène</dt>
+        <dd>{{ show.director }}</dd>
+
+        <dt ng-if="show.duration != null && show.duration > 0">Durée</dt>
+        <dd ng-if="show.duration != null && show.duration > 0">{{ show.prettyDuration }}</dd>
+
+        <dt ng-if="company != null">Troupe</dt>
+        <dd ng-if="company != null">{{ company.name }}</dd>
+    </dl>
+</div>
+<div class="show-card show-card-big" ng-if="!small && show != null">
+    <div class="row">
+        <div class="small-8 columns">
+            <h1>{{ show.title }}</h1>
+            <h6>
+                Écrit par <strong>{{ show.author }}</strong>
+                et mis en scène par <strong>{{ show.director }}</strong>
+            </h6>
+
+            <p ng-if="show.duration != null && show.duration > 0">Durée: {{ show.prettyDuration }}</p>
+
+            <div ng-bind-html="show.content"></div>
+        </div>
+        <div class="small-4 columns">
+            <h3>Troupe</h3>
+
+            <company-card canonical="show.company" small="true"></company-card>
+        </div>
+    </div>
+</div>

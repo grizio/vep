@@ -14,13 +14,16 @@ import 'package:vepweb/roles.dart' as roles;
 import 'package:vepweb/component/common/form/vep.component.form.lib.dart';
 import 'package:klang/utilities/string.dart' as stringUtilities;
 import 'package:vepweb/http/vep.http.lib.dart';
+import 'package:vepweb/model/vep.model.lib.dart';
 
 part 'form-show.dart';
+part 'show-card.dart';
 part 'show-list.dart';
 
 class VepComponentShowModule extends Module {
   VepComponentShowModule() {
     bind(FormShowComponent);
+    bind(ShowCardComponent);
     bind(ShowListComponent);
   }
 }

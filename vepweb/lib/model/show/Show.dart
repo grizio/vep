@@ -11,6 +11,16 @@ class Show {
 
   String update = 'Modifier';
 
+  String get prettyDuration {
+    int hour = (duration / 60).floor();
+    int minutes = duration % 60;
+    if (hour > 0) {
+      return '${hour}h${minutes}';
+    } else {
+      return '${minutes}m';
+    }
+  }
+
   ShowForm toShowForm() {
     var showForm = new ShowForm();
     showForm.canonical = canonical;
