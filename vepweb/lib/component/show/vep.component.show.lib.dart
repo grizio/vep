@@ -11,11 +11,16 @@ import 'package:vepweb/component/common/field/vep.component.common.field.lib.dar
 import 'package:vepweb/service/company/vep.service.company.lib.dart';
 import 'package:vepweb/component/main/vep.component.main.lib.dart';
 import 'package:vepweb/roles.dart' as roles;
+import 'package:vepweb/component/common/form/vep.component.form.lib.dart';
+import 'package:klang/utilities/string.dart' as stringUtilities;
+import 'package:vepweb/http/vep.http.lib.dart';
 
+part 'form-show.dart';
 part 'show-list.dart';
 
 class VepComponentShowModule extends Module {
   VepComponentShowModule() {
+    bind(FormShowComponent);
     bind(ShowListComponent);
   }
 }

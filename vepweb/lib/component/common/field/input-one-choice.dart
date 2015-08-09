@@ -9,14 +9,22 @@ class InputOneChoiceComponent extends FieldComponent<Object> {
   @NgOneWayOneTime('explode')
   bool explode;
 
+  List<Choice<Object>> _choices;
+
   @NgOneWay('choices')
-  List<Choice<Object>> choices;
+  List<Choice<Object>> get choices => _choices;
+
+  set choices(List<Choice<Object>> choices) {
+    _choices = choices;
+    verify();
+  }
 
   List<InputElement> elements = [];
 
-  int get innerValue => choices.indexOf(new Choice(value, ''));
+  String get innerValue => choices.indexOf(new Choice(value, '')).toString();
 
-  set innerValue(int newValue) {
+  set innerValue(String newValueStr) {
+    int newValue = int.parse(newValueStr);
     if (0 <= newValue && newValue < choices.length) {
       value = choices[newValue].value;
     } else {
@@ -27,7 +35,7 @@ class InputOneChoiceComponent extends FieldComponent<Object> {
   @override
   bool verify() {
     super.verify();
-    if (required && innerValue < 0) {
+    if (required && int.parse(innerValue) < 0) {
       errors.add('Veuillez sélectionner au moins un élément.');
     }
     return errors.isEmpty;

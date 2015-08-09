@@ -36,4 +36,22 @@ class ShowService {
       return _;
     });
   }
+
+  Future<HttpResult> create(ShowForm show) {
+    return http.post('/show/' + show.canonical, show, withSession: true);
+  }
+
+  Future<HttpResult> update(ShowForm show) {
+    return http.put('/show/${show.canonical}', show, withSession: true);
+  }
+
+  Future<Show> find(String canonical) {
+    return http.get('/show/${canonical}', type: Show).then((_){
+      if (_.isSuccess) {
+        return (_ as HttpResultSuccessEntity).entity;
+      } else {
+        return null;
+      }
+    });
+  }
 }
