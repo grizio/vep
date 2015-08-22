@@ -1,5 +1,7 @@
 package vep.model.common
 
+class IncompatibleArgumentException(e: String) extends Exception(e)
+
 /**
  * If a class extends this trait, it means it can be checked to verify (no database constraint)
  */
@@ -59,6 +61,7 @@ trait VerifiableUnique extends Verifiable {
  * This trait is a specification for Verifiable classes when they can have several errors grouped by field.
  */
 trait VerifiableMultiple extends Verifiable {
+
   /**
    * The map of field -> errors.
    */
@@ -91,4 +94,96 @@ trait VerifiableMultiple extends Verifiable {
    * @return False if it has an error, otherwise true
    */
   protected def hasNotErrors: Boolean = !hasErrors
+
+  // TODO: make final when children use doVerify
+  override def verify: Boolean = {
+    doVerify()
+    hasNotErrors
+  }
+
+  /**
+   * This method is defined to permit the developer to define its verification method.
+   * It will be called on {{{verify}}} call (if not overridden)
+   * before returning the success flag with {{{hasNotErrors}}}.
+   */
+  // TODO: remove implementation when all class use this method
+  protected def doVerify(): Unit = {}
+}
+
+/**
+ * This trait is a specification for Verifiable classes when they can have several errors grouped by field.
+ */
+trait VerifiableMultipleStructured extends Verifiable {
+
+  /**
+   * The map of field -> errors.
+   */
+  private var _errors: ErrorItemTree = ErrorItemTree(Map())
+
+  def errors = _errors
+
+  /**
+   * Add an error for a field.
+   * @param field The field to attach the error
+   * @param err The error code
+   */
+  protected def addError(field: String, err: Int): Unit = {
+    val element = _errors.e.getOrElse(field, ErrorItemFinal(Seq())) match {
+      case ErrorItemFinal(e) => ErrorItemFinal(e :+ err)
+      case ErrorItemTree(e) => throw new IncompatibleArgumentException("You are trying to add an integer error into a tree error")
+      case ErrorItemSeq(e) => throw new IncompatibleArgumentException("You are trying to add an integer error into a seq error")
+    }
+    _errors = ErrorItemTree(_errors.e + (field -> element))
+  }
+
+  protected def addSeqErrors(field: String, errors: Map[Int, ErrorItem]): Unit = {
+    val element = _errors.e.getOrElse(field, ErrorItemSeq(Map())) match {
+      case ErrorItemFinal(e) => throw new IncompatibleArgumentException("You are trying to add a seq error into a integer error")
+      case ErrorItemTree(e) => throw new IncompatibleArgumentException("You are trying to add a seq error into a tree error")
+      case ErrorItemSeq(e) => ErrorItemSeq(e ++ errors)
+    }
+    _errors = ErrorItemTree(_errors.e + (field -> element))
+  }
+
+  protected def addMapErrors(field: String, errors: Map[String, ErrorItem]): Unit = {
+    val element = _errors.e.getOrElse(field, ErrorItemSeq(Map())) match {
+      case ErrorItemFinal(e) => throw new IncompatibleArgumentException("You are trying to add a tree error into a integer error")
+      case ErrorItemTree(e) => ErrorItemTree(e ++ errors)
+      case ErrorItemSeq(e) => throw new IncompatibleArgumentException("You are trying to add a tree error into a seq error")
+    }
+    _errors = ErrorItemTree(_errors.e + (field -> element))
+  }
+
+  /**
+   * Clears the errors (when retesting the model for instance)
+   */
+  protected def clearErrors() = _errors = ErrorItemTree(Map())
+
+  override def toResult: Result = if (hasErrors) ResultStructuredErrors(_errors) else ResultSuccess
+
+  /**
+   * Has this class an error?
+   * @return True if it has an error, otherwise false
+   */
+  protected def hasErrors: Boolean = !hasNotErrors
+
+  /**
+   * Has this class an error?
+   * @return False if it has an error, otherwise true
+   */
+  protected def hasNotErrors: Boolean = _errors.isEmpty
+
+  // TODO: make final when children use doVerify
+  override def verify: Boolean = {
+    doVerify()
+    hasNotErrors
+  }
+
+  /**
+   * This method is defined to permit the developer to define its verification method.
+   * It will be called on {{{verify}}} call (if not overridden)
+   * before returning the success flag with {{{hasNotErrors}}}.
+   */
+  // TODO: remove implementation when all class use this method
+  protected def doVerify(): Unit = {}
 }

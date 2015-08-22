@@ -1,6 +1,6 @@
 package vep.exception
 
-import vep.model.common.{ResultError, ResultErrors}
+import vep.model.common.{ErrorItem, ResultError, ResultErrors, ResultStructuredErrors}
 
 /**
  * This class defines an exception due to field error from database.
@@ -10,15 +10,25 @@ import vep.model.common.{ResultError, ResultErrors}
  * @param cause The error description
  */
 class FieldErrorException(field: String, code: Int, cause: String)
-  extends Exception("An error append for field " + field + " cause: [" + code + "]" + cause) {
+  extends Exception("An error append for field " + field + ". Cause: [" + code + "] " + cause) {
 
   /**
-   * Transforms this class into a {@code ResultErrors}.
+   * Transforms this class into a {{{ResultErrors}}}.
    */
   def toResultErrors: ResultErrors = ResultErrors(Map(field -> Seq(code)))
 
   /**
-   * Transforms this class into a {@code ResultError}.
+   * Transforms this class into a {{{ResultError}}}.
    */
   def toResultError: ResultError = ResultError(code)
+}
+
+class FieldStructuredErrorException(val cause: String, val error: ErrorItem)
+  extends Exception("An error append for a field. Cause: " + cause) {
+  def this(error: ErrorItem, cause: String) = this(cause, error)
+
+  /**
+   * Transforms this class into a {{{ResultStructuredErrors}}}.
+   */
+  def toResult: ResultStructuredErrors = ResultStructuredErrors(error)
 }

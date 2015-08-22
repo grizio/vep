@@ -39,6 +39,13 @@ trait TheaterServiceComponent {
      * Returns the list of all theaters
      */
     def findAll(): Seq[Theater]
+
+    /**
+     * Returns the theater with given canonical if exists.
+     * @param canonical The canonical of the theater
+     * @return The theater with given canonical
+     */
+    def findByCanonical(canonical: String): Option[Theater]
   }
 
 }
@@ -111,11 +118,14 @@ trait TheaterServiceProductionComponent extends TheaterServiceComponent {
       n == 1
     }
 
-    /**
-     * Returns the list of all theaters
-     */
     override def findAll(): Seq[Theater] = DB.withConnection { implicit c =>
       SQL("SELECT id, canonical, name, address, content, fixed, plan, maxSeats FROM theater").as(theaterParser *)
+    }
+
+    override def findByCanonical(canonical: String): Option[Theater] = DB.withConnection { implicit c =>
+      SQL("SELECT id, canonical, name, address, content, fixed, plan, maxSeats FROM theater WHERE canonical = {canonical}")
+        .on("canonical" -> canonical)
+        .as(theaterParser.singleOpt)
     }
   }
 

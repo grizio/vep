@@ -16,9 +16,10 @@ trait VepApiRouter
   with TheaterRouter
   with CompanyRouter
   with ShowRouter
+  with SessionRouter
   with VepControllersComponent {
 
   override lazy val route: Route = cors {
-    userRoute ~ cmsRoute ~ theaterRoute ~ companyRoute ~ showRoute
+    userRoute ~ cmsRoute ~ theaterRoute ~ companyRoute ~ showRoute ~ sessionRoute
   }
 }

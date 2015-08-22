@@ -367,5 +367,23 @@ class StringUtilsSpecification extends Specification {
         StringUtils.isNotCanonical("aBcd") === true
       }
     }
+
+    "StringUtils.canonicalize should" >> {
+      "keep 'abcd' as 'abcd'" >> {
+        StringUtils.canonicalize("abcd") === "abcd"
+      }
+
+      "transform 'some words here' to 'some-words-here'" >> {
+        StringUtils.canonicalize("some words here") === "some-words-here"
+      }
+
+      "transform 'Some UppErCase' to 'some-uppercase'" >> {
+        StringUtils.canonicalize("Some UppErCase") === "some-uppercase"
+      }
+
+      "transform 'S0m€ spéc!al Chàràctèrs hërê' to 's0me-spec-al-characters-here'" >> {
+        StringUtils.canonicalize("S0m€ spéc!al Chàràctèrs hërê") === "s0me-spec-al-characters-here"
+      }
+    }
   }
 }

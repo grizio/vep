@@ -150,4 +150,33 @@ object StringUtils {
    * @return True if the string is not in JSON format, otherwise false.
    */
   def isNotJson(str: String): Boolean = !isJson(str)
+
+  /**
+   * Creates a canonical from given string
+   * @param str The string to transform
+   * @return The canonical representing the string
+   */
+  def canonicalize(str: String): String = {
+    if (isBlank(str)) {
+      ""
+    } else {
+      var tmp = str.toLowerCase
+
+      tmp = tmp.replaceAll("(à|ä|â|@)", "a")
+      tmp = tmp.replaceAll("(é|è|ë|ê|€)", "e")
+      tmp = tmp.replaceAll("(ï|î)", "i")
+      tmp = tmp.replaceAll("(ö|ô)", "o")
+      tmp = tmp.replaceAll("(ù|ü|û)", "u")
+      tmp = tmp.replaceAll("\\s+", "-")
+      tmp = tmp.replaceAll("[^a-z0-9_+-]+", "-")
+      tmp = tmp.replaceAll("-+", "-")
+      while (tmp.startsWith("_") || tmp.startsWith("-") || tmp.startsWith("+")) {
+        tmp = tmp.substring(1)
+      }
+      while (tmp.endsWith("_") || tmp.endsWith("-") || tmp.endsWith("+")) {
+        tmp = tmp.substring(0, tmp.length - 1)
+      }
+      tmp
+    }
+  }
 }

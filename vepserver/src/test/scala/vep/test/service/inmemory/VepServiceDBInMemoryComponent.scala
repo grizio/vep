@@ -75,6 +75,7 @@ trait VepServicesDBInMemoryComponent
     DB.disableFK()
 
     DB.withTransaction { implicit c =>
+      SQL("SET FOREIGN_KEY_CHECKS = 0").execute()
       val tables = SQL(
         """SELECT table_name
           | FROM  information_schema.tables
@@ -83,6 +84,7 @@ trait VepServicesDBInMemoryComponent
       tables foreach {
         table => SQL("TRUNCATE TABLE " + table).execute()
       }
+      SQL("SET FOREIGN_KEY_CHECKS = 1").execute()
     }
 
     DB.enableFK()

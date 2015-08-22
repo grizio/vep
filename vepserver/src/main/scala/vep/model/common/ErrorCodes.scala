@@ -30,4 +30,12 @@ object ErrorCodes {
   val undefinedShow = 24
   val notANumber = 25
   val unknownOrder = 26
+  val undefinedTheater = 27
+  val existingDateForTheater = 28
+  val invalidDate = 29
+  val dateTooSoon = 30
+  val reservationEndDateTooLate = 31
+  val emptyShowList = 32
+  val undefinedSession = 33
+  val lockedTheater = 34
 }

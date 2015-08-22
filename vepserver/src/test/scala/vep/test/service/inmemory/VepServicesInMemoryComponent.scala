@@ -22,4 +22,6 @@ trait VepServicesInMemoryComponent
   override def showService: ShowService = ???
 
   override def showSearchService: ShowSearchService = ???
+
+  override def sessionService: SessionService = ???
 }

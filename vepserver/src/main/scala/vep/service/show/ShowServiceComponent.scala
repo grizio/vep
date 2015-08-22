@@ -5,7 +5,7 @@ import anorm._
 import vep.AnormClient
 import vep.exception.FieldErrorException
 import vep.model.common.ErrorCodes
-import vep.model.show.{ShowDetail, ShowForm}
+import vep.model.show.{Show, ShowDetail, ShowForm}
 import vep.service.AnormImplicits
 import vep.service.company.CompanyServiceComponent
 import vep.utils.DB
@@ -42,6 +42,13 @@ trait ShowServiceComponent {
      * @return The show with given canonical
      */
     def findDetail(canonical: String): Option[ShowDetail]
+
+    /**
+     * Returns the show (show row, not its detail unlike {{{findDetail}}}) in terms of given canonical if exists.
+     * @param canonical The show canonical
+     * @return The show
+     */
+    def findByCanonical(canonical: String): Option[Show]
   }
 
 }
@@ -112,6 +119,12 @@ trait ShowServiceProductionComponent extends ShowServiceComponent {
           |WHERE s.canonical = {canonical}""".stripMargin
       ).on("canonical" -> canonical)
         .as(ShowParsers.showDetail.singleOpt)
+    }
+
+    override def findByCanonical(canonical: String): Option[Show] = DB.withConnection { implicit c =>
+      SQL("SELECT * FROM shows WHERE canonical = {canonical}")
+        .on("canonical" -> canonical)
+        .as(ShowParsers.show.singleOpt)
     }
   }
 
