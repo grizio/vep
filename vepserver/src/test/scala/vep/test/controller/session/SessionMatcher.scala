@@ -1,7 +1,8 @@
 package vep.test.controller.session
 
+import org.specs2.matcher.Matcher
 import org.specs2.mutable.Specification
-import vep.model.session.{Session, SessionPrice, SessionShow}
+import vep.model.session._
 
 trait SessionMatcher {
   self: Specification =>
@@ -48,4 +49,21 @@ trait SessionMatcher {
     (value must have size expected.length) and
       (value must containTheSameElementsAs(expected, equalSessionShow))
 
+  def matchSessionDetail(sessionUpdateForm: SessionUpdateForm): Matcher[SessionDetail] = { session: SessionDetail =>
+    (session.date === sessionUpdateForm.dtDate) and
+      (session.reservationEndDate === sessionUpdateForm.dtReservationEndDate) and
+      (session.name === sessionUpdateForm.name) and
+      (session.prices must matchSessionPriceSeq(sessionUpdateForm.prices)) and
+      (session.shows === sessionUpdateForm.shows)
+  }
+
+  def matchSessionPriceSeq(sessionPriceFormSeq: Seq[SessionPriceForm]): Matcher[Seq[SessionPriceDetail]] = { sessionPriceSeq: Seq[SessionPriceDetail] =>
+    sessionPriceSeq must contain[SessionPriceForm, SessionPriceDetail](matchSessionPriceForm)(sessionPriceFormSeq)
+  }
+
+  def matchSessionPriceForm(sessionPriceForm: SessionPriceForm): Matcher[SessionPriceDetail] = { sessionPrice: SessionPriceDetail =>
+    (sessionPrice.name === sessionPriceForm.name) and
+      (sessionPrice.price === sessionPriceForm.price) and
+      (sessionPrice.cases === sessionPriceForm.condition)
+  }
 }

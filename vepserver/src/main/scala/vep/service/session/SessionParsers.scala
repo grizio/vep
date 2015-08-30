@@ -4,6 +4,7 @@ import anorm.SqlParser._
 import anorm.~
 import org.joda.time.DateTime
 import vep.model.session._
+import vep.utils.DateUtils
 
 object SessionParsers {
   lazy val session =
@@ -34,5 +35,24 @@ object SessionParsers {
       int("num") map {
       case sessionId ~ show ~ num =>
         SessionShow(sessionId, show, num)
+    }
+
+  lazy val sessionDetailParser =
+    int("session.id") ~
+      str("theater.canonical") ~
+      str("session.canonical") ~
+      date("session.date") ~
+      str("session.name") ~
+      date("session.reservationEndDate") map {
+      case id ~ theater ~ canonical ~ date ~ name ~ reservationEndDate =>
+        SessionDetailParsed(id, theater, canonical, DateUtils.toDateTime(date), name, DateUtils.toDateTime(reservationEndDate))
+    }
+
+  lazy val sessionPriceDetailParser =
+    str("name") ~
+      int("price") ~
+      get[Option[String]]("cases") map {
+      case name ~ price ~ cases =>
+        SessionPriceDetail(name, price, cases)
     }
 }

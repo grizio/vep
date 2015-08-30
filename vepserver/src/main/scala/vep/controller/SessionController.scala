@@ -1,8 +1,8 @@
 package vep.controller
 
 import vep.exception.FieldStructuredErrorException
-import vep.model.common.{ResultStructuredErrors, ResultSuccessEntity}
-import vep.model.session.SessionForm
+import vep.model.common._
+import vep.model.session.{SessionForm, SessionUpdateForm}
 import vep.service.VepServicesComponent
 
 /**
@@ -18,6 +18,12 @@ trait SessionControllerComponent {
      * @return The session canonical
      */
     def create(sessionForm: SessionForm): Either[ResultStructuredErrors, ResultSuccessEntity[String]]
+
+    /**
+     * Updates an existing session
+     * @param sessionUpdateForm The session to update
+     */
+    def update(sessionUpdateForm: SessionUpdateForm): Either[ResultStructuredErrors, ResultSuccess]
   }
 
 }
@@ -38,6 +44,27 @@ trait SessionControllerProductionComponent extends SessionControllerComponent {
         }
       } else {
         Left(sessionForm.toResult.asInstanceOf[ResultStructuredErrors])
+      }
+    }
+
+    override def update(sessionUpdateForm: SessionUpdateForm): Either[ResultStructuredErrors, ResultSuccess] = {
+      if (sessionUpdateForm.verify) {
+        if (theaterService.exists(sessionUpdateForm.theater)) {
+          if (sessionService.exists(sessionUpdateForm.theater, sessionUpdateForm.session)) {
+            try {
+              sessionService.update(sessionUpdateForm)
+              Right(ResultSuccess)
+            } catch {
+              case e: FieldStructuredErrorException => Left(e.toResult)
+            }
+          } else {
+            Left(ResultStructuredErrors(ErrorItem.build("session" -> ErrorCodes.undefinedSession)))
+          }
+        } else {
+          Left(ResultStructuredErrors(ErrorItem.build("theater" -> ErrorCodes.undefinedTheater)))
+        }
+      } else {
+        Left(sessionUpdateForm.toResult.asInstanceOf[ResultStructuredErrors])
       }
     }
   }

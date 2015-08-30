@@ -1,5 +1,7 @@
 package vep.utils
 
+import java.util.Date
+
 import org.joda.time.DateTime
 
 /**
@@ -26,6 +28,13 @@ object DateUtils {
    * @return The resulting date
    */
   def toDateTime(str: String): DateTime = DateTime.parse(str)
+
+  /**
+   * Returns the {{{DateTime}}} corresponding to given {{{date}}}.
+   * @param date The date to convert
+   * @return The resulting date
+   */
+  def toDateTime(date: Date): DateTime = new DateTime(date)
 
   /**
    * Checked if the date is valid ISO-8601.
