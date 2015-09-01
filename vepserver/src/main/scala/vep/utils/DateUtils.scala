@@ -15,7 +15,7 @@ object DateUtils {
    */
   def toDateTimeOpt(str: String): Option[DateTime] = {
     try {
-      Some(DateTime.parse(str))
+      Some(toDateTime(str))
     } catch {
       case e: Exception => None
     }
@@ -27,7 +27,8 @@ object DateUtils {
    * @param str The string to convert
    * @return The resulting date
    */
-  def toDateTime(str: String): DateTime = DateTime.parse(str)
+  // Both ISO (yyyy-mm-dd\THH:mm:ss) and SQL (yyyy-mm-dd HH:mm:ss)
+  def toDateTime(str: String): DateTime = DateTime.parse(str.trim.replace(" ", "T"))
 
   /**
    * Returns the {{{DateTime}}} corresponding to given {{{date}}}.

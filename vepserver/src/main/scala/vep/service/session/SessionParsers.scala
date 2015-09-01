@@ -1,5 +1,7 @@
 package vep.service.session
 
+import java.util.Date
+
 import anorm.SqlParser._
 import anorm.~
 import org.joda.time.DateTime
@@ -54,5 +56,20 @@ object SessionParsers {
       get[Option[String]]("cases") map {
       case name ~ price ~ cases =>
         SessionPriceDetail(name, price, cases)
+    }
+
+  lazy val sessionSearchParser =
+    str("theater.canonical") ~
+      str("theater.name") ~
+      int("session.id") ~
+      str("session.canonical") ~
+      get[Date]("session.date") map {
+      case theater ~ theaterName ~ id ~ canonical ~ date =>
+        SessionSearchParsed(theater, theaterName, id, canonical, DateUtils.toDateTime(date))
+    }
+
+  lazy val sessionSearchShowParser =
+    str("canonical") ~ str("title") map {
+      case canonical ~ title => SessionSearchShow(canonical, title)
     }
 }

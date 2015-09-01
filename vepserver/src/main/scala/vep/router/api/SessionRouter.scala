@@ -4,7 +4,8 @@ import spray.http.StatusCodes
 import spray.routing.HttpService
 import vep.controller.VepControllersComponent
 import vep.model.common.Roles
-import vep.model.session.{SessionFormBody, SessionUpdateFormBody}
+import vep.model.session.{SessionSearch, SessionFormBody, SessionUpdateFormBody}
+import vep.model.show.ShowSearch
 import vep.router.VepRouter
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -50,6 +51,15 @@ trait SessionRouter extends HttpService {
             }
           }
         }
+    }
+  } ~ path("sessions") {
+    get {
+      parameters('t.as[String] ?, 's.as[String] ?, 'sd.as[String] ?, 'ed.as[String] ?, 'o.as[String] ?, 'p.as[Int] ?).as(SessionSearch) { sessionSearch => ctx =>
+        sessionController.search(sessionSearch) match {
+          case Left(error) => ctx.complete(StatusCodes.BadRequest, error)
+          case Right(success) => ctx.complete(StatusCodes.OK, success.entity)
+        }
+      }
     }
   }
 }

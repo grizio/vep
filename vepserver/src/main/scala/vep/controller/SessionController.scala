@@ -2,7 +2,7 @@ package vep.controller
 
 import vep.exception.FieldStructuredErrorException
 import vep.model.common._
-import vep.model.session.{SessionForm, SessionUpdateForm}
+import vep.model.session.{SessionForm, SessionSearch, SessionSearchResponse, SessionUpdateForm}
 import vep.service.VepServicesComponent
 
 /**
@@ -24,6 +24,13 @@ trait SessionControllerComponent {
      * @param sessionUpdateForm The session to update
      */
     def update(sessionUpdateForm: SessionUpdateForm): Either[ResultStructuredErrors, ResultSuccess]
+
+    /**
+     * Searches sessions in terms of given criteria.
+     * @param sessionSearch The search criteria
+     * @return The list of sessions respecting criteria
+     */
+    def search(sessionSearch: SessionSearch): Either[ResultErrors, ResultSuccessEntity[SessionSearchResponse]]
   }
 
 }
@@ -34,6 +41,8 @@ trait SessionControllerProductionComponent extends SessionControllerComponent {
   override lazy val sessionController = new SessionControllerProduction
 
   class SessionControllerProduction extends SessionController {
+    lazy val maxPerPage = 20
+
     override def create(sessionForm: SessionForm): Either[ResultStructuredErrors, ResultSuccessEntity[String]] = {
       if (sessionForm.verify) {
         try {
@@ -67,6 +76,15 @@ trait SessionControllerProductionComponent extends SessionControllerComponent {
         Left(sessionUpdateForm.toResult.asInstanceOf[ResultStructuredErrors])
       }
     }
-  }
 
+    override def search(sessionSearch: SessionSearch): Either[ResultErrors, ResultSuccessEntity[SessionSearchResponse]] = {
+      if (sessionSearch.verify) {
+        val result = sessionSearchService.search(sessionSearch, maxPerPage)
+        val count = sessionSearchService.count(sessionSearch)
+        Right(ResultSuccessEntity(SessionSearchResponse(result, Math.ceil(count.toDouble / maxPerPage.toDouble).toInt)))
+      } else {
+        Left(sessionSearch.toResult.asInstanceOf[ResultErrors])
+      }
+    }
+  }
 }
