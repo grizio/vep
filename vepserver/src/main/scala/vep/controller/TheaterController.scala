@@ -62,15 +62,19 @@ trait TheaterControllerProductionComponent extends TheaterControllerComponent {
 
     override def update(theaterForm: TheaterForm): Either[ResultErrors, ResultSuccess] = {
       if (theaterService.exists(theaterForm.canonical)) {
-        if (theaterForm.verify) {
-          try {
-            theaterService.update(theaterForm)
-            Right(ResultSuccess)
-          } catch {
-            case e: FieldErrorException => Left(e.toResultErrors)
-          }
+        if (theaterService.isLocked(theaterForm.canonical)) {
+          Left(ResultErrors(Map("_" -> Seq(ErrorCodes.lockedTheater))))
         } else {
-          Left(theaterForm.toResult.asInstanceOf[ResultErrors])
+          if (theaterForm.verify) {
+            try {
+              theaterService.update(theaterForm)
+              Right(ResultSuccess)
+            } catch {
+              case e: FieldErrorException => Left(e.toResultErrors)
+            }
+          } else {
+            Left(theaterForm.toResult.asInstanceOf[ResultErrors])
+          }
         }
       } else {
         Left(ResultErrors(Map(

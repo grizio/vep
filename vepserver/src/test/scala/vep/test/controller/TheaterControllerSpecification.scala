@@ -281,6 +281,14 @@ class TheaterControllerSpecification extends Specification {
             (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("plan").get must contain(ErrorCodes.invalidJson))
         }
       }
+
+      "do not update a locked theater" >> {
+        val tcComp = new TheaterControllerForSpecificationComponent
+        val result = tcComp.theaterController.update(validTheaterForm.copy(canonical = "locked-theater"))
+        (result must beAnInstanceOf[Left[ResultErrors, _]]) and
+          (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("_")) and
+          (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("_").get must contain(ErrorCodes.lockedTheater))
+      }
     }
   }
 }

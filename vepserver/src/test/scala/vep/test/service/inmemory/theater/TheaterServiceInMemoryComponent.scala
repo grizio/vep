@@ -15,7 +15,8 @@ trait TheaterServiceInMemoryComponent extends TheaterServiceComponent {
   class TheaterServiceInMemory extends TheaterService {
     private var theaters = Seq[Theater](
       Theater(1, "my-theater", "My Theater", "1 road of the glory", None, fixed = true, Some( """[{"name":"A1","x":0,"y":0,"w":50,"h":50}]"""), None),
-      Theater(2, "my-theater-2", "My Theater", "1 road of the glory", None, fixed = false, None, Some(1))
+      Theater(2, "my-theater-2", "My Theater", "1 road of the glory", None, fixed = false, None, Some(1)),
+      Theater(3, "locked-theater", "Locked Theater", "1 road of the failure", None, fixed = false, None, Some(1))
     )
 
     override def create(theaterForm: TheaterForm): Unit = {
@@ -58,7 +59,7 @@ trait TheaterServiceInMemoryComponent extends TheaterServiceComponent {
 
     override def findByCanonical(canonical: String): Option[Theater] = ???
 
-    override def isLocked(canonical: String): Boolean = ???
+    override def isLocked(canonical: String): Boolean = canonical == "locked-theater"
   }
 
 }
