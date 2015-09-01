@@ -30,6 +30,13 @@ trait TheaterControllerComponent {
      * Returns the whole list of theaters.
      */
     def list(): ResultSuccessEntity[Seq[Theater]]
+
+    /**
+     * Checks if a theater is locked.
+     * @param canonical The theater canonical
+     * @return True if the theater is locked, otherwise false.
+     */
+    def isLocked(canonical: String): Either[ResultError, ResultSuccessEntity[Boolean]]
   }
 
 }
@@ -74,6 +81,14 @@ trait TheaterControllerProductionComponent extends TheaterControllerComponent {
 
     override def list(): ResultSuccessEntity[Seq[Theater]] = {
       ResultSuccessEntity(theaterService.findAll())
+    }
+
+    override def isLocked(canonical: String): Either[ResultError, ResultSuccessEntity[Boolean]] = {
+      if (theaterService.exists(canonical)) {
+        Right(ResultSuccessEntity(theaterService.isLocked(canonical)))
+      } else {
+        Left(ResultError(ErrorCodes.undefinedTheater))
+      }
     }
   }
 

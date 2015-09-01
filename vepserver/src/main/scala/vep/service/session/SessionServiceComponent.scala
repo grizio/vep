@@ -46,6 +46,13 @@ trait SessionServiceComponent {
      * @return The detail of the session if exists
      */
     def findDetail(theater: String, session: String): Option[SessionDetail]
+
+    /**
+     * Counts the number of future sessions for given theater.
+     * @param theater The theater canonical
+     * @return The number of sessions
+     */
+    def countByTheater(theater: String): Int
   }
 
 }
@@ -258,6 +265,19 @@ trait SessionServiceProductionComponent extends SessionServiceComponent {
         .on("shows" -> show.get.id)
         .on("num" -> i)
         .executeUpdate()
+    }
+
+    override def countByTheater(theater: String): Int = DB.withConnection { implicit c =>
+      SQL(
+        """
+          |SELECT count(*)
+          |FROM session
+          |WHERE theater in (SELECT id FROM theater WHERE canonical = {theater})
+          |AND date >= {now}
+        """.stripMargin)
+        .on("theater" -> theater)
+        .on("now" -> DateUtils.toStringSQL(DateTime.now))
+        .as(scalar[Int].single)
     }
   }
 

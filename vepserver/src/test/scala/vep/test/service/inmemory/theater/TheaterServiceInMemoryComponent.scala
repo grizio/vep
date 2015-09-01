@@ -57,6 +57,8 @@ trait TheaterServiceInMemoryComponent extends TheaterServiceComponent {
     override def findAll(): Seq[Theater] = theaters map { t => t.copy() }
 
     override def findByCanonical(canonical: String): Option[Theater] = ???
+
+    override def isLocked(canonical: String): Boolean = ???
   }
 
 }

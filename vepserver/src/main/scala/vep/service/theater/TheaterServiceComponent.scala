@@ -6,7 +6,7 @@ import vep.AnormClient
 import vep.exception.FieldErrorException
 import vep.model.common.ErrorCodes
 import vep.model.theater.{Theater, TheaterForm}
-import vep.service.AnormImplicits
+import vep.service.{VepServicesComponent, AnormImplicits}
 import vep.utils.DB
 
 /**
@@ -46,12 +46,19 @@ trait TheaterServiceComponent {
      * @return The theater with given canonical
      */
     def findByCanonical(canonical: String): Option[Theater]
+
+    /**
+     * Checks if a theater is locked.
+     * @param canonical The theater canonical
+     * @return True if the theater is locked, otherwise false.
+     */
+    def isLocked(canonical: String): Boolean
   }
 
 }
 
 trait TheaterServiceProductionComponent extends TheaterServiceComponent {
-  self: AnormClient =>
+  self: AnormClient with VepServicesComponent =>
   override lazy val theaterService = new TheaterServiceProduction
 
   class TheaterServiceProduction extends TheaterService with AnormImplicits {
@@ -126,6 +133,11 @@ trait TheaterServiceProductionComponent extends TheaterServiceComponent {
       SQL("SELECT id, canonical, name, address, content, fixed, plan, maxSeats FROM theater WHERE canonical = {canonical}")
         .on("canonical" -> canonical)
         .as(theaterParser.singleOpt)
+    }
+
+    override def isLocked(canonical: String): Boolean = DB.withConnection { implicit c =>
+      // Locked if there is at least one future session in this theater
+      sessionService.countByTheater(canonical) > 0
     }
   }
 
