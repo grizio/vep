@@ -88,4 +88,38 @@ object SessionImplicits extends JsonImplicits {
       }
     }
   }
+
+  /*
+   case class SessionDetail(theater: String, canonical: String, date: DateTime, name: String, reservationEndDate: DateTime,
+                         prices: Seq[SessionPriceDetail], shows: Seq[String])
+
+case class SessionPriceDetail(name: String, price: Int, cases: Option[String])
+  * */
+
+  implicit val impSessionDetail = new RootJsonFormat[SessionDetail] {
+    override def write(obj: SessionDetail): JsValue = JsObject(
+      "theater" -> JsString(obj.theater),
+      "canonical" -> JsString(obj.canonical),
+      "date" -> JsString(DateUtils.toStringISO(obj.date)),
+      "name" -> JsString(obj.name),
+      "reservationEndDate" -> JsString(DateUtils.toStringISO(obj.reservationEndDate)),
+      "prices" -> JsArray(obj.prices.map(impSessionPriceDetail.write): _*),
+      "shows" -> JsArray(obj.shows.map(s => JsString(s)): _*)
+    )
+
+    override def read(json: JsValue): SessionDetail = {
+      json.asJsObject.getFields("theater", "canonical", "date", "name", "reservationEndDate", "prices", "shows") match {
+        case Seq(JsString(theater), JsString(canonical), JsString(date), JsString(name), JsString(reservationEndDate), JsArray(prices), JsArray(shows)) =>
+          SessionDetail(theater, canonical, DateUtils.toDateTime(date), name, DateUtils.toDateTime(reservationEndDate),
+            prices.map(impSessionPriceDetail.read),
+            shows map {
+              case JsString(s) => s
+              case _ => throw new DeserializationException("String expected")
+            }
+          )
+      }
+    }
+  }
+
+  implicit val impSessionPriceDetail: JsonFormat[SessionPriceDetail] = jsonFormat(SessionPriceDetail.apply, "name", "price", "conditions")
 }

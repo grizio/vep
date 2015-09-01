@@ -2,7 +2,7 @@ package vep.controller
 
 import vep.exception.FieldStructuredErrorException
 import vep.model.common._
-import vep.model.session.{SessionForm, SessionSearch, SessionSearchResponse, SessionUpdateForm}
+import vep.model.session._
 import vep.service.VepServicesComponent
 
 /**
@@ -31,6 +31,14 @@ trait SessionControllerComponent {
      * @return The list of sessions respecting criteria
      */
     def search(sessionSearch: SessionSearch): Either[ResultErrors, ResultSuccessEntity[SessionSearchResponse]]
+
+    /**
+     * Finds the session by given canonical if exists
+     * @param theater The theater canonical
+     * @param session The session canonical
+     * @return The session
+     */
+    def find(theater: String, session: String): ResultSuccessEntity[Option[SessionDetail]]
   }
 
 }
@@ -85,6 +93,10 @@ trait SessionControllerProductionComponent extends SessionControllerComponent {
       } else {
         Left(sessionSearch.toResult.asInstanceOf[ResultErrors])
       }
+    }
+
+    override def find(theater: String, session: String): ResultSuccessEntity[Option[SessionDetail]] = {
+      ResultSuccessEntity(sessionService.findDetail(theater, session))
     }
   }
 }

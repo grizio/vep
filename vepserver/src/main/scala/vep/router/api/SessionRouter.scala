@@ -4,8 +4,7 @@ import spray.http.StatusCodes
 import spray.routing.HttpService
 import vep.controller.VepControllersComponent
 import vep.model.common.Roles
-import vep.model.session.{SessionSearch, SessionFormBody, SessionUpdateFormBody}
-import vep.model.show.ShowSearch
+import vep.model.session.{SessionFormBody, SessionSearch, SessionUpdateFormBody}
 import vep.router.VepRouter
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -36,20 +35,41 @@ trait SessionRouter extends HttpService {
         }
       } ~
         path(Segment) { sessionCanonical =>
-          put {
-            entity(as[SessionUpdateFormBody]) { sessionUpdateFormBody =>
-              sealRoute {
-                authenticate(vepBasicUserAuthenticator) { implicit user =>
-                  authorize(user.roles.contains(Roles.sessionManager)) { ctx =>
-                    sessionController.update(sessionUpdateFormBody.toSessionUpdateForm(theaterCanonical, sessionCanonical)) match {
-                      case Left(error) => ctx.complete(StatusCodes.BadRequest, error)
-                      case Right(success) => ctx.complete(StatusCodes.OK)
+          get {
+            sealRoute {
+              optionalAuthenticate(vepBasicUserAuthenticator) { implicit user => ctx =>
+                sessionController.find(theaterCanonical, sessionCanonical).entity match {
+                  case Some(session) =>
+                    if (session.date.isAfterNow) {
+                      ctx.complete(StatusCodes.OK, session)
+                    } else if (user.isDefined) {
+                      if (user.get.roles.contains(Roles.sessionManager)) {
+                        ctx.complete(StatusCodes.OK, session)
+                      } else {
+                        ctx.complete(StatusCodes.Forbidden)
+                      }
+                    } else {
+                      ctx.complete(StatusCodes.Unauthorized)
+                    }
+                  case None => ctx.complete(StatusCodes.NotFound)
+                }
+              }
+            }
+          } ~
+            put {
+              entity(as[SessionUpdateFormBody]) { sessionUpdateFormBody =>
+                sealRoute {
+                  authenticate(vepBasicUserAuthenticator) { implicit user =>
+                    authorize(user.roles.contains(Roles.sessionManager)) { ctx =>
+                      sessionController.update(sessionUpdateFormBody.toSessionUpdateForm(theaterCanonical, sessionCanonical)) match {
+                        case Left(error) => ctx.complete(StatusCodes.BadRequest, error)
+                        case Right(success) => ctx.complete(StatusCodes.OK)
+                      }
                     }
                   }
                 }
               }
             }
-          }
         }
     }
   } ~ path("sessions") {
