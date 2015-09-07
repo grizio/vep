@@ -1,0 +1,24 @@
+library vep.component.session;
+
+import 'package:angular/angular.dart';
+import 'package:vepweb/component/common/form/vep.component.form.lib.dart';
+import 'package:vepweb/component/main/vep.component.main.lib.dart';
+import 'package:vepweb/component/common/field/vep.component.common.field.lib.dart';
+import 'package:vepweb/model/vep.model.lib.dart';
+import 'dart:async';
+import 'package:vepweb/http/vep.http.lib.dart';
+import 'package:vepweb/service/show/vep.service.show.lib.dart';
+import 'package:vepweb/service/theater/vep.service.theater.lib.dart';
+import 'package:vepweb/service/session/vep.service.session.lib.dart';
+
+part 'field-price.dart';
+part 'form-session.dart';
+part 'price-card.dart';
+
+class VepComponentSessionModule extends Module {
+  VepComponentSessionModule() {
+    bind(FieldPriceComponent);
+    bind(FormSessionComponent);
+    bind(PriceCardComponent);
+  }
+}

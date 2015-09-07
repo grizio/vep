@@ -45,9 +45,13 @@ abstract class FieldComponent<A> implements ScopeAware, AttachAware {
 
   set scope(Scope scope) {
     _scope = scope;
-    var ctx = utils.getContext(scope, (_) => _ is FormComponentContainer) as FormComponentContainer;
-    if (ctx != null) {
-      formComponent = ctx.form;
+    var ctxFieldContainer = utils.getContext(scope, (_) => _ is FieldContainer) as FieldContainer;
+    if (ctxFieldContainer != null && ctxFieldContainer != this) {
+      fieldContainer = ctxFieldContainer;
+    }
+    var ctxFormContainer = utils.getContext(scope, (_) => _ is FormComponentContainer) as FormComponentContainer;
+    if (ctxFormContainer != null) {
+      formComponent = ctxFormContainer.form;
       formComponent.waitingField();
     }
   }
@@ -55,20 +59,22 @@ abstract class FieldComponent<A> implements ScopeAware, AttachAware {
   @override
   void attach() {
     if (formComponent != null) {
-      if (formComponent is FormSimpleComponent) {
-        fieldContainer = formComponent as FieldContainer;
-      } else {
-        if (parent != null) {
-          if (formComponent is FormSectionsComponent) {
-            fieldContainer = (formComponent as FormSectionsComponent)[parent];
-          } else if (formComponent is FormStepsComponent) {
-            fieldContainer = (formComponent as FormStepsComponent)[parent];
+      if (fieldContainer == null) {
+        if (formComponent is FormSimpleComponent) {
+          fieldContainer = formComponent as FieldContainer;
+        } else {
+          if (parent != null) {
+            if (formComponent is FormSectionsComponent) {
+              fieldContainer = (formComponent as FormSectionsComponent)[parent];
+            } else if (formComponent is FormStepsComponent) {
+              fieldContainer = (formComponent as FormStepsComponent)[parent];
+            }
           }
         }
       }
 
       if (fieldContainer != null) {
-        fieldContainer.fields.add(this);
+        fieldContainer.addField(this);
       }
 
       formComponent.fieldInitialized();
@@ -142,9 +148,6 @@ abstract class FieldDecorator implements ScopeAware {
     if (ctx != null) {
       addAttribute('name', ctx.name);
       addAttribute('id', ctx.id);
-      if (!ctx.enabled) {
-        element.attributes['disabled'] = 'disabled';
-      }
       if (ctx.required != null && ctx.required) {
         element.attributes['required'] = 'required';
       }

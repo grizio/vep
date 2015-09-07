@@ -1,0 +1,18 @@
+<button ng-click="add($event)" class="button secondary tiny">+</button>
+
+<fieldset ng-repeat="index in indexList()" class="row">
+    <legend>Prix {{ $index + 1 }}</legend>
+    <div class="small-1 columns">
+        <button ng-click="remove(index, $event)" class="button alert tiny">-</button>
+    </div>
+    <div class="small-11 columns">
+        <input-text name="name[{{ index }}]" label="Nom" required="true"
+                    with-id="field-price-name-{{ index }}"></input-text>
+        <input-price name="price[{{ index }}]" label="Prix" required="true" min="0" convert-to-cent="true"
+                       with-id="field-price-price-{{ index }}"></input-price>
+        <input-text name="condition[{{ index }}]" label="Condition" required="false"
+                    with-id="field-price-condition-{{ index }}"></input-text>
+    </div>
+</fieldset>
+
+<button ng-click="add($event)" class="button secondary tiny">+</button>

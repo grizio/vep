@@ -54,4 +54,19 @@ class ShowService {
       }
     });
   }
+
+  Future<List<Choice<String>>> findCanonicalByTitle(String title) {
+    final criteria = new ShowSearchCriteria();
+    criteria.title = title;
+    return search(criteria).then((ShowSearchResponse response){
+      if (response.shows.isNotEmpty) {
+        final show = response.shows.firstWhere((_) => _.title == title, orElse: () => response.shows.first);
+        final result = [show];
+        result.addAll(response.shows.where((_) => _.canonical != show.canonical));
+        return result.map((_) => new Choice(_.canonical, _.title)).toList();
+      } else {
+        return null;
+      }
+    });
+  }
 }

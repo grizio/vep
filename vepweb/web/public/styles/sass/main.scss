@@ -4,6 +4,8 @@
 @import 'table-search';
 @import 'theater/theater';
 @import "company/company";
+@import 'session/session';
+@import 'show/show';
 
 .header {
   height: 75px;
@@ -21,4 +23,20 @@
 
 textarea {
   min-height: 200px;
+}
+
+.panel {
+  &.error {
+    background-color: #cf2a0e;
+    color: #fff;
+  }
+
+  &.success {
+    background-color: #43AC6A;
+    color: #fff;
+  }
+
+  &:empty {
+    display: none;
+  }
 }

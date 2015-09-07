@@ -13,7 +13,7 @@ class InputIntegerComponent extends InputComponent<int> {
   int max;
 
   @NgOneWay('step')
-  int step;
+  int step = 1;
 }
 
 /// Decorates the input with attributes in terms of developer configuration.

@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="small-3 columns">
+        <label for="{{ id }}" class="right inline" ng-class="{error: errors.isNotEmpty}">{{ label }}</label>
+    </div>
+    <div class="small-9 columns">
+        <div class="row collapse">
+            <div class="small-11 columns">
+                <input type="number" class="input-price" ng-model="innerValue" ng-class="{error: errors.isNotEmpty}"
+                       ng-disabled="!enabled"/>
+                <small class="error" ng-if="errors.isNotEmpty">{{ errors.join(' &bull; ') }}</small>
+            </div>
+            <div class="small-1 columns">
+                <span class="postfix">&euro;</span>
+            </div>
+        </div>
+    </div>
+</div>

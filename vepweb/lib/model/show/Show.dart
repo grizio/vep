@@ -54,8 +54,7 @@ class ShowSearchCriteria {
 
 class ShowSearchResponse {
   int pageMax;
-  List<Show> _shows;
-  List<Map<String, Object>> shows;
+  List<Show> shows;
 }
 
 class ShowForm {

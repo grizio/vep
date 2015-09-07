@@ -45,6 +45,7 @@
                         <navigation-link code="logout" name="'Déconnexion'" url="'/logout'"
                                          ng-if="loggedIn"></navigation-link>
                         <navigation-link code="shows" name="'Pièces'" url="'/shows'"></navigation-link>
+                        <navigation-link code="sessions" name="'Séances'" url="'/sessions'"></navigation-link>
                         <navigation-link ng-repeat="page in pages" code="page.canonical" name="page.title"
                                          url="'/page/' + page.canonical"></navigation-link>
                     </ul>

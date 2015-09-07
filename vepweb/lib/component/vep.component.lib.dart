@@ -9,6 +9,7 @@ import 'user/vep.component.user.lib.dart';
 import 'cms/vep.component.cms.lib.dart';
 import 'theater/vep.component.theater.lib.dart';
 import 'show/vep.component.show.lib.dart';
+import 'session/vep.component.session.lib.dart';
 
 part 'Subscriber.dart';
 
@@ -21,5 +22,6 @@ class VepComponentModule extends Module {
     install(new VepComponentCmsModule());
     install(new VepComponentTheaterModule());
     install(new VepComponentShowModule());
+    install(new VepComponentSessionModule());
   }
 }

@@ -15,6 +15,7 @@ part 'form-simple.dart';
 part 'form-step.dart';
 part 'form-steps.dart';
 part 'FormComponent.dart';
+part 'RepeatableContainer.dart';
 
 class VepComponentCommonFormModule extends Module {
   VepComponentCommonFormModule() {

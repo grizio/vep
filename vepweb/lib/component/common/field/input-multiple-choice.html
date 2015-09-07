@@ -8,13 +8,13 @@
     <div class="small-9 columns" ng-if="explode">
         <label ng-repeat="choice in choices">
             <input type="checkbox" ng-model="innerValue" value="{{ $index }}" class="input-mutiple-choice"
-                   ng-class="{error: errors.isNotEmpty}">
+                   ng-class="{error: errors.isNotEmpty}" ng-disabled="!enabled">
             {{ choice.label }}
         </label>
     </div>
     <div class="small-9 columns" ng-if="!explode">
         <select ng-options="$index as choice.label for choice in choices" ng-model="innerValue"
-                ng-class="{error: errors.isNotEmpty}" multiple>
+                ng-class="{error: errors.isNotEmpty}" multiple ng-disabled="!enabled">
             <option value="" ng-if="!required">Aucun(e)</option>
         </select>
         <small class="error" ng-if="errors.isNotEmpty">{{ errors.join(' &bull; ') }}</small>

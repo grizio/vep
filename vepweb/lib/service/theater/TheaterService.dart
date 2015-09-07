@@ -11,7 +11,7 @@ class TheaterService {
 
   TheaterService(this.http);
 
-  Future<List<Page>> findAll() {
+  Future<List<Theater>> findAll() {
     return _prepare().then((_) {
       if (_) {
         return _theaters;

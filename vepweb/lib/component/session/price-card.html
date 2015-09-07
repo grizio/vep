@@ -1,0 +1,12 @@
+<div class="price-card">
+    <dl>
+        <dt>Nom</dt>
+        <dd>{{ price.name }}</dd>
+
+        <dt>Tarif</dt>
+        <dd>{{ price.price / 100 }} &euro;</dd>
+
+        <dt ng-if="price.condition != null">Condition</dt>
+        <dd ng-if="price.condition != null">{{ price.condition }}</dd>
+    </dl>
+</div>

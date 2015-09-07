@@ -29,19 +29,19 @@ class FormStepComponent extends FieldContainer implements ScopeAware {
   @NgOneWay('label')
   String title;
 
-  @NgOneWayOneTime('comingFromPreviousStep')
+  @NgOneWayOneTime('coming-from-previous-step')
   ComingFromPreviousStep comingFromPreviousStep;
 
-  @NgOneWayOneTime('leavingToPreviousStep')
+  @NgOneWayOneTime('leaving-to-previous-step')
   LeavingToPreviousStep leavingToPreviousStep;
 
-  @NgOneWayOneTime('comingFromNextStep')
+  @NgOneWayOneTime('coming-from-next-step')
   ComingFromNextStep comingFromNextStep;
 
-  @NgOneWayOneTime('leavingToNextStep')
+  @NgOneWayOneTime('leaving-to-next-step')
   LeavingToNextStep leavingToNextStep;
 
-  @NgOneWayOneTime('validateNextStep')
+  @NgOneWayOneTime('validate-next-step')
   ValidateNextStep validateNextStep;
 
   @NgOneWay('when')
@@ -71,7 +71,10 @@ class FormStepComponent extends FieldContainer implements ScopeAware {
 
   bool get hasNotNext => !hasNext;
 
-  bool get isStepValid => fields.every((_) => _.verify());
+  bool get isStepValid => fields.every((_){
+    _.verify();
+    return _.isValid;
+  });
 
   bool get isStepNotValid => !isStepValid;
 }
