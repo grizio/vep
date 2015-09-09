@@ -10,15 +10,20 @@ import 'package:vepweb/http/vep.http.lib.dart';
 import 'package:vepweb/service/show/vep.service.show.lib.dart';
 import 'package:vepweb/service/theater/vep.service.theater.lib.dart';
 import 'package:vepweb/service/session/vep.service.session.lib.dart';
+import 'package:vepweb/component/common/table/vep.component.common.table.lib.dart';
+import 'package:vepweb/roles.dart' as roles;
+import 'package:vepweb/utils.dart' as utils;
 
 part 'field-price.dart';
 part 'form-session.dart';
 part 'price-card.dart';
+part 'session-list.dart';
 
 class VepComponentSessionModule extends Module {
   VepComponentSessionModule() {
     bind(FieldPriceComponent);
     bind(FormSessionComponent);
     bind(PriceCardComponent);
+    bind(SessionListComponent);
   }
 }

@@ -8,10 +8,12 @@ export 'show/vep.model.show.lib.dart' hide prepareJsonx;
 export 'session/vep.model.session.lib.dart';
 
 import 'show/vep.model.show.lib.dart' as show;
+import 'session/vep.model.session.lib.dart' as session;
 import 'dart:mirrors';
 
 prepareJsonx() {
   show.prepareJsonx();
+  session.prepareJsonx();
 }
 
 class ModelToString {

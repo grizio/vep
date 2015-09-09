@@ -6,7 +6,9 @@ part of vep.component.common.table;
     selector: 'table-search',
     templateUrl: '/packages/vepweb/component/common/table/table-search.html',
     useShadowDom: false)
-class TableSearchComponent implements ScopeAware {
+class TableSearchComponent implements ScopeAware, AttachAware {
+  TableSearchDecorator tableSearchDecorator;
+
   @NgOneWay('max-result')
   int maxResult;
 
@@ -30,13 +32,19 @@ class TableSearchComponent implements ScopeAware {
   @NgOneWay('page-max')
   int pageMaxFormParent = null;
 
-  int get pageMax => pageMaxFormParent != null ? pageMaxFormParent : _data == null ? 1 : max(0, ((_data.length - 1) / maxResult).floor()) + 1;
+  int get pageMax => pageMaxFormParent != null ? pageMaxFormParent : data == null ? 1 : max(0, ((data.length - 1) / maxResult).floor()) + 1;
 
   TableSearchContext context;
 
   TableDescriptor get tableDescriptor => context.tableDescriptor;
 
+  Scope _scope;
+
+  Scope get scope => _scope;
+
+  @override
   void set scope(Scope scope) {
+    _scope = scope;
     var currentScope = scope;
     while (currentScope != null && !(currentScope.context is TableSearchContext)) {
       currentScope = currentScope.parentScope;
@@ -48,18 +56,36 @@ class TableSearchComponent implements ScopeAware {
     }
   }
 
+  bool loading = false;
   Future<Map<String, Object>> _dataFuture;
-  List<Map<String, Object>> _data;
   Timer timer = null;
 
-  List<Map<String, Object>> get data {
-    if (_data == null && _dataFuture == null) {
+  List<Map<String, Object>> data = [];
+
+  @override
+  void attach() {
+    reloadData();
+  }
+
+  void reloadData() {
+    if (_dataFuture == null) {
+      loading = true;
+      if (tableSearchDecorator != null) {
+        // Trick to force refresh of table.
+        // TODO: find a proper way
+        tableSearchDecorator.element.click();
+      }
       _dataFuture = context.search(new Map.unmodifiable(filter.internal)).then((_) {
-        _data = _;
+        data = _;
         _dataFuture = null;
+        loading = false;
+        if (tableSearchDecorator != null) {
+          // Trick to force refresh of table.
+          // TODO: find a proper way
+          tableSearchDecorator.element.click();
+        }
       });
     }
-    return _data == null ? [] : _data;
   }
 
   MapFilter _filter = null;
@@ -85,12 +111,14 @@ class TableSearchComponent implements ScopeAware {
       // We filter only when checkbox is checked, otherwise, we do not include the checkbox in filter.
       var checkboxColumns = columnsToCheck.where((_) => _.type == ColumnTypes.checkbox && filter[_.code] == true);
       var numberColumns = columnsToCheck.where((_) => [ColumnTypes.integer].contains(_.type) && !(filter[_.code] as num).isNaN);
+      var dateColumns = columnsToCheck.where((_) => [ColumnTypes.date].contains(_.type) && filter[_.code] != [null, null]);
       filtered = [];
       int index = 0;
       for (Map<String, Object> row in data) {
         if (textColumns.every((_) => (row[_.code] as String).contains(filter[_.code])) &&
         checkboxColumns.every((_) => row[_.code] == filter[_.code]) &&
-        numberColumns.every((_) => row[_.code].toString().contains(filter[_.code].toString()))) {
+        numberColumns.every((_) => row[_.code].toString().contains(filter[_.code].toString())) &&
+        filteredDataCheckByDate(dateColumns, row)) {
           row['_index'] = index;
           filtered.add(row);
         }
@@ -100,6 +128,27 @@ class TableSearchComponent implements ScopeAware {
       filtered = data;
     }
 
+    return filteredDataPage(filtered);
+  }
+
+  bool filteredDataCheckByDate(List<ColumnDescriptor> columns, Map<String, Object> row) {
+    for (final columnDescriptor in columns) {
+      final period = filter[columnDescriptor.code] as List<DateTime>;
+      if (period != null && period.length == 2 && (period[0] != null || period[1] != null)) {
+        final date = row[columnDescriptor.code] as DateTime;
+        if (date == null) {
+          return false;
+        } else if (period[0] != null && date.isBefore(period[0])) {
+          return false;
+        } else if (period[1] != null && date.isAfter(period[0])) {
+
+        }
+      }
+    }
+    return true;
+  }
+
+  List<Map<String, Object>> filteredDataPage(List<Map<String, Object>> filtered) {
     if (showPages) {
       if (filterIn) {
         if (listUtilities.isEmpty(filtered) || (page - 1) * maxResult > filtered.length) {
@@ -123,8 +172,8 @@ class TableSearchComponent implements ScopeAware {
   }
 
   void onChange(index, field, value) {
-    _data[index][field] = value;
-    context.onChange(_data[index]);
+    data[index][field] = value;
+    context.onChange(data[index]);
   }
 
   void timerReload([Duration duration=const Duration(seconds: 1)]) {
@@ -136,7 +185,7 @@ class TableSearchComponent implements ScopeAware {
   }
 
   void timerDone() {
-    _data = null;
+    reloadData();
     if (timer != null) {
       timer = null;
     }
@@ -236,6 +285,7 @@ abstract class ColumnTypes {
   static const String link = 'link';
   static const String integer = 'integer';
   static const String choices = 'choices';
+  static const String date = 'date';
 }
 
 class MapFilter {
@@ -259,6 +309,8 @@ class MapFilter {
             i++;
           }
           return "-1";
+        } else if (column.type == ColumnTypes.date) {
+          internal.putIfAbsent(key, () => [null, null]);
         }
       }
     }
@@ -278,6 +330,29 @@ class MapFilter {
           }
         } else {
           internal[key] = value;
+        }
+      } else if (key.length > 2) {
+        var columnName = key.substring(0, key.length - 2);
+        column = tableDescriptor[columnName];
+        if (column != null && column.type == ColumnTypes.date) {
+          int index = int.parse(key.substring(key.length - 1));
+          DateTime dtValue;
+          if (value == null) {
+            dtValue = null;
+          } else if (value is DateTime) {
+            dtValue = value;
+          } else {
+            try {
+              dtValue = new DateFormat(dateConstants.displayFormatsDP[dateConstants.typeDate]).parse(value);
+            } catch (e) {
+              try {
+                dtValue = new DateFormat(dateConstants.devFormatDP[dateConstants.typeDate]).parse(value);
+              } catch (e2) {
+                dtValue = null;
+              }
+            }
+          }
+          (this[columnName] as List<DateTime>)[index] = dtValue;
         }
       }
     }
@@ -305,4 +380,55 @@ class MapFilter {
   bool get isEmpty => internal.isEmpty;
 
   bool get isNotEmpty => internal.isNotEmpty;
+}
+
+/// Decorates the input with attributes in terms of developer configuration.
+@Decorator(selector: '.table-search')
+class TableSearchDecorator implements ScopeAware {
+  final Element element;
+
+  TableSearchDecorator(this.element);
+
+  void set scope(Scope scope) {
+    final ctx = utils.getContext(scope, (_) => _ is TableSearchComponent) as TableSearchComponent;
+    if (ctx != null) {
+      ctx.tableSearchDecorator = this;
+    }
+  }
+}
+
+/// Decorates the input with attributes in terms of developer configuration.
+@Decorator(selector: '.table-search-criteria-date')
+class TableSearchCriteriaDateDecorator implements ScopeAware {
+  Element element;
+
+  Scope _scope;
+
+  Scope get scope => _scope;
+
+  set scope(Scope scope) {
+    _scope = scope;
+    init();
+  }
+
+  TableSearchCriteriaDateDecorator(this.element);
+
+  void init() {
+    final jqElement = context['\$'].apply([element]);
+    final ctx = utils.getContext(scope, (_) => _ is TableSearchComponent) as TableSearchComponent;
+    final options = {
+      'format': dateConstants.displayFormatsDP[dateConstants.typeDate],
+      'lang': 'fr',
+      'formatDate': dateConstants.devFormatDP[dateConstants.typeDate],
+      'datepicker': true,
+      'timepicker': false,
+      'onChangeDateTime': (DateTime date, JsObject input, b) {
+        final name = element.getAttribute('name');
+        ctx.filter[name] = date;
+        element.blur();
+      }
+    };
+
+    jqElement.callMethod('datetimepicker', [new JsObject.jsify(options)]);
+  }
 }

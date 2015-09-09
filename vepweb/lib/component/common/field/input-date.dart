@@ -6,48 +6,16 @@ part of vep.component.common.field;
     templateUrl: '/packages/vepweb/component/common/field/input-date.html',
     useShadowDom: false)
 class InputDateComponent extends InputComponent<DateTime> {
-  static const typeDate = 'date';
-  static const typeTime = 'time';
-  static const typeDatetime = 'datetime';
-
-  /// Date formats for display.
-  static const displayFormatsDT = const<String, String>{
-    typeDate: 'dd/MM/yyyy',
-    typeTime: 'HH:mm',
-    typeDatetime: 'dd/MM/yyyy HH:mm'
-  };
-
-  /// Date formats for inner values (with datetimepicker)
-  static const displayFormatsDP = const<String, String>{
-    typeDate: 'd/m/Y',
-    typeTime: 'H:i',
-    typeDatetime: 'd/m/Y H:i'
-  };
-
-  /// Date format for outer attributes ([min] and [max]).
-  static const devFormatDP = const<String, String>{
-    typeDate: 'Y-m-d',
-    typeTime: 'H:i',
-    typeDatetime: 'Y-m-d'
-  };
-
-  /// Date format for outer attributes ([min] and [max]).
-  static const devFormatDT = const<String, String>{
-    typeDate: 'yyyy-MM-dd',
-    typeTime: 'HH:mm',
-    typeDatetime: 'yyyy-MM-dd'
-  };
-
   String _type;
 
   @NgAttr('type')
   String get type => _type;
 
   set type(String type) {
-    if ([typeDate, typeDatetime, typeTime].contains(type)) {
+    if (dateConstants.allTypes.contains(type)) {
       _type = type;
     } else {
-      throw 'The type $type is not valid for date. Authorized types = [$typeDate, $typeDatetime, $typeTime].';
+      throw 'The type $type is not valid for date. Authorized types = [${dateConstants.allTypes.join(',')}].';
     }
   }
 
@@ -60,12 +28,12 @@ class InputDateComponent extends InputComponent<DateTime> {
   @NgOneWay('step')
   int step;
 
-  String get innerValue => value != null ? new DateFormat(displayFormatsDT[type]).format(value) : null;
+  String get innerValue => value != null ? new DateFormat(dateConstants.displayFormatsDT[type]).format(value) : null;
 
   set innerValue(String innerValue) {
     try {
       if (stringUtils.isNotBlank(innerValue)) {
-        value = new DateFormat(displayFormatsDT[type]).parse(innerValue);
+        value = new DateFormat(dateConstants.displayFormatsDT[type]).parse(innerValue);
       } else {
         value = null;
       }
@@ -78,10 +46,10 @@ class InputDateComponent extends InputComponent<DateTime> {
     super.verify();
     try {
       if (stringUtils.isNotBlank(innerValue)) {
-        new DateFormat(displayFormatsDT[type]).parse(innerValue);
+        new DateFormat(dateConstants.displayFormatsDT[type]).parse(innerValue);
       }
     } catch (e) {
-      errors.add('Le format de la date est invalide (requis: ${displayFormatsDT[type]}).');
+      errors.add('Le format de la date est invalide (requis: ${dateConstants.displayFormatsDT[type]}).');
     }
     return errors.isEmpty;
   }
@@ -112,31 +80,31 @@ class InputDateDecorator extends InputDecorator {
       final ctx = scope.context as InputDateComponent;
       final jqElement = context['\$'].apply([element]);
       var options = {
-        'format': InputDateComponent.displayFormatsDP[ctx.type],
+        'format': dateConstants.displayFormatsDP[ctx.type],
         'lang': 'fr',
         'onChangeDateTime': (DateTime date, a, b) {
           if (date != null) {
-            ctx.innerValue = new DateFormat(InputDateComponent.displayFormatsDT[ctx.type]).format(date);
+            ctx.innerValue = new DateFormat(dateConstants.displayFormatsDT[ctx.type]).format(date);
           }
         }
       };
 
-      if (ctx.type == InputDateComponent.typeDate) {
+      if (ctx.type == dateConstants.typeDate) {
         options.addAll({
-          'formatDate': InputDateComponent.devFormatDP[InputDateComponent.typeDate],
+          'formatDate': dateConstants.devFormatDP[dateConstants.typeDate],
           'datepicker': true,
           'timepicker': false
         });
-      } else if (ctx.type == InputDateComponent.typeTime) {
+      } else if (ctx.type == dateConstants.typeTime) {
         options.addAll({
-          'formatTime': InputDateComponent.devFormatDP[InputDateComponent.typeTime],
+          'formatTime': dateConstants.devFormatDP[dateConstants.typeTime],
           'datepicker': false,
           'timepicker': true,
           'timepickerScrollbar': false
         });
-      } else if (ctx.type == InputDateComponent.typeDatetime) {
+      } else if (ctx.type == dateConstants.typeDatetime) {
         options.addAll({
-          'formatDate': InputDateComponent.devFormatDP[InputDateComponent.typeDatetime],
+          'formatDate': dateConstants.devFormatDP[dateConstants.typeDatetime],
           'datepicker': true,
           'timepicker': true,
           'timepickerScrollbar': false
@@ -149,26 +117,26 @@ class InputDateDecorator extends InputDecorator {
 
       options['onShow'] = ([a, b, c]) {
         var options = {};
-        if (ctx.type == InputDateComponent.typeDate) {
+        if (ctx.type == dateConstants.typeDate) {
           if (ctx.min != null) {
-            options['minDate'] = new DateFormat(InputDateComponent.devFormatDT[InputDateComponent.typeDate]).format(ctx.min);
+            options['minDate'] = new DateFormat(dateConstants.devFormatDT[dateConstants.typeDate]).format(ctx.min);
           }
           if (ctx.max != null) {
-            options['maxDate'] = new DateFormat(InputDateComponent.devFormatDT[InputDateComponent.typeDate]).format(ctx.max);
+            options['maxDate'] = new DateFormat(dateConstants.devFormatDT[dateConstants.typeDate]).format(ctx.max);
           }
-        } else if (ctx.type == InputDateComponent.typeTime) {
+        } else if (ctx.type == dateConstants.typeTime) {
           if (ctx.min != null) {
-            options['minTime'] = new DateFormat(InputDateComponent.devFormatDT[InputDateComponent.typeTime]).format(ctx.min);
+            options['minTime'] = new DateFormat(dateConstants.devFormatDT[dateConstants.typeTime]).format(ctx.min);
           }
           if (ctx.max != null) {
-            options['maxTime'] = new DateFormat(InputDateComponent.devFormatDT[InputDateComponent.typeTime]).format(ctx.max);
+            options['maxTime'] = new DateFormat(dateConstants.devFormatDT[dateConstants.typeTime]).format(ctx.max);
           }
-        } else if (ctx.type == InputDateComponent.typeDatetime) {
+        } else if (ctx.type == dateConstants.typeDatetime) {
           if (ctx.min != null) {
-            options['minDate'] = new DateFormat(InputDateComponent.devFormatDT[InputDateComponent.typeDatetime]).format(ctx.min);
+            options['minDate'] = new DateFormat(dateConstants.devFormatDT[dateConstants.typeDatetime]).format(ctx.min);
           }
           if (ctx.max != null) {
-            options['maxDate'] = new DateFormat(InputDateComponent.devFormatDT[InputDateComponent.typeDatetime]).format(ctx.max);
+            options['maxDate'] = new DateFormat(dateConstants.devFormatDT[dateConstants.typeDatetime]).format(ctx.max);
           }
         }
         jqElement.callMethod('datetimepicker', [new JsObject.jsify(options)]);

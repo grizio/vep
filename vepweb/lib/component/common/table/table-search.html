@@ -2,6 +2,9 @@
     <pagination pageMax="pageMax" centered="true" page="page" ng-if="showPages"></pagination>
     <table>
         <thead>
+        <tr ng-if="loading">
+            <th colspan="{{ tableDescriptor.columns.length }}" class="text-center">Chargement en cours</th>
+        </tr>
         <tr>
             <th ng-repeat="column in tableDescriptor.columns">
                 {{ column.name }}
@@ -25,6 +28,14 @@
                         <option value="-1">Tous</option>
                         <option ng-repeat="choice in column.choices" value="{{ $index }}">{{ choice.label }}</option>
                     </select>
+                    <span ng-switch-when="date">
+                        <input type="text" name="{{ column.code }}_0" ng-model="filter[column.code + '_0']"
+                               ng-change="onFilterChange()" class="table-search-criteria-date"
+                               placeholder="Date minimale"/>
+                        <input type="text" name="{{ column.code }}_1" ng-model="filter[column.code + '_1']"
+                               ng-change="onFilterChange()" class="table-search-criteria-date"
+                               placeholder="Date maximale"/>
+                    </span>
                 </span>
             </th>
         </tr>
@@ -47,6 +58,8 @@
                     <select name="{{ column.code }}" ng-switch-when="choices" ng-model="filter[column.code]"
                             ng-change="onChange(row['_index'], column.code, $event.target.value)"
                             ng-options="$index as choice.label for choice in column.choices"></select>
+                    <input type="text" name="{{ column.code }}" ng-switch-when="date" ng-model="row[column.code]"
+                           ng-change="onChange(row['_index'], column.code, $event.target.value)"/>
                 </span>
                 <span ng-if="!column.active" ng-switch="column.type">
                     <span ng-switch-when="text">{{ row[column.code] }}</span>
@@ -55,6 +68,7 @@
                     <a href="{{ column.link(row) }}" ng-switch-when="link">{{ row[column.code] }}</a>
                     <span ng-switch-when="integer">{{ row[column.code] }}</span>
                     <span ng-switch-when="choices">{{ column.getLabelOfChoice(row[column.code]) }}</span>
+                    <span ng-switch-when="date">{{ row[column.code] | date:'dd/MM/yyyy HH:mm' }}</span>
                 </span>
             </td>
         </tr>

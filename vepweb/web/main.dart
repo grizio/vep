@@ -8,7 +8,13 @@ import 'package:vepweb/model/vep.model.lib.dart';
 void main() {
   Logger.root.level = constants.loggerLevel;
   Logger.root.onRecord.listen((LogRecord r) {
-    print("[${r.level}][${r.loggerName}][${r.time.toIso8601String()}]${r.message}");
+    if (r.loggerName == 'route') {
+      if (constants.logIncludeRoute) {
+        print("[${r.level}][${r.loggerName}][${r.time.toIso8601String()}]${r.message}");
+      }
+    } else {
+      print("[${r.level}][${r.loggerName}][${r.time.toIso8601String()}]${r.message}");
+    }
   });
 
   applicationFactory().addModule(new VepModule()).run();
