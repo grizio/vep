@@ -1,7 +1,7 @@
 part of vep.component.common.form;
 
 /// This class describes a component containing several fields.
-abstract class RepeatableContainer<A> extends FieldComponent<List<A>> with FieldContainer {
+abstract class RepeatableContainer<A> extends FieldComponent<List<A>> implements FieldContainer {
   @NgOneWay('min')
   int min;
 
@@ -15,6 +15,12 @@ abstract class RepeatableContainer<A> extends FieldComponent<List<A>> with Field
   A createModel();
 
   int current = 0;
+
+
+  //copied from FieldContainer
+  List<String> errors = [];
+  List<FieldComponent> fields = [];
+  List<String> _initializedFields = [];
 
   List<int> indexList() => new List.generate(current, (_) => _);
 
@@ -43,7 +49,10 @@ abstract class RepeatableContainer<A> extends FieldComponent<List<A>> with Field
   @override
   void addField(FieldComponent fieldComponent) {
     if (fieldComponent != this) {
-      super.addField(fieldComponent);
+      //copied from FieldContainer
+      //update it when updating here
+      fields.add(fieldComponent);
+      _initializedFields.add(fieldComponent.name);
     }
   }
 
@@ -138,5 +147,34 @@ abstract class RepeatableContainer<A> extends FieldComponent<List<A>> with Field
 
   void reload() {
     updateAllFromModel(formComponent.data);
+  }
+
+  //copied from FieldContainer
+  //update it when updating here
+  @override
+  void updateAllFromModel(Object data) {
+    for (var field in fields) {
+      updateFromModel(data, field.name);
+    }
+  }
+
+  //copied from FieldContainer
+  //update it when updating here
+  @override
+  FieldComponent operator [](String name) {
+    return fields.firstWhere((_) => _.name == name, orElse: () => null);
+  }
+
+  //copied from FieldContainer
+  //update it when updating here
+  @override
+  void propagateErrors(Map<String, List<String>> errors) {
+    for (var field in fields) {
+      if (errors.containsKey(field.name)) {
+        field.errors = errors[field.name];
+      } else {
+        field.errors = [];
+      }
+    }
   }
 }

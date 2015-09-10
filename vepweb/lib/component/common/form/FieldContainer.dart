@@ -8,6 +8,8 @@ abstract class FieldContainer {
   List<FieldComponent> fields = [];
   List<String> _initializedFields = [];
 
+  //copied to RepeatableContainer
+  //update it when updating here
   void addField(FieldComponent fieldComponent) {
     fields.add(fieldComponent);
     _initializedFields.add(fieldComponent.name);
@@ -34,16 +36,22 @@ abstract class FieldContainer {
     }
   }
 
+  //copied to RepeatableContainer
+  //update it when updating here
   void updateAllFromModel(Object data) {
     for (var field in fields) {
       updateFromModel(data, field.name);
     }
   }
 
+  //copied to RepeatableContainer
+  //update it when updating here
   FieldComponent operator [](String name) {
     return fields.firstWhere((_) => _.name == name, orElse: () => null);
   }
 
+  //copied to RepeatableContainer
+  //update it when updating here
   void propagateErrors(Map<String, List<String>> errors) {
     for (var field in fields) {
       if (errors.containsKey(field.name)) {
