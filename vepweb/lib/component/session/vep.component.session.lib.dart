@@ -16,6 +16,7 @@ import 'package:vepweb/utils.dart' as utils;
 
 part 'field-price.dart';
 part 'form-session.dart';
+part 'form-session-update.dart';
 part 'price-card.dart';
 part 'session-list.dart';
 
@@ -23,6 +24,7 @@ class VepComponentSessionModule extends Module {
   VepComponentSessionModule() {
     bind(FieldPriceComponent);
     bind(FormSessionComponent);
+    bind(FormSessionUpdateComponent);
     bind(PriceCardComponent);
     bind(SessionListComponent);
   }

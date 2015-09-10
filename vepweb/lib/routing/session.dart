@@ -13,7 +13,7 @@ abstract class SessionRouter {
     ),
     'session-update': ngRoute(
         path: '/update/:theater/:canonical',
-        view: '/public/views/session/form.html',
+        view: '/public/views/session/form-update.html',
         preEnter: (RoutePreEnterEvent _) => app.breadCrumb = new BreadCrumb()
         .child('sessions', '/sessions', 'Séances')
         .child('session-form', '/session/update/${_.parameters['theater']}/${_.parameters['canonical']}', 'Mise à jour de la séance')

@@ -12,6 +12,10 @@ class SessionService {
     return http.post('/session/${session.theater}', session, withSession: true);
   }
 
+  Future<HttpResult> update(SessionFormUpdate session) {
+    return http.put('/session/${session.theater}/${session.canonical}', session, withSession: true);
+  }
+
   Map<String, Future> _loading = {};
 
   Future<SessionSearchResponse> search(SessionSearchCriteria criteria) {
@@ -38,6 +42,16 @@ class SessionService {
     return loading.then((_) {
       _loading.remove(query);
       return _;
+    });
+  }
+
+  Future<Session> find(String theater, String session) {
+    return http.get('/session/${theater}/${session}', type: Session).then((_){
+      if (_.isSuccess) {
+        return (_ as HttpResultSuccessEntity).entity;
+      } else {
+        return null;
+      }
     });
   }
 }

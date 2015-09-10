@@ -8,6 +8,23 @@ class Session extends ModelToString {
   DateTime reservationEndDate;
   List<SessionPrice> prices;
   List<String> shows;
+
+  SessionForm toSessionForm([SessionForm sessionForm]) {
+    if (sessionForm == null) {
+      sessionForm = new SessionForm();
+    }
+    copyByAccessors(this, sessionForm);
+    sessionForm.internalShows = sessionForm.shows == null ? null : sessionForm.shows.map((_){
+      var sessionFormShow = new SessionFormShow();
+      sessionFormShow.show = _;
+      return sessionFormShow;
+    }).toList();
+    return sessionForm;
+  }
+
+  SessionFormUpdate toSessionFormUpdate() {
+    return toSessionForm(new SessionFormUpdate());
+  }
 }
 
 class SessionPrice extends ModelToString {
@@ -33,6 +50,10 @@ class SessionForm extends ModelToString {
 
   String get strDate => date != null ? new DateFormat('dd/MM/yyyy HH:mm').format(date) : '';
   String get strReservationEndDate => reservationEndDate != null ? new DateFormat('dd/MM/yyyy HH:mm').format(reservationEndDate) : '';
+}
+
+class SessionFormUpdate extends SessionForm {
+  String reason;
 }
 
 class SessionFormShow extends ModelToString {

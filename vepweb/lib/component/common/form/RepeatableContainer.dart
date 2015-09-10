@@ -33,9 +33,16 @@ abstract class RepeatableContainer<A> extends FieldComponent<List<A>> with Field
   }
 
   @override
+  void forceSetValue(List newValue) {
+    if (newValue != null) {
+      current = newValue.length;
+    }
+    super.forceSetValue(newValue);
+  }
+
+  @override
   void addField(FieldComponent fieldComponent) {
-    if (fieldComponent == this) {
-    } else {
+    if (fieldComponent != this) {
       super.addField(fieldComponent);
     }
   }
@@ -99,7 +106,10 @@ abstract class RepeatableContainer<A> extends FieldComponent<List<A>> with Field
   }
 
   @override
-  bool get isValid => errors.isEmpty && fields.every((_) => _.isValid);
+  bool get isValid => errors.isEmpty && fields.every((_){
+    _.verify();
+    return _.isValid;
+  });
 
   void add([Event event]) {
     if (event != null) {

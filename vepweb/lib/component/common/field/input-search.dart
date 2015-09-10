@@ -2,6 +2,8 @@ part of vep.component.common.field;
 
 typedef Future<List<Choice<String>>> InputSearchFunction(String criteria);
 
+typedef Future<Choice<String>> InputSearchInverseFunction(String value);
+
 /// This component provides the user to search a value.
 @Component(
     selector: 'input-search',
@@ -27,13 +29,34 @@ class InputSearchComponent extends InputComponent<String> {
   @NgOneWay('search')
   InputSearchFunction search;
 
+  @NgOneWay('inverse-search')
+  InputSearchInverseFunction inverseSearch;
+
   @NgOneWay('timer-wait')
   int timerWait = 1000;
+
+  bool _isNormalSet = false;
 
   @override
   set value(String newValue) {
     isInvalid = false;
+    _isNormalSet = true;
     super.value = newValue;
+    _isNormalSet = false;
+  }
+
+  @override
+  void forceSetValue(String newValue) {
+    super.forceSetValue(newValue);
+    if (!_isNormalSet) {
+      searching = searching != null ? searching : new Future.value();
+      searching = searching.then((_){
+        return inverseSearch(newValue).then((Choice choice){
+          value = choice.value;
+          _displayedValue = choice.label;
+        });
+      });
+    }
   }
 
   List<Choice> choices = [];

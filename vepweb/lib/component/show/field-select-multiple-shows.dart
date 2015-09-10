@@ -29,4 +29,18 @@ class FieldSelectMultipleShowsComponent extends RepeatableContainer<SessionFormS
       return new Future.value(null);
     }
   }
+
+  Future<Choice<String>> inverseSearchShow(String canonical) {
+    if (stringUtilities.isNotBlank(canonical)) {
+      return showService.find(canonical).then((show){
+        if (show != null) {
+          return new Choice(show.canonical, show.title);
+        } else {
+          return new Choice('','');
+        }
+      });
+    } else {
+      return new Future.value(new Choice('', ''));
+    }
+  }
 }

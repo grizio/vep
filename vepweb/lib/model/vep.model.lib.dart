@@ -33,3 +33,31 @@ class ModelToString {
     return result.toString();
   }
 }
+
+void copyByAccessors(Object source, Object destination) {
+  final destinationMirror = reflect(destination);
+  final sourceMirror = reflect(source);
+  for (final name in getFieldsByAccessors(source, destination)) {
+    final field = MirrorSystem.getSymbol(name);
+    final valueMirror = sourceMirror.getField(field);
+    final value = valueMirror.hasReflectee ? valueMirror.reflectee : null;
+    destinationMirror.setField(field, value);
+  }
+}
+
+List<String> getFieldsByAccessors(Object source, Object destination) {
+  final sourceMembers = reflect(source).type.instanceMembers;
+  final getters = sourceMembers.keys
+  .where((Symbol symbol) => sourceMembers[symbol].isGetter)
+  .map((_) => MirrorSystem.getName(_)).toList();
+
+  final destinationMembers = reflect(destination).type.instanceMembers;
+  final setters = destinationMembers.keys
+  .where((Symbol symbol) => destinationMembers[symbol].isSetter)
+  .map((_) {
+    final name = MirrorSystem.getName(_);
+    return name.substring(0, name.length - 1);
+  });
+
+  return getters.where((_) => setters.contains(_)).toList();
+}

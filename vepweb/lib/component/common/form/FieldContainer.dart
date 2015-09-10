@@ -19,7 +19,11 @@ abstract class FieldContainer {
     var field = fields.firstWhere((_) => _.name == fieldName, orElse: () => null);
     if (field != null) {
       var valueMirror = reflect(data).getField(MirrorSystem.getSymbol(fieldName));
-      field.forceSetValue(valueMirror.hasReflectee ? valueMirror.reflectee : null);
+      var value = valueMirror.hasReflectee ? valueMirror.reflectee : null;
+      field.forceSetValue(value);
+      if (field is FieldContainer) {
+        (field as FieldContainer).updateAllFromModel(data);
+      }
     }
   }
 
