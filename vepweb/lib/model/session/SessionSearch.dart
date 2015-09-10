@@ -31,6 +31,7 @@ class SessionSearchItem {
   String canonical;
   String theater;
   String theaterName;
+  String name;
   List<SessionSearchShow> showList;
   DateTime date;
 

@@ -28,7 +28,8 @@ class SessionListComponent implements TableSearchContext {
     var columns = [
       new ColumnDescriptor('theater', 'Théâtre', ColumnTypes.choices, hasFilter: true, choices: []),
       new ColumnDescriptor('shows', 'Pièce(s)', ColumnTypes.text, hasFilter: true),
-      new ColumnDescriptor('date', 'Date', ColumnTypes.date, hasFilter: true)
+      new ColumnDescriptor('date', 'Date', ColumnTypes.date, hasFilter: true),
+      new ColumnDescriptor('go', 'Accéder', ColumnTypes.link, hasFilter: false, url: '/session/read/{theater}/{session}')
     ];
 
     if (app.roles.contains(roles.sessionManager)) {
@@ -50,6 +51,7 @@ class SessionListComponent implements TableSearchContext {
         'theaterName': session.theaterName,
         'shows': session.shows,
         'date': session.date,
+        'go': 'Accéder',
         'update': 'Modifier'
       }).toList();
     });

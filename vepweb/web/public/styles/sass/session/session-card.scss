@@ -1,0 +1,5 @@
+@import "../common/common";
+
+.session-card.session-card-small {
+  @extend .card-small;
+}

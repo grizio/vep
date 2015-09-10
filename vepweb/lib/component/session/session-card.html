@@ -1,0 +1,59 @@
+<div class="text-center" ng-if="sessionCard == null">
+    Chargement en cours
+</div>
+<div class="session-card session-card-small" ng-if="small && sessionCard != null">
+    <dl>
+        <dt>Nom</dt>
+        <dd>{{ sessionCard.name }}</dd>
+
+        <dt>Théâtre</dt>
+        <dd>
+            <a href="/theater/{{sessionCard.theater.canonical}}">
+                {{ sessionCard.theater.name }}
+            </a>
+        </dd>
+
+        <dt>Date</dt>
+        <dd>{{ sessionCard.date | date:'dd/MM/yyyy HH:mm' }}</dd>
+
+        <dt>Pièces</dt>
+        <dd>
+            <ul>
+                <li ng-repeat="show in sessionCard.shows">
+                    <a href="/show/{{show.canonical}}">
+                        {{ show.title }}
+                    </a>
+                </li>
+            </ul>
+        </dd>
+
+        <dt>Prix</dt>
+        <dd>
+            <ul>
+                <li ng-repeat="price in sessionCard.prices">{{ price.name }} ({{ price.price / 100 | currency : '' }} &euro;)</li>
+            </ul>
+        </dd>
+    </dl>
+</div>
+<div class="session-card session-card-big" ng-if="!small && sessionCard != null">
+    <h2>{{ sessionCard.name }}</h2>
+
+    <div class="row">
+        <div class="small-6 columns">
+            <h3>Pièces</h3>
+
+            <div ng-repeat="show in sessionCard.shows">
+                <show-card canonical="show.canonical" small="true"></show-card>
+            </div>
+        </div>
+        <div class="small-6 columns">
+            <h3>Théâtre</h3>
+
+            <theater-card canonical="sessionCard.theater.canonical" small="true"></theater-card>
+
+            <h3>Prix</h3>
+
+            <price-card price="price" ng-repeat="price in sessionCard.prices"></price-card>
+        </div>
+    </div>
+</div>

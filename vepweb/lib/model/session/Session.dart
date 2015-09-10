@@ -59,3 +59,12 @@ class SessionFormUpdate extends SessionForm {
 class SessionFormShow extends ModelToString {
   String show;
 }
+
+class SessionCard extends ModelToString {
+  Theater theater;
+  DateTime date;
+  DateTime reservationEndDate;
+  String name;
+  List<Show> shows;
+  List<SessionPrice> prices;
+}

@@ -19,6 +19,7 @@ part 'form-session.dart';
 part 'form-session-update.dart';
 part 'price-card.dart';
 part 'session-list.dart';
+part 'session-card.dart';
 
 class VepComponentSessionModule extends Module {
   VepComponentSessionModule() {
@@ -27,5 +28,6 @@ class VepComponentSessionModule extends Module {
     bind(FormSessionUpdateComponent);
     bind(PriceCardComponent);
     bind(SessionListComponent);
+    bind(SessionCardComponent);
   }
 }
