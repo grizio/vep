@@ -53,12 +53,18 @@ abstract class FieldContainer {
   //copied to RepeatableContainer
   //update it when updating here
   void propagateErrors(Map<String, List<String>> errors) {
+    if (errors.containsKey('_root_')) {
+      this.errors = errors['_root_'];
+    } else {
+      this.errors = [];
+    }
     for (var field in fields) {
       if (errors.containsKey(field.name)) {
-        field.errors = errors[field.name];
+        field.errorsFromSubmit = errors[field.name];
       } else {
-        field.errors = [];
+        field.errorsFromSubmit = [];
       }
+      field.verify();
     }
   }
 }

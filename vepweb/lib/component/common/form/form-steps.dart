@@ -179,6 +179,17 @@ class FormStepsComponent extends FormComponent {
     });
   }
 
+  @override
+  Future onFormErrorInner() {
+    for (final step in steps) {
+      if (step.isStepNotValid) {
+        current = step.name;
+        break;
+      }
+    }
+    return new Future.value();
+  }
+
   bool prevent(Event e) {
     if (e != null) {
       e.preventDefault();

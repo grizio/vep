@@ -169,6 +169,11 @@ abstract class RepeatableContainer<A> extends FieldComponent<List<A>> implements
   //update it when updating here
   @override
   void propagateErrors(Map<String, List<String>> errors) {
+    if (errors.containsKey('_root_')) {
+      this.errors = errors['_root_'];
+    } else {
+      this.errors = [];
+    }
     for (var field in fields) {
       if (errors.containsKey(field.name)) {
         field.errors = errors[field.name];

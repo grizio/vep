@@ -127,7 +127,7 @@ abstract class FormComponent implements ScopeAware, AttachAware {
             } else if (result is HttpResultErrors) {
               propagateErrors(result.errorMessages);
             }
-            return onFormError != null ? onFormError(result) : defaultFuture;
+            return onFormErrorInner().then((_) => onFormError != null ? onFormError(result) : defaultFuture);
           }
         }
       });
@@ -149,6 +149,8 @@ abstract class FormComponent implements ScopeAware, AttachAware {
   void updateFieldFromModel(String fieldName);
 
   void updateAllFieldsFromModel();
+
+  Future onFormErrorInner() => new Future.value();
 }
 
 /// This class is an helper used to listen all changes in the model.

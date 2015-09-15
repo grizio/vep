@@ -36,6 +36,8 @@ abstract class FieldComponent<A> implements ScopeAware, AttachAware {
   @NgTwoWay('errors')
   List<String> errors;
 
+  List<String> errorsFromSubmit = [];
+
   @NgAttr('parent')
   String parent;
 
@@ -93,6 +95,7 @@ abstract class FieldComponent<A> implements ScopeAware, AttachAware {
 
   set value(A newValue) {
     if (enabled) {
+      errorsFromSubmit = [];
       forceSetValue(newValue);
     }
   }
@@ -118,6 +121,9 @@ abstract class FieldComponent<A> implements ScopeAware, AttachAware {
 
   bool verify() {
     errors = <String>[];
+    if (errorsFromSubmit != null) {
+      errors.addAll(errorsFromSubmit);
+    }
     for (var i = 0, c = constraints.length; i < c; i++) {
       if (!constraints[i](value)) {
         errors.add(constraintErrors[i]);

@@ -102,49 +102,53 @@ class HttpProduction implements IHttp {
   }
 
   Future<HttpResult> complete(http.Response response, [Type type=null]) {
+    HttpResult httpResult;
     if (response.statusCode == 0) {
       logger.warning("The returned status was 0. It seems it was not done by a server.");
-      return new Future.value(new HttpResultSuccess(response.statusCode, response.body));
+      httpResult = new HttpResultSuccess(response.statusCode, response.body);
     } else if (response.statusCode >= 200 && response.statusCode < 300) {
       try {
         var result = type == null ? jsonx.decode(response.body) : jsonx.decode(response.body, type: type);
-        return new Future.value(new HttpResultSuccessEntity(200, result));
+        httpResult = new HttpResultSuccessEntity(200, result);
       } catch (e) {
-        return new Future.value(new HttpResultSuccess(200, response.body));
+        httpResult = new HttpResultSuccess(200, response.body);
       }
     } else if (response.statusCode >= 300 && response.statusCode < 400) {
       logger.severe('This kind of status is not managed by this implementation of Http.');
-      return new Future.value(new HttpResultUnhandled(response.statusCode, response));
+      httpResult = new HttpResultUnhandled(response.statusCode, response);
     }
     else if (response.statusCode >= 400 && response.statusCode < 500) {
       try {
         var json = jsonx.decode(response.body);
         if (json is int) {
-          return createHttpResultError(response.statusCode, json);
+          httpResult = createHttpResultError(response.statusCode, json);
         } else if (json is Map) {
-          return createHttpResultErrors(response.statusCode, json);
+          httpResult = createHttpResultErrors(response.statusCode, json);
         } else {
-          return new Future.value(new HttpResultUnhandled(response.statusCode, response));
+          httpResult = new HttpResultUnhandled(response.statusCode, response);
         }
       } catch (e) {
         // Error when parsing json because of a raw exception.
-        return new Future.value(new HttpResultUnhandled(response.statusCode, response));
+        httpResult = new HttpResultUnhandled(response.statusCode, response);
       }
     } else {
       logger.severe('This kind of status is not managed by this implementation of Http.');
-      return new Future.value(new HttpResultUnhandled(response.statusCode, response));
+      httpResult = new HttpResultUnhandled(response.statusCode, response);
     }
+
+    logger.fine('httpResult: ${httpResult.toString()}');
+    return new Future.value(httpResult);
   }
 
-  Future<HttpResultError> createHttpResultError(int statusCode, int errorCode) {
-    return new Future.value(new HttpResultError(statusCode, errorCode, i18n[errorCode]));
+  HttpResultError createHttpResultError(int statusCode, int errorCode) {
+    return new HttpResultError(statusCode, errorCode, i18n[errorCode]);
   }
 
-  Future<HttpResultErrors> createHttpResultErrors(int statusCode, Map<String, List<int>> errors) {
+  HttpResultErrors createHttpResultErrors(int statusCode, Map<String, List<int>> errors) {
     var errorMessages = <String, List<String>>{};
     errors.forEach((field, errorCodes) {
       errorMessages[field] = errorCodes.map((errorCode) => i18n[errorCode]);
     });
-    return new Future.value(new HttpResultErrors(statusCode, errors, errorMessages));
+    return new HttpResultErrors(statusCode, errors, errorMessages);
   }
 }
