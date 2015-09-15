@@ -13,7 +13,7 @@ class FormTheaterComponent extends FormStepsComponentContainer {
   final App app;
 
 
-  final List<Choice<bool>> theaterTypes = [new Choice(true, 'Fixe'), new Choice(false, 'Dynamique')];
+  final List<Choice<bool>> theaterTypes = [new Choice(true, 'Fixe'), new Choice(false, 'Libre')];
 
   TheaterForm theater = new TheaterForm();
 

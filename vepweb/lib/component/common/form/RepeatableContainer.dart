@@ -53,6 +53,11 @@ abstract class RepeatableContainer<A> extends FieldComponent<List<A>> implements
       //update it when updating here
       fields.add(fieldComponent);
       _initializedFields.add(fieldComponent.name);
+
+      // specific for here
+      if (formComponent != null) {
+        updateAllFromModel(formComponent.data);
+      }
     }
   }
 
@@ -92,8 +97,11 @@ abstract class RepeatableContainer<A> extends FieldComponent<List<A>> implements
         final rgx = new RegExp('^([^\\]]+)\\[([0-9]+)\\]\$');
         final match = rgx.firstMatch(fieldName);
         if (match != null) {
-          final valueMirror = reflect(list[int.parse(match.group(2))]).getField(MirrorSystem.getSymbol(match.group(1)));
-          field.forceSetValue(valueMirror.hasReflectee ? valueMirror.reflectee : null);
+          final index = int.parse(match.group(2));
+          if (index != null && list.length > index) {
+            final valueMirror = reflect(list[index]).getField(MirrorSystem.getSymbol(match.group(1)));
+            field.forceSetValue(valueMirror.hasReflectee ? valueMirror.reflectee : null);
+          }
         }
       }
     }
@@ -108,7 +116,10 @@ abstract class RepeatableContainer<A> extends FieldComponent<List<A>> implements
         final rgx = new RegExp('^([^\\]]+)\\[([0-9]+)\\]\$');
         final match = rgx.firstMatch(fieldName);
         if (match != null) {
-          reflect(list[int.parse(match.group(2))]).setField(MirrorSystem.getSymbol(match.group(1)), field.value);
+          final index = int.parse(match.group(2));
+          if (index != null && list.length > index) {
+            reflect(list[index]).setField(MirrorSystem.getSymbol(match.group(1)), field.value);
+          }
         }
       }
     }
@@ -128,7 +139,6 @@ abstract class RepeatableContainer<A> extends FieldComponent<List<A>> implements
     newValue.addAll(value);
     newValue.add(createModel());
     this.value = newValue;
-    current++;
     reload();
   }
 
@@ -140,7 +150,6 @@ abstract class RepeatableContainer<A> extends FieldComponent<List<A>> implements
     newValue.addAll(value);
     newValue.removeAt(index);
     this.value = newValue;
-    current--;
     fields.removeWhere((_) => _.name.contains('[$current]'));
     reload();
   }

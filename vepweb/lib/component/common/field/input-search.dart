@@ -41,7 +41,7 @@ class InputSearchComponent extends InputComponent<String> {
   set value(String newValue) {
     isInvalid = false;
     _isNormalSet = true;
-    super.value = newValue;
+    super.value = newValue == '' ? null : newValue;
     _isNormalSet = false;
   }
 

@@ -60,8 +60,9 @@ class InputDateComponent extends InputComponent<DateTime> {
 class InputDateDecorator extends InputDecorator {
   InputDateDecorator(Element element) : super(element);
 
-  set scope(Scope scope) {
-    super.scope = scope;
+  @override
+  void attach() {
+    super.attach();
     init();
   }
 

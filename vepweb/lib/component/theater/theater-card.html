@@ -7,7 +7,7 @@
         <dd>{{ theater.address }}</dd>
 
         <dt>Placement</dt>
-        <dd ng-if="theater.fixed">attribué</dd>
+        <dd ng-if="theater.fixed">fixe</dd>
         <dd ng-if="!theater.fixed">libre</dd>
     </dl>
 </div>
@@ -30,7 +30,7 @@
     <hr>
     <div class="row" ng-if="theater.fixed">
         <div class="small-12 columns">
-            <p><strong>Placement :</strong> attribué</p>
+            <p><strong>Placement :</strong> fixe</p>
             <theater-plan enabled="false" json-plan="theater.plan" legend="'description'"></theater-plan>
         </div>
     </div>

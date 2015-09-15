@@ -36,11 +36,12 @@ class FormSessionUpdateComponent extends FormStepsComponentContainer {
   FormSessionUpdateComponent(this.router, this.app, this.sessionService, this.showService, this.theaterService, RouteProvider routeProvider) {
     sessionService.find(routeProvider.parameters['theater'], routeProvider.parameters['canonical']).then((_){
       session = _.toSessionFormUpdate();
+      selectedTheater = session.theater;
     });
   }
 
   Future initialize() {
-    theaterField.onValueChange.listen((_) => selectedTheater = _.newValue);
+    theaterField.enableWhen = () => false; // Cannot be updated
     nameField.enableWhen = () => session.internalShows != null && session.internalShows.length > 1;
     dateField.onValueChange.listen((_) => maxReservationEndDate = _.newValue);
     var futureTheater = theaterService.findAll().then((_){
