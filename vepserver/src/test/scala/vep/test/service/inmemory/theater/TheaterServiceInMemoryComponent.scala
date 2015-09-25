@@ -60,6 +60,8 @@ trait TheaterServiceInMemoryComponent extends TheaterServiceComponent {
     override def findByCanonical(canonical: String): Option[Theater] = ???
 
     override def isLocked(canonical: String): Boolean = canonical == "locked-theater"
+
+    override def containsSeat(theater: String, seat: String): Boolean = ???
   }
 
 }

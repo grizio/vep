@@ -3,7 +3,7 @@ package vep.service
 import vep.AnormClient
 import vep.service.cms.{PageServiceComponent, PageServiceProductionComponent}
 import vep.service.company.{CompanyServiceComponent, CompanyServiceProductionComponent}
-import vep.service.session.{SessionSearchServiceProductionComponent, SessionSearchServiceComponent, SessionServiceComponent, SessionServiceProductionComponent}
+import vep.service.session._
 import vep.service.show.{ShowSearchServiceComponent, ShowSearchServiceProductionComponent, ShowServiceComponent, ShowServiceProductionComponent}
 import vep.service.theater.{TheaterServiceComponent, TheaterServiceProductionComponent}
 import vep.service.user.{UserServiceComponent, UserServiceProductionComponent}
@@ -21,6 +21,7 @@ trait VepServicesComponent
   with ShowSearchServiceComponent
   with SessionServiceComponent
   with SessionSearchServiceComponent
+  with ReservationServiceComponent
 
 trait VepServicesProductionComponent
   extends VepServicesComponent
@@ -32,4 +33,5 @@ trait VepServicesProductionComponent
   with ShowSearchServiceProductionComponent
   with SessionServiceProductionComponent
   with SessionSearchServiceProductionComponent
+  with ReservationServiceProductionComponent
   with AnormClient

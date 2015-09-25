@@ -89,13 +89,6 @@ object SessionImplicits extends JsonImplicits {
     }
   }
 
-  /*
-   case class SessionDetail(theater: String, canonical: String, date: DateTime, name: String, reservationEndDate: DateTime,
-                         prices: Seq[SessionPriceDetail], shows: Seq[String])
-
-case class SessionPriceDetail(name: String, price: Int, cases: Option[String])
-  * */
-
   implicit val impSessionDetail = new RootJsonFormat[SessionDetail] {
     override def write(obj: SessionDetail): JsValue = JsObject(
       "theater" -> JsString(obj.theater),

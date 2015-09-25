@@ -2,11 +2,12 @@ package vep.service.theater
 
 import anorm.SqlParser._
 import anorm._
+import spray.json.JsonParser
 import vep.AnormClient
 import vep.exception.FieldErrorException
 import vep.model.common.ErrorCodes
-import vep.model.theater.{Theater, TheaterForm}
-import vep.service.{VepServicesComponent, AnormImplicits}
+import vep.model.theater.{Seat, Theater, TheaterForm}
+import vep.service.{AnormImplicits, VepServicesComponent}
 import vep.utils.DB
 
 /**
@@ -53,6 +54,15 @@ trait TheaterServiceComponent {
      * @return True if the theater is locked, otherwise false.
      */
     def isLocked(canonical: String): Boolean
+
+    /**
+     * Checks if the seat exists in given theater.
+     *
+     * @param theater The theater to check
+     * @param seat The seat to check
+     * @return True if the seat exists, otherwise false
+     */
+    def containsSeat(theater: String, seat: String): Boolean
   }
 
 }
@@ -138,6 +148,19 @@ trait TheaterServiceProductionComponent extends TheaterServiceComponent {
     override def isLocked(canonical: String): Boolean = DB.withConnection { implicit c =>
       // Locked if there is at least one future session in this theater
       sessionService.countByTheater(canonical) > 0
+    }
+
+    override def containsSeat(theater: String, seat: String): Boolean = DB.withConnection { implicit c =>
+      import Seat._
+
+      val planOpt = SQL( """SELECT plan FROM theater where canonical = {canonical}""")
+        .on("canonical" -> theater)
+        .as(scalar[String].singleOpt)
+
+      planOpt exists { plan =>
+        val seats = JsonParser(plan).convertTo[Seq[Seat]]
+        seats exists (_.code == seat)
+      }
     }
   }
 

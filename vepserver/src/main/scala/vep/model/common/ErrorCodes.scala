@@ -38,4 +38,10 @@ object ErrorCodes {
   val emptyShowList = 32
   val undefinedSession = 33
   val lockedTheater = 34
+  val undefinedSeat = 35
+  val undefinedPrice = 36
+  val differentSeatPriceNumbers = 37
+  val fixedTheater = 38
+  val notFixedTheater = 39
+  val reservedSeat = 40
 }

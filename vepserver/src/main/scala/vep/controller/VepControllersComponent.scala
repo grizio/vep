@@ -13,6 +13,7 @@ trait VepControllersComponent
   with CompanyControllerComponent
   with ShowControllerComponent
   with SessionControllerComponent
+  with ReservationControllerComponent
 
 /**
  * This trait is the production trait grouping the whole list of production controllers.
@@ -26,3 +27,4 @@ trait VepControllersProductionComponent
   with CompanyControllerProductionComponent
   with ShowControllerProductionComponent
   with SessionControllerProductionComponent
+  with ReservationControllerProductionComponent

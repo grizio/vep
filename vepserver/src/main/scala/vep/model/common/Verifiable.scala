@@ -118,7 +118,7 @@ trait VerifiableMultipleStructured extends Verifiable {
   /**
    * The map of field -> errors.
    */
-  private var _errors: ErrorItemTree = ErrorItemTree(Map())
+  private var _errors: ErrorItemTree = ErrorItemTree(Map[String, ErrorItem]())
 
   def errors = _errors
 
@@ -137,7 +137,7 @@ trait VerifiableMultipleStructured extends Verifiable {
   }
 
   protected def addSeqErrors(field: String, errors: Map[Int, ErrorItem]): Unit = {
-    val element = _errors.e.getOrElse(field, ErrorItemSeq(Map())) match {
+    val element = _errors.e.getOrElse(field, ErrorItemSeq(Map[Int, ErrorItem]())) match {
       case ErrorItemFinal(e) => throw new IncompatibleArgumentException("You are trying to add a seq error into a integer error")
       case ErrorItemTree(e) => throw new IncompatibleArgumentException("You are trying to add a seq error into a tree error")
       case ErrorItemSeq(e) => ErrorItemSeq(e ++ errors)
@@ -146,7 +146,7 @@ trait VerifiableMultipleStructured extends Verifiable {
   }
 
   protected def addMapErrors(field: String, errors: Map[String, ErrorItem]): Unit = {
-    val element = _errors.e.getOrElse(field, ErrorItemSeq(Map())) match {
+    val element = _errors.e.getOrElse(field, ErrorItemSeq(Map[Int, ErrorItem]())) match {
       case ErrorItemFinal(e) => throw new IncompatibleArgumentException("You are trying to add a tree error into a integer error")
       case ErrorItemTree(e) => ErrorItemTree(e ++ errors)
       case ErrorItemSeq(e) => throw new IncompatibleArgumentException("You are trying to add a tree error into a seq error")
@@ -154,10 +154,18 @@ trait VerifiableMultipleStructured extends Verifiable {
     _errors = ErrorItemTree(_errors.e + (field -> element))
   }
 
+  protected def addErrorItem(field: String, error: ErrorItem): Unit = {
+    error match {
+      case ErrorItemFinal(err) => err.foreach(addError(field, _))
+      case ErrorItemTree(err) => addMapErrors(field, err)
+      case ErrorItemSeq(err) => addSeqErrors(field, err)
+    }
+  }
+
   /**
    * Clears the errors (when retesting the model for instance)
    */
-  protected def clearErrors() = _errors = ErrorItemTree(Map())
+  protected def clearErrors() = _errors = ErrorItemTree(Map[String, ErrorItem]())
 
   override def toResult: Result = if (hasErrors) ResultStructuredErrors(_errors) else ResultSuccess
 

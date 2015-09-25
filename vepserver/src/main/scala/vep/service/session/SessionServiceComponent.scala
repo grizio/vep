@@ -53,6 +53,14 @@ trait SessionServiceComponent {
      * @return The number of sessions
      */
     def countByTheater(theater: String): Int
+
+    /**
+     * Checks if current id exists exists.
+     * @param id The price id
+     * @param session If given, check only for given session
+     * @return true if the price exists, otherwise false
+     */
+    def priceExists(id: Int, session: Option[Int] = None): Boolean
   }
 
 }
@@ -278,6 +286,21 @@ trait SessionServiceProductionComponent extends SessionServiceComponent {
         .on("theater" -> theater)
         .on("now" -> DateUtils.toStringSQL(DateTime.now))
         .as(scalar[Int].single)
+    }
+
+    override def priceExists(id: Int, session: Option[Int]): Boolean = DB.withConnection { implicit c =>
+      val count = session match {
+        case Some(sessionID) =>
+          SQL("SELECT count(*) FROM session_price WHERE id = {id} AND session = {session}")
+            .on("id" -> id)
+            .on("session" -> sessionID)
+            .as(scalar[Int].single)
+        case None =>
+          SQL("SELECT count(*) FROM session_price WHERE id = {id}")
+            .on("id" -> id)
+            .as(scalar[Int].single)
+      }
+      count > 0
     }
   }
 
