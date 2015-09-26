@@ -2,7 +2,7 @@ package vep.controller
 
 import vep.exception.FieldStructuredErrorException
 import vep.model.common.{ErrorCodes, ResultError, ResultStructuredErrors, ResultSuccessEntity}
-import vep.model.session.{ReservationDetailSeq, ReservationForm, ReservationFormResult}
+import vep.model.session.{ReservationDetailSeq, ReservationForm, ReservationFormResult, ReservedSeats}
 import vep.service.VepServicesComponent
 
 /**
@@ -26,6 +26,14 @@ trait ReservationControllerComponent {
      * @return The list of reservation
      */
     def fromSession(theater: String, session: String): Either[ResultError, ResultSuccessEntity[ReservationDetailSeq]]
+
+    /**
+     * Returns the list of reserved place for given session (fixed theater).
+     * @param theater The session theater canonical
+     * @param session The session canonical
+     * @return The list of reserved places
+     */
+    def reservedPlacesAsPlan(theater: String, session: String): Either[ResultError, ResultSuccessEntity[ReservedSeats]]
   }
 
 }
@@ -57,6 +65,23 @@ trait ReservationControllerProductionComponent extends ReservationControllerComp
       theaterService.findByCanonical(theaterCanonical).fold(theaterError) { theater =>
         sessionService.findId(theaterCanonical, sessionCanonical).fold(sessionError) { sessionID =>
           Right(ResultSuccessEntity(ReservationDetailSeq(reservationService.findFromSession(sessionID))))
+        }
+      }
+    }
+
+    override def reservedPlacesAsPlan(theaterCanonical: String, sessionCanonical: String): Either[ResultError, ResultSuccessEntity[ReservedSeats]] = {
+      type R = Either[ResultError, ResultSuccessEntity[ReservedSeats]]
+      lazy val theaterError: R = Left(ResultError(ErrorCodes.undefinedTheater))
+      lazy val sessionError: R = Left(ResultError(ErrorCodes.undefinedSession))
+      lazy val theaterFixedError: R = Left(ResultError(ErrorCodes.notFixedTheater))
+
+      theaterService.findByCanonical(theaterCanonical).fold(theaterError) { theater =>
+        if (theater.fixed) {
+          sessionService.findId(theaterCanonical, sessionCanonical).fold(sessionError) { sessionID =>
+            Right(ResultSuccessEntity(ReservedSeats(reservationService.findReservedPlaces(sessionID))))
+          }
+        } else {
+          theaterFixedError
         }
       }
     }

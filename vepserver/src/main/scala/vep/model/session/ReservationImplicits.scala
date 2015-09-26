@@ -14,4 +14,6 @@ object ReservationImplicits extends JsonImplicits {
   implicit val impReservationDetail = jsonFormat11(ReservationDetail.apply)
 
   implicit val impReservationDetailSeq = jsonFormat1(ReservationDetailSeq.apply)
+
+  implicit val impReservedSeats = jsonFormat1(ReservedSeats.apply)
 }

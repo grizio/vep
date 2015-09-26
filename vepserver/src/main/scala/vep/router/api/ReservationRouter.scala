@@ -57,6 +57,15 @@ trait ReservationRouter extends HttpService {
               }
             }
           }
+        } ~ path("plan") { ctx =>
+          reservationController.reservedPlacesAsPlan(theaterCanonical, sessionCanonical) match {
+            case Left(error) => error match {
+              case ResultError(ErrorCodes.undefinedTheater) => ctx.complete(StatusCodes.NotFound, error)
+              case ResultError(ErrorCodes.undefinedSession) => ctx.complete(StatusCodes.NotFound, error)
+              case _ => ctx.complete(StatusCodes.BadRequest, error)
+            }
+            case Right(success) => ctx.complete(StatusCodes.OK, success.entity)
+          }
         }
       }
     }

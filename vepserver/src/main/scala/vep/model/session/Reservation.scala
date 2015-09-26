@@ -87,3 +87,5 @@ case class ReservationDetail(id: Int, session: String, firstName: String, lastNa
 case class ReservationPriceDetail(price: Int, number: Int, value: Int)
 
 case class ReservationDetailSeq(reservations: Seq[ReservationDetail])
+
+case class ReservedSeats(seats: Seq[String])

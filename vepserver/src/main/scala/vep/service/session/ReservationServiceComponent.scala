@@ -34,6 +34,13 @@ trait ReservationServiceComponent {
      * @return The list of reservation from session
      */
     def findFromSession(id: Int): Seq[ReservationDetail]
+
+    /**
+     * Returns the list of reserved places for given session.
+     * @param session The session id
+     * @return The list of reserved places
+     */
+    def findReservedPlaces(session: Int): Seq[String]
   }
 
 }
@@ -229,6 +236,15 @@ trait ReservationServiceProductionComponent extends ReservationServiceComponent 
           prices = reservationPrices
         )
     }
-  }
 
+    override def findReservedPlaces(session: Int): Seq[String] = DB.withConnection { implicit c =>
+      SQL(
+        """SELECT rs.seat
+          |FROM reservation_seat rs
+          |JOIN reservation r ON rs.reservation = r.id
+          |WHERE r.session = {session}""".stripMargin)
+        .on("session" -> session)
+        .as(scalar[String] *)
+    }
+  }
 }
