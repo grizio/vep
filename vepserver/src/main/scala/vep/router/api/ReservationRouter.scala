@@ -4,8 +4,11 @@ import spray.http.StatusCodes
 import spray.routing.HttpService
 import vep.controller.VepControllersComponent
 import vep.model.common._
-import vep.model.session.{ReservationFormBody, SessionFormBody, SessionSearch, SessionUpdateFormBody}
+import vep.model.session.ReservationFormBody
 import vep.router.VepRouter
+
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 trait ReservationRouter extends HttpService {
   self: VepControllersComponent with VepRouter =>
@@ -36,6 +39,21 @@ trait ReservationRouter extends HttpService {
                     ctx.complete(StatusCodes.BadRequest, error)
                   }
                 case Right(result) => ctx.complete(StatusCodes.OK, result.entity)
+              }
+            }
+          }
+        } ~ path("list") {
+          sealRoute {
+            authenticate(vepBasicUserAuthenticator) { implicit user =>
+              authorize(user.roles.contains(Roles.sessionManager)) { ctx =>
+                reservationController.fromSession(theaterCanonical, sessionCanonical) match {
+                  case Left(error) => error match {
+                    case ResultError(ErrorCodes.undefinedTheater) => ctx.complete(StatusCodes.NotFound, error)
+                    case ResultError(ErrorCodes.undefinedSession) => ctx.complete(StatusCodes.NotFound, error)
+                    case _ => ctx.complete(StatusCodes.BadRequest, error)
+                  }
+                  case Right(success) => ctx.complete(StatusCodes.OK, success.entity)
+                }
               }
             }
           }

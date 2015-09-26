@@ -1,7 +1,6 @@
 package vep.model.session
 
-import spray.json.DefaultJsonProtocol._
-import vep.model.common.{ErrorItem, ErrorCodes, VerifiableMultipleStructured}
+import vep.model.common.{ErrorCodes, ErrorItem, VerifiableMultipleStructured}
 import vep.utils.StringUtils
 
 case class Reservation(id: Int, session: Int, firstName: String, lastName: String, email: String, city: Option[String],
@@ -87,3 +86,4 @@ case class ReservationDetail(id: Int, session: String, firstName: String, lastNa
 
 case class ReservationPriceDetail(price: Int, number: Int, value: Int)
 
+case class ReservationDetailSeq(reservations: Seq[ReservationDetail])

@@ -44,21 +44,36 @@ INSERT INTO session_show (session, shows, num) VALUES (2, 1, 1);
 /* Reservations */
 
 /* Fixed theater */
+/* Reservation 1 */
 INSERT INTO reservation (id, session, firstname, lastname, email, city, comment, seats, pass)
-VALUES (1, 1, 'John', 'Smith', 'abc@def.com', '', null, null, '123456789');
+VALUES (1, 1, 'John', 'Smith', 'abc@def.com', null, null, null, '123456789');
 
 INSERT INTO reservation_seat (reservation, seat) VALUES (1, 'A1');
 INSERT INTO reservation_seat (reservation, seat) VALUES (1, 'A2');
 INSERT INTO reservation_seat (reservation, seat) VALUES (1, 'A3');
 INSERT INTO reservation_seat (reservation, seat) VALUES (1, 'A4');
-INSERT INTO reservation_seat (reservation, seat) VALUES (1, 'A5');
 
-INSERT INTO reservation_price (reservation, price, number) VALUES (1, 1, 2);
+INSERT INTO reservation_price (reservation, price, number) VALUES (1, 1, 1);
 INSERT INTO reservation_price (reservation, price, number) VALUES (1, 2, 3);
 
-/* Dynamic theater */
+/* Reservation 2 */
 INSERT INTO reservation (id, session, firstname, lastname, email, city, comment, seats, pass)
-VALUES (2, 2, 'Albert', 'Einstein', 'ghi@jkl.com', '', null, 5, '987654321');
+VALUES (3, 1, 'Al', 'Zheimer', 'al@zheimer.undefined.com', null, null, null, '246813579');
+
+INSERT INTO reservation_seat (reservation, seat) VALUES (3, 'A5');
+
+INSERT INTO reservation_price (reservation, price, number) VALUES (3, 1, 1);
+
+/* Dynamic theater */
+/* Reservation 1 */
+INSERT INTO reservation (id, session, firstname, lastname, email, city, comment, seats, pass)
+VALUES (2, 2, 'Albert', 'Einstein', 'ghi@jkl.com', null, null, 5, '987654321');
 
 INSERT INTO reservation_price (reservation, price, number) VALUES (2, 3, 2);
 INSERT INTO reservation_price (reservation, price, number) VALUES (2, 4, 3);
+
+/* Reservation 2 */
+INSERT INTO reservation (id, session, firstname, lastname, email, city, comment, seats, pass)
+VALUES (4, 2, 'Miss', 'Tyc', 'miss@tyc.undefined.com', null, null, 1, '987654321');
+
+INSERT INTO reservation_price (reservation, price, number) VALUES (4, 3, 1);

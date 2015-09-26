@@ -26,7 +26,7 @@ trait SessionServiceComponent {
     def create(sessionForm: SessionForm): String
 
     /**
-     * UPdates an existing session from database
+     * Updates an existing session from database
      * @param sessionUpdateForm The session to update
      */
     def update(sessionUpdateForm: SessionUpdateForm)
@@ -38,6 +38,14 @@ trait SessionServiceComponent {
      * @return true if the session exists, otherwise false.
      */
     def exists(theater: String, session: String): Boolean
+
+    /**
+     * Returns the session id from its canonical.
+     * @param theater The theater canonical
+     * @param canonical The session canonical
+     * @return The session id if exist
+     */
+    def findId(theater: String, canonical: String): Option[Int]
 
     /**
      * Finds the detail of a session
@@ -171,19 +179,20 @@ trait SessionServiceProductionComponent extends SessionServiceComponent {
       }
     }
 
-    override def exists(theater: String, session: String): Boolean = DB.withConnection { implicit c =>
-      val n = SQL(
+    override def exists(theater: String, session: String): Boolean = findId(theater, session).isDefined
+
+    override def findId(theater: String, canonical: String): Option[Int] = DB.withConnection { implicit c =>
+      SQL(
         """
-          |SELECT COUNT(*)
+          |SELECT s.id
           |FROM session s
           |JOIN theater t ON s.theater = t.id
           |WHERE t.canonical = {theater}
           |AND s.canonical = {session}
         """.stripMargin)
         .on("theater" -> theater)
-        .on("session" -> session)
-        .as(scalar[Int].single)
-      n != 0
+        .on("session" -> canonical)
+        .as(scalar[Int].singleOpt)
     }
 
     override def findDetail(theater: String, session: String): Option[SessionDetail] = DB.withConnection { implicit c =>

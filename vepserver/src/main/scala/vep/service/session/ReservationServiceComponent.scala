@@ -27,6 +27,13 @@ trait ReservationServiceComponent {
      * @return The reservation with given id if exist
      */
     def find(id: Int): Option[ReservationDetail]
+
+    /**
+     * Finds the list of reservation from given session
+     * @param id The session id
+     * @return The list of reservation from session
+     */
+    def findFromSession(id: Int): Seq[ReservationDetail]
   }
 
 }
@@ -188,9 +195,24 @@ trait ReservationServiceProductionComponent extends ReservationServiceComponent 
         .on("id" -> id)
         .as(ReservationParsers.reservationDetail.singleOpt)
 
-      reservationDetailOpt map { reservationDetail =>
+      reservationDetailOpt.map(populateReservationChildren)
+    }
+
+    override def findFromSession(id: Int): Seq[ReservationDetail] = DB.withConnection { implicit c =>
+      val reservationDetailSeq = SQL(
+        """SELECT r.id, s.canonical, r.firstName, r.lastName, r.email, r.city, r.comment, r.seats, r.pass
+          | FROM reservation r
+          | JOIN session s ON s.id = r.session
+          | WHERE s.id = {id}""".stripMargin)
+        .on("id" -> id)
+        .as(ReservationParsers.reservationDetail *)
+
+      reservationDetailSeq.map(populateReservationChildren)
+    }
+
+    def populateReservationChildren(reservationDetail: ReservationDetail): ReservationDetail = DB.withConnection { implicit c =>
         val reservationSeats = SQL("SELECT seat FROM reservation_seat WHERE reservation = {reservation}")
-          .on("reservation" -> id)
+          .on("reservation" -> reservationDetail.id)
           .as(scalar[String] *)
 
         val reservationPrices = SQL(
@@ -199,14 +221,13 @@ trait ReservationServiceProductionComponent extends ReservationServiceComponent 
             |FROM reservation_price rp
             |JOIN session_price sp ON rp.price = sp.id
             |WHERE rp.reservation = {reservation}""".stripMargin)
-          .on("reservation" -> id)
+          .on("reservation" -> reservationDetail.id)
           .as(ReservationParsers.reservationPriceDetail *)
 
         reservationDetail.copy(
           seatList = reservationSeats,
           prices = reservationPrices
         )
-      }
     }
   }
 
