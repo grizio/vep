@@ -28,12 +28,20 @@ trait ReservationControllerComponent {
     def fromSession(theater: String, session: String): Either[ResultError, ResultSuccessEntity[ReservationDetailSeq]]
 
     /**
-     * Returns the list of reserved place for given session (fixed theater).
+     * Returns the list of reserved places for given session (fixed theater).
      * @param theater The session theater canonical
      * @param session The session canonical
      * @return The list of reserved places
      */
     def reservedPlacesAsPlan(theater: String, session: String): Either[ResultError, ResultSuccessEntity[ReservedSeats]]
+
+    /**
+     * Returns the number of reserved places for given session (dynamic theater).
+     * @param theater The theater canonical
+     * @param session The session canonical
+     * @return The number of reserved places
+     */
+    def reservedPlacesAsNumber(theater: String, session: String): Either[ResultError, ResultSuccessEntity[Int]]
   }
 
 }
@@ -82,6 +90,23 @@ trait ReservationControllerProductionComponent extends ReservationControllerComp
           }
         } else {
           theaterFixedError
+        }
+      }
+    }
+
+    override def reservedPlacesAsNumber(theaterCanonical: String, sessionCanonical: String): Either[ResultError, ResultSuccessEntity[Int]] = {
+      type R = Either[ResultError, ResultSuccessEntity[Int]]
+      lazy val theaterError: R = Left(ResultError(ErrorCodes.undefinedTheater))
+      lazy val sessionError: R = Left(ResultError(ErrorCodes.undefinedSession))
+      lazy val theaterDynamicError: R = Left(ResultError(ErrorCodes.fixedTheater))
+
+      theaterService.findByCanonical(theaterCanonical).fold(theaterError) { theater =>
+        if (theater.fixed) {
+          theaterDynamicError
+        } else {
+          sessionService.findId(theaterCanonical, sessionCanonical).fold(sessionError) { sessionID =>
+            Right(ResultSuccessEntity(reservationService.findNumberOfReservedPlaces(sessionID)))
+          }
         }
       }
     }

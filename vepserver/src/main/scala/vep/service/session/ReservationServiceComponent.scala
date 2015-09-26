@@ -41,6 +41,13 @@ trait ReservationServiceComponent {
      * @return The list of reserved places
      */
     def findReservedPlaces(session: Int): Seq[String]
+
+    /**
+     * Returns the number of reserved places for given session (dynamic theater).
+     * @param session The session id
+     * @return The list of reserved places
+     */
+    def findNumberOfReservedPlaces(session: Int): Int
   }
 
 }
@@ -245,6 +252,16 @@ trait ReservationServiceProductionComponent extends ReservationServiceComponent 
           |WHERE r.session = {session}""".stripMargin)
         .on("session" -> session)
         .as(scalar[String] *)
+    }
+
+    override def findNumberOfReservedPlaces(session: Int): Int = DB.withConnection { implicit c =>
+      SQL(
+        """SELECT sum(r.seats)
+          |FROM reservation r
+          |WHERE r.session = {session}
+        """.stripMargin)
+        .on("session" -> session)
+        .as(scalar[Int].single)
     }
   }
 }
