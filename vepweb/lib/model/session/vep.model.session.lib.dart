@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 part 'Session.dart';
 part 'SessionSearch.dart';
+part 'Reservation.dart';
 
 void prepareJsonx() {
   prepareJsonxSessionSearch();

@@ -23,6 +23,7 @@ class TheaterPlanComponent {
     _jsonPlan = value;
     try {
       seats = jsonx.decode(value, type: const jsonx.TypeHelper<List<Seat>>().type);
+      updateTaken();
       if (decorator != null) {
         decorator.update();
       }
@@ -31,11 +32,42 @@ class TheaterPlanComponent {
     }
   }
 
-  List<String> get selected => seats.where((_) => _.selected).map((_) => _.c);
+  List<String> _selected = [];
+
+  @NgTwoWay('selected')
+  List<String> get selected => _selected;
+
+  set selected(List<String> selected) => _selected = selected != null ? selected : [];
+
+  List<String> _taken = [];
+
+  @NgOneWay('taken')
+  List<String> get taken => _taken;
+
+  set taken(List<String> taken) {
+    _taken = taken != null ? taken : [];
+    updateTaken();
+  }
+
+  void updateTaken() {
+    if (seats != null) {
+      seats.forEach((_) => _.taken = taken.contains(_.c));
+    }
+  }
 
   void toggle(Seat seat) {
     if (enabled && seat.t != 'taken') {
-      seat.selected = !seat.selected;
+      if (seat.selected) {
+        seat.selected = false;
+        if (selected != null) {
+          selected.remove(seat.c);
+        }
+      } else {
+        seat.selected = true;
+        if (selected != null && !selected.contains(seat.c)) {
+          selected.add(seat.c);
+        }
+      }
     }
   }
 }

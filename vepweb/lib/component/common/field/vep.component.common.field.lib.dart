@@ -26,6 +26,7 @@ part 'input-multiple-choice.dart';
 part 'input-one-choice.dart';
 part 'input-password.dart';
 part 'input-price.dart';
+part 'input-repartition.dart';
 part 'input-search.dart';
 part 'input-text.dart';
 part 'valueChange.dart';
@@ -60,6 +61,8 @@ class VepComponentCommonFieldsModule extends Module {
 
     bind(InputPriceComponent);
     bind(InputPriceDecorator);
+
+    bind(InputRepartitionComponent);
 
     bind(InputSearchComponent);
     bind(InputSearchDecorator);

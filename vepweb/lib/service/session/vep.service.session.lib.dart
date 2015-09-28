@@ -7,10 +7,12 @@ import 'package:logging/logging.dart';
 import 'package:vepweb/model/vep.model.lib.dart';
 import 'package:jsonx/jsonx.dart' as jsonx;
 
+part 'ReservationService.dart';
 part 'SessionService.dart';
 
 class VepServiceSessionModule extends Module {
   VepServiceSessionModule() {
+    bind(ReservationService);
     bind(SessionService);
   }
 }

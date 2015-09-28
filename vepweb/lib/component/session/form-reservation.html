@@ -1,0 +1,82 @@
+<form-steps current="current" data="reservation" on-loaded="onLoaded" on-submit="onSubmit" on-valid="onValid"
+            ng-if="result == null">
+    <form-step name="select-plan" label="'Votre sélection'" when="theater.fixed" validate-next-step="validateSelectPlan"
+               leaving-to-next-step="leavingSelectPlanToNextStep">
+        <theater-plan enabled="true" json-plan="theater.plan" selected="reservation.seatList"
+                      taken="takenSeats"></theater-plan>
+    </form-step>
+    <form-step name="select-number" label="'Votre sélection'" when="!theater.fixed">
+        <input-integer name="seats" label="Nombre de places" required="true" with-id="form-reservation-seats"
+                       min="1" max="theater.maxSeats - takenSeatsCount" step="1" parent="select-number"></input-integer>
+
+        <ul>
+            <li>Nombre de places : {{ theater.maxSeats }}</li>
+            <li>Nombre de places prises : {{ takenSeatsCount }}</li>
+            <li>Nombre de places restantes : {{ theater.maxSeats - takenSeatsCount }}</li>
+        </ul>
+    </form-step>
+    <form-step name="prices" label="'Tarifs'" when="true" leaving-to-next-step="leavingPricesToNextStep">
+        <input-repartition name="priceRepartition" label="Tarifs" required="true" with-id="form-reservation-prices"
+                           parent="prices" choices="prices" total="reservedSeats"></input-repartition>
+    </form-step>
+    <form-step name="person" label="'Vos informations'" when="true">
+        <input-text name="firstName" with-id="form-reservation-firstName" label="Prénom"
+                    placeholder="Votre prénom" required="true" parent="person"></input-text>
+        <input-text name="lastName" with-id="form-reservation-lastName" label="Nom" placeholder="Votre nom"
+                    required="true" parent="person"></input-text>
+        <input-email name="email" with-id="form-reservation-email" label="Email"
+                     placeholder="Votre adresse e-mail valide" required="true" parent="person"></input-email>
+        <input-text name="city" with-id="form-reservation-city" label="Ville"
+                    placeholder="Votre ville (optionnel)" parent="person"></input-text>
+        <input-text name="comment" with-id="form-reservation-comment" label="Commentaire" area="true" parent="person"
+                    placeholder="Tout commentaire que vous jugez utile (ex: autres personnes concernée par la réservation)"></input-text>
+    </form-step>
+    <form-step name="summary" label="'Récapitulatif'" when="true">
+        <div class="row">
+            <div class="small-6 columns">
+                <h3>Sélection</h3>
+                <ul ng-if="theater.fixed">
+                    <li ng-repeat="seat in reservation.seatList">{{ seat }}</li>
+                </ul>
+
+                <div ng-if="!theater.fixed">
+                    {{ reservation.seats }}
+                </div>
+            </div>
+            <div class="small-6 columns">
+                <h3>Tarifs</h3>
+                <ul>
+                    <li ng-repeat="price in reservation.prices">{{ price.name }} : {{ price.number }} * {{ price.value /
+                        100 | currency:''}}&euro;</li>
+                    <li>Total : {{ reservation.totalPrice / 100 | currency:'' }}&euro;</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-6 columns">
+                <h3>Vos informations</h3>
+
+                <ul>
+                    <li>Nom : {{ reservation.firstName }} {{ reservation.lastName }}</li>
+                    <li>Adresse e-mail : {{ reservation.email }}</li>
+                    <li ng-if="reservation.city != null && !reservation.city.isEmpty">
+                        Ville : {{ reservation.city }}
+                    </li>
+                    <li ng-if="reservation.comment != null && !reservation.comment.isEmpty">
+                        Commentaire : {{ reservation.comment }}
+                    </li>
+                </ul>
+            </div>
+            <div class="small-6 columns">
+                <h3>Rappels sur la séance</h3>
+
+                <session-card theater="session.theater" canonical="session.canonical" small="true"
+                              ng-if="session != null"></session-card>
+            </div>
+        </div>
+    </form-step>
+</form-steps>
+<div ng-if="result != null" class="panel success">
+    Votre réservation a bien été prise en compte.
+    Vous devriez recevoir un mail à l'adresse e-mail indiquée avec les informations de la réservation.
+</div>

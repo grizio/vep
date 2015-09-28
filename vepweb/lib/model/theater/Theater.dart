@@ -56,5 +56,8 @@ class Seat {
   bool selected;
 
   @jsonIgnore
-  String get className => 'theater-plan-seat-' + (selected != null && selected ? 'selected' : (t != null ? t : 'normal'));
+  bool taken;
+
+  @jsonIgnore
+  String get className => 'theater-plan-seat-' + (taken != null && taken ? 'taken' : (selected != null && selected ? 'selected' : (t != null ? t : 'normal')));
 }

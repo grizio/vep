@@ -15,6 +15,7 @@ import 'package:vepweb/roles.dart' as roles;
 import 'package:vepweb/utils.dart' as utils;
 
 part 'field-price.dart';
+part 'form-reservation.dart';
 part 'form-session.dart';
 part 'form-session-update.dart';
 part 'price-card.dart';
@@ -24,6 +25,7 @@ part 'session-card.dart';
 class VepComponentSessionModule extends Module {
   VepComponentSessionModule() {
     bind(FieldPriceComponent);
+    bind(FormReservationComponent);
     bind(FormSessionComponent);
     bind(FormSessionUpdateComponent);
     bind(PriceCardComponent);

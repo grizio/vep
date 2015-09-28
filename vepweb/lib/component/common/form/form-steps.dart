@@ -182,7 +182,7 @@ class FormStepsComponent extends FormComponent {
   @override
   Future onFormErrorInner() {
     for (final step in steps) {
-      if (step.isStepNotValid) {
+      if (step.when && step.isStepNotValid) {
         current = step.name;
         break;
       }

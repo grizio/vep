@@ -28,6 +28,8 @@ class Session extends ModelToString {
 }
 
 class SessionPrice extends ModelToString {
+  @jsonx.jsonIgnore
+  int id;
   String name;
   int price;
   String condition;
@@ -62,9 +64,12 @@ class SessionFormShow extends ModelToString {
 
 class SessionCard extends ModelToString {
   Theater theater;
+  String canonical;
   DateTime date;
   DateTime reservationEndDate;
   String name;
   List<Show> shows;
   List<SessionPrice> prices;
+
+  bool get canReserve => reservationEndDate.isAfter(new DateTime.now());
 }

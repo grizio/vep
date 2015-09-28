@@ -45,6 +45,10 @@
             <div ng-repeat="show in sessionCard.shows">
                 <show-card canonical="show.canonical" small="true"></show-card>
             </div>
+
+            <a href="/reservation/{{ sessionCard.theater.canonical }}/{{ sessionCard.canonical }}" ng-if="sessionCard.canReserve">
+                Réserver des places
+            </a>
         </div>
         <div class="small-6 columns">
             <h3>Théâtre</h3>

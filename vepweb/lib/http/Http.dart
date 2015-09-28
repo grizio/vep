@@ -25,7 +25,7 @@ class HttpProduction implements IHttp {
 
   Map<String, String> buildHeaders({Map<String, String> headers:const{}, bool withSession: false}) {
     var result = merge(<String, String>{}, headers);
-    if (app.isLoggedIn) {
+    if (withSession && app.isLoggedIn) {
       result['authorization'] = 'Basic ' + CryptoUtils.bytesToBase64(UTF8.encode(app.username + ':' + app.key));
     }
     return result;
