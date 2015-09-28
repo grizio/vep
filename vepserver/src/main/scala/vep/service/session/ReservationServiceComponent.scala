@@ -256,7 +256,7 @@ trait ReservationServiceProductionComponent extends ReservationServiceComponent 
 
     override def findNumberOfReservedPlaces(session: Int): Int = DB.withConnection { implicit c =>
       SQL(
-        """SELECT sum(r.seats)
+        """SELECT ifnull(sum(r.seats), 0) as seatCount
           |FROM reservation r
           |WHERE r.session = {session}
         """.stripMargin)

@@ -26,6 +26,7 @@ class ReservationControllerReservedPlacesAsNumberSpecification extends Specifica
       val validSessionDynamic = "existing-session_2"
       val invalidTheater = "undefined-theater"
       val invalidSession = "undefined-session"
+      val validSessionNoReservation = "existing-session_3"
 
       val expected = 6
 
@@ -36,6 +37,12 @@ class ReservationControllerReservedPlacesAsNumberSpecification extends Specifica
         val result = reservationController.reservedPlacesAsNumber(validTheaterDynamic, validSessionDynamic)
         (result must beRight[ResultSuccessEntity[Int]]) and
           (result.asInstanceOf[Right[_, ResultSuccessEntity[Int]]].b.entity === expected)
+      }
+
+      "returns 0 when valid and no reservation (dynamic theater)" >> {
+        val result = reservationController.reservedPlacesAsNumber(validTheaterDynamic, validSessionNoReservation)
+        (result must beRight[ResultSuccessEntity[Int]]) and
+          (result.asInstanceOf[Right[_, ResultSuccessEntity[Int]]].b.entity === 0)
       }
 
       "returns an error when theater is invalid" >> {

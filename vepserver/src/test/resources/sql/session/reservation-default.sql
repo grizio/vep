@@ -32,6 +32,7 @@ INSERT INTO session_show (session, shows, num) VALUES (1, 1, 1);
 
 
 /* session dynamic theater */
+/* session with reservation */
 INSERT INTO session (id, theater, canonical, date, name, reservationEndDate)
 VALUES (2, 2, 'existing-session_2', '2100-01-02 20:30:00', 'Existing session', '2100-01-02 20:00:00');
 
@@ -39,6 +40,16 @@ INSERT INTO session_price (id, session, name, price, cases) VALUES (3, 2, 'Full 
 INSERT INTO session_price (id, session, name, price, cases) VALUES (4, 2, 'Half price', 6, 'Children');
 
 INSERT INTO session_show (session, shows, num) VALUES (2, 1, 1);
+
+
+/* session without reservation */
+INSERT INTO session (id, theater, canonical, date, name, reservationEndDate)
+VALUES (3, 2, 'existing-session_3', '2100-01-03 20:30:00', 'Existing session', '2100-01-03 20:00:00');
+
+INSERT INTO session_price (id, session, name, price, cases) VALUES (5, 3, 'Full price', 12, null);
+INSERT INTO session_price (id, session, name, price, cases) VALUES (6, 3, 'Half price', 6, 'Children');
+
+INSERT INTO session_show (session, shows, num) VALUES (3, 1, 1);
 
 
 /* Reservations */

@@ -43,37 +43,43 @@ trait ReservationRouter extends HttpService {
             }
           }
         } ~ path("list") {
-          sealRoute {
-            authenticate(vepBasicUserAuthenticator) { implicit user =>
-              authorize(user.roles.contains(Roles.sessionManager)) { ctx =>
-                reservationController.fromSession(theaterCanonical, sessionCanonical) match {
-                  case Left(error) => error match {
-                    case ResultError(ErrorCodes.undefinedTheater) => ctx.complete(StatusCodes.NotFound, error)
-                    case ResultError(ErrorCodes.undefinedSession) => ctx.complete(StatusCodes.NotFound, error)
-                    case _ => ctx.complete(StatusCodes.BadRequest, error)
+          get {
+            sealRoute {
+              authenticate(vepBasicUserAuthenticator) { implicit user =>
+                authorize(user.roles.contains(Roles.sessionManager)) { ctx =>
+                  reservationController.fromSession(theaterCanonical, sessionCanonical) match {
+                    case Left(error) => error match {
+                      case ResultError(ErrorCodes.undefinedTheater) => ctx.complete(StatusCodes.NotFound, error)
+                      case ResultError(ErrorCodes.undefinedSession) => ctx.complete(StatusCodes.NotFound, error)
+                      case _ => ctx.complete(StatusCodes.BadRequest, error)
+                    }
+                    case Right(success) => ctx.complete(StatusCodes.OK, success.entity)
                   }
-                  case Right(success) => ctx.complete(StatusCodes.OK, success.entity)
                 }
               }
             }
           }
-        } ~ path("plan") { ctx =>
-          reservationController.reservedPlacesAsPlan(theaterCanonical, sessionCanonical) match {
-            case Left(error) => error match {
-              case ResultError(ErrorCodes.undefinedTheater) => ctx.complete(StatusCodes.NotFound, error)
-              case ResultError(ErrorCodes.undefinedSession) => ctx.complete(StatusCodes.NotFound, error)
-              case _ => ctx.complete(StatusCodes.BadRequest, error)
+        } ~ path("plan") {
+          get { ctx =>
+            reservationController.reservedPlacesAsPlan(theaterCanonical, sessionCanonical) match {
+              case Left(error) => error match {
+                case ResultError(ErrorCodes.undefinedTheater) => ctx.complete(StatusCodes.NotFound, error)
+                case ResultError(ErrorCodes.undefinedSession) => ctx.complete(StatusCodes.NotFound, error)
+                case _ => ctx.complete(StatusCodes.BadRequest, error)
+              }
+              case Right(success) => ctx.complete(StatusCodes.OK, success.entity)
             }
-            case Right(success) => ctx.complete(StatusCodes.OK, success.entity)
           }
-        } ~ path("number") { ctx =>
-          reservationController.reservedPlacesAsNumber(theaterCanonical, sessionCanonical) match {
-            case Left(error) => error match {
-              case ResultError(ErrorCodes.undefinedTheater) => ctx.complete(StatusCodes.NotFound, error)
-              case ResultError(ErrorCodes.undefinedSession) => ctx.complete(StatusCodes.NotFound, error)
-              case _ => ctx.complete(StatusCodes.BadRequest, error)
+        } ~ path("number") {
+          get { ctx =>
+            reservationController.reservedPlacesAsNumber(theaterCanonical, sessionCanonical) match {
+              case Left(error) => error match {
+                case ResultError(ErrorCodes.undefinedTheater) => ctx.complete(StatusCodes.NotFound, error)
+                case ResultError(ErrorCodes.undefinedSession) => ctx.complete(StatusCodes.NotFound, error)
+                case _ => ctx.complete(StatusCodes.BadRequest, error)
+              }
+              case Right(success) => ctx.complete(StatusCodes.OK, success.entity.toString)
             }
-            case Right(success) => ctx.complete(StatusCodes.OK, success.entity.toString)
           }
         }
       }
