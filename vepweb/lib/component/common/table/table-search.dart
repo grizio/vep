@@ -61,6 +61,7 @@ class TableSearchComponent implements ScopeAware, AttachAware {
   Timer timer = null;
 
   List<Map<String, Object>> data = [];
+  bool fetchedData = false;
 
   @override
   void attach() {
@@ -68,67 +69,81 @@ class TableSearchComponent implements ScopeAware, AttachAware {
   }
 
   void reloadData() {
-    if (_dataFuture == null) {
-      loading = true;
-      if (tableSearchDecorator != null) {
-        // Trick to force refresh of table.
-        // TODO: find a proper way
-        tableSearchDecorator.element.click();
-      }
-      _dataFuture = context.search(new Map.unmodifiable(filter.internal)).then((_) {
-        data = _;
-        _dataFuture = null;
-        loading = false;
+    if (tableDescriptor != null) {
+      if (_dataFuture == null) {
+        loading = true;
         if (tableSearchDecorator != null) {
           // Trick to force refresh of table.
           // TODO: find a proper way
           tableSearchDecorator.element.click();
         }
-      });
+        _dataFuture = context.search(new Map.unmodifiable(filter.internal)).then((_) {
+          data = _;
+          _dataFuture = null;
+          loading = false;
+          fetchedData = true;
+          if (tableSearchDecorator != null) {
+            // Trick to force refresh of table.
+            // TODO: find a proper way
+            tableSearchDecorator.element.click();
+          }
+        });
+      }
     }
   }
 
   MapFilter _filter = null;
 
   MapFilter get filter {
-    if (_filter == null) {
-      if (context != null) {
-        _filter = new MapFilter(tableDescriptor, this);
-        return _filter;
+    if (tableDescriptor != null) {
+      if (_filter == null) {
+        if (context != null) {
+          _filter = new MapFilter(tableDescriptor, this);
+          return _filter;
+        } else {
+          return new MapFilter(null, this);
+        }
       } else {
-        return new MapFilter(null, this);
+        return _filter;
       }
     } else {
-      return _filter;
+      return new MapFilter(null, this);
     }
   }
 
   List<Map<String, Object>> get filteredData {
-    List<Map<String, Object>> filtered;
-    if (filterIn) {
-      var columnsToCheck = tableDescriptor.columns.where((_) => filter.containsKey(_.code) && filter[_.code] != null);
-      var textColumns = columnsToCheck.where((_) => [ColumnTypes.text, ColumnTypes.link].contains(_.type));
-      // We filter only when checkbox is checked, otherwise, we do not include the checkbox in filter.
-      var checkboxColumns = columnsToCheck.where((_) => _.type == ColumnTypes.checkbox && filter[_.code] == true);
-      var numberColumns = columnsToCheck.where((_) => [ColumnTypes.integer].contains(_.type) && !(filter[_.code] as num).isNaN);
-      var dateColumns = columnsToCheck.where((_) => [ColumnTypes.date].contains(_.type) && filter[_.code] != [null, null]);
-      filtered = [];
-      int index = 0;
-      for (Map<String, Object> row in data) {
-        if (textColumns.every((_) => (row[_.code] as String).contains(filter[_.code])) &&
-        checkboxColumns.every((_) => row[_.code] == filter[_.code]) &&
-        numberColumns.every((_) => row[_.code].toString().contains(filter[_.code].toString())) &&
-        filteredDataCheckByDate(dateColumns, row)) {
-          row['_index'] = index;
-          filtered.add(row);
+    if (tableDescriptor != null) {
+      List<Map<String, Object>> filtered;
+      if (filterIn) {
+        if (!fetchedData && !loading) {
+          reloadData();
         }
-        index++;
+        var columnsToCheck = tableDescriptor.columns.where((_) => filter.containsKey(_.code) && filter[_.code] != null);
+        var textColumns = columnsToCheck.where((_) => [ColumnTypes.text, ColumnTypes.link].contains(_.type));
+        // We filter only when checkbox is checked, otherwise, we do not include the checkbox in filter.
+        var checkboxColumns = columnsToCheck.where((_) => _.type == ColumnTypes.checkbox && filter[_.code] == true);
+        var numberColumns = columnsToCheck.where((_) => [ColumnTypes.integer].contains(_.type) && !(filter[_.code] as num).isNaN);
+        var dateColumns = columnsToCheck.where((_) => [ColumnTypes.date].contains(_.type) && filter[_.code] != [null, null]);
+        filtered = [];
+        int index = 0;
+        for (Map<String, Object> row in data) {
+          if (textColumns.every((_) => (row[_.code] as String).contains(filter[_.code])) &&
+          checkboxColumns.every((_) => row[_.code] == filter[_.code]) &&
+          numberColumns.every((_) => row[_.code].toString().contains(filter[_.code].toString())) &&
+          filteredDataCheckByDate(dateColumns, row)) {
+            row['_index'] = index;
+            filtered.add(row);
+          }
+          index++;
+        }
+      } else {
+        filtered = data;
       }
-    } else {
-      filtered = data;
-    }
 
-    return filteredDataPage(filtered);
+      return filteredDataPage(filtered);
+    } else {
+      return [];
+    }
   }
 
   bool filteredDataCheckByDate(List<ColumnDescriptor> columns, Map<String, Object> row) {
@@ -176,12 +191,16 @@ class TableSearchComponent implements ScopeAware, AttachAware {
     context.onChange(data[index]);
   }
 
+  /// Reloads the timer to update search results, only after a duration.
+  /// Useful only when filter-out
   void timerReload([Duration duration=const Duration(seconds: 1)]) {
-    // We use a timer to update data only 1 second of inactivity.
-    if (timer != null) {
-      timer.cancel();
+    if (!filterIn) {
+      // We use a timer to update data only 1 second of inactivity.
+      if (timer != null) {
+        timer.cancel();
+      }
+      timer = new Timer(duration, timerDone);
     }
-    timer = new Timer(duration, timerDone);
   }
 
   void timerDone() {

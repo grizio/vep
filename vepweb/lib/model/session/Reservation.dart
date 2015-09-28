@@ -12,6 +12,8 @@ class Reservation extends ModelToString {
   String key;
   List<String> seatList;
   List<ReservationPrice> prices;
+
+  String get joinedSeats => seatList != null ? seatList.join(', ') : '';
 }
 
 class ReservationPrice extends ModelToString {
@@ -47,4 +49,31 @@ class ReservationForm extends ModelToString {
 class ReservationResult extends ModelToString {
   int id;
   String key;
+}
+
+void prepareJsonxReservation() {
+  jsonx.jsonToObjects[new jsonx.TypeHelper<List<Reservation>>().type] = (json) {
+    final reservations = (json as Map<String, Object>)['reservations'] as List<Map<String, Object>>;
+    return reservations.map((reservationJson) {
+      final reservation = new Reservation();
+      reservation.id = reservationJson['id'];
+      reservation.firstName = reservationJson['firstName'];
+      reservation.lastName = reservationJson['lastName'];
+      reservation.email = reservationJson['email'];
+      reservation.city = reservationJson['city'];
+      reservation.comment = reservationJson['comment'];
+      reservation.seats = reservationJson['seats'];
+      reservation.key = reservationJson['key'];
+      reservation.seatList = reservationJson['seatList'];
+      reservation.prices = (reservationJson['prices'] as List<Map<String, Object>>).map((priceJson){
+        final price = new ReservationPrice();
+        price.price = priceJson.containsKey('id') ? priceJson['id'] : priceJson['price'];
+        price.number = priceJson['number'];
+        price.name = priceJson['name'];
+        price.value = priceJson['value'];
+        return price;
+      }).toList();
+      return reservation;
+    }).toList();
+  };
 }

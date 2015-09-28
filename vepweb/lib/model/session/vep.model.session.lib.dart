@@ -10,4 +10,5 @@ part 'Reservation.dart';
 
 void prepareJsonx() {
   prepareJsonxSessionSearch();
+  prepareJsonxReservation();
 }

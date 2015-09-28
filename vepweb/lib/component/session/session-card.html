@@ -36,7 +36,14 @@
     </dl>
 </div>
 <div class="session-card session-card-big" ng-if="!small && sessionCard != null">
-    <h2>{{ sessionCard.name }}</h2>
+    <h2>
+        {{ sessionCard.name }}
+
+        <a href="/reservation/{{ sessionCard.theater.canonical }}/{{ sessionCard.canonical }}"
+           class="button primary small right" ng-if="sessionCard.canReserve">
+            Réserver des places
+        </a>
+    </h2>
 
     <div class="row">
         <div class="small-6 columns">
@@ -45,10 +52,6 @@
             <div ng-repeat="show in sessionCard.shows">
                 <show-card canonical="show.canonical" small="true"></show-card>
             </div>
-
-            <a href="/reservation/{{ sessionCard.theater.canonical }}/{{ sessionCard.canonical }}" ng-if="sessionCard.canReserve">
-                Réserver des places
-            </a>
         </div>
         <div class="small-6 columns">
             <h3>Théâtre</h3>
@@ -60,4 +63,21 @@
             <price-card price="price" ng-repeat="price in sessionCard.prices"></price-card>
         </div>
     </div>
+
+    <div class="row">
+        <div class="small-12 columns" ng-if="sessionCard.theater.fixed">
+            <theater-plan enabled="false" json-plan="sessionCard.theater.plan" taken="takenSeats"
+                          legend="'none'"></theater-plan>
+        </div>
+        <div class="small-12 columns" ng-if="!sessionCard.theater.fixed">
+            <ul>
+                <li>Nombre de places : {{ sessionCard.theater.maxSeats }}</li>
+                <li>Nombre de places prises : {{ takenSeatNumber }}</li>
+                <li>Nombre de places restantes : {{ sessionCard.theater.maxSeats - takenSeatNumber }}</li>
+            </ul>
+        </div>
+    </div>
+
+    <session-card-reservations theater="{{ sessionCard.theater.canonical }}"
+                               session="{{ sessionCard.canonical }}"></session-card-reservations>
 </div>

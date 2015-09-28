@@ -31,4 +31,14 @@ class ReservationService {
       }
     });
   }
+
+  Future<List<Reservation>> findReservations(String theater, String session) {
+    return http.get('/reservation/${theater}/${session}/list', type: new jsonx.TypeHelper<List<Reservation>>().type, withSession: true).then((_){
+      if (_.isSuccess) {
+        return _.entity;
+      } else {
+        return [];
+      }
+    });
+  }
 }

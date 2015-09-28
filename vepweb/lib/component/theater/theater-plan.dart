@@ -92,7 +92,8 @@ class TheaterPlanMapDecorator implements AttachAware {
     }
     maxWidth += 10;
     maxHeight += 10;
-    var width = min(element.parent.clientWidth, maxWidth);
+    // ?: because of some bug sometimes
+    var width = element.parent.clientWidth != 0 ? min(element.parent.clientWidth, maxWidth) : maxWidth;
     var height = min(window.innerHeight - 25, maxHeight);
     element.style.width = width.toString() + 'px';
     element.style.height = height.toString() + 'px';

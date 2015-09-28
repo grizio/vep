@@ -9,6 +9,7 @@ class SessionCardComponent implements AttachAware {
   final ShowService showService;
   final TheaterService theaterService;
   final SessionService sessionService;
+  final ReservationService reservationService;
   final RouteProvider routeProvider;
   final App app;
 
@@ -23,7 +24,11 @@ class SessionCardComponent implements AttachAware {
 
   SessionCard sessionCard;
 
-  SessionCardComponent(this.showService, this.theaterService, this.sessionService, this.routeProvider, this.app);
+  List<String> takenSeats;
+
+  int takenSeatNumber;
+
+  SessionCardComponent(this.showService, this.theaterService, this.sessionService, this.reservationService, this.routeProvider, this.app);
 
   @override
   void attach() {
@@ -34,8 +39,21 @@ class SessionCardComponent implements AttachAware {
       var futures = <Future>[];
 
       // load theater
-      futures.add(theaterService.find(session.theater).then((theater) {
+      final theaterFuture = theaterService.find(session.theater).then((theater) {
         loadingSessionCard.theater = theater;
+      });
+      futures.add(theaterFuture);
+
+      futures.add(theaterFuture.then((_){
+        if (loadingSessionCard.theater.fixed) {
+          return reservationService.findReservedPlacesPlan(getTheaterCanonical(), getCanonical()).then((_){
+            takenSeats = _;
+          });
+        } else {
+          return reservationService.findReservedPlacesNumber(getTheaterCanonical(), getCanonical()).then((_){
+            takenSeatNumber = _;
+          });
+        }
       }));
 
       // load shows
