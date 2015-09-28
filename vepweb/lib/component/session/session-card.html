@@ -38,6 +38,9 @@
 <div class="session-card session-card-big" ng-if="!small && sessionCard != null">
     <h2>
         {{ sessionCard.name }}
+        <small>
+            {{ sessionCard.date | date:'dd/MM/yyyy HH:mm' }}
+        </small>
 
         <a href="/reservation/{{ sessionCard.theater.canonical }}/{{ sessionCard.canonical }}"
            class="button primary small right" ng-if="sessionCard.canReserve">
