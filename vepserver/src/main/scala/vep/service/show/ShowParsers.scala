@@ -10,7 +10,7 @@ object ShowParsers {
       str("canonical") ~
       str("title") ~
       str("author") ~
-      str("director") ~
+      get[Option[String]]("director") ~
       int("company") ~
       get[Option[Int]]("duration") ~
       get[Option[String]]("content") map {
@@ -22,7 +22,7 @@ object ShowParsers {
     str("shows.canonical") ~
       str("title") ~
       str("author") ~
-      str("director") ~
+      get[Option[String]]("director") ~
       str("company") map {
       case canonical ~ title ~ author ~ director ~ company =>
         ShowSearchResult(canonical, title, author, director, company)
@@ -32,7 +32,7 @@ object ShowParsers {
     str("shows.canonical") ~
       str("title") ~
       str("author") ~
-      str("director") ~
+      get[Option[String]]("director") ~
       str("company") ~
       get[Option[Int]]("duration") ~
       get[Option[String]]("content") map {

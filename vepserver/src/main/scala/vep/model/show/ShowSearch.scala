@@ -51,6 +51,6 @@ FROM shows
 LEFT JOIN company ON company = company.id;
 */
 // The usage of this class for search response instead of Show is to reduce response length.
-case class ShowSearchResult(canonical: String, title: String, author: String, director: String, company: String)
+case class ShowSearchResult(canonical: String, title: String, author: String, director: Option[String], company: String)
 
 case class ShowSearchResponse(shows: Seq[ShowSearchResult], pageMax: Int)

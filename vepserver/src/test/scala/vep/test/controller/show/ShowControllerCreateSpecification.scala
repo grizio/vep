@@ -21,9 +21,9 @@ class ShowControllerCreateSpecification extends Specification with VepController
   // Usage of sequential because database state is reset between each test.
   sequential ^ "Specifications of ShowController" >> {
     "create should" >> {
-      lazy val validShowForm = ShowForm("new-show", "New show", "an author", "a director", "existing-company", Some(1), Some("My content"))
+      lazy val validShowForm = ShowForm("new-show", "New show", "an author", Some("a director"), "existing-company", Some(1), Some("My content"))
       lazy val existingShowForm = validShowForm.copy(canonical = "existing-show")
-      lazy val invalidShowForm = ShowForm("invalid-canonical", "", "", "", "", Some(-1), None)
+      lazy val invalidShowForm = ShowForm("invalid-canonical", "", "", None, "", Some(-1), None)
 
       "create a new entry and return a success on valid entity" >> {
         prepare()
@@ -142,17 +142,9 @@ class ShowControllerCreateSpecification extends Specification with VepController
             (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("author").get must contain(ErrorCodes.bigString))
         }
 
-        "when empty director" >> {
-          prepare()
-          val result = showController.create(validShowForm.copy(director = ""))
-          (result must beAnInstanceOf[Left[ResultErrors, _]]) and
-            (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("director")) and
-            (result.asInstanceOf[Left[ResultErrors, _]].a.errors.get("director").get must contain(ErrorCodes.emptyField))
-        }
-
         "when big director" >> {
           prepare()
-          val result = showController.create(validShowForm.copy(director = "a" * 256))
+          val result = showController.create(validShowForm.copy(director = Some("a" * 256)))
 
           (result must beAnInstanceOf[Left[ResultErrors, _]]) and
             (result.asInstanceOf[Left[ResultErrors, _]].a.errors must haveKey("director")) and

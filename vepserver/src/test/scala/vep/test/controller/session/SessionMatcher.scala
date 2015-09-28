@@ -64,6 +64,6 @@ trait SessionMatcher {
   def matchSessionPriceForm(sessionPriceForm: SessionPriceForm): Matcher[SessionPriceDetail] = { sessionPrice: SessionPriceDetail =>
     (sessionPrice.name === sessionPriceForm.name) and
       (sessionPrice.price === sessionPriceForm.price) and
-      (sessionPrice.cases === sessionPriceForm.condition)
+      (sessionPrice.condition === sessionPriceForm.condition)
   }
 }

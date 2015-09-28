@@ -16,4 +16,4 @@ case class SessionDetailParsed(id: Int, theater: String, canonical: String, date
 case class SessionDetail(theater: String, canonical: String, date: DateTime, name: String, reservationEndDate: DateTime,
                          prices: Seq[SessionPriceDetail], shows: Seq[String])
 
-case class SessionPriceDetail(id: Int, name: String, price: Int, cases: Option[String])
+case class SessionPriceDetail(id: Int, name: String, price: Int, condition: Option[String])

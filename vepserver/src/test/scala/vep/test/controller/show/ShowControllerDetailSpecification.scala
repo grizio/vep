@@ -23,7 +23,7 @@ class ShowControllerDetailSpecification extends Specification with VepController
         canonical = "existing-show",
         title = "Existing show",
         author = "This author",
-        director = "This director",
+        director = Some("This director"),
         company = "existing-company",
         duration = Some(120),
         content = Some("This is a content")

@@ -21,7 +21,7 @@ class ShowRouterUpdateSpecification extends Specification with VepRouterDBInMemo
        val validEntity = ShowFormBody(
          title = "My updated title",
          author = "My updated author",
-         director = "My updated director",
+         director = Some("My updated director"),
          company = "existing-company-2",
          duration = None,
          content = None

@@ -1,9 +1,6 @@
 <div class="price-card">
     <dl>
-        <dt>Nom</dt>
-        <dd>{{ price.name }}</dd>
-
-        <dt>Tarif</dt>
+        <dt>{{ price.name }}</dt>
         <dd>{{ price.price / 100 | currency:''}} &euro;</dd>
 
         <dt ng-if="price.condition != null">Condition</dt>
