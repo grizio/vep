@@ -34,8 +34,8 @@ class SessionControllerFindSpecification extends Specification with VepMatcher w
         name = "Existing session",
         reservationEndDate = DateUtils.toDateTime("2100-01-01 00:00:00"),
         prices = Seq(
-          SessionPriceDetail(name = "First price", price = 10, cases = None),
-          SessionPriceDetail(name = "Second price", price = 5, cases = Some("Children"))
+          SessionPriceDetail(id = 0, name = "First price", price = 10, cases = None),
+          SessionPriceDetail(id = 0, name = "Second price", price = 5, cases = Some("Children"))
         ),
         shows = Seq("existing-show")
       )
@@ -46,7 +46,7 @@ class SessionControllerFindSpecification extends Specification with VepMatcher w
         name = "Existing session",
         reservationEndDate = DateUtils.toDateTime("2000-01-01 00:00:00"),
         prices = Seq(
-          SessionPriceDetail(name = "First price", price = 10, cases = None)
+          SessionPriceDetail(id = 0, name = "First price", price = 10, cases = None)
         ),
         shows = Seq("existing-show")
       )

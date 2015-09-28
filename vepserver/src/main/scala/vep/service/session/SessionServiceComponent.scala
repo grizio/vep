@@ -211,7 +211,7 @@ trait SessionServiceProductionComponent extends SessionServiceComponent {
       sessionDetailOpt map { sessionDetail =>
         val prices = SQL(
           """
-            |SELECT name, price, cases
+            |SELECT id, name, price, cases
             |FROM session_price
             |WHERE session = {session}
           """.stripMargin)

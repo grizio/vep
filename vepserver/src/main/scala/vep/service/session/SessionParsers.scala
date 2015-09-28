@@ -51,11 +51,12 @@ object SessionParsers {
     }
 
   lazy val sessionPriceDetailParser =
-    str("name") ~
+    int("id") ~
+      str("name") ~
       int("price") ~
       get[Option[String]]("cases") map {
-      case name ~ price ~ cases =>
-        SessionPriceDetail(name, price, cases)
+      case id ~ name ~ price ~ cases =>
+        SessionPriceDetail(id, name, price, cases)
     }
 
   lazy val sessionSearchParser =

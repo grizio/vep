@@ -89,6 +89,8 @@ object SessionImplicits extends JsonImplicits {
     }
   }
 
+  implicit val impSessionPriceDetail: JsonFormat[SessionPriceDetail] = jsonFormat4(SessionPriceDetail.apply)
+
   implicit val impSessionDetail = new RootJsonFormat[SessionDetail] {
     override def write(obj: SessionDetail): JsValue = JsObject(
       "theater" -> JsString(obj.theater),
@@ -113,6 +115,4 @@ object SessionImplicits extends JsonImplicits {
       }
     }
   }
-
-  implicit val impSessionPriceDetail: JsonFormat[SessionPriceDetail] = jsonFormat(SessionPriceDetail.apply, "name", "price", "conditions")
 }
