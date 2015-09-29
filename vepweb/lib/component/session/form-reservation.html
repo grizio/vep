@@ -26,10 +26,12 @@
                     required="true" parent="person"></input-text>
         <input-email name="email" with-id="form-reservation-email" label="Email"
                      placeholder="Votre adresse e-mail valide" required="true" parent="person"></input-email>
+        <input-email name="email2" with-id="form-reservation-email2" label="Confirmation"
+                     placeholder="Confirmation de votre adresse e-mail" required="true" parent="person"></input-email>
         <input-text name="city" with-id="form-reservation-city" label="Ville"
                     placeholder="Votre ville (optionnel)" parent="person"></input-text>
         <input-text name="comment" with-id="form-reservation-comment" label="Commentaire" area="true" parent="person"
-                    placeholder="Tout commentaire que vous jugez utile (ex: autres personnes concernée par la réservation)"></input-text>
+                    placeholder="Tout commentaire que vous jugez utile"></input-text>
     </form-step>
     <form-step name="summary" label="'Récapitulatif'" when="true">
         <div class="row">
@@ -40,7 +42,7 @@
                 </ul>
 
                 <div ng-if="!theater.fixed">
-                    {{ reservation.seats }}
+                    Vous allez réserver {{ reservation.seats }} places.
                 </div>
             </div>
             <div class="small-6 columns">
@@ -78,5 +80,14 @@
 </form-steps>
 <div ng-if="result != null" class="panel success">
     Votre réservation a bien été prise en compte.
-    Vous devriez recevoir un mail à l'adresse e-mail indiquée avec les informations de la réservation.
+    Vous allez recevoir un mail de confirmation à l'adresse que vous avez indiquée.
+
+    <br>
+
+    Toutefois, la réservation ne deviendra définitive qu'à réception de votre réglement.
+
+    <br>
+
+    Si vous ne recevez pas de mail de confirmation dans l'heure qui suit, veuillez nous le signaler dans la page de
+    <a href="/contact">contact</a>.
 </div>

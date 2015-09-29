@@ -23,7 +23,7 @@ class FormUserRegistrationComponent extends FormSimpleComponentContainer {
     email.onValueChange.listen((_) => email2.verify());
 
     // String.isEmpty to avoid showing error because it is not already set.
-    email2.addConstraint((v) => stringUtilities.isEmpty(v) || stringUtilities.equals(email.value, v), errorCodes.i18n[errorCodes.differentEmails]);
+    email2.addConstraint((v) => stringUtilities.isEmpty(v) || stringUtilities.equals(email.value, v), errorCodes.i18n[errorCodes.differentEmail]);
 
     password.addConstraint((v) => stringUtilities.isSecuredPassword(v, needLowercaseLetter: false, needUppercaseLetter: false, needSymbol: false, minLength: 8), errorCodes.i18n[errorCodes.weakPassword]);
     password.onValueChange.listen((_) => password2.verify());

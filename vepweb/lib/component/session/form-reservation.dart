@@ -37,6 +37,10 @@ class FormReservationComponent extends FormStepsComponentContainer {
 
   InputIntegerComponent get seats => form['select-number']['seats'];
 
+  InputEmailComponent get email => form['person']['email'];
+
+  InputEmailComponent get email2 => form['person']['email2'];
+
   ReservationResult result = null;
 
   FormReservationComponent(this.theaterService, this.sessionService, this.reservationService, this.app, this.router, this.routeProvider);
@@ -49,10 +53,14 @@ class FormReservationComponent extends FormStepsComponentContainer {
 
     final futureSession = sessionService.find(routeProvider.parameters['theater'], routeProvider.parameters['session']).then((_) {
       session = _;
-      prices = session.prices.map((_) => new Choice(_.id, _.name)).toList();
+      prices = session.prices.map((_) {
+        if (stringUtils.isNotBlank(_.condition)) {
+          return new Choice(_.id, '${_.name} (${_.price / 100}€ - ${_.condition})');
+        } else {
+          return new Choice(_.id, '${_.name} (${_.price / 100}€)');
+        }
+      }).toList();
     });
-
-    seats.onValueChange.listen((event) => reservedSeats = event.newValue);
 
     final futureReservedSeats = futureTheater.then((_) {
       if (theater.fixed) {
@@ -65,6 +73,12 @@ class FormReservationComponent extends FormStepsComponentContainer {
         });
       }
     });
+
+    seats.onValueChange.listen((event) => reservedSeats = event.newValue);
+
+    email.onValueChange.listen((_) => email2.verify());
+
+    email2.addConstraint((v) => stringUtils.isEmpty(v) || stringUtils.equals(email.value, v), errorCodes.i18n[errorCodes.differentEmail]);
 
     return Future.wait([
       futureTheater,

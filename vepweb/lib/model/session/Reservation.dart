@@ -40,6 +40,9 @@ class ReservationForm extends ModelToString {
   List<ReservationPrice> prices;
 
   @jsonx.jsonIgnore
+  String email2;
+
+  @jsonx.jsonIgnore
   Map<int, int> priceRepartition;
 
   @jsonx.jsonIgnore

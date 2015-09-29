@@ -13,6 +13,8 @@ import 'package:vepweb/service/session/vep.service.session.lib.dart';
 import 'package:vepweb/component/common/table/vep.component.common.table.lib.dart';
 import 'package:vepweb/roles.dart' as roles;
 import 'package:vepweb/utils.dart' as utils;
+import 'package:klang/utilities/string.dart' as stringUtils;
+import 'package:vepweb/errors.dart' as errorCodes;
 
 part 'field-price.dart';
 part 'form-reservation.dart';
