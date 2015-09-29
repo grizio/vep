@@ -56,7 +56,7 @@ class TheaterPlanComponent {
   }
 
   void toggle(Seat seat) {
-    if (enabled && seat.t != 'taken') {
+    if (enabled && seat.t != 'taken' && seat.t != 'stage') {
       if (seat.selected) {
         seat.selected = false;
         if (selected != null) {

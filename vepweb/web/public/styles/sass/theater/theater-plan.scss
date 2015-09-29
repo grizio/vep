@@ -24,13 +24,13 @@
       }
 
       &.theater-plan-map-disabled {
-        &:not(.theater-plan-seat-taken) {
+        &:not(.theater-plan-seat-taken):not(.theater-plan-seat-stage) {
           cursor: default!important;
         }
       }
 
       &:not(.theater-plan-map-disabled) {
-        .theater-plan-seat:not(.theater-plan-seat-taken) {
+        .theater-plan-seat:not(.theater-plan-seat-taken):not(.theater-plan-seat-stage) {
           cursor: pointer;
         }
       }
@@ -62,6 +62,16 @@
       background-color: #484;
       color: #fff;
       border: 1px solid #252;
+    }
+
+    &.theater-plan-seat-stage {
+      background-color: #aaa;
+      color: #000;
+      border: 1px solid #000;
+      border-radius: 10px;
+      font-weight: bold;
+      text-shadow: 0 1px #fff, 0 -1px #fff, 1px 0 #fff, -1px 0 #fff;
+      cursor: default;
     }
   }
 }

@@ -22,7 +22,7 @@
         <div class="theater-plan-map" ng-class="{'theater-plan-map-disabled': !enabled}">
             <div class="theater-plan-seat" ng-repeat="seat in seats" ng-click="toggle(seat)"
                  ng-class="[seat.className]"
-                 style="top: {{ seat.y }}px;left: {{ seat.x }}px;width: {{ seat.w }}px;height: {{ seat.h }}px">
+                 style="top: {{ seat.y }}px;left: {{ seat.x }}px;width: {{ seat.w }}px;height: {{ seat.h }}px;line-height: {{ seat.h }}px">
                 {{ seat.c }}
             </div>
         </div>
