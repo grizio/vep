@@ -1,7 +1,9 @@
 package vep.router.api
 
+import akka.actor.Actor
 import spray.http.StatusCodes
 import spray.routing.HttpService
+import vep.actors.ReservationCreate
 import vep.controller.VepControllersComponent
 import vep.model.common._
 import vep.model.session.ReservationFormBody
@@ -11,7 +13,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 
 trait ReservationRouter extends HttpService {
-  self: VepControllersComponent with VepRouter =>
+  self: VepControllersComponent with VepRouter with Actor =>
 
   import spray.httpx.SprayJsonSupport._
   import vep.model.common.ResultImplicits._
@@ -38,7 +40,9 @@ trait ReservationRouter extends HttpService {
                   } else {
                     ctx.complete(StatusCodes.BadRequest, error)
                   }
-                case Right(result) => ctx.complete(StatusCodes.OK, result.entity)
+                case Right(result) =>
+                  context.actorSelection("/user/reservationEmailActor") ! ReservationCreate(result.entity.id)
+                  ctx.complete(StatusCodes.OK, result.entity)
               }
             }
           }

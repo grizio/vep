@@ -20,6 +20,7 @@ libraryDependencies ++= Seq(
   "commons-validator" % "commons-validator" % "1.4.+",
   "org.apache.commons" % "commons-lang3" % "3.+",
   "org.slf4j" % "slf4j-nop" % "1.7.+",
+  "org.apache.commons" % "commons-email" % "1.4",
 
   "io.spray" %% "spray-testkit" % "1.3.3",
   "org.specs2" %% "specs2" % "2.4.17",

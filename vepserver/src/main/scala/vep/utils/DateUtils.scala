@@ -8,6 +8,30 @@ import org.joda.time.DateTime
  * This object groups all utility functions about date.
  */
 object DateUtils {
+  val days = Map(
+    1 -> "lundi",
+    2 -> "mardi",
+    3 -> "mercredi",
+    4 -> "jeudi",
+    5 -> "vendredi",
+    6 -> "samedi",
+    7 -> "dimanche"
+  )
+  val months = Map(
+    1 -> "janvier",
+    2 -> "février",
+    3 -> "mars",
+    4 -> "avril",
+    5 -> "mai",
+    6 -> "juin",
+    7 -> "juillet",
+    8 -> "août",
+    9 -> "septembre",
+    10 -> "octobre",
+    11 -> "novembre",
+    12 -> "décembre"
+  )
+
   /**
    * Returns the {{{DateTime}}} corresponding to given {{{str}}} or {{{None}}} if {{{str}}} could not be parsed.
    * @param str The string to convert
@@ -65,5 +89,36 @@ object DateUtils {
    */
   def toStringISO(date: DateTime): String = {
     date.toString("yyyy-MM-dd") + "T" + date.toString("HH:mm:ss")
+  }
+
+  /**
+   * Transforms the given date into a string readable by a human (short version).
+   * @param date The date to transform
+   * @param withTime If true, includes time
+   * @return The transformed date
+   */
+  def toStringDisplay(date: DateTime, withTime: Boolean = true): String = {
+    if (withTime) {
+      date.toString("dd/MM/yyyy") + " à " + date.toString("HH:mm")
+    } else {
+      date.toString("dd/MM/yyyy")
+    }
+  }
+
+  /**
+   * Transforms the given date into a string readable by a human (long version).
+   * @param date The date to transform
+   * @param withTime If true, includes time
+   * @return The transformed date
+   */
+  def toStringDisplayLong(date: DateTime, withTime: Boolean = true): String = {
+    val day = days(date.getDayOfWeek)
+    val month = months(date.getMonthOfYear)
+    val dateStr = s"$day ${date.toString("dd")} $month ${date.toString("yyyy")}"
+    if (withTime) {
+      dateStr + " à " + date.toString("HH:mm")
+    } else {
+      dateStr
+    }
   }
 }

@@ -44,6 +44,21 @@ vep {
       password = "veptest"
     }
   }
+
+  mail {
+    ssl = false
+    tls = false
+    host = ""
+    port = 25
+    username = ""
+    password = ""
+  }
+
+  contact {
+    mail = ""
+    address = ""
+    tel = ""
+  }
 }
 
 akka {

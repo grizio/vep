@@ -115,5 +115,25 @@ class DateUtilsSpecification extends Specification {
         DateUtils.toStringISO(DateUtils.toDateTime("2015-01-01T01:01:01")) === "2015-01-01T01:01:01"
       }
     }
+
+    "DateUtils.toStringDisplay should" >> {
+      "returns '01/01/2015 à 20:30' for DateTime(2015-01-01T20:30)" >> {
+        DateUtils.toStringDisplay(DateUtils.toDateTime("2015-01-01T20:30")) === "01/01/2015 à 20:30"
+      }
+
+      "returns '02/02/2015 ' for DateTime(2015-02-02T20:30, false)" >> {
+        DateUtils.toStringDisplay(DateUtils.toDateTime("2015-02-02T20:30"), false) === "02/02/2015"
+      }
+    }
+
+    "DateUtils.toStringDisplayLong should" >> {
+      "returns 'jeudi 01 janvier 2015 à 20:30' for DateTime(2015-01-01T20:30)" >> {
+        DateUtils.toStringDisplayLong(DateUtils.toDateTime("2015-01-01T20:30")) === "jeudi 01 janvier 2015 à 20:30"
+      }
+
+      "returns 'lundi 02 février 2015' for DateTime(2015-02-02T20:30, false)" >> {
+        DateUtils.toStringDisplayLong(DateUtils.toDateTime("2015-02-02T20:30"), false) === "lundi 02 février 2015"
+      }
+    }
   }
 }

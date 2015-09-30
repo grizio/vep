@@ -8,7 +8,7 @@ import org.joda.time.DateTime
 import vep.AnormClient
 import vep.exception.FieldStructuredErrorException
 import vep.model.common._
-import vep.model.session.{SessionDetail, SessionForm, SessionPriceForm, SessionUpdateForm}
+import vep.model.session._
 import vep.model.show.Show
 import vep.model.theater.Theater
 import vep.service.{AnormImplicits, VepServicesComponent}
@@ -69,6 +69,13 @@ trait SessionServiceComponent {
      * @return true if the price exists, otherwise false
      */
     def priceExists(id: Int, session: Option[Int] = None): Boolean
+
+    /**
+     * Finds a session in terms of given reservation id.
+     * @param reservationID The reservation id
+     * @return
+     */
+    def findByReservation(reservationID: Int): Option[SessionDetail]
   }
 
 }
@@ -196,7 +203,7 @@ trait SessionServiceProductionComponent extends SessionServiceComponent {
     }
 
     override def findDetail(theater: String, session: String): Option[SessionDetail] = DB.withConnection { implicit c =>
-      val sessionDetailOpt = SQL(
+      fillDetail(SQL(
         """
           |SELECT s.id, t.canonical, s.canonical, s.date, s.name, s.reservationEndDate
           |FROM session s
@@ -207,7 +214,10 @@ trait SessionServiceProductionComponent extends SessionServiceComponent {
         .on("theater" -> theater)
         .on("session" -> session)
         .as(SessionParsers.sessionDetailParser.singleOpt)
+      )
+    }
 
+    def fillDetail(sessionDetailOpt: Option[SessionDetailParsed]): Option[SessionDetail] = DB.withConnection { implicit c =>
       sessionDetailOpt map { sessionDetail =>
         val prices = SQL(
           """
@@ -311,6 +321,18 @@ trait SessionServiceProductionComponent extends SessionServiceComponent {
       }
       count > 0
     }
-  }
 
+    override def findByReservation(reservationID: Int): Option[SessionDetail] = DB.withConnection { implicit c =>
+      fillDetail(SQL(
+        """
+          |SELECT s.id, t.canonical, s.canonical, s.date, s.name, s.reservationEndDate
+          |FROM reservation r
+          |JOIN session s ON r.session = s.id
+          |JOIN theater t ON t.id = s.theater
+          |WHERE r.id = {reservationID}
+        """.stripMargin)
+        .on("reservationID" -> reservationID)
+        .as(SessionParsers.sessionDetailParser.singleOpt))
+    }
+  }
 }
