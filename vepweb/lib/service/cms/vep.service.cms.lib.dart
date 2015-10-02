@@ -9,10 +9,12 @@ import 'package:jsonx/jsonx.dart' as jsonx;
 import 'dart:html';
 import 'package:logging/logging.dart';
 
+part 'ContactService.dart';
 part 'PageService.dart';
 
 class VepServiceCmsModule extends Module {
   VepServiceCmsModule() {
+    bind(ContactService);
     bind(PageService);
   }
 }

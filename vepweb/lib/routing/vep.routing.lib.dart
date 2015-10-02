@@ -32,6 +32,11 @@ class VepRouter extends UserRouter with CmsRouter, TheaterRouter, CompanyRouter,
           path: '/cms',
           mount: cmsRoute
       ),
+      'contact': ngRoute(
+          path: '/contact',
+          view: '/public/views/cms/contact.html',
+          preEnter: (_) => app.breadCrumb = new BreadCrumb().child('contact', '/contact', 'Contactez-nous')
+      ),
       'theater': ngRoute(
           path: '/theater',
           mount: theaterRoute
