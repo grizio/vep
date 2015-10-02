@@ -14,6 +14,7 @@ case class SmtpConfig(tls: Boolean = false,
                       ssl: Boolean = false,
                       port: Int = 25,
                       host: String,
+                      email: String,
                       user: String,
                       password: String)
 
@@ -21,7 +22,6 @@ case class EmailConfig(smtp: SmtpConfig, retryOn: FiniteDuration, var deliveryAt
 
 case class EmailMessage(subject: String,
                         recipient: String,
-                        from: String,
                         replyTo: Option[String] = None,
                         text: Option[String] = None,
                         html: Option[String] = None)
@@ -47,6 +47,7 @@ class EmailServiceActor extends Actor with ActorLogging {
     ssl = config.getBoolean("vep.mail.ssl"),
     port = config.getInt("vep.mail.port"),
     host = config.getString("vep.mail.host"),
+    email = config.getString("vep.mail.email"),
     user = config.getString("vep.mail.username"),
     password = config.getString("vep.mail.password")
   )
@@ -152,9 +153,9 @@ class EmailServiceWorker extends Actor with ActorLogging {
     email.setCharset("UTF-8")
 
     email.addTo(message.recipient)
-      .setFrom(message.from)
+      .setFrom(smtp.email)
       .setSubject(message.subject)
-      .addReplyTo(message.replyTo.getOrElse(message.from))
+      .addReplyTo(message.replyTo.getOrElse(smtp.email))
       .send()
   }
 }

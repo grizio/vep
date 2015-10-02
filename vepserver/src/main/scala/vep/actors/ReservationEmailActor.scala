@@ -6,12 +6,12 @@ import vep.FinalVepServicesProductionComponent
 import vep.model.session.{ReservationDetail, ReservationPriceDetail, SessionDetail}
 import vep.model.show.Show
 import vep.model.theater.Theater
-import vep.utils.DateUtils
+import vep.utils.{DateUtils, EmailUtils}
 
 case class ReservationCreate(id: Int)
 
-class ReservationEmailActor extends Actor with ActorLogging with FinalVepServicesProductionComponent with EmailActorHelper {
-  lazy val config = ConfigFactory.load()
+class ReservationEmailActor extends Actor with ActorLogging with FinalVepServicesProductionComponent {
+  private lazy val config = ConfigFactory.load()
 
   override def receive = {
     case ReservationCreate(id) =>
@@ -22,10 +22,9 @@ class ReservationEmailActor extends Actor with ActorLogging with FinalVepService
             context.actorSelection("/user/email") ! EmailMessage(
               subject = "Votre réservation sur Voir & Entendre",
               recipient = reservation.email,
-              from = "robot@voir-entendre-posso.fr",
-              replyTo = Some("contact@voir-entendre-posso.fr"),
-              text = Some(fill(getText("reservation-create.txt"), reservation, session, theater, shows, asHTML = false)),
-              html = Some(fill(getText("reservation-create.html"), reservation, session, theater, shows, asHTML = true))
+              replyTo = Some(config.getString("vep.contact.email")),
+              text = Some(fill(EmailUtils.getText("reservation-create.txt"), reservation, session, theater, shows, asHTML = false)),
+              html = Some(fill(EmailUtils.getText("reservation-create.html"), reservation, session, theater, shows, asHTML = true))
             )
           }
         }
@@ -36,21 +35,22 @@ class ReservationEmailActor extends Actor with ActorLogging with FinalVepService
 
   def fill(text: String, reservation: ReservationDetail, session: SessionDetail, theater: Theater, shows: Seq[Show], asHTML: Boolean): String = {
     implicit val _asHTML = asHTML
-    var result = text
-    result = replaceParam(result, "firstName", reservation.firstName)
-    result = replaceParam(result, "lastName", reservation.lastName)
+    var result = EmailUtils.replaceParams(text)(
+      "firstName" -> reservation.firstName,
+      "lastName" -> reservation.lastName,
+      "prices" -> (literalPrices(reservation.prices, session) + " = " + totalPrices(reservation.prices) + "€"),
+      "address" -> config.getString("vep.contact.address"),
+      "date" -> DateUtils.toStringDisplayLong(session.date),
+      "theaterName" -> theater.name,
+      "theaterAddress" -> theater.address,
+      "shows" -> shows.map(_.title).mkString(", ")
+    )
     reservation.seats foreach { seats =>
-      result = replaceParam(result, "seats", seats + " places")
+      result = EmailUtils.replaceParam(result, "seats", seats + " places")
     }
     if (reservation.seatList.nonEmpty) {
-      result = replaceParam(result, "seats", reservation.seatList.mkString(", "))
+      result = EmailUtils.replaceParam(result, "seats", reservation.seatList.mkString(", "))
     }
-    result = replaceParam(result, "prices", literalPrices(reservation.prices, session) + " = " + totalPrices(reservation.prices) + "€")
-    result = replaceParam(result, "address", config.getString("vep.contact.address"))
-    result = replaceParam(result, "date", DateUtils.toStringDisplayLong(session.date))
-    result = replaceParam(result, "theaterName", theater.name)
-    result = replaceParam(result, "theaterAddress", theater.address)
-    result = replaceParam(result, "shows", shows.map(_.title).mkString(", "))
     result
   }
 

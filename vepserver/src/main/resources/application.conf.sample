@@ -52,10 +52,11 @@ vep {
     port = 25
     username = ""
     password = ""
+    email = ""
   }
 
   contact {
-    mail = ""
+    email = ""
     address = ""
     tel = ""
   }
