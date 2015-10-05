@@ -10,6 +10,7 @@ import 'cms/vep.component.cms.lib.dart';
 import 'theater/vep.component.theater.lib.dart';
 import 'show/vep.component.show.lib.dart';
 import 'session/vep.component.session.lib.dart';
+import 'dart:html';
 
 part 'Subscriber.dart';
 
@@ -23,5 +24,10 @@ class VepComponentModule extends Module {
     install(new VepComponentTheaterModule());
     install(new VepComponentShowModule());
     install(new VepComponentSessionModule());
+    bind(NodeValidator, toFactory: () {
+      final validator = new NodeValidatorBuilder.common()
+        ..allowElement('a', attributes: ['href','onclick','target']);
+      return validator;
+    });
   }
 }

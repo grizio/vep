@@ -9,11 +9,13 @@ import 'package:vepweb/utils.dart' as utils;
 
 part 'map.dart';
 part 'processing.dart';
+part 'vep-bind-html.dart';
 
 class VepComponentCommonMiscModule extends Module {
   VepComponentCommonMiscModule() {
     bind(MapComponent);
     bind(MapDecorator);
     bind(ProcessingComponent);
+    bind(VepBindHTML);
   }
 }

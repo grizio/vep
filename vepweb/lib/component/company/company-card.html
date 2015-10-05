@@ -3,8 +3,8 @@
         <dt>Nom</dt>
         <dd>{{ company.name }}</dd>
 
-        <dt ng-if="company.address != null">Adresse</dt>
-        <dd ng-if="company.address != null">{{ company.address }}</dd>
+        <dt ng-if="company.address != null && company.address != ''">Adresse</dt>
+        <dd ng-if="company.address != null && company.address != ''">{{ company.address }}</dd>
 
         <dt>Voir &amp; Entendre</dt>
         <dd ng-if="company.isVep">Oui</dd>
@@ -18,7 +18,7 @@
             <h6 ng-if="company.isVep">Troupe de voir &amp; Entendre</h6>
             <h6 ng-if="!company.isVep">Troupe extérieure</h6>
 
-            <div ng-bind-html="company.content"></div>
+            <div vep-bind-html="company.content"></div>
         </div>
         <div class="small-6 columns" ng-if="company.address != null">
             <h3>Adresse</h3>
