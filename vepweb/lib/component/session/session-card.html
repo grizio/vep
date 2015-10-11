@@ -41,11 +41,6 @@
         <small>
             {{ sessionCard.date | date:'dd/MM/yyyy HH:mm' }}
         </small>
-
-        <a href="/reservation/{{ sessionCard.theater.canonical }}/{{ sessionCard.canonical }}"
-           class="button primary small right" ng-if="sessionCard.canReserve">
-            Réserver des places
-        </a>
     </h2>
 
     <div class="row">
@@ -68,9 +63,15 @@
     </div>
 
     <div class="row">
+        <a href="/reservation/{{ sessionCard.theater.canonical }}/{{ sessionCard.canonical }}"
+           class="button primary small-12 columns" ng-if="sessionCard.canReserve">
+            Réserver des places
+        </a>
         <div class="small-12 columns" ng-if="sessionCard.theater.fixed">
-            <theater-plan enabled="false" json-plan="sessionCard.theater.plan" taken="takenSeats"
-                          legend="'none'"></theater-plan>
+            <a href="/reservation/{{ sessionCard.theater.canonical }}/{{ sessionCard.canonical }}">
+                <theater-plan enabled="false" json-plan="sessionCard.theater.plan" taken="takenSeats"
+                              legend="'none'"></theater-plan>
+            </a>
         </div>
         <div class="small-12 columns" ng-if="!sessionCard.theater.fixed">
             <ul>
@@ -79,6 +80,10 @@
                 <li>Nombre de places restantes : {{ sessionCard.theater.maxSeats - takenSeatNumber }}</li>
             </ul>
         </div>
+        <a href="/reservation/{{ sessionCard.theater.canonical }}/{{ sessionCard.canonical }}"
+           class="button primary small-12 columns" ng-if="sessionCard.canReserve">
+            Réserver des places
+        </a>
     </div>
 
     <session-card-reservations theater="{{ sessionCard.theater.canonical }}"

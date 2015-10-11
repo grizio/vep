@@ -75,8 +75,8 @@ class TheaterService {
   bool _isCacheExpired() {
     if (window.localStorage.containsKey(theatersCacheStart)) {
       var dtCache = JSON.decode(window.localStorage[theatersCacheStart]);
-      var expire = new DateTime.fromMillisecondsSinceEpoch(dtCache).add(new Duration(hours: 1));
-      if (expire.isAfter(new DateTime.now())) {
+      var expire = new DateTime.fromMillisecondsSinceEpoch(dtCache).add(new Duration(minutes: 1));
+      if (expire.isBefore(new DateTime.now())) {
         _clearCache();
         return true;
       } else {

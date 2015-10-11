@@ -17,7 +17,7 @@
             Sélectionné
         </div>
     </div>
-    <hr>
+    <hr ng-if="legend != 'none'">
     <div class="theater-plan-map-box">
         <div class="theater-plan-map" ng-class="{'theater-plan-map-disabled': !enabled}">
             <div class="theater-plan-seat" ng-repeat="seat in seats" ng-click="toggle(seat)"
