@@ -1,3 +1,8 @@
 {
-
+  "vep-app": {
+    "topbar": {
+      "sitename": "Voir & Entendre",
+      "home": "Accueil"
+    }
+  }
 }

@@ -1,7 +1,28 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-app/kwc-app.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/bower_components/app-router/app-router.html">
 
 <dom-module id="vep-app">
   <template>
+    <kwc-i18n key="vep-app.topbar.sitename" var="{{i18nSitename}}"></kwc-i18n>
+    <kwc-app logo="/public/images/logo-acve.png" sitename="[[i18nSitename]]" sitehome="/">
+      <div class="top-bar-left-menu">
+        <ul>
+          <li>
+            <a href="/">
+              <kwc-i18n key="vep-app.topbar.home" show></kwc-i18n>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="content">
+        <app-router mode="pushstate" trailingSlash="ignore">
+          <app-route path="/" import="/dist/pages/cms/page-home/page-home.html"></app-route>
+        </app-router>
+      </div>
+    </kwc-app>
   </template>
 
   <script src="vep-app.js"></script>

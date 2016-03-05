@@ -12,13 +12,14 @@
 <body>
 <vep-app></vep-app>
 
-<script src="config.js"></script>
+<script src="/config.js"></script>
 <script>
   document.addEventListener('HTMLImportsLoaded', function () {
+    var force = window.vep.config.environment === "dev";
     window.kwc_i18n.setup({
       source: "/i18n/{locale}.json",
       locale: "fr",
-      force: true
+      force: force
     })
   });
 </script>

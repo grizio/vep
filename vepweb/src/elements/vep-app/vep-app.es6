@@ -1,7 +1,9 @@
-class VepApp {
-  beforeRegister() {
-    this.is = "vep-app"
+(() => {
+  class VepApp {
+    beforeRegister() {
+      this.is = "vep-app"
+    }
   }
-}
 
-Polymer(VepApp);
+  Polymer(VepApp);
+})();

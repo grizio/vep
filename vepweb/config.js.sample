@@ -1,6 +1,7 @@
 (function () {
   const config = {
-    remote: ""
+    remote: "",
+    environment: "dev"
   };
 
   window.vep = window.vep || {};
