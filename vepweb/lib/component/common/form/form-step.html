@@ -1,9 +1,0 @@
-<fieldset class="form-step" ng-show="isVisible">
-    <legend ng-if="title != null && title != ''">{{ title }}</legend>
-
-    <div class="panel error" ng-if="errors.isNotEmpty">
-        {{ errors.join(' &bull; ') }}
-    </div>
-
-    <content></content>
-</fieldset>
