@@ -37,7 +37,6 @@
     }
 
     _pageChanged(value) {
-      console.log(value);
       if (value) {
         this.$.content.innerHTML = value.content;
       }

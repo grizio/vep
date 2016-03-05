@@ -2,7 +2,17 @@
   "vep-app": {
     "topbar": {
       "sitename": "Voir & Entendre",
-      "home": "Accueil"
+      "home": "Accueil",
+      "shows": "Pièces"
+    }
+  },
+  "page-shows": {
+    "title": "Pièces",
+    "table": {
+      "title": "Titre",
+      "author": "Auteur",
+      "director": "Metteur en scène",
+      "company": "Troupe"
     }
   }
 }

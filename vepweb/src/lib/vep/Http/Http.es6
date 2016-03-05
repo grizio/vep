@@ -51,30 +51,29 @@
     send() {
       const options = objectUtils.merge(this._options, defaultOptions);
       return new Promise(function (resolve, reject) {
-        return buildURI(options.url, options.host).then((uri) => {
-          const xhr = new XMLHttpRequest();
-          xhr.open(options.method, uri, true);
-          if (options.contentType.isNotNone) {
-            xhr.setRequestHeader("Content-Type", options.contentType.toString());
-          }
-          //if (session.isDefined) {
-          //  xhr.setRequestHeader("Authorization", "Basic " + session.authorization);
-          //}
+        const uri = buildURI(options.url, options.host);
+        const xhr = new XMLHttpRequest();
+        xhr.open(options.method, uri, true);
+        if (options.contentType.isNotNone) {
+          xhr.setRequestHeader("Content-Type", options.contentType.toString());
+        }
+        //if (session.isDefined) {
+        //  xhr.setRequestHeader("Authorization", "Basic " + session.authorization);
+        //}
 
-          xhr.onreadystatechange = function () {
-            processReadyStateChange(xhr, resolve, reject);
-          };
+        xhr.onreadystatechange = function () {
+          processReadyStateChange(xhr, resolve, reject);
+        };
 
-          if (options.entity) {
-            if (ContentTypes.ApplicationJson.equals(options.contentType)) {
-              xhr.send(JSON.stringify(options.entity));
-            } else {
-              xhr.send(options.entity);
-            }
+        if (options.entity) {
+          if (ContentTypes.ApplicationJson.equals(options.contentType)) {
+            xhr.send(JSON.stringify(options.entity));
           } else {
-            xhr.send();
+            xhr.send(options.entity);
           }
-        });
+        } else {
+          xhr.send();
+        }
       });
     }
   }
@@ -121,22 +120,20 @@
         let result = "//" + (host === "this" ? window.location.host : host);
         result += result.endsWith("/") ? "" : "/";
         result += url.startsWith("/") ? url.substr(1) : url;
-        return Promise.resolve(result);
+        return result;
       } else {
-        //config.getString("my-config")
-        return Promise.resolve("//api.voir-entendre-posso.fr/").then((host) => {
-          let result = "//";
-          if (host.startsWith("//")) {
-            result += host.substr(2);
-          } else if (host.startsWith("/")) {
-            result += host.substr(1);
-          } else {
-            result += host;
-          }
-          result += result.endsWith("/") ? "" : "/";
-          result += url.startsWith("/") ? url.substr(1) : url;
-          return result;
-        })
+        const remote = window.vep.config.remote;
+        let result = "//";
+        if (remote.startsWith("//")) {
+          result += remote.substr(2);
+        } else if (remote.startsWith("/")) {
+          result += remote.substr(1);
+        } else {
+          result += remote;
+        }
+        result += result.endsWith("/") ? "" : "/";
+        result += url.startsWith("/") ? url.substr(1) : url;
+        return result;
       }
     }
   }

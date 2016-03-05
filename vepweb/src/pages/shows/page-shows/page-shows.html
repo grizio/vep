@@ -1,0 +1,35 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-table/kwc-table.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/dist/lib/vep/services/show-service/show-service.html">
+
+<dom-module id="page-shows">
+  <template>
+    <h1><kwc-i18n key="page-shows.title" show></kwc-i18n></h1>
+    <kwc-table data="[[shows]]">
+      <kwc-table-column header="[[i18nTitle]]" property="title">
+        <kwc-table-cell>
+          <template>
+            <a href="/show/read/[[row.canonical]]">[[value]]</a>
+          </template>
+        </kwc-table-cell>
+      </kwc-table-column>
+      <kwc-table-column header="[[i18nAuthor]]" property="author"></kwc-table-column>
+      <kwc-table-column header="[[i18nDirector]]" property="director"></kwc-table-column>
+      <kwc-table-column header="[[i18nCompany]]" property="company">
+        <kwc-table-cell>
+          <template>
+            [[value.name]]
+          </template>
+        </kwc-table-cell>
+      </kwc-table-column>
+    </kwc-table>
+
+    <kwc-i18n key="page-shows.table.title" var="{{i18nTitle}}"></kwc-i18n>
+    <kwc-i18n key="page-shows.table.author" var="{{i18nAuthor}}"></kwc-i18n>
+    <kwc-i18n key="page-shows.table.director" var="{{i18nDirector}}"></kwc-i18n>
+    <kwc-i18n key="page-shows.table.company" var="{{i18nCompany}}"></kwc-i18n>
+  </template>
+
+  <script src="page-shows.js"></script>
+</dom-module>
