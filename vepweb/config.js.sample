@@ -1,0 +1,8 @@
+(function () {
+  const config = {
+    remote: ""
+  };
+
+  window.vep = window.vep || {};
+  window.vep.config = Object.freeze(config);
+})();

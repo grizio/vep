@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Voir &amp; Entendre</title>
+  <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+  <link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+  <link rel="import" href="/dist/elements/vep-app/vep-app.html">
+</head>
+
+<body>
+<vep-app></vep-app>
+
+<script src="config.js"></script>
+<script>
+  document.addEventListener('HTMLImportsLoaded', function () {
+    window.kwc_i18n.setup({
+      source: "/i18n/{locale}.json",
+      locale: "fr",
+      force: true
+    })
+  });
+</script>
+</body>
+
+</html>
