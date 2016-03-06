@@ -1,5 +1,4 @@
 (() => {
-  const http = window.vep.http;
   const RequestBuilder = window.vep.RequestBuilder;
   const methods = window.vep.methods;
 
@@ -7,7 +6,12 @@
 
   let listeners = [];
 
-  class SessionService {
+  class LoginService {
+    // used because of bidirectional dependency
+    get http() {
+      return window.vep.http;
+    }
+
     beforeRegister() {
       this.is = "login-service";
 
@@ -39,7 +43,7 @@
 
     login(email, password) {
       const that = this;
-      return http.post("/login", {
+      return this.http.post("/login", {
         email: email,
         password: password
       }).then((response) => {
@@ -60,6 +64,10 @@
 
     logout() {
       this._save(null);
+    }
+
+    getRoles() {
+      return this.logged ? this._session.roles : [];
     }
 
     _computeLogged(session) {
@@ -86,5 +94,5 @@
     }
   }
 
-  Polymer(SessionService);
+  Polymer(LoginService);
 })();

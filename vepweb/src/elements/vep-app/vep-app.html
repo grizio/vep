@@ -46,6 +46,11 @@
         </ul>
         <ul hidden$="[[!_logged]]">
           <li>
+            <a href="/cms/pages">
+              <kwc-i18n key="vep-app.topbar.pages" show></kwc-i18n>
+            </a>
+          </li>
+          <li>
             <a href="/" id="logout">
               <kwc-i18n key="vep-app.topbar.logout" show></kwc-i18n>
             </a>
@@ -58,9 +63,12 @@
           <app-route path="/" import="/dist/pages/cms/page-home/page-home.html"></app-route>
           <app-route path="/shows" import="/dist/pages/shows/page-shows/page-shows.html"></app-route>
           <app-route path="/show/read/:canonical" import="/dist/pages/shows/page-show/page-show.html"></app-route>
-          <app-route path="/page/:canonical" import="/dist/pages/cms/page-read/page-read.html"></app-route>
+          <app-route path="/page/:canonical" import="/dist/pages/cms/page-read-page/page-read-page.html"></app-route>
           <app-route path="/contact" import="/dist/pages/cms/page-contact/page-contact.html"></app-route>
           <app-route path="/login" import="/dist/pages/user/page-login/page-login.html"></app-route>
+          <app-route path="/cms/pages" import="/dist/pages/cms/page-list-pages/page-list-pages.html"></app-route>
+          <app-route path="/cms/pages/create" import="/dist/pages/cms/page-create-page/page-create-page.html"></app-route>
+          <app-route path="/cms/page/update/:canonical" import="/dist/pages/cms/page-update-page/page-update-page.html"></app-route>
         </app-router>
       </div>
     </kwc-app>

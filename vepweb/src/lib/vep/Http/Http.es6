@@ -3,6 +3,8 @@
   const ContentTypes = window.vep.ContentTypes;
   const objectUtils = window.vep.utils.object;
 
+  const KEY = "vep-session";
+
   const CONNECT = "CONNECT";
   const DELETE = "DELETE";
   const GET = "GET";
@@ -55,6 +57,7 @@
     }
 
     send() {
+      const that = this;
       const options = objectUtils.merge(this._options, defaultOptions);
       return new Promise(function (resolve, reject) {
         const uri = buildURI(options.url, options.host);
@@ -63,9 +66,11 @@
         if (options.contentType.isNotNone) {
           xhr.setRequestHeader("Content-Type", options.contentType.toString());
         }
-        //if (session.isDefined) {
-        //  xhr.setRequestHeader("Authorization", "Basic " + session.authorization);
-        //}
+
+        const session = that.getSession();
+        if (session !== null) {
+          xhr.setRequestHeader("Authorization", "Basic " + btoa(session.email + ":" + session.token));
+        }
         objectUtils.foreachKeyValue(options.headers, (field, value) => {
           xhr.setRequestHeader(field, value);
         });
@@ -84,6 +89,16 @@
           xhr.send();
         }
       });
+    }
+
+    getSession() {
+      // same as login-service
+      const fromLocalStorage = localStorage[KEY];
+      if (fromLocalStorage) {
+        return JSON.parse(atob(fromLocalStorage));
+      } else {
+        return null;
+      }
     }
   }
 

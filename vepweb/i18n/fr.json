@@ -6,7 +6,8 @@
       "shows": "Pièces",
       "contact": "Contactez-nous",
       "login": "Se connecter",
-      "logout": "Se déconnecter"
+      "logout": "Se déconnecter",
+      "pages": "Gestion des pages"
     }
   },
   "page-shows": {
@@ -76,5 +77,52 @@
       "title": "Vous êtes connecté",
       "content": "Vous êtes maintenant connecté au site."
     }
+  },
+  "on-granted": {
+    "error": {
+      "header": "Accès restreint",
+      "content": "L'accès à cette partie du site est restreint et vous ne pouvez pas y accéder."
+    }
+  },
+  "page-list": {
+    "table": {
+      "url": "URL",
+      "title": "Titre",
+      "order": "Ordre dans le menu"
+    },
+    "create": "Nouvelle page"
+  },
+  "input-html": {
+    "errors": {
+      "required": "Veuillez renseigner ce champ"
+    }
+  },
+  "form-page": {
+    "title": {
+      "create": "Création d'une page",
+      "update": "Modification de la page {1}"
+    },
+    "fields": {
+      "title": {
+        "label": "Titre",
+        "placeholder": "Titre de la page (et nom du menu si fourni)"
+      },
+      "canonical": {
+        "label": "URL",
+        "placeholder": "URL d'accès à la page (lettres minuscules, chiffres, -, + ou _)"
+      },
+      "menu": {
+        "label": "Ordre dans le menu",
+        "placeholder": "0 ou vide pour ne pas l'inclure"
+      },
+      "content": {
+        "label": "Contenu"
+      }
+    },
+    "submit": {
+      "create": "Créer",
+      "update": "Modifier"
+    },
+    "home": "Revenir à la liste des pages"
   }
 }

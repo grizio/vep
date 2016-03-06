@@ -1,0 +1,63 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/bower_components/kwc-field/kwc-field.html">
+<link rel="import" href="/dist/elements/input-html/input-html.html">
+<link rel="import" href="/dist/elements/on-granted/on-granted.html">
+<link rel="import" href="/dist/lib/vep/services/page-service/page-service.html">
+<link rel="import" href="/dist/lib/vep/utils/string/String.html">
+
+<dom-module id="form-page">
+  <template>
+    <form id="form">
+      <fieldset>
+        <legend>
+          <kwc-i18n key="form-page.title.create" show hidden$="[[canonical]]"></kwc-i18n>
+          <kwc-i18n key="form-page.title.update" show p1="[[page.title]]" hidden$="[[!canonical]]"></kwc-i18n>
+        </legend>
+
+        <kwc-field value="{{page.title}}">
+            <span class="kwc-field-label">
+              <kwc-i18n key="form-page.fields.title.label" show></kwc-i18n>
+            </span>
+          <input type="text" required placeholder="[[i18nTitlePlaceholder]]" class="kwc-field-field"/>
+        </kwc-field>
+
+        <kwc-field value="{{page.canonical}}" id="canonicalField">
+            <span class="kwc-field-label">
+              <kwc-i18n key="form-page.fields.canonical.label" show></kwc-i18n>
+            </span>
+          <input type="text" required pattern="[a-z0-9+_-]+" placeholder="[[i18nCanonicalPlaceholder]]" id="canonical"
+                 class="kwc-field-field"/>
+        </kwc-field>
+
+        <kwc-field value="{{page.menu}}">
+            <span class="kwc-field-label">
+              <kwc-i18n key="form-page.fields.menu.label" show></kwc-i18n>
+            </span>
+          <input type="number" min="0" placeholder="[[i18nMenuPlaceholder]]" class="kwc-field-field"/>
+        </kwc-field>
+
+        <kwc-field value="{{page.content}}">
+            <span class="kwc-field-label">
+              <kwc-i18n key="form-page.fields.content.label" show></kwc-i18n>
+            </span>
+          <input-html class="kwc-field-field" required></input-html>
+        </kwc-field>
+
+        <button>
+          <kwc-i18n key="form-page.submit.create" show hidden$="[[canonical]]"></kwc-i18n>
+          <kwc-i18n key="form-page.submit.update" show hidden$="[[!canonical]]"></kwc-i18n>
+        </button>
+        <a href="/cms/pages">
+          <kwc-i18n key="form-page.home" show></kwc-i18n>
+        </a>
+      </fieldset>
+    </form>
+
+    <kwc-i18n key="form-page.fields.title.placeholder" var="{{i18nTitlePlaceholder}}"></kwc-i18n>
+    <kwc-i18n key="form-page.fields.canonical.placeholder" var="{{i18nCanonicalPlaceholder}}"></kwc-i18n>
+    <kwc-i18n key="form-page.fields.menu.placeholder" var="{{i18nMenuPlaceholder}}"></kwc-i18n>
+  </template>
+
+  <script src="form-page.js"></script>
+</dom-module>

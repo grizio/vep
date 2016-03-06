@@ -1,0 +1,13 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/dist/elements/on-granted/on-granted.html">
+<link rel="import" href="/dist/elements/cms/form-page/form-page.html">
+
+<dom-module id="page-create-page">
+  <template>
+    <on-granted roles="page-manager">
+      <form-page id="form"></form-page>
+    </on-granted>
+  </template>
+
+  <script src="page-create-page.js"></script>
+</dom-module>

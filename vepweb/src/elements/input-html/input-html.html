@@ -1,0 +1,19 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/juicy-ace-editor/juicy-ace-editor.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+
+<dom-module id="input-html">
+  <template>
+    <style>
+      #editor {
+        min-height: 450px;
+      }
+    </style>
+
+    <juicy-ace-editor mode="ace/mode/html" id="editor"></juicy-ace-editor>
+
+    <kwc-i18n key="input-html.errors.required" var="{{_i18nErrorRequired}}"></kwc-i18n>
+  </template>
+
+  <script src="input-html.js"></script>
+</dom-module>

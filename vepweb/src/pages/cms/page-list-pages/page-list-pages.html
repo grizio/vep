@@ -1,0 +1,30 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-table/kwc-table.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/dist/lib/vep/services/page-service/page-service.html">
+
+<dom-module id="page-list-pages">
+  <template>
+    <a href="/cms/pages/create"><kwc-i18n key="page-list.create" show></kwc-i18n></a>
+
+    <kwc-table data="[[_pages]]">
+      <kwc-table-column header="[[i18nTableUrl]]" property="canonical" sortable>
+        <kwc-table-cell>
+          <template>
+            <a href="/cms/page/update/[[value]]">[[value]]</a>
+          </template>
+        </kwc-table-cell>
+      </kwc-table-column>
+      <kwc-table-column header="[[i18nTableTitle]]" property="title" sortable></kwc-table-column>
+      <kwc-table-column header="[[i18nTableOrder]]" property="menu" sortable></kwc-table-column>
+    </kwc-table>
+
+    <a href="/cms/pages/create"><kwc-i18n key="page-list.create" show></kwc-i18n></a>
+
+    <kwc-i18n key="page-list.table.url" var="{{i18nTableUrl}}"></kwc-i18n>
+    <kwc-i18n key="page-list.table.title" var="{{i18nTableTitle}}"></kwc-i18n>
+    <kwc-i18n key="page-list.table.order" var="{{i18nTableOrder}}"></kwc-i18n>
+  </template>
+
+  <script src="page-list-pages.js"></script>
+</dom-module>

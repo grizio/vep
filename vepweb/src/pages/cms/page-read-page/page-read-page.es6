@@ -1,7 +1,7 @@
 (() => {
-  class PageRead {
+  class PageReadPage {
     beforeRegister() {
-      this.is = "page-read";
+      this.is = "page-read-page";
 
       this.properties = {
         canonical: {
@@ -12,5 +12,5 @@
     }
   }
 
-  Polymer(PageRead);
+  Polymer(PageReadPage);
 })();

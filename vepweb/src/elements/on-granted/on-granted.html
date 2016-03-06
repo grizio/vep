@@ -1,0 +1,26 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/bower_components/kwc-callout/kwc-callout.html">
+<link rel="import" href="/dist/elements/login-form/login-form.html">
+<link rel="import" href="/dist/lib/vep/services/login-service/login-service.html">
+
+<dom-module id="on-granted">
+  <template>
+    <div hidden$="[[_hideContent]]">
+      <content></content>
+    </div>
+    <div hidden$="[[_hideLogin]]">
+      <login-form></login-form>
+    </div>
+    <div hidden$="[[_hideCallout]]">
+      <kwc-i18n key="on-granted.error.header" var="{{i18nCalloutHeader}}"></kwc-i18n>
+      <kwc-callout type="error" header="[[i18nCalloutHeader]]">
+        <kwc-i18n key="on-granted.error.content" show></kwc-i18n>
+      </kwc-callout>
+    </div>
+
+    <login-service id="loginService" logged="{{_logged}}"></login-service>
+  </template>
+
+  <script src="on-granted.js"></script>
+</dom-module>
