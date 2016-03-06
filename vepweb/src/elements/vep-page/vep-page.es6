@@ -1,7 +1,5 @@
 (() => {
-  const http = window.vep.http;
-
-  let pages = null;
+  const pageService = window.vep.services.page;
 
   class VepPage {
     beforeRegister() {
@@ -16,24 +14,21 @@
           type: Object,
           value: null,
           observer: "_pageChanged"
+        },
+        _done: {
+          type: Boolean,
+          value: false
         }
       }
     }
 
     attached() {
       const that = this;
-      let promise;
-      if (!pages) {
-        promise = http.get("/cms/pages").then((result) => {
-          pages = result;
-          return pages;
+      pageService.find(this.canonical)
+        .then((page) => {
+          that._page = page;
+          that._done = true;
         });
-      } else {
-        promise = Promise.resolve(pages);
-      }
-      promise.then((pages) => {
-        that._page = pages.find((p) => p.canonical === that.canonical);
-      });
     }
 
     _pageChanged(value) {

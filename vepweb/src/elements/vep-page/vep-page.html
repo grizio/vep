@@ -1,13 +1,24 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
-<link rel="import" href="/dist/lib/vep/Http/Http.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/bower_components/kwc-callout/kwc-callout.html">
+<link rel="import" href="/dist/lib/vep/services/page-service/page-service.html">
 
 <dom-module id="vep-page">
   <template>
-    <article>
-      <h1>{{ _page.title }}</h1>
+    <article hidden$="[[!_done]]">
+      <div hidden$="[[!_page]]">
+        <h1>{{ _page.title }}</h1>
 
-      <div id="content"></div>
+        <div id="content"></div>
+      </div>
+      <kwc-callout hidden$="[[_page]]" type="error" header="[[i18nErrorTitle]]">
+        <p class="content">
+          <kwc-i18n key="page-read.not-found.content" show></kwc-i18n>
+        </p>
+      </kwc-callout>
     </article>
+
+    <kwc-i18n key="page-read.not-found.title" var="{{i18nErrorTitle}}"></kwc-i18n>
   </template>
 
   <script src="vep-page.js"></script>

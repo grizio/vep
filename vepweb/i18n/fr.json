@@ -14,5 +14,11 @@
       "director": "Metteur en scène",
       "company": "Troupe"
     }
+  },
+  "page-read": {
+    "not-found": {
+      "title": "Page non trouvée",
+      "content": "La page que vous recherchez n'a pas été trouvée. Si vous êtes arrivés ici par un lien de notre site, merci de nous contacter."
+    }
   }
 }

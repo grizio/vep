@@ -2,6 +2,7 @@
 <link rel="import" href="/bower_components/kwc-app/kwc-app.html">
 <link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
 <link rel="import" href="/bower_components/app-router/app-router.html">
+<link rel="import" href="/dist/lib/vep/services/page-service/page-service.html">
 
 <dom-module id="vep-app">
   <template>
@@ -19,6 +20,13 @@
               <kwc-i18n key="vep-app.topbar.shows" show></kwc-i18n>
             </a>
           </li>
+          <template is="dom-repeat" items="[[_pages]]" as="page">
+            <li>
+              <a href="/page/[[page.canonical]]">
+                [[page.title]]
+              </a>
+            </li>
+          </template>
         </ul>
       </div>
 
@@ -27,6 +35,7 @@
           <app-route path="/" import="/dist/pages/cms/page-home/page-home.html"></app-route>
           <app-route path="/shows" import="/dist/pages/shows/page-shows/page-shows.html"></app-route>
           <app-route path="/show/read/:canonical" import="/dist/pages/shows/page-show/page-show.html"></app-route>
+          <app-route path="/page/:canonical" import="/dist/pages/cms/page-read/page-read.html"></app-route>
         </app-router>
       </div>
     </kwc-app>
