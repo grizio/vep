@@ -16,7 +16,8 @@
     "kwc-i18n": "^0.1.0",
     "kwc-app": "^0.1.0",
     "kwc-table": "^0.3.1",
-    "kwc-callout": "^0.1.0"
+    "kwc-callout": "^0.1.0",
+    "kwc-field": "^0.2.1"
   },
   "homepage": "http://voir-entendre-posso.fr",
   "authors": [

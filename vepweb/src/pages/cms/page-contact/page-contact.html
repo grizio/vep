@@ -1,0 +1,70 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-field/kwc-field.html">
+<link rel="import" href="/bower_components/kwc-callout/kwc-callout.html">
+<link rel="import" href="/dist/lib/vep/Http/Http.html">
+
+<dom-module id="page-contact">
+  <template>
+    <form id="form" hidden$="[[_done]]">
+      <fieldset>
+        <legend><kwc-i18n key="page-contact.title"></kwc-i18n></legend>
+        
+        <kwc-field id="name">
+          <span class="kwc-field-label">
+            <kwc-i18n key="page-contact.fields.name.label" show></kwc-i18n>
+          </span>
+          <kwc-i18n key="page-contact.fields.name.placeholder" var="{{i18nNamePlaceholder}}"></kwc-i18n>
+          <input type="text" required placeholder="[[i18nNamePlaceholder]]" value="{{contact.name::input}}"
+                 class="kwc-field-field">
+        </kwc-field>
+
+        <kwc-field id="email">
+          <span class="kwc-field-label">
+            <kwc-i18n key="page-contact.fields.email.label" show></kwc-i18n>
+          </span>
+          <kwc-i18n key="page-contact.fields.email.placeholder" var="{{i18nEmailPlaceholder}}"></kwc-i18n>
+          <input type="email" required placeholder="[[i18nEmailPlaceholder]]" value="{{contact.email::input}}"
+                 class="kwc-field-field">
+        </kwc-field>
+
+        <kwc-field id="email2">
+          <span class="kwc-field-label">
+            <kwc-i18n key="page-contact.fields.email2.label" show></kwc-i18n>
+          </span>
+          <kwc-i18n key="page-contact.fields.email2.placeholder" var="{{i18nEmailPlaceholder}}"></kwc-i18n>
+          <input type="email" required placeholder="[[i18nEmailPlaceholder]]" class="kwc-field-field">
+        </kwc-field>
+
+        <kwc-field id="title">
+          <span class="kwc-field-label">
+            <kwc-i18n key="page-contact.fields.title.label" show></kwc-i18n>
+          </span>
+          <kwc-i18n key="page-contact.fields.title.placeholder" var="{{i18nTitlePlaceholder}}"></kwc-i18n>
+          <input type="text" required placeholder="[[i18nTitlePlaceholder]]" value="{{contact.title::input}}"
+                 class="kwc-field-field">
+        </kwc-field>
+
+        <kwc-field id="content">
+          <span class="kwc-field-label">
+            <kwc-i18n key="page-contact.fields.content.label" show></kwc-i18n>
+          </span>
+          <kwc-i18n key="page-contact.fields.content.placeholder" var="{{i18nContentPlaceholder}}"></kwc-i18n>
+        <textarea required placeholder="[[i18nContentPlaceholder]]" value="{{contact.content::input}}"
+                  class="kwc-field-field"></textarea>
+        </kwc-field>
+
+        <button><kwc-i18n key="page-contact.submit" show></kwc-i18n></button>
+        <a href="/"><kwc-i18n key="page-contact.home" show></kwc-i18n></a>
+      </fieldset>
+    </form>
+
+    <kwc-callout hidden$="[[!_done]]" type="success" header="[[i18nDoneTitle]]">
+      <kwc-i18n key="page-contact.done.content" show></kwc-i18n>
+    </kwc-callout>
+
+    <kwc-i18n key="page-contact.fields.email2.errors.copy" var="{{i18nEmail2ErrorsCopy}}"></kwc-i18n>
+    <kwc-i18n key="page-contact.done.title" var="{{i18nDoneTitle}}"></kwc-i18n>
+  </template>
+
+  <script src="page-contact.js"></script>
+</dom-module>

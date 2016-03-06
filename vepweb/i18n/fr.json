@@ -3,7 +3,8 @@
     "topbar": {
       "sitename": "Voir & Entendre",
       "home": "Accueil",
-      "shows": "Pièces"
+      "shows": "Pièces",
+      "contact": "Contactez-nous"
     }
   },
   "page-shows": {
@@ -19,6 +20,40 @@
     "not-found": {
       "title": "Page non trouvée",
       "content": "La page que vous recherchez n'a pas été trouvée. Si vous êtes arrivés ici par un lien de notre site, merci de nous contacter."
+    }
+  },
+  "page-contact": {
+    "title": "Contactez-nour",
+    "fields": {
+      "name": {
+        "label": "Votre nom",
+        "placeholder": "Prénom Nom"
+      },
+      "email": {
+        "label": "Adresse e-mail",
+        "placeholder": "Votre adresse e-mail valide"
+      },
+      "email2": {
+        "label": "Confirmation",
+        "placeholder": "Confirmation de votre adresse e-mail",
+        "errors": {
+          "copy": "La confirmation doit être identique à l'adresse e-mail"
+        }
+      },
+      "title": {
+        "label": "Titre",
+        "placeholder": "Sujet de votre message"
+      },
+      "content": {
+        "label": "Contenu",
+        "placeholder": "Contenu de votre message"
+      }
+    },
+    "submit": "Envoyer",
+    "home": "Revenir à l'accueil",
+    "done": {
+      "title": "Message envoyé",
+      "content": "Votre message a été envoyé. Si vous ne recevez pas de réponse d'ici une semaine, nous vous invitons à nous renvoyer un nouvel email."
     }
   }
 }
