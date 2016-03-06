@@ -35,7 +35,7 @@
 
     submit(e) {
       e.preventDefault();
-      const that = this
+      const that = this;
       http.post("/contact", this.contact).then((_) => that._done = true);
     }
   }

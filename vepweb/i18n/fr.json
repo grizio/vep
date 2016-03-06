@@ -4,7 +4,9 @@
       "sitename": "Voir & Entendre",
       "home": "Accueil",
       "shows": "Pièces",
-      "contact": "Contactez-nous"
+      "contact": "Contactez-nous",
+      "login": "Se connecter",
+      "logout": "Se déconnecter"
     }
   },
   "page-shows": {
@@ -54,6 +56,25 @@
     "done": {
       "title": "Message envoyé",
       "content": "Votre message a été envoyé. Si vous ne recevez pas de réponse d'ici une semaine, nous vous invitons à nous renvoyer un nouvel email."
+    }
+  },
+  "page-login": {
+    "title": "Connexion",
+    "fields": {
+      "email": {
+        "label": "Email",
+        "placeholder": "Votre adress e-mail valide"
+      },
+      "password": {
+        "label": "Mot de passe",
+        "placeholder": "Votre mot de passe (rappel: minimum 8 caractères dont un chiffre et une lettre)"
+      }
+    },
+    "submit": "Envoyer",
+    "home": "Revenir à l'accueil",
+    "done": {
+      "title": "Vous êtes connecté",
+      "content": "Vous êtes maintenant connecté au site."
     }
   }
 }

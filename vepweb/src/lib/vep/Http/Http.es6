@@ -44,8 +44,14 @@
       if (contentType instanceof ContentType) {
         return new RequestBuilder(objectUtils.merge({contentType: contentType}, this._options));
       } else {
-        throw "Please give a valid `ContentType` object from module `lib/k/ref/http/contentTypes`."
+        throw "Please give a valid `ContentType` object from module `lib/k/ref/http/contentTypes`.";
       }
+    }
+
+    withHeader(field, value) {
+      const headers = objectUtils.clone(this._options.headers || {});
+      headers[field] = value;
+      return new RequestBuilder(objectUtils.merge({headers: Object.freeze(headers)}, this._options));
     }
 
     send() {
@@ -60,6 +66,9 @@
         //if (session.isDefined) {
         //  xhr.setRequestHeader("Authorization", "Basic " + session.authorization);
         //}
+        objectUtils.foreachKeyValue(options.headers, (field, value) => {
+          xhr.setRequestHeader(field, value);
+        });
 
         xhr.onreadystatechange = function () {
           processReadyStateChange(xhr, resolve, reject);
@@ -175,6 +184,7 @@
   }
 
   window.vep = window.vep || {};
+  window.vep.RequestBuilder = RequestBuilder;
   window.vep.http = new Http();
   window.vep.methods = Object.freeze({
     CONNECT: CONNECT,

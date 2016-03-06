@@ -3,6 +3,7 @@
 <link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
 <link rel="import" href="/bower_components/app-router/app-router.html">
 <link rel="import" href="/dist/lib/vep/services/page-service/page-service.html">
+<link rel="import" href="/dist/lib/vep/services/login-service/login-service.html">
 
 <dom-module id="vep-app">
   <template>
@@ -35,6 +36,23 @@
         </ul>
       </div>
 
+      <div class="top-bar-right-menu">
+        <ul hidden$="[[_logged]]">
+          <li>
+            <a href="/login">
+              <kwc-i18n key="vep-app.topbar.login" show></kwc-i18n>
+            </a>
+          </li>
+        </ul>
+        <ul hidden$="[[!_logged]]">
+          <li>
+            <a href="/" id="logout">
+              <kwc-i18n key="vep-app.topbar.logout" show></kwc-i18n>
+            </a>
+          </li>
+        </ul>
+      </div>
+
       <div class="content">
         <app-router mode="pushstate" trailingSlash="ignore">
           <app-route path="/" import="/dist/pages/cms/page-home/page-home.html"></app-route>
@@ -42,9 +60,12 @@
           <app-route path="/show/read/:canonical" import="/dist/pages/shows/page-show/page-show.html"></app-route>
           <app-route path="/page/:canonical" import="/dist/pages/cms/page-read/page-read.html"></app-route>
           <app-route path="/contact" import="/dist/pages/cms/page-contact/page-contact.html"></app-route>
+          <app-route path="/login" import="/dist/pages/user/page-login/page-login.html"></app-route>
         </app-router>
       </div>
     </kwc-app>
+
+    <login-service id="loginService" logged="{{_logged}}"></login-service>
   </template>
 
   <script src="vep-app.js"></script>

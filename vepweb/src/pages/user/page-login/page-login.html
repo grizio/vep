@@ -1,0 +1,53 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-field/kwc-field.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/bower_components/kwc-callout/kwc-callout.html">
+<link rel="import" href="/dist/lib/vep/services/login-service/login-service.html">
+<link rel="import" href="/dist/lib/vep/error-codes/error-codes.html">
+
+<dom-module id="page-login">
+  <template>
+    <form id="form" hidden$="[[_logged]]">
+      <kwc-callout type="error" hidden$="[[!_error]]">[[_error]]</kwc-callout>
+      <fieldset>
+        <legend>
+          <kwc-i18n key="page-login.title" show></kwc-i18n>
+        </legend>
+
+        <kwc-field id="email">
+          <span class="kwc-field-label">
+            <kwc-i18n key="page-login.fields.email.label" show></kwc-i18n>
+          </span>
+          <kwc-i18n key="page-login.fields.email.placeholder" var="{{i18nEmailPlaceholder}}"></kwc-i18n>
+          <input type="email" required placeholder="[[i18nEmailPlaceholder]]" value="{{_email::input}}"
+                 class="kwc-field-field">
+        </kwc-field>
+
+        <kwc-field id="password">
+          <span class="kwc-field-label">
+            <kwc-i18n key="page-login.fields.password.label" show></kwc-i18n>
+          </span>
+          <kwc-i18n key="page-login.fields.password.placeholder" var="{{i18nPasswordPlaceholder}}"></kwc-i18n>
+          <input type="password" required placeholder="[[i18nPasswordPlaceholder]]" value="{{_password::input}}"
+                 class="kwc-field-field">
+        </kwc-field>
+
+        <button>
+          <kwc-i18n key="page-login.submit" show></kwc-i18n>
+        </button>
+        <a href="/">
+          <kwc-i18n key="page-login.home" show></kwc-i18n>
+        </a>
+      </fieldset>
+    </form>
+
+    <kwc-callout hidden$="[[!_logged]]" type="success" header="[[i18nDoneTitle]]">
+      <kwc-i18n key="page-login.done.content" show></kwc-i18n>
+    </kwc-callout>
+
+    <kwc-i18n key="page-login.done.title" var="{{i18nDoneTitle}}"></kwc-i18n>
+    <login-service id="loginService" logged="{{_logged}}"></login-service>
+  </template>
+
+  <script src="page-login.js"></script>
+</dom-module>

@@ -32,11 +32,33 @@
     }
   }
 
+  function getKeys(obj) {
+    const result = [];
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        result.push(key);
+      }
+    }
+    return result;
+  }
+
+  function getValues(obj) {
+    const result = [];
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        result.push(obj[key]);
+      }
+    }
+    return result;
+  }
+
   window.vep = window.vep || {};
   window.vep.utils = window.vep.utils || {};
   window.vep.utils.object = Object.freeze({
     clone: clone,
     merge: merge,
-    foreachKeyValue: foreachKeyValue
+    foreachKeyValue: foreachKeyValue,
+    getKeys: getKeys,
+    getValues: getValues
   });
 })();
