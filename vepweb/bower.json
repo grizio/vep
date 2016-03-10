@@ -21,7 +21,8 @@
     "uikit": "^2.25.0",
     "codemirror": "^5.12.0",
     "marked": "^0.3.5",
-    "juicy-ace-editor": "^1.1.1"
+    "google-map": "GoogleWebComponents/google-map#^1.1.10",
+    "kwc-date-format": "^0.1.0"
   },
   "homepage": "http://voir-entendre-posso.fr",
   "authors": [

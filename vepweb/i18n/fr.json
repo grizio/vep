@@ -124,5 +124,14 @@
       "update": "Modifier"
     },
     "home": "Revenir à la liste des pages"
+  },
+  "page-read-session": {
+    "shows": {
+      "title": "Au programme"
+    },
+    "theater": {
+      "title": "Où se rendre ?",
+      "description": "La séance se déroulera au théâtre « {1} » indiqué sur la carte ci-dessous :"
+    }
   }
 }

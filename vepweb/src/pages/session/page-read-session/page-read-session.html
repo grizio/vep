@@ -1,0 +1,70 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/bower_components/google-map/google-map.html">
+<link rel="import" href="/bower_components/google-map/google-map-marker.html">
+<link rel="import" href="/bower_components/google-map/google-map-search.html">
+<link rel="import" href="/bower_components/kwc-date-format/kwc-date-format.html">
+<link rel="import" href="/dist/lib/vep/services/session-service/session-service.html">
+<link rel="import" href="/dist/lib/vep/services/theater-service/theater-service.html">
+<link rel="import" href="/dist/lib/vep/services/show-service/show-service.html">
+
+<dom-module id="page-read-session">
+  <template>
+    <style>
+      google-map {
+        height: 250px;
+      }
+
+      .row {
+        display: flex;
+      }
+
+      .column {
+        flex-grow: 1;
+      }
+    </style>
+
+    <h1>[[session.name]] <small><kwc-date-format date="[[session.date]]" format="dddd DD MMMM YYYY [à] HH:mm"></kwc-date-format></small></h1>
+
+    <div class="row">
+      <div class="column">
+        <h3>
+          <kwc-i18n key="page-read-session.shows.title" show></kwc-i18n>
+        </h3>
+
+        <ul>
+          <template is="dom-repeat" items="[[session.shows]]" as="show">
+            <li><a href="/show/read/[[show.canonical]]">[[show.title]]</a></li>
+          </template>
+        </ul>
+
+        <h3>Liste des prix</h3>
+
+        <ul>
+          <template is="dom-repeat" items="[[session.prices]]" as="price">
+            <li>
+              <strong>[[price.name]]</strong> :
+              [[price.price]] &euro;
+              <span hidden$="[[!price.condition]]">([[price.condition]])</span>
+            </li>
+          </template>
+        </ul>
+      </div>
+      <div class="column">
+        <h3>
+          <kwc-i18n key="page-read-session.theater.title" show></kwc-i18n>
+        </h3>
+
+        <kwc-i18n key="page-read-session.theater.description" show p1="[[theater.name]]"></kwc-i18n>
+
+        <google-map-search map="[[map]]" query="[[theater.address]]" id="gmapSearch"></google-map-search>
+        <google-map map="{{map}}" latitude="[[_theaterPlace.latitude]]" longitude="[[_theaterPlace.longitude]]"
+                    api-key="AIzaSyC54D9PP_qz3xZTcZ6XeEULegzG5GATThE" zoom="15">
+          <google-map-marker latitude="[[_theaterPlace.latitude]]" longitude="[[_theaterPlace.longitude]]"></google-map-marker>
+        </google-map>
+      </div>
+    </div>
+  </template>
+
+  <script src="page-read-session.js"></script>
+</dom-module>
