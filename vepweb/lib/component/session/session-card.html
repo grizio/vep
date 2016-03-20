@@ -68,10 +68,12 @@
             Réserver des places
         </a>
         <div class="small-12 columns" ng-if="sessionCard.theater.fixed">
-            <a href="/reservation/{{ sessionCard.theater.canonical }}/{{ sessionCard.canonical }}">
+            <a href="/reservation/{{ sessionCard.theater.canonical }}/{{ sessionCard.canonical }}" ng-if="sessionCard.canReserve">
                 <theater-plan enabled="false" json-plan="sessionCard.theater.plan" taken="takenSeats"
                               legend="'none'"></theater-plan>
             </a>
+            <theater-plan enabled="false" json-plan="sessionCard.theater.plan" taken="takenSeats" ng-if="!sessionCard.canReserve"
+                          legend="'none'"></theater-plan>
         </div>
         <div class="small-12 columns" ng-if="!sessionCard.theater.fixed">
             <ul>
