@@ -1,0 +1,106 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<dom-module id="show-plan">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .legend .seat {
+        display: inline-block;
+        vertical-align: middle;
+        width: 2em;
+        height: 2em;
+      }
+
+      .map-box {
+        padding: 5px;
+        box-shadow: 0 0 5px #888;
+      }
+
+      .map {
+        position: relative;
+        overflow: auto;
+        margin: auto;
+      }
+
+      .map .seat {
+        position: absolute;
+        text-align: center;
+        transition: all ease 250ms;
+      }
+
+      .map.disabled .seat {
+        cursor: default!important;
+      }
+
+      .map .seat.normal {
+        background-color: #fff;
+        color: #000;
+        border: 1px solid black;
+      }
+
+      .map .seat.strap {
+        background-color: #07a;
+        color: #fff;
+        border-radius: 100%;
+        border: 1px solid #046;
+      }
+
+      .map .seat.taken {
+        background-color: #d43;
+        color: #fff;
+        cursor: not-allowed;
+        border: 1px solid #832;
+      }
+
+      .map .seat.selected {
+        background-color: #484;
+        color: #fff;
+        border: 1px solid #252;
+      }
+
+      .map .seat.stage {
+        background-color: #aaa;
+        color: #000;
+        border: 1px solid #000;
+        border-radius: 10px;
+        font-weight: bold;
+        text-shadow: 0 1px #fff, 0 -1px #fff, 1px 0 #fff, -1px 0 #fff;
+        cursor: default;
+      }
+    </style>
+
+    <template is="dom-if" if="[[legend]]">
+      <div class="row legend">
+        <div class="small-3 columns">
+          <div class="seat normal"></div>
+          Normal
+        </div>
+        <div class="small-3 columns">
+          <div class="seat strap"></div>
+          Strapontin
+        </div>
+        <div class="small-3 columns">
+          <div class="seat taken"></div>
+          Déjà réservé
+        </div>
+        <div class="small-3 columns">
+          <div class="seat selected"></div>
+          Sélectionné
+        </div>
+      </div>
+      <hr>
+    </template>
+    <div class="map-box">
+      <div class="map" class$="[[_mapClass]]" style$="[[_mapStyles]]">
+        <template is="dom-repeat" items="[[_seats]]">
+          <div class$="{{_getSeatClass(item)}}" style$="{{_getSeatStyle(item)}}">[[item.c]]</div>
+        </template>
+      </div>
+    </div>
+  </template>
+
+  <script src="show-plan.js"></script>
+</dom-module>

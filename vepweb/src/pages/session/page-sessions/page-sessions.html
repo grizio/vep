@@ -1,0 +1,27 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-table/kwc-table.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/dist/lib/vep/services/session-service/session-service.html">
+
+<dom-module id="page-sessions">
+  <template>
+    <h1><kwc-i18n key="page-sessions.title" show></kwc-i18n></h1>
+    <kwc-table data="[[sessions]]">
+      <kwc-table-column header="[[i18nTheater]]" property="theater"></kwc-table-column>
+      <kwc-table-column header="[[i18nShows]]" property="shows"></kwc-table-column>
+      <kwc-table-column header="[[i18nDate]]" property="date">
+        <kwc-table-cell>
+          <template>
+            <a href="/session/read/[[row.theater]]/[[row.canonical]]">[[value]]</a>
+          </template>
+        </kwc-table-cell>
+      </kwc-table-column>
+    </kwc-table>
+
+    <kwc-i18n key="page-sessions.table.theater" var="{{i18nTheater}}"></kwc-i18n>
+    <kwc-i18n key="page-sessions.table.shows" var="{{i18nShows}}"></kwc-i18n>
+    <kwc-i18n key="page-sessions.table.date" var="{{i18nDate}}"></kwc-i18n>
+  </template>
+
+  <script src="page-sessions.js"></script>
+</dom-module>

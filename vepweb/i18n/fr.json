@@ -4,6 +4,7 @@
       "sitename": "Voir & Entendre",
       "home": "Accueil",
       "shows": "Pièces",
+      "sessions": "Séances",
       "contact": "Contactez-nous",
       "login": "Se connecter",
       "logout": "Se déconnecter",
@@ -125,6 +126,14 @@
     },
     "home": "Revenir à la liste des pages"
   },
+  "page-sessions": {
+    "title": "Prochaines séances",
+    "table": {
+      "theater": "Théâtre",
+      "shows": "Pièces",
+      "date": "Date"
+    }
+  },
   "page-read-session": {
     "shows": {
       "title": "Au programme"
@@ -132,6 +141,7 @@
     "theater": {
       "title": "Où se rendre ?",
       "description": "La séance se déroulera au théâtre « {1} » indiqué sur la carte ci-dessous :"
-    }
+    },
+    "reserve": "Réservez !"
   }
 }
