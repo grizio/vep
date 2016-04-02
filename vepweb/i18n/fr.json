@@ -13,9 +13,10 @@
       "contact": "Contactez-nous",
       "login": "Se connecter",
       "logout": "Se déconnecter",
-      "pages": "Gestion des pages",
-      "roles": "Gestion des rôles",
-      "theaters": "Gestion des théâtres"
+      "pages": "Pages",
+      "roles": "Rôles",
+      "theaters": "Théâtres",
+      "companies": "Troupes"
     }
   },
   "page-shows": {
@@ -290,5 +291,45 @@
         "placeholder": "Plan de la salle au format JSON selon le model suivant: [{n,x,y,w,h,t}]"
       }
     }
+  },
+  "page-companies": {
+    "title": "Liste des troupes",
+    "headers": {
+      "canonical": "URL",
+      "name": "Nom",
+      "address": "Adresse",
+      "isvep": "Voir & Entendre"
+    },
+    "create": "Créer une nouvelle troupe"
+  },
+  "page-form-company": {
+    "title": {
+      "create": "Créer une nouvelle troupe",
+      "update": "Mise à jour de la troupe {1}"
+    },
+    "legend": "Informations générales",
+    "fields": {
+      "name": {
+        "label": "Nom",
+        "placeholder": "Nom de la troupe"
+      },
+      "canonical": {
+        "label": "Url d'accès",
+        "placeholder": "URL d'accès à la troupe (lettres minuscules, chiffres, -, + ou _)"
+      },
+      "isvep": {
+        "label": "Voir & Entendre"
+      },
+      "address": {
+        "label": "Adresse",
+        "placeholder": "Adresse ou ville de la troupe (optionel)"
+      },
+      "content": {
+        "label": "Description",
+        "placeholder": "Description de la troupe, sous forme HTML"
+      }
+    },
+    "submit": "Envoyer",
+    "return": "Revenir à la liste des troupes"
   }
 }

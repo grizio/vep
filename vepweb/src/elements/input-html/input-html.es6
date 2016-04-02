@@ -36,7 +36,6 @@
     }
 
     editorChange(e) {
-      console.log(this.$.editor.value);
       this.value = this.$.editor.value;
     }
 

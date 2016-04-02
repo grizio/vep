@@ -139,6 +139,13 @@
               </a>
             </li>
           </on-granted>
+          <on-granted roles="company-manager" hide>
+            <li>
+              <a href="/companies">
+                <kwc-i18n key="vep-app.topbar.companies" show></kwc-i18n>
+              </a>
+            </li>
+          </on-granted>
           <li>
             <a href="/" id="logout">
               <kwc-i18n key="vep-app.topbar.logout" show></kwc-i18n>
@@ -172,6 +179,9 @@
           <app-route path="/theaters" import="/dist/pages/theater/page-theaters/page-theaters.html"></app-route>
           <app-route path="/theater/create" import="/dist/pages/theater/page-form-theater/page-form-theater.html"></app-route>
           <app-route path="/theater/update/:canonical" import="/dist/pages/theater/page-form-theater/page-form-theater.html"></app-route>
+          <app-route path="/companies" import="/dist/pages/company/page-companies/page-companies.html"></app-route>
+          <app-route path="/company/create" import="/dist/pages/company/page-form-company/page-form-company.html"></app-route>
+          <app-route path="/company/update/:canonical" import="/dist/pages/company/page-form-company/page-form-company.html"></app-route>
         </app-router>
       </div>
     </kwc-app>

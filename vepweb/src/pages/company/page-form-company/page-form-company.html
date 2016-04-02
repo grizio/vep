@@ -1,0 +1,81 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/bower_components/kwc-table/kwc-table.html">
+<link rel="import" href="/dist/elements/on-granted/on-granted.html">
+<link rel="import" href="/dist/elements/input-html/input-html.html">
+<link rel="import" href="/dist/lib/vep/services/company-service/company-service.html">
+<link rel="import" href="/dist/lib/vep/utils/string/String.html">
+
+<dom-module id="page-form-company">
+  <template>
+    <on-granted roles="company-manager">
+      <h1 hidden$="[[!isCreation]]">
+        <kwc-i18n key="page-form-company.title.create" show></kwc-i18n>
+      </h1>
+      <h1 hidden$="[[isCreation]]">
+        <kwc-i18n key="page-form-company.title.update" show p1="[[company.name]]"></kwc-i18n>
+      </h1>
+
+      <form id="form">
+        <fieldset>
+          <legend>
+            <kwc-i18n key="page-form-company.legend" show></kwc-i18n>
+          </legend>
+
+          <kwc-field value="{{company.name}}" id="name">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-company.fields.name.label" show></kwc-i18n>
+            </span>
+            <input type="text" required placeholder="[[i18nFieldsNamePlaceholder]]" class="kwc-field-field">
+          </kwc-field>
+
+          <kwc-field value="{{company.canonical}}" id="canonical">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-company.fields.canonical.label" show></kwc-i18n>
+            </span>
+            <input type="text" required placeholder="[[i18nFieldsCanonicalPlaceholder]]" pattern="[a-z0-9_+-]+"
+                   class="kwc-field-field">
+          </kwc-field>
+
+          <kwc-field value="{{company.isVep}}">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-company.fields.isvep.label" show></kwc-i18n>
+            </span>
+            <input type="checkbox" class="kwc-field-field">
+          </kwc-field>
+
+          <kwc-field value="{{company.address}}">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-company.fields.address.label" show></kwc-i18n>
+            </span>
+            <input type="text" placeholder="[[i18nFieldsAddressPlaceholder]]" class="kwc-field-field">
+          </kwc-field>
+
+          <kwc-field value="{{company.content}}">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-company.fields.content.label" show></kwc-i18n>
+            </span>
+            <input-html class="kwc-field-field"></input-html>
+          </kwc-field>
+
+          <button class="btn primary">
+            <kwc-i18n key="page-form-company.submit" show></kwc-i18n>
+          </button>
+          <a href="/companies" class="btn secondary">
+            <kwc-i18n key="page-form-company.return" show></kwc-i18n>
+          </a>
+
+          <kwc-i18n key="page-form-company.fields.name.placeholder" var="{{i18nFieldsNamePlaceholder}}"></kwc-i18n>
+          <kwc-i18n key="page-form-company.fields.canonical.placeholder"
+                    var="{{i18nFieldsCanonicalPlaceholder}}"></kwc-i18n>
+          <kwc-i18n key="page-form-company.fields.address.placeholder"
+                    var="{{i18nFieldsAddressPlaceholder}}"></kwc-i18n>
+          <kwc-i18n key="page-form-company.fields.content.placeholder"
+                    var="{{i18nFieldsContentPlaceholder}}"></kwc-i18n>
+        </fieldset>
+      </form>
+    </on-granted>
+  </template>
+
+  <script src="page-form-company.js"></script>
+</dom-module>

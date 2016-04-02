@@ -1,25 +1,42 @@
 (() => {
   const http = window.vep.http;
 
-  const companyService = {};
+  class CompanyService {
+    findAll() {
+      if (this._companiesPromise) {
+        return Promise.resolve(this._companiesPromise);
+      } else {
+        return http.get("/companies").then((result) => {
+          this._companiesPromise = result;
+          return this._companiesPromise;
+        });
+      }
+    }
 
-  let companies = null;
+    find(canonical) {
+      return this.findAll().then((result) => result.find((c) => c.canonical === canonical));
+    }
 
-  companyService.findAll = () => {
-    if (companies) {
-      return Promise.resolve(companies);
-    } else {
-      return http.get("/companies").then((result) => {
-        companies = result;
-        return companies;
+    create(company) {
+      const that = this;
+      company.isVep = !!company.isVep;
+      return http.post(`/company/${company.canonical}`, company).then((_) => {
+        that._companiesPromise = null;
+        return _;
       });
     }
-  };
 
-  companyService.find = (canonical) =>
-    companyService.findAll().then((result) => result.find((c) => c.canonical === canonical));
+    update(company) {
+      const that = this;
+      company.isVep = !!company.isVep;
+      return http.put(`/company/${company.canonical}`, company).then((_) => {
+        that._companiesPromise = null;
+        return _;
+      });
+    }
+  }
 
   window.vep = window.vep || {};
   window.vep.services = window.vep.services || {};
-  window.vep.services.company = Object.freeze(companyService);
+  window.vep.services.company = new CompanyService();
 })();
