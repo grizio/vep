@@ -1,0 +1,46 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-table/kwc-table.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/dist/lib/vep/services/session-service/session-service.html">
+
+<dom-module id="session-reservations">
+  <template>
+    <kwc-table data="[[reservations]]">
+      <kwc-table-column header="[[i18nHeaderFirstName]]" property="firstName" sortable></kwc-table-column>
+      <kwc-table-column header="[[i18nHeaderLastName]]" property="lastName" sortable></kwc-table-column>
+      <kwc-table-column header="[[i18nHeaderEmail]]" property="email" sortable></kwc-table-column>
+      <kwc-table-column header="[[i18nHeaderCity]]" property="city" sortable></kwc-table-column>
+      <kwc-table-column header="[[i18nHeaderComment]]" property="comment"></kwc-table-column>
+      <kwc-table-column header="[[i18nHeaderSeats]]" property="seats"></kwc-table-column>
+      <kwc-table-column header="[[i18nHeaderPrices]]" property="prices">
+        <kwc-table-cell>
+          <template>
+            <ul>
+              <template is="dom-repeat" items="[[value]]">
+                <li>[[item.name]] : [[item.number]] * [[item.value]] = [[item.total]]&euro;</li>
+              </template>
+            </ul>
+          </template>
+        </kwc-table-cell>
+      </kwc-table-column>
+      <kwc-table-column header="[[i18nHeaderTotal]]" property="total">
+        <kwc-table-cell>
+          <template>
+            [[value]]&euro;
+          </template>
+        </kwc-table-cell>
+      </kwc-table-column>
+    </kwc-table>
+
+    <kwc-i18n key="session-reservations.headers.firstName" var="{{i18nHeaderFirstName}}"></kwc-i18n>
+    <kwc-i18n key="session-reservations.headers.lastName" var="{{i18nHeaderLastName}}"></kwc-i18n>
+    <kwc-i18n key="session-reservations.headers.email" var="{{i18nHeaderEmail}}"></kwc-i18n>
+    <kwc-i18n key="session-reservations.headers.city" var="{{i18nHeaderCity}}"></kwc-i18n>
+    <kwc-i18n key="session-reservations.headers.comment" var="{{i18nHeaderComment}}"></kwc-i18n>
+    <kwc-i18n key="session-reservations.headers.seats" var="{{i18nHeaderSeats}}"></kwc-i18n>
+    <kwc-i18n key="session-reservations.headers.prices" var="{{i18nHeaderPrices}}"></kwc-i18n>
+    <kwc-i18n key="session-reservations.headers.total" var="{{i18nHeaderTotal}}"></kwc-i18n>
+  </template>
+
+  <script src="session-reservations.js"></script>
+</dom-module>

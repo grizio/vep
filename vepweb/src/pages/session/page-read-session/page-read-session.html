@@ -5,6 +5,8 @@
 <link rel="import" href="/bower_components/google-map/google-map-search.html">
 <link rel="import" href="/bower_components/kwc-date-format/kwc-date-format.html">
 <link rel="import" href="/dist/elements/theater/show-plan/show-plan.html">
+<link rel="import" href="/dist/elements/on-granted/on-granted.html">
+<link rel="import" href="/dist/elements/session/session-reservations/session-reservations.html">
 <link rel="import" href="/dist/lib/vep/services/theater-service/theater-service.html">
 <link rel="import" href="/dist/lib/vep/services/show-service/show-service.html">
 <link rel="import" href="/dist/lib/vep/services/session-service/session-service.html">
@@ -100,6 +102,10 @@
         </template>
       </div>
     </div>
+
+    <on-granted roles="session-manager" block>
+      <session-reservations theater="[[theaterCanonical]]" session="[[sessionCanonical]]"></session-reservations>
+    </on-granted>
   </template>
 
   <script src="page-read-session.js"></script>

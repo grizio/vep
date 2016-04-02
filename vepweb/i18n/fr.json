@@ -220,5 +220,17 @@
   },
   "price-repartition": {
     "error": "Veuillez répartir l'ensemble des places dans les différents tarifs"
+  },
+  "session-reservations": {
+    "headers": {
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Adresse e-mail",
+      "city": "Ville",
+      "comment": "Commentaire",
+      "seats": "Places",
+      "prices": "Tarifs",
+      "total": "Total"
+    }
   }
 }

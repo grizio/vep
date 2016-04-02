@@ -27,9 +27,13 @@
     reserve(theater, session, reservation) {
       return http.post(`reservation/${theater}/${session}`, reservation);
     }
-    
+
     findReservedSeats(theater, session) {
       return http.get(`/reservation/${theater}/${session}/plan`).then((_) => _.seats);
+    }
+
+    findReservations(theater, session) {
+      return http.get(`/reservation/${theater}/${session}/list`).then((_) => _.reservations);
     }
   }
 
