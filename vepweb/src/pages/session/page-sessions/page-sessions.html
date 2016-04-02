@@ -1,18 +1,29 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/kwc-table/kwc-table.html">
 <link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/bower_components/kwc-date-format/kwc-date-format.html">
 <link rel="import" href="/dist/lib/vep/services/session-service/session-service.html">
 
 <dom-module id="page-sessions">
   <template>
     <h1><kwc-i18n key="page-sessions.title" show></kwc-i18n></h1>
     <kwc-table data="[[sessions]]">
-      <kwc-table-column header="[[i18nTheater]]" property="theater"></kwc-table-column>
-      <kwc-table-column header="[[i18nShows]]" property="shows"></kwc-table-column>
+      <kwc-table-column header="[[i18nTheater]]" property="theaterName"></kwc-table-column>
+      <kwc-table-column header="[[i18nShows]]" property="shows">
+        <kwc-table-cell>
+          <template>
+            <template is="dom-repeat" items="[[value]]">
+              [[item.title]]
+            </template>
+          </template>
+        </kwc-table-cell>
+      </kwc-table-column>
       <kwc-table-column header="[[i18nDate]]" property="date">
         <kwc-table-cell>
           <template>
-            <a href="/session/read/[[row.theater]]/[[row.canonical]]">[[value]]</a>
+            <a href="/session/read/[[row.theater]]/[[row.canonical]]">
+              <kwc-date-format date="[[value]]" format="dddd DD MMMM YYYY HH:mm"></kwc-date-format>
+            </a>
           </template>
         </kwc-table-cell>
       </kwc-table-column>
