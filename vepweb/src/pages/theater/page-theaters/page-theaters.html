@@ -1,0 +1,37 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/bower_components/kwc-table/kwc-table.html">
+<link rel="import" href="/dist/elements/on-granted/on-granted.html">
+<link rel="import" href="/dist/lib/vep/services/theater-service/theater-service.html">
+
+<dom-module id="page-theaters">
+  <template>
+    <on-granted roles="theater-manager">
+      <h1>
+        <kwc-i18n key="page-theaters.title" show></kwc-i18n>
+      </h1>
+
+      <a href="/theater/create" class="btn primary"><kwc-i18n key="page-theaters.create" show></kwc-i18n></a>
+
+      <kwc-table data="[[theaters]]">
+        <kwc-table-column property="canonical" header="[[i18nHeadersCanonical]]" sortable>
+          <kwc-table-cell>
+            <template>
+              <a href="/theater/update/[[value]]">[[value]]</a>
+            </template>
+          </kwc-table-cell>
+        </kwc-table-column>
+        <kwc-table-column property="name" header="[[i18nHeadersName]]" sortable></kwc-table-column>
+        <kwc-table-column property="address" header="[[i18nHeadersAddress]]" sortable></kwc-table-column>
+      </kwc-table>
+    </on-granted>
+
+    <a href="/theater/create" class="btn primary"><kwc-i18n key="page-theaters.create" show></kwc-i18n></a>
+
+    <kwc-i18n key="page-theaters.headers.canonical" var="{{i18nHeadersCanonical}}"></kwc-i18n>
+    <kwc-i18n key="page-theaters.headers.name" var="{{i18nHeadersName}}"></kwc-i18n>
+    <kwc-i18n key="page-theaters.headers.address" var="{{i18nHeadersAddress}}"></kwc-i18n>
+  </template>
+
+  <script src="page-theaters.js"></script>
+</dom-module>

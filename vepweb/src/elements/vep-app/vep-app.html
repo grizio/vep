@@ -132,6 +132,13 @@
               </a>
             </li>
           </on-granted>
+          <on-granted roles="theater-manager" hide>
+            <li>
+              <a href="/theaters">
+                <kwc-i18n key="vep-app.topbar.theaters" show></kwc-i18n>
+              </a>
+            </li>
+          </on-granted>
           <li>
             <a href="/" id="logout">
               <kwc-i18n key="vep-app.topbar.logout" show></kwc-i18n>
@@ -160,6 +167,11 @@
                      import="/dist/pages/session/page-reservation/page-reservation.html"></app-route>
           <app-route path="/user/role/management"
                      import="/dist/pages/user/page-roles/page-roles.html"></app-route>
+          <app-route path="/user/role/management"
+                     import="/dist/pages/user/page-roles/page-roles.html"></app-route>
+          <app-route path="/theaters" import="/dist/pages/theater/page-theaters/page-theaters.html"></app-route>
+          <app-route path="/theater/create" import="/dist/pages/theater/page-form-theater/page-form-theater.html"></app-route>
+          <app-route path="/theater/update/:canonical" import="/dist/pages/theater/page-form-theater/page-form-theater.html"></app-route>
         </app-router>
       </div>
     </kwc-app>

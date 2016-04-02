@@ -14,7 +14,8 @@
       "login": "Se connecter",
       "logout": "Se déconnecter",
       "pages": "Gestion des pages",
-      "roles": "Gestion des rôles"
+      "roles": "Gestion des rôles",
+      "theaters": "Gestion des théâtres"
     }
   },
   "page-shows": {
@@ -248,5 +249,46 @@
       "sessionManager": "Gestion des séances"
     },
     "saved": "Les rôles de l'utilisateur ont bien été mis à jour."
+  },
+  "page-theaters": {
+    "title": "Liste des théâtres",
+    "headers": {
+      "canonical": "URL",
+      "name": "Nom",
+      "address": "Adresse"
+    },
+    "create": "Créer un nouveau théâtre"
+  },
+  "page-form-theater": {
+    "title": {
+      "create": "Créer un nouveau théâtre",
+      "update": "Modifier le théâtre {1}"
+    },
+    "steps": {
+      "general": "Informations générales",
+      "plan": "Plan du théâtre"
+    },
+    "fields": {
+      "name": {
+        "label": "Nom du théâtre",
+        "placeholder": "Nom du théâtre, tel qu'il sera affiché sur le site"
+      },
+      "canonical": {
+        "label": "Url d'accès",
+        "placeholder": "L'adresse utilisée pour accéder à la fiche du théâtre"
+      },
+      "content": {
+        "label": "Description",
+        "placeholder": "Description du théâtre optionnelle"
+      },
+      "address": {
+        "label": "Adresse",
+        "placeholder": "Adresse du théâtre: numéro rue, ville"
+      },
+      "plan": {
+        "label": "Plan de la salle",
+        "placeholder": "Plan de la salle au format JSON selon le model suivant: [{n,x,y,w,h,t}]"
+      }
+    }
   }
 }

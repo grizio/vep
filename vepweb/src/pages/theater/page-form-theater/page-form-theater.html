@@ -1,0 +1,84 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/bower_components/kwc-callout/kwc-callout.html">
+<link rel="import" href="/bower_components/kwc-form-steps/kwc-form-steps.html">
+<link rel="import" href="/bower_components/kwc-form-steps/kwc-form-step.html">
+<link rel="import" href="/bower_components/kwc-field/kwc-field.html">
+<link rel="import" href="/dist/elements/on-granted/on-granted.html">
+<link rel="import" href="/dist/lib/vep/services/theater-service/theater-service.html">
+<link rel="import" href="/dist/lib/vep/utils/string/String.html">
+<link rel="import" href="/dist/lib/vep/error-codes/error-codes.html">
+
+<dom-module id="page-form-theater">
+  <template>
+    <on-granted roles="theater-manager">
+      <h1 hidden="[[!isCreation]]">
+        <kwc-i18n key="page-form-theater.title.create" show></kwc-i18n>
+      </h1>
+      <h1 hidden="[[isCreation]]">
+        <kwc-i18n key="page-form-theater.title.update" show p1="[[theater.name]]"></kwc-i18n>
+      </h1>
+
+      <kwc-callout type="error" hidden$="[[!hasError]]">
+        <template is="dom-repeat" items="[[errors]]">
+          <p>[[item]]</p>
+        </template>
+      </kwc-callout>
+
+      <kwc-form-steps id="form" previous-label="[[i18nGlobalPrevious]]" next-label="[[i18nGlobalNext]]"
+                      validate-label="[[i18nGlobalValidate]]">
+        <kwc-form-step title="[[i18nStepsGeneral]]">
+          <kwc-field value="{{theater.name}}" id="name">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-theater.fields.name.label" show></kwc-i18n>
+            </span>
+            <input type="text" required placeholder="[[i18nFieldsNamePlaceholder]]" class="kwc-field-field">
+          </kwc-field>
+
+          <kwc-field value="{{theater.canonical}}" id="canonical">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-theater.fields.canonical.label" show></kwc-i18n>
+            </span>
+            <input type="text" required placeholder="[[i18nFieldsCanonicalPlaceholder]]" class="kwc-field-field"
+                   pattern="[a-z0-9-_]+">
+          </kwc-field>
+
+          <kwc-field value="{{theater.content}}">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-theater.fields.content.label" show></kwc-i18n>
+            </span>
+            <textarea placeholder="[[i18nFieldsContentPlaceholder]]" class="kwc-field-field"></textarea>
+          </kwc-field>
+
+          <kwc-field value="{{theater.address}}">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-theater.fields.address.label" show></kwc-i18n>
+            </span>
+            <input type="text" required placeholder="[[i18nFieldsAddressPlaceholder]]" class="kwc-field-field">
+          </kwc-field>
+        </kwc-form-step>
+        <kwc-form-step title="[[i18nStepsPlan]]">
+          <kwc-field value="{{theater.plan}}">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-theater.fields.plan.label" show></kwc-i18n>
+            </span>
+            <textarea required placeholder="[[i18nFieldsPlanPlaceholder]]" class="kwc-field-field"></textarea>
+          </kwc-field>
+        </kwc-form-step>
+      </kwc-form-steps>
+    </on-granted>
+
+    <kwc-i18n key="global.previous" var="{{i18nGlobalPrevious}}"></kwc-i18n>
+    <kwc-i18n key="global.next" var="{{i18nGlobalNext}}"></kwc-i18n>
+    <kwc-i18n key="global.validate" var="{{i18nGlobalValidate}}"></kwc-i18n>
+    <kwc-i18n key="page-form-theater.steps.general" var="{{i18nStepsGeneral}}"></kwc-i18n>
+    <kwc-i18n key="page-form-theater.steps.plan" var="{{i18nStepsPlan}}"></kwc-i18n>
+    <kwc-i18n key="page-form-theater.fields.name.placeholder" var="{{i18nFieldsNamePlaceholder}}"></kwc-i18n>
+    <kwc-i18n key="page-form-theater.fields.canonical.placeholder" var="{{i18nFieldsCanonicalPlaceholder}}"></kwc-i18n>
+    <kwc-i18n key="page-form-theater.fields.content.placeholder" var="{{i18nFieldsContentPlaceholder}}"></kwc-i18n>
+    <kwc-i18n key="page-form-theater.fields.address.placeholder" var="{{i18nFieldsAddressPlaceholder}}"></kwc-i18n>
+    <kwc-i18n key="page-form-theater.fields.plan.placeholder" var="{{i18nFieldsPlanPlaceholder}}"></kwc-i18n>
+  </template>
+
+  <script src="page-form-theater.js"></script>
+</dom-module>

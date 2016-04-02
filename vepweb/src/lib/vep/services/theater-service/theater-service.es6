@@ -15,6 +15,24 @@
     find(canonical) {
       return this.findAll().then((theaters) => theaters.find((t) => t.canonical === canonical));
     }
+
+    create(theater) {
+      const that = this;
+      theater.fixed = true;
+      return http.post(`/theater/${theater.canonical}`, theater).then((_) => {
+        that._theatersPromise = null;
+        return _;
+      });
+    }
+
+    update(theater) {
+      const that = this;
+      theater.fixed = true;
+      return http.put(`/theater/${theater.canonical}`, theater).then((_) => {
+        that._theatersPromise = null;
+        return _;
+      });
+    }
   }
 
   window.vep = window.vep || {};
