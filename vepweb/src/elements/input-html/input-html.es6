@@ -36,6 +36,7 @@
     }
 
     editorChange(e) {
+      console.log(this.$.editor.value);
       this.value = this.$.editor.value;
     }
 
@@ -58,6 +59,7 @@
       if (this.$.editor.value !== value) {
         this.$.editor.value = value;
       }
+      this._refresh();
     }
 
     _refresh() {

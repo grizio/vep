@@ -5,7 +5,7 @@
 
 <dom-module id="page-list-pages">
   <template>
-    <a href="/cms/pages/create"><kwc-i18n key="page-list.create" show></kwc-i18n></a>
+    <a href="/cms/pages/create" class="btn primary"><kwc-i18n key="page-list.create" show></kwc-i18n></a>
 
     <kwc-table data="[[_pages]]">
       <kwc-table-column header="[[i18nTableUrl]]" property="canonical" sortable>
@@ -19,7 +19,7 @@
       <kwc-table-column header="[[i18nTableOrder]]" property="menu" sortable></kwc-table-column>
     </kwc-table>
 
-    <a href="/cms/pages/create"><kwc-i18n key="page-list.create" show></kwc-i18n></a>
+    <a href="/cms/pages/create" class="btn primary"><kwc-i18n key="page-list.create" show></kwc-i18n></a>
 
     <kwc-i18n key="page-list.table.url" var="{{i18nTableUrl}}"></kwc-i18n>
     <kwc-i18n key="page-list.table.title" var="{{i18nTableTitle}}"></kwc-i18n>

@@ -2,24 +2,25 @@
 <link rel="import" href="/bower_components/kwc-table/kwc-table.html">
 <link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
 <link rel="import" href="/dist/lib/vep/services/show-service/show-service.html">
+<link rel="import" href="/dist/lib/vep/services/company-service/company-service.html">
 
 <dom-module id="page-shows">
   <template>
     <h1><kwc-i18n key="page-shows.title" show></kwc-i18n></h1>
     <kwc-table data="[[shows]]">
-      <kwc-table-column header="[[i18nTitle]]" property="title">
+      <kwc-table-column header="[[i18nTitle]]" property="title" sortable>
         <kwc-table-cell>
           <template>
             <a href="/show/read/[[row.canonical]]">[[value]]</a>
           </template>
         </kwc-table-cell>
       </kwc-table-column>
-      <kwc-table-column header="[[i18nAuthor]]" property="author"></kwc-table-column>
-      <kwc-table-column header="[[i18nDirector]]" property="director"></kwc-table-column>
-      <kwc-table-column header="[[i18nCompany]]" property="company">
+      <kwc-table-column header="[[i18nAuthor]]" property="author" sortable></kwc-table-column>
+      <kwc-table-column header="[[i18nDirector]]" property="director" sortable></kwc-table-column>
+      <kwc-table-column header="[[i18nCompany]]" property="company" sortable>
         <kwc-table-cell>
           <template>
-            [[value.name]]
+            {{getCompany(value)}}
           </template>
         </kwc-table-cell>
       </kwc-table-column>

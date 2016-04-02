@@ -54,7 +54,7 @@
     <kwc-form-steps id="form" previous-label="[[i18nPrevious]]" next-label="[[i18nNext]]"
                     validate-label="[[i18nValidate]]" hidden$="[[done]]">
       <kwc-form-step title="[[i18nStepSelectionTitle]]">
-        <kwc-field>
+        <kwc-field class="no-label">
           <show-plan enabled legend json-plan="[[theater.plan]]" value="{{reservation.selectedSeats}}" reserved-seats="[[reservedSeats]]"
                      class="kwc-field-field"></show-plan>
         </kwc-field>

@@ -8,22 +8,22 @@
   <template>
     <h1><kwc-i18n key="page-sessions.title" show></kwc-i18n></h1>
     <kwc-table data="[[sessions]]">
-      <kwc-table-column header="[[i18nTheater]]" property="theaterName"></kwc-table-column>
+      <kwc-table-column header="[[i18nTheater]]" property="theaterName" sortable></kwc-table-column>
+      <kwc-table-column header="[[i18nDate]]" property="date" sortable>
+        <kwc-table-cell>
+          <template>
+            <a href="/session/read/[[row.theater]]/[[row.canonical]]">
+              <kwc-date-format date="[[value]]" format="dddd DD MMMM YYYY HH:mm"></kwc-date-format>
+            </a>
+          </template>
+        </kwc-table-cell>
+      </kwc-table-column>
       <kwc-table-column header="[[i18nShows]]" property="shows">
         <kwc-table-cell>
           <template>
             <template is="dom-repeat" items="[[value]]">
               [[item.title]]
             </template>
-          </template>
-        </kwc-table-cell>
-      </kwc-table-column>
-      <kwc-table-column header="[[i18nDate]]" property="date">
-        <kwc-table-cell>
-          <template>
-            <a href="/session/read/[[row.theater]]/[[row.canonical]]">
-              <kwc-date-format date="[[value]]" format="dddd DD MMMM YYYY HH:mm"></kwc-date-format>
-            </a>
           </template>
         </kwc-table-cell>
       </kwc-table-column>

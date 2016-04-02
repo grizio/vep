@@ -7,6 +7,73 @@
 
 <dom-module id="vep-app">
   <template>
+    <style>
+      kwc-app {
+        --kwc-top-bar-bg-color: #212121;
+        --kwc-top-bar-color: #fafafa;
+        --kwc-top-bar-link-menu-styles: {
+          font-weight: normal;
+        };
+        --kwc-top-bar-link-menu-hover-styles: {
+          background-color: #616161;
+        };
+      }
+
+      ::content kwc-table ::content table {
+        width: 100%;
+        border: 1px solid #212121;
+        border-collapse: collapse;
+        margin: 1rem 0;
+      }
+
+      ::content kwc-table ::content thead {
+        background-color: #212121;
+        color: #fafafa;
+      }
+
+      ::content kwc-table ::content thead th {
+        padding: 0.25rem;
+      }
+
+      ::content kwc-table ::content tbody td {
+        padding: 0.25rem;
+        border-left: 1px solid #bdbdbd;
+        border-right: 1px solid #bdbdbd;
+      }
+
+      ::content kwc-table ::content tbody td a {
+        display: block;
+      }
+
+      ::content kwc-table ::content tbody tr:nth-of-type(even) {
+        background-color: #e0e0e0;
+      }
+
+      ::content kwc-table ::content tbody tr:nth-of-type(odd) {
+        background-color: #f5f5f5;
+      }
+
+      ::content kwc-table ::content .sortable {
+        cursor: pointer;
+      }
+
+      ::content kwc-table ::content .sorted.level1 {
+        text-decoration: underline;
+      }
+
+      ::content kwc-table ::content .sorted.up {
+        background: url("/public/images/sorted-up.png") no-repeat right center;
+      }
+
+      ::content kwc-table ::content .sorted.down {
+        background: url("/public/images/sorted-down.png") no-repeat right center;
+      }
+
+      ::content kwc-callout ::content {
+        padding: 0.5rem;
+      }
+    </style>
+
     <kwc-i18n key="vep-app.topbar.sitename" var="{{i18nSitename}}"></kwc-i18n>
     <kwc-app logo="/public/images/logo-acve.png" sitename="[[i18nSitename]]" sitehome="/">
       <div class="top-bar-left-menu">

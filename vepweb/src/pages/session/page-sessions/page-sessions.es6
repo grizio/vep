@@ -16,7 +16,6 @@
     attached() {
       const that = this;
       sessionService.findAll().then((sessions) => that.sessions = sessions);
-      setTimeout(() => console.log(that.sessions), 1000);
     }
   }
 
