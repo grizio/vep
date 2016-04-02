@@ -1,0 +1,17 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+
+<dom-module id="price-repartition">
+  <template>
+    <template is="dom-repeat" items="[[prices]]">
+      <kwc-field value="{{prices[item.id]}}" data-id$="[[item.id]]">
+        <span class="kwc-field-label">[[item.name]] ([[item.price]]&euro;)</span>
+        <input type="number" min="0" data-name$="[[item.id]]" class="kwc-field-field"/>
+      </kwc-field>
+    </template>
+
+    <kwc-i18n key="price-repartition.error" var="{{_i18nErrorInvalidValue}}">
+  </template>
+
+  <script src="price-repartition.js"></script>
+</dom-module>

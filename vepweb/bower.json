@@ -22,7 +22,8 @@
     "codemirror": "^5.12.0",
     "marked": "^0.3.5",
     "google-map": "GoogleWebComponents/google-map#^1.1.10",
-    "kwc-date-format": "^0.1.0"
+    "kwc-date-format": "^0.1.0",
+    "kwc-form-steps": "^0.1.0"
   },
   "homepage": "http://voir-entendre-posso.fr",
   "authors": [

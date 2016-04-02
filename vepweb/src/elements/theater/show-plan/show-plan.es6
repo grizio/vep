@@ -17,6 +17,10 @@
           value: null,
           observer: "_jsonPlanChanged"
         },
+        reservedSeats: {
+          type: Array,
+          value: []
+        },
         _seats: {
           type: Array,
           value: []
@@ -28,9 +32,56 @@
         _mapStyles: {
           type: String,
           value: null
+        },
+        value: {
+          type: Array,
+          value: [],
+          reflectToAttribute: true,
+          notify: true,
+          observer: "_valueChanged"
+        },
+        _i18nErrorEmptyValue: {
+          type: String,
+          value: null,
+          observer: "_valueChanged"
         }
       };
     }
+
+    attached() {
+      this.addEventListener("click", (e) => {
+        if (this.enabled) {
+          const classList = e.target.classList;
+          if (classList.contains("seat")) {
+            e.preventDefault();
+            if (!classList.contains("taken")) {
+              const seat = this._seats.find((s) => s.c === e.target.innerText);
+              seat.selected = !seat.selected;
+            }
+            this.value = this._seats.filter((s) => !!s.selected);
+            const seats = this._seats;
+            this._seats = null;
+            this.async(() => this._seats = seats);
+          }
+        }
+      }, true)
+    }
+
+    // Field behavior compatibility
+
+    checkValidity() {
+      return this.value && this.value.length > 0;
+    }
+
+    _valueChanged() {
+      this.fire("input");
+    }
+    
+    get validationMessage() {
+      return this.checkValidity() ? null : this._i18nErrorEmptyValue;
+    }
+
+    // Private methods
 
     _jsonPlanChanged(value) {
       if (value) {
@@ -50,11 +101,17 @@
         width = Math.max(width, _.x + _.w);
         height = Math.max(height, _.y + _.h);
       });
-      return `width:${width+10}px;height:${height+10}px`;
+      return `width:${width + 10}px;height:${height + 10}px`;
     }
 
-    _getSeatClass(seat) {
-      return "seat " + (seat.t || "normal");
+    _getSeatClass(seat, reservedSeats) {
+      if (seat.selected) {
+        return "seat selected";
+      } else if (reservedSeats.some((s) => s == seat.c)) {
+        return "seat taken";
+      } else {
+        return "seat " + (seat.t || "normal");
+      }
     }
 
     _getSeatStyle(seat) {

@@ -6,7 +6,6 @@
 <link rel="import" href="/bower_components/kwc-date-format/kwc-date-format.html">
 <link rel="import" href="/dist/elements/theater/show-plan/show-plan.html">
 <link rel="import" href="/dist/lib/vep/services/theater-service/theater-service.html">
-<link rel="import" href="/dist/lib/vep/services/theater-service/theater-service.html">
 <link rel="import" href="/dist/lib/vep/services/show-service/show-service.html">
 <link rel="import" href="/dist/lib/vep/services/session-service/session-service.html">
 
@@ -92,12 +91,12 @@
         <template is="dom-if" if="[[session.canReserve]]">
           <a href="[[session.reservationURL]]" class="reserve">
             <div class="btn-reserve"><kwc-i18n key="page-read-session.reserve" show></kwc-i18n></div>
-            <show-plan json-plan="[[theater.plan]]"></show-plan>
+            <show-plan json-plan="[[theater.plan]]" reserved-seats="[[reservedSeats]]"></show-plan>
             <div class="btn-reserve"><kwc-i18n key="page-read-session.reserve" show></kwc-i18n></div>
           </a>
         </template>
         <template is="dom-if" if="[[!session.canReserve]]">
-          <show-plan json-plan="[[theater.plan]]"></show-plan>
+          <show-plan json-plan="[[theater.plan]]" reserved-seats="[[reservedSeats]]"></show-plan>
         </template>
       </div>
     </div>

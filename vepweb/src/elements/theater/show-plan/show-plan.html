@@ -1,10 +1,20 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
 
 <dom-module id="show-plan">
   <template>
     <style>
       :host {
         display: block;
+      }
+
+      .legend {
+        display: flex;
+        margin-bottom: 0.5rem;
+      }
+
+      .seat-container {
+        flex-grow: 1;
       }
 
       .legend .seat {
@@ -31,37 +41,41 @@
         transition: all ease 250ms;
       }
 
+      .map .seat {
+        cursor: pointer;
+      }
+
       .map.disabled .seat {
         cursor: default!important;
       }
 
-      .map .seat.normal {
+      .seat.normal {
         background-color: #fff;
         color: #000;
         border: 1px solid black;
       }
 
-      .map .seat.strap {
+      .seat.strap {
         background-color: #07a;
         color: #fff;
         border-radius: 100%;
         border: 1px solid #046;
       }
 
-      .map .seat.taken {
+      .seat.taken {
         background-color: #d43;
         color: #fff;
-        cursor: not-allowed;
+        cursor: not-allowed!important;
         border: 1px solid #832;
       }
 
-      .map .seat.selected {
+      .seat.selected {
         background-color: #484;
         color: #fff;
         border: 1px solid #252;
       }
 
-      .map .seat.stage {
+      .seat.stage {
         background-color: #aaa;
         color: #000;
         border: 1px solid #000;
@@ -73,33 +87,34 @@
     </style>
 
     <template is="dom-if" if="[[legend]]">
-      <div class="row legend">
-        <div class="small-3 columns">
+      <div class="legend">
+        <div class="seat-container">
           <div class="seat normal"></div>
           Normal
         </div>
-        <div class="small-3 columns">
+        <div class="seat-container">
           <div class="seat strap"></div>
           Strapontin
         </div>
-        <div class="small-3 columns">
+        <div class="seat-container">
           <div class="seat taken"></div>
           Déjà réservé
         </div>
-        <div class="small-3 columns">
+        <div class="seat-container">
           <div class="seat selected"></div>
           Sélectionné
         </div>
       </div>
-      <hr>
     </template>
     <div class="map-box">
       <div class="map" class$="[[_mapClass]]" style$="[[_mapStyles]]">
         <template is="dom-repeat" items="[[_seats]]">
-          <div class$="{{_getSeatClass(item)}}" style$="{{_getSeatStyle(item)}}">[[item.c]]</div>
+          <div class$="{{_getSeatClass(item, reservedSeats)}}" style$="{{_getSeatStyle(item)}}">[[item.c]]</div>
         </template>
       </div>
     </div>
+
+    <kwc-i18n key="show-plan.emptyValue" var="{{_i18nErrorEmptyValue}}"></kwc-i18n>
   </template>
 
   <script src="show-plan.js"></script>

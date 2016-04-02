@@ -1,4 +1,9 @@
 {
+  "global": {
+    "previous": "Précédent",
+    "next": "Suivant",
+    "validate": "Valider"
+  },
   "vep-app": {
     "topbar": {
       "sitename": "Voir & Entendre",
@@ -143,5 +148,77 @@
       "description": "La séance se déroulera au théâtre « {1} » indiqué sur la carte ci-dessous :"
     },
     "reserve": "Réservez !"
+  },
+  "page-reservation": {
+    "title": "Réserver des places pour « {1} » du {2}",
+    "steps": {
+      "selection": {
+        "title": "Votre sélection"
+      },
+      "prices": {
+        "title": "Tarifs",
+        "description": "Vous avez choisi {1} place(s). Veuillez les répartir selon les profils des spectateurs."
+      },
+      "person": {
+        "title": "Vos informations",
+        "firstName": {
+          "label": "Prénom",
+          "placeholder": "Votre prénom"
+        },
+        "lastName": {
+          "label": "Nom",
+          "placeholder": "Votre nom"
+        },
+        "email": {
+          "label": "Email",
+          "placeholder": "Votre adresse e-mail valide"
+        },
+        "email2": {
+          "label": "Confirmation",
+          "placeholder": "Confirmation de votre adresse e-mail",
+          "error": "Veuillez indiquer la même adresse que précédemment"
+        },
+        "city": {
+          "label": "Ville",
+          "placeholder": "Votre ville (optionnel)"
+        },
+        "comment": {
+          "label": "Commentaire",
+          "placeholder": "Tout commentaire que vous jugez utile"
+        }
+      },
+      "summary": {
+        "title": "Récapitulatif",
+        "selection": "Votre sélection",
+        "profiles": "Profiles",
+        "total": "Total :",
+        "person": "Vos informations",
+        "name": "Nom :",
+        "email": "Adresse e-mail :",
+        "city": "Ville :",
+        "comment": "Commentaire :",
+        "session": "Rappels sur la séance",
+        "sessionName": "Nom de la séance :",
+        "theaterName": "Théâtre :",
+        "date": "Date :",
+        "shows": "Pièces :",
+        "show": "Pièce :"
+      }
+    },
+    "success": {
+      "title": "Votre réservation a bien été prise en compte",
+      "description": {
+        "got-email": "Vous allez recevoir un mail de confirmation à l'adresse que vous avez indiquée.",
+        "need-payment": "Toutefois, la réservation ne deviendra définitive qu'à réception de votre réglement.",
+        "signal": "Si vous ne recevez pas de mail de confirmation dans l'heure qui suit, veuillez nous le signaler dans la page de ",
+        "contact": "contact"
+      }
+    }
+  },
+  "show-plan": {
+    "emptyValue": "Veuillez sélectionner au moins une place"
+  },
+  "price-repartition": {
+    "error": "Veuillez répartir l'ensemble des places dans les différents tarifs"
   }
 }

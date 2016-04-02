@@ -1,0 +1,234 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/bower_components/kwc-form-steps/kwc-form-steps.html">
+<link rel="import" href="/bower_components/kwc-form-steps/kwc-form-step.html">
+<link rel="import" href="/bower_components/kwc-field/kwc-field.html">
+<link rel="import" href="/bower_components/kwc-date-format/kwc-date-format.html">
+<link rel="import" href="/bower_components/kwc-callout/kwc-callout.html">
+<link rel="import" href="/bower_components/kwc-date-format/kwc-date-format.html">
+<link rel="import" href="/dist/elements/theater/show-plan/show-plan.html">
+<link rel="import" href="/dist/elements/session/price-repartition/price-repartition.html">
+<link rel="import" href="/dist/lib/vep/services/theater-service/theater-service.html">
+<link rel="import" href="/dist/lib/vep/services/show-service/show-service.html">
+<link rel="import" href="/dist/lib/vep/services/session-service/session-service.html">
+<link rel="import" href="/dist/lib/vep/error-codes/error-codes.html">
+
+<dom-module id="page-reservation">
+  <template>
+    <style>
+      .row {
+        display: flex;
+      }
+
+      .row .column {
+        width: 50%;
+      }
+
+      .seats {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .seats .seat {
+        background-color: #fff;
+        color: #000;
+        border: 1px solid black;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        vertical-align: middle;
+        margin: 1rem;
+      }
+    </style>
+
+    <h1><kwc-i18n key="page-reservation.title" show p1="[[session.name]]" p2="[[sessionDateFormat]]"></kwc-i18n></h1>
+    <kwc-date-format date="[[session.date]]" format="dddd DD MMMM YYYY HH:mm" output="{{sessionDateFormat}}" hidden></kwc-date-format>
+
+    <kwc-callout type="error" hidden$="[[!hasError]]">
+      <template is="dom-repeat" items="[[errors]]">
+        <p>[[item]]</p>
+      </template>
+    </kwc-callout>
+
+    <kwc-form-steps id="form" previous-label="[[i18nPrevious]]" next-label="[[i18nNext]]"
+                    validate-label="[[i18nValidate]]" hidden$="[[done]]">
+      <kwc-form-step title="[[i18nStepSelectionTitle]]">
+        <kwc-field>
+          <show-plan enabled legend json-plan="[[theater.plan]]" value="{{reservation.selectedSeats}}" reserved-seats="[[reservedSeats]]"
+                     class="kwc-field-field"></show-plan>
+        </kwc-field>
+      </kwc-form-step>
+      <kwc-form-step title="[[i18nStepPricesTitle]]" id="stepPrices">
+        <p>
+          <kwc-i18n key="page-reservation.steps.prices.description" p1="[[seatNumber]]" show></kwc-i18n>
+        </p>
+        <kwc-field value="{{reservation.prices}}">
+          <price-repartition prices="[[session.prices]]" number="[[seatNumber]]"
+                             class="kwc-field-field"></price-repartition>
+        </kwc-field>
+      </kwc-form-step>
+      <kwc-form-step title="[[i18nStepPersonTitle]]">
+        <kwc-field value="{{reservation.firstName}}">
+          <span class="kwc-field-label"><kwc-i18n key="page-reservation.steps.person.firstName.label"
+                                                  show></kwc-i18n></span>
+          <input type="text" required placeholder$="[[i18nPersonFirstNamePlaceholder]]" class="kwc-field-field">
+        </kwc-field>
+        <kwc-field value="{{reservation.lastName}}">
+          <span class="kwc-field-label"><kwc-i18n key="page-reservation.steps.person.lastName.label"
+                                                  show></kwc-i18n></span>
+          <input type="text" required placeholder$="[[i18nPersonLastNamePlaceholder]]" class="kwc-field-field">
+        </kwc-field>
+        <kwc-field value="{{reservation.email}}" id="emailField">
+          <span class="kwc-field-label"><kwc-i18n key="page-reservation.steps.person.email.label"
+                                                  show></kwc-i18n></span>
+          <input type="email" required placeholder$="[[i18nPersonEmailPlaceholder]]" class="kwc-field-field">
+        </kwc-field>
+        <kwc-field id="email2Field">
+          <span class="kwc-field-label"><kwc-i18n key="page-reservation.steps.person.email2.label"
+                                                  show></kwc-i18n></span>
+          <input type="email" required placeholder$="[[i18nPersonEmail2Placeholder]]" class="kwc-field-field">
+        </kwc-field>
+        <kwc-field value="{{reservation.city}}">
+          <span class="kwc-field-label"><kwc-i18n key="page-reservation.steps.person.city.label" show></kwc-i18n></span>
+          <input type="text" placeholder$="[[i18nPersonCityPlaceholder]]" class="kwc-field-field">
+        </kwc-field>
+        <kwc-field value="{{reservation.comment}}">
+          <span class="kwc-field-label"><kwc-i18n key="page-reservation.steps.person.comment.label"
+                                                  show></kwc-i18n></span>
+          <textarea placeholder$="[[i18nPersonCommentPlaceholder]]" class="kwc-field-field"></textarea>
+        </kwc-field>
+      </kwc-form-step>
+      <kwc-form-step title="[[i18nStepSummaryTitle]]">
+        <div class="row">
+          <div class="column">
+            <h3>
+              <kwc-i18n key="page-reservation.steps.summary.selection" show></kwc-i18n>
+            </h3>
+            <div class="seats">
+              <template is="dom-repeat" items="[[reservation.selectedSeats]]">
+                <div class="seat">[[ item.c ]]</div>
+              </template>
+            </div>
+
+            <h3>
+              <kwc-i18n key="page-reservation.steps.summary.profiles" show></kwc-i18n>
+            </h3>
+            <ul>
+              <template is="dom-repeat" items="[[summaryPrices]]">
+                <li>[[ item.name ]] : [[ item.number ]] * [[ item.price ]]&euro; = [[item.total]]&euro;</li>
+              </template>
+              <li>
+                <kwc-i18n key="page-reservation.steps.summary.total" show></kwc-i18n>
+                [[ summaryTotalPrice ]]&euro;
+              </li>
+            </ul>
+          </div>
+          <div class="column">
+            <h3>
+              <kwc-i18n key="page-reservation.steps.summary.person" show></kwc-i18n>
+            </h3>
+
+            <ul>
+              <li>
+                <kwc-i18n key="page-reservation.steps.summary.name" show></kwc-i18n>
+                [[ reservation.firstName ]] [[ reservation.lastName ]]
+              </li>
+              <li>
+                <kwc-i18n key="page-reservation.steps.summary.email" show></kwc-i18n>
+                [[ reservation.email ]]
+              </li>
+              <template is="dom-if" if="[[hasCity]]">
+                <li>
+                  <kwc-i18n key="page-reservation.steps.summary.city" show></kwc-i18n>
+                  [[ reservation.city ]]
+                </li>
+              </template>
+              <template is="dom-if" if="[[hasComment]]">
+                <li>
+                  <kwc-i18n key="page-reservation.steps.summary.comment" show></kwc-i18n>
+                  [[ reservation.comment ]]
+                </li>
+              </template>
+            </ul>
+
+            <h3>
+              <kwc-i18n key="page-reservation.steps.summary.session" show></kwc-i18n>
+            </h3>
+
+            <ul>
+              <li>
+                <kwc-i18n key="page-reservation.steps.summary.sessionName" show></kwc-i18n>
+                [[ session.name ]]
+              </li>
+              <li>
+                <kwc-i18n key="page-reservation.steps.summary.theaterName" show></kwc-i18n>
+                <a href="[[theater.link]]" target="_blank">
+                  [[ theater.name ]]
+                </a>
+              </li>
+              <li>
+                <kwc-i18n key="page-reservation.steps.summary.date" show></kwc-i18n>
+                <kwc-date-format date="[[session.date]]" format="dddd DD MMMM YYYY HH:mm" locale="fr"></kwc-date-format>
+              </li>
+              <li>
+                <template is="dom-if" if="[[session.severalShows]]">
+                  <kwc-i18n key="page-reservation.steps.summary.shows" show></kwc-i18n>
+                  <ul>
+                    <template is="dom-repeat" items="[[session.shows]]">
+                      <li>
+                        <a href="[[item.link]]">[[item.title]]</a>
+                      </li>
+                    </template>
+                  </ul>
+                </template>
+                <template is="dom-if" if="[[!session.severalShows]]">
+                  <kwc-i18n key="page-reservation.steps.summary.show" show></kwc-i18n>
+                  <a href="[[session.firstShow.link]]">[[session.firstShow.title]]</a>
+
+                </template>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </kwc-form-step>
+    </kwc-form-steps>
+
+    <kwc-i18n key="page-reservation.success.title" var="{{i18nSuccessHeader}}"></kwc-i18n>
+    <kwc-callout type="success" hidden$="[[!done]]" header="[[i18nSuccessHeader]]">
+      <p>
+        <kwc-i18n key="page-reservation.success.description.got-email" show></kwc-i18n>
+      </p>
+      <p>
+        <kwc-i18n key="page-reservation.success.description.need-payment" show></kwc-i18n>
+      </p>
+      <p>
+        <kwc-i18n key="page-reservation.success.description.signal" show></kwc-i18n>
+        <a href="/contact"><kwc-i18n key="page-reservation.success.description.contact" show></kwc-i18n></a>
+      </p>
+    </kwc-callout>
+
+    <kwc-i18n key="global.previous" var="{{i18nPrevious}}"></kwc-i18n>
+    <kwc-i18n key="global.next" var="{{i18nNext}}"></kwc-i18n>
+    <kwc-i18n key="global.validate" var="{{i18nValidate}}"></kwc-i18n>
+    <kwc-i18n key="page-reservation.steps.selection.title" var="{{i18nStepSelectionTitle}}"></kwc-i18n>
+    <kwc-i18n key="page-reservation.steps.prices.title" var="{{i18nStepPricesTitle}}"></kwc-i18n>
+    <kwc-i18n key="page-reservation.steps.person.title" var="{{i18nStepPersonTitle}}"></kwc-i18n>
+    <kwc-i18n key="page-reservation.steps.summary.title" var="{{i18nStepSummaryTitle}}"></kwc-i18n>
+    <kwc-i18n key="page-reservation.steps.person.firstName.placeholder"
+              var="{{i18nPersonFirstNamePlaceholder}}"></kwc-i18n>
+    <kwc-i18n key="page-reservation.steps.person.lastName.placeholder"
+              var="{{i18nPersonLastNamePlaceholder}}"></kwc-i18n>
+    <kwc-i18n key="page-reservation.steps.person.email.placeholder"
+              var="{{i18nPersonEmailPlaceholder}}"></kwc-i18n>
+    <kwc-i18n key="page-reservation.steps.person.email2.placeholder"
+              var="{{i18nPersonEmail2Placeholder}}"></kwc-i18n>
+    <kwc-i18n key="page-reservation.steps.person.email2.error"
+              var="{{i18nPersonEmail2Error}}"></kwc-i18n>
+    <kwc-i18n key="page-reservation.steps.person.city.placeholder" var="{{i18nPersonCityPlaceholder}}"></kwc-i18n>
+    <kwc-i18n key="page-reservation.steps.person.comment.placeholder"
+              var="{{i18nPersonCommentPlaceholder}}"></kwc-i18n>
+  </template>
+
+  <script src="page-reservation.js"></script>
+</dom-module>

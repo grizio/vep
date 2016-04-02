@@ -23,6 +23,14 @@
         process(1, []);
       });
     }
+
+    reserve(theater, session, reservation) {
+      return http.post(`reservation/${theater}/${session}`, reservation);
+    }
+    
+    findReservedSeats(theater, session) {
+      return http.get(`/reservation/${theater}/${session}/plan`).then((_) => _.seats);
+    }
   }
 
   window.vep = window.vep || {};

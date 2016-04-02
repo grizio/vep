@@ -36,10 +36,25 @@
     emptyShowList: {num: 32, message: "Veuillez indiquer au moins une pièce."},
     undefinedSession: {num: 33, message: "La séance indiquée n'a pas été trouvée."},
     lockedTheater: {num: 34, message: "Le théâtre ne peut pas être modifié pour le moment."},
+    undefinedSeat: {num: 35, message: "Un siège selectionné n'existe pase"},
+    undefinedPrice: {num: 36, message: "Un prix sélectionné n'existe pas"},
+    differentSeatPriceNumbers: {num: 37, message: "Le nombre de sièges sélectionné est différent du nombre de profils"},
+    fixedTheater: {num: 38, message: "Le placement est fixe"},
+    notFixedTheater: {num: 39, message: "Le placement est libre."},
+    reservedSeat: {num: 40, message: "Le siège {1} est déjà réservé."},
 
-    find: function(num) {
+    find: function() {
+      const num = arguments[0];
       const result = objectUtils.getValues(this).find((v) => v.num === num);
-      return result ? result.message : null;
+      if (result) {
+        let message = result.message;
+        for (let i = 1, c = arguments.length ; i < c ; i++) {
+          message = message.replace(`{${i}}`, arguments[i], "g");
+        }
+        return message;
+      } else {
+        return null;
+      }
     }
   });
 

@@ -28,6 +28,10 @@
           type: Object,
           value: null
         },
+        reservedSeats: {
+          type: Array,
+          value: []
+        },
         _theaterPlace: {
           type: Object,
           value: null
@@ -54,6 +58,10 @@
       theaterService.find(this.theaterCanonical).then((theater) => {
         that.theater = theater;
         that.$.gmapSearch.search();
+      });
+
+      sessionService.findReservedSeats(this.theaterCanonical, this.sessionCanonical).then((reservedSeats) => {
+        that.reservedSeats = reservedSeats;
       });
     }
 
