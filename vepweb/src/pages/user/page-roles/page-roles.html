@@ -1,0 +1,121 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/bower_components/kwc-callout/kwc-callout.html">
+<link rel="import" href="/bower_components/kwc-table/kwc-table.html">
+<link rel="import" href="/dist/elements/on-granted/on-granted.html">
+<link rel="import" href="/dist/lib/vep/services/user-service/user-service.html">
+
+<dom-module id="page-roles">
+  <template>
+    <on-granted role="user-manager">
+      <kwc-callout show="{{showSave}}" autoclose="5000" closeable type="success">
+        <p>
+          <kwc-i18n key="page-roles.saved" show></kwc-i18n>
+        </p>
+      </kwc-callout>
+
+      <kwc-table data="[[users]]">
+        <kwc-table-column property="firstName" header="[[i18nHeaderFirstName]]" sortable></kwc-table-column>
+        <kwc-table-column property="lastName" header="[[i18nHeaderLastName]]" sortable></kwc-table-column>
+        <kwc-table-column property="email" header="[[i18nHeaderEmail]]" sortable></kwc-table-column>
+        <kwc-table-column property="user" header="[[i18nHeaderUser]]">
+          <kwc-table-cell>
+            <template>
+              <template is="dom-if" if="[[hasRole(row, 'user')]]">
+                <iron-icon icon="icons:check" class="change-role" data-role="user" data-id$="[[row.uid]]"></iron-icon>
+              </template>
+              <template is="dom-if" if="[[!hasRole(row, 'user')]]">
+                <iron-icon icon="icons:clear" class="change-role" data-role="user" data-id$="[[row.uid]]"></iron-icon>
+              </template>
+            </template>
+          </kwc-table-cell>
+        </kwc-table-column>
+        <kwc-table-column property="userManager" header="[[i18nHeaderUserManager]]">
+          <kwc-table-cell>
+            <template>
+              <template is="dom-if" if="[[hasRole(row, 'user-manager')]]">
+                <iron-icon icon="icons:check" class="change-role" data-role="user-manager" data-id$="[[row.uid]]"></iron-icon>
+              </template>
+              <template is="dom-if" if="[[!hasRole(row, 'user-manager')]]">
+                <iron-icon icon="icons:clear" class="change-role" data-role="user-manager" data-id$="[[row.uid]]"></iron-icon>
+              </template>
+            </template>
+          </kwc-table-cell>
+        </kwc-table-column>
+        <kwc-table-column property="pageManager" header="[[i18nHeaderPageManager]]">
+          <kwc-table-cell>
+            <template>
+              <template is="dom-if" if="[[hasRole(row, 'page-manager')]]">
+                <iron-icon icon="icons:check" class="change-role" data-role="page-manager" data-id$="[[row.uid]]"></iron-icon>
+              </template>
+              <template is="dom-if" if="[[!hasRole(row, 'page-manager')]]">
+                <iron-icon icon="icons:clear" class="change-role" data-role="page-manager" data-id$="[[row.uid]]"></iron-icon>
+              </template>
+            </template>
+          </kwc-table-cell>
+        </kwc-table-column>
+        <kwc-table-column property="theaterManager" header="[[i18nHeaderTheaterManager]]">
+          <kwc-table-cell>
+            <template>
+              <template is="dom-if" if="[[hasRole(row, 'theater-manager')]]">
+                <iron-icon icon="icons:check" class="change-role" data-role="theater-manager" data-id$="[[row.uid]]"></iron-icon>
+              </template>
+              <template is="dom-if" if="[[!hasRole(row, 'theater-manager')]]">
+                <iron-icon icon="icons:clear" class="change-role" data-role="theater-manager" data-id$="[[row.uid]]"></iron-icon>
+              </template>
+            </template>
+          </kwc-table-cell>
+        </kwc-table-column>
+        <kwc-table-column property="companyManager" header="[[i18nHeaderCompanyManager]]">
+          <kwc-table-cell>
+            <template>
+              <template is="dom-if" if="[[hasRole(row, 'company-manager')]]">
+                <iron-icon icon="icons:check" class="change-role" data-role="company-manager" data-id$="[[row.uid]]"></iron-icon>
+              </template>
+              <template is="dom-if" if="[[!hasRole(row, 'company-manager')]]">
+                <iron-icon icon="icons:clear" class="change-role" data-role="company-manager" data-id$="[[row.uid]]"></iron-icon>
+              </template>
+            </template>
+          </kwc-table-cell>
+        </kwc-table-column>
+        <kwc-table-column property="showManager" header="[[i18nHeaderShowManager]]">
+          <kwc-table-cell>
+            <template>
+              <template is="dom-if" if="[[hasRole(row, 'show-manager')]]">
+                <iron-icon icon="icons:check" class="change-role" data-role="show-manager" data-id$="[[row.uid]]"></iron-icon>
+              </template>
+              <template is="dom-if" if="[[!hasRole(row, 'show-manager')]]">
+                <iron-icon icon="icons:clear" class="change-role" data-role="show-manager" data-id$="[[row.uid]]"></iron-icon>
+              </template>
+            </template>
+          </kwc-table-cell>
+        </kwc-table-column>
+        <kwc-table-column property="sessionManager" header="[[i18nHeaderSessionManager]]">
+          <kwc-table-cell>
+            <template>
+              <template is="dom-if" if="[[hasRole(row, 'session-manager')]]">
+                <iron-icon icon="icons:check" class="change-role" data-role="session-manager" data-id$="[[row.uid]]"></iron-icon>
+              </template>
+              <template is="dom-if" if="[[!hasRole(row, 'session-manager')]]">
+                <iron-icon icon="icons:clear" class="change-role" data-role="session-manager" data-id$="[[row.uid]]"></iron-icon>
+              </template>
+            </template>
+          </kwc-table-cell>
+        </kwc-table-column>
+      </kwc-table>
+    </on-granted>
+
+    <kwc-i18n key="page-roles.headers.firstName" var="{{i18nHeaderFirstName}}"></kwc-i18n>
+    <kwc-i18n key="page-roles.headers.lastName" var="{{i18nHeaderLastName}}"></kwc-i18n>
+    <kwc-i18n key="page-roles.headers.email" var="{{i18nHeaderEmail}}"></kwc-i18n>
+    <kwc-i18n key="page-roles.headers.user" var="{{i18nHeaderUser}}"></kwc-i18n>
+    <kwc-i18n key="page-roles.headers.userManager" var="{{i18nHeaderUserManager}}"></kwc-i18n>
+    <kwc-i18n key="page-roles.headers.pageManager" var="{{i18nHeaderPageManager}}"></kwc-i18n>
+    <kwc-i18n key="page-roles.headers.theaterManager" var="{{i18nHeaderTheaterManager}}"></kwc-i18n>
+    <kwc-i18n key="page-roles.headers.companyManager" var="{{i18nHeaderCompanyManager}}"></kwc-i18n>
+    <kwc-i18n key="page-roles.headers.showManager" var="{{i18nHeaderShowManager}}"></kwc-i18n>
+    <kwc-i18n key="page-roles.headers.sessionManager" var="{{i18nHeaderSessionManager}}"></kwc-i18n>
+  </template>
+
+  <script src="page-roles.js"></script>
+</dom-module>

@@ -2,6 +2,7 @@
 <link rel="import" href="/bower_components/kwc-app/kwc-app.html">
 <link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
 <link rel="import" href="/bower_components/app-router/app-router.html">
+<link rel="import" href="/dist/elements/on-granted/on-granted.html">
 <link rel="import" href="/dist/lib/vep/services/page-service/page-service.html">
 <link rel="import" href="/dist/lib/vep/services/login-service/login-service.html">
 
@@ -117,11 +118,20 @@
           </li>
         </ul>
         <ul hidden$="[[!_logged]]">
-          <li>
-            <a href="/cms/pages">
-              <kwc-i18n key="vep-app.topbar.pages" show></kwc-i18n>
-            </a>
-          </li>
+          <on-granted roles="user-manager" hide>
+            <li>
+              <a href="/user/role/management">
+                <kwc-i18n key="vep-app.topbar.roles" show></kwc-i18n>
+              </a>
+            </li>
+          </on-granted>
+          <on-granted roles="page-manager" hide>
+            <li>
+              <a href="/cms/pages">
+                <kwc-i18n key="vep-app.topbar.pages" show></kwc-i18n>
+              </a>
+            </li>
+          </on-granted>
           <li>
             <a href="/" id="logout">
               <kwc-i18n key="vep-app.topbar.logout" show></kwc-i18n>
@@ -139,11 +149,17 @@
           <app-route path="/contact" import="/dist/pages/cms/page-contact/page-contact.html"></app-route>
           <app-route path="/login" import="/dist/pages/user/page-login/page-login.html"></app-route>
           <app-route path="/cms/pages" import="/dist/pages/cms/page-list-pages/page-list-pages.html"></app-route>
-          <app-route path="/cms/pages/create" import="/dist/pages/cms/page-create-page/page-create-page.html"></app-route>
-          <app-route path="/cms/page/update/:canonical" import="/dist/pages/cms/page-update-page/page-update-page.html"></app-route>
+          <app-route path="/cms/pages/create"
+                     import="/dist/pages/cms/page-create-page/page-create-page.html"></app-route>
+          <app-route path="/cms/page/update/:canonical"
+                     import="/dist/pages/cms/page-update-page/page-update-page.html"></app-route>
           <app-route path="/sessions" import="/dist/pages/session/page-sessions/page-sessions.html"></app-route>
-          <app-route path="/session/read/:theaterCanonical/:sessionCanonical" import="/dist/pages/session/page-read-session/page-read-session.html"></app-route>
-          <app-route path="/reservation/:theaterCanonical/:sessionCanonical" import="/dist/pages/session/page-reservation/page-reservation.html"></app-route>
+          <app-route path="/session/read/:theaterCanonical/:sessionCanonical"
+                     import="/dist/pages/session/page-read-session/page-read-session.html"></app-route>
+          <app-route path="/reservation/:theaterCanonical/:sessionCanonical"
+                     import="/dist/pages/session/page-reservation/page-reservation.html"></app-route>
+          <app-route path="/user/role/management"
+                     import="/dist/pages/user/page-roles/page-roles.html"></app-route>
         </app-router>
       </div>
     </kwc-app>

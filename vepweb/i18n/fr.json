@@ -13,7 +13,8 @@
       "contact": "Contactez-nous",
       "login": "Se connecter",
       "logout": "Se déconnecter",
-      "pages": "Gestion des pages"
+      "pages": "Gestion des pages",
+      "roles": "Gestion des rôles"
     }
   },
   "page-shows": {
@@ -232,5 +233,20 @@
       "prices": "Tarifs",
       "total": "Total"
     }
+  },
+  "page-roles": {
+    "headers": {
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Adresse e-mail",
+      "user": "Utilisateur",
+      "userManager": "Gestion des utilisateurs",
+      "pageManager": "Gestion des pages",
+      "theaterManager": "Gestion des théâtres",
+      "companyManager": "Gestion des troupes",
+      "showManager": "Gestion des pièces",
+      "sessionManager": "Gestion des séances"
+    },
+    "saved": "Les rôles de l'utilisateur ont bien été mis à jour."
   }
 }
