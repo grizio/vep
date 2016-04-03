@@ -5,8 +5,26 @@
 <dom-module id="input-html">
   <template>
     <style>
+      :host {
+        display: block;
+      }
+
       #editor {
         min-height: 450px;
+      }
+
+      juicy-ace-editor {
+        display: flex;
+        position: relative;
+      }
+
+      juicy-ace-editor .ace_editor {
+        width: auto!important;
+        height: auto!important;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
       }
     </style>
 
