@@ -9,7 +9,7 @@
   <template>
     <h1><kwc-i18n key="page-shows.title" show></kwc-i18n></h1>
 
-    <on-granted roles="show-manager">
+    <on-granted roles="show-manager" block>
       <a href="/show/create" class="btn primary"><kwc-i18n key="page-shows.create" show></kwc-i18n></a>
     </on-granted>
 
@@ -32,7 +32,7 @@
       </kwc-table-column>
     </kwc-table>
 
-    <on-granted roles="show-manager">
+    <on-granted roles="show-manager" block>
       <a href="/show/create" class="btn primary"><kwc-i18n key="page-shows.create" show></kwc-i18n></a>
     </on-granted>
 
