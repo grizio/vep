@@ -1,0 +1,103 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/bower_components/kwc-field/kwc-field.html">
+<link rel="import" href="/dist/elements/on-granted/on-granted.html">
+<link rel="import" href="/dist/elements/input-html/input-html.html">
+<link rel="import" href="/dist/lib/vep/services/show-service/show-service.html">
+<link rel="import" href="/dist/lib/vep/services/company-service/company-service.html">
+<link rel="import" href="/dist/lib/vep/utils/string/String.html">
+
+<dom-module id="page-form-show">
+  <template>
+    <on-granted roles="show-manager">
+      <h1 hidden$="[[!isCreation]]">
+        <kwc-i18n key="page-form-show.title.create" show></kwc-i18n>
+      </h1>
+      <h1 hidden$="[[isCreation]]">
+        <kwc-i18n key="page-form-show.title.update" show p1="[[show.title]]"></kwc-i18n>
+      </h1>
+
+      <form id="form">
+        <fieldset>
+          <legend>
+            <kwc-i18n key="page-form-show.legend" show></kwc-i18n>
+          </legend>
+
+          <kwc-field value="{{show.title}}" id="title">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-show.fields.title.label" show></kwc-i18n>
+            </span>
+            <input type="text" required placeholder="[[i18nFieldsTitlePlaceholder]]" class="kwc-field-field">
+          </kwc-field>
+
+          <kwc-field value="{{show.canonical}}" id="canonical">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-show.fields.canonical.label" show></kwc-i18n>
+            </span>
+            <input type="text" required placeholder="[[i18nFieldsCanonicalPlaceholder]]" pattern="[a-z0-9_+-]+"
+                   class="kwc-field-field" id="canonicalField">
+          </kwc-field>
+
+          <kwc-field value="{{show.author}}">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-show.fields.author.label" show></kwc-i18n>
+            </span>
+            <input type="text" placeholder="[[i18nFieldsAuthorPlaceholder]]" class="kwc-field-field">
+          </kwc-field>
+
+          <kwc-field value="{{show.director}}">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-show.fields.director.label" show></kwc-i18n>
+            </span>
+            <input type="text" placeholder="[[i18nFieldsDirectorPlaceholder]]" class="kwc-field-field">
+          </kwc-field>
+
+          <kwc-field value="{{show.duration}}">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-show.fields.duration.label" show></kwc-i18n>
+            </span>
+            <input type="number" min="0" step="15" placeholder="[[i18nFieldsDurationPlaceholder]]"
+                   class="kwc-field-field">
+          </kwc-field>
+
+          <kwc-field value="{{show.company}}">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-show.fields.company.label" show></kwc-i18n>
+            </span>
+            <select class="kwc-field-field">
+              <template is="dom-repeat" items="[[companies]]">
+                <option value="[[item.canonical]]">[[item.name]]</option>
+              </template>
+            </select>
+          </kwc-field>
+
+          <kwc-field value="{{show.content}}">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-show.fields.content.label" show></kwc-i18n>
+            </span>
+            <input-html class="kwc-field-field"></input-html>
+          </kwc-field>
+
+          <button class="btn primary">
+            <kwc-i18n key="page-form-show.submit" show></kwc-i18n>
+          </button>
+          <a href="/shows" class="btn secondary">
+            <kwc-i18n key="page-form-show.return" show></kwc-i18n>
+          </a>
+
+          <kwc-i18n key="page-form-show.fields.title.placeholder" var="{{i18nFieldsTitlePlaceholder}}"></kwc-i18n>
+          <kwc-i18n key="page-form-show.fields.canonical.placeholder"
+                    var="{{i18nFieldsCanonicalPlaceholder}}"></kwc-i18n>
+          <kwc-i18n key="page-form-show.fields.author.placeholder"
+                    var="{{i18nFieldsAuthorPlaceholder}}"></kwc-i18n>
+          <kwc-i18n key="page-form-show.fields.director.placeholder"
+                    var="{{i18nFieldsDirectorPlaceholder}}"></kwc-i18n>
+          <kwc-i18n key="page-form-show.fields.content.placeholder"
+                    var="{{i18nFieldsContentPlaceholder}}"></kwc-i18n>
+        </fieldset>
+      </form>
+    </on-granted>
+  </template>
+
+  <script src="./page-form-show.js" inline></script>
+</dom-module>

@@ -19,6 +19,9 @@
       "companies": "Troupes"
     }
   },
+  "page-show": {
+    "update": "Modifier"
+  },
   "page-shows": {
     "title": "Pièces",
     "table": {
@@ -26,7 +29,8 @@
       "author": "Auteur",
       "director": "Metteur en scène",
       "company": "Troupe"
-    }
+    },
+    "create": "Créer une nouvelle pièce"
   },
   "page-read": {
     "not-found": {
@@ -331,5 +335,42 @@
     },
     "submit": "Envoyer",
     "return": "Revenir à la liste des troupes"
+  },
+  "page-form-show": {
+    "title": {
+      "create": "Créer une nouvelle pièce",
+      "update": "Mise à jour de la pièce {1}"
+    },
+    "legend": "Pièce",
+    "fields": {
+      "title": {
+        "label": "Titre",
+        "placeholder": "Titre de la pièce"
+      },
+      "canonical": {
+        "label": "Url d'accès",
+        "placeholder": "URL d'accès à la troupe (lettres minuscules, chiffres, -, + ou _)"
+      },
+      "author": {
+        "label": "Auteur",
+        "placeholder": "Auteur de la pièce"
+      },
+      "director": {
+        "label": "Metteur en scène",
+        "placeholder": "Metteur en scène de la pièce"
+      },
+      "duration": {
+        "label": "Durée (minutes)"
+      },
+      "company": {
+        "label": "Troupe"
+      },
+      "content": {
+        "label": "Description",
+        "placeholder": "Description de la pièce, sous forme HTML"
+      }
+    },
+    "submit": "Valider",
+    "return": "Retourner à la liste des pièces"
   }
 }

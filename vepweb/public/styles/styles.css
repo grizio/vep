@@ -49,7 +49,7 @@ kwc-field.no-label .label {
     display: none;
 }
 
-kwc-field input.kwc-field-field, kwc-field textarea.kwc-field-field {
+kwc-field input.kwc-field-field, kwc-field textarea.kwc-field-field, kwc-field select.kwc-field-field {
     border: 1px solid #bdbdbd;
     padding: 0.5rem;
 }

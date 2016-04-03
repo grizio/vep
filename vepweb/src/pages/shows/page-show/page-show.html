@@ -1,13 +1,28 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
 <link rel="import" href="/dist/lib/vep/services/show-service/show-service.html">
+<link rel="import" href="/dist/elements/on-granted/on-granted.html">
 
 <dom-module id="page-show">
   <template>
+    <style>
+      .action {
+        margin-top: 1rem;
+      }
+    </style>
+
     <h1>[[show.title]]</h1>
     <h6>[[show.company.name]]</h6>
 
     <div id="content"></div>
+
+    <on-granted roles="show-manager">
+      <div class="action">
+        <a href="/show/update/[[show.canonical]]" class="btn primary">
+          <kwc-i18n key="page-show.update" show></kwc-i18n>
+        </a>
+      </div>
+    </on-granted>
   </template>
 
   <script src="./page-show.js" inline></script>

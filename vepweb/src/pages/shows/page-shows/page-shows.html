@@ -1,12 +1,18 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/kwc-table/kwc-table.html">
 <link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/dist/elements/on-granted/on-granted.html">
 <link rel="import" href="/dist/lib/vep/services/show-service/show-service.html">
 <link rel="import" href="/dist/lib/vep/services/company-service/company-service.html">
 
 <dom-module id="page-shows">
   <template>
     <h1><kwc-i18n key="page-shows.title" show></kwc-i18n></h1>
+
+    <on-granted roles="show-manager">
+      <a href="/show/create" class="btn primary"><kwc-i18n key="page-shows.create" show></kwc-i18n></a>
+    </on-granted>
+
     <kwc-table data="[[shows]]">
       <kwc-table-column header="[[i18nTitle]]" property="title" sortable>
         <kwc-table-cell>
@@ -25,6 +31,10 @@
         </kwc-table-cell>
       </kwc-table-column>
     </kwc-table>
+
+    <on-granted roles="show-manager">
+      <a href="/show/create" class="btn primary"><kwc-i18n key="page-shows.create" show></kwc-i18n></a>
+    </on-granted>
 
     <kwc-i18n key="page-shows.table.title" var="{{i18nTitle}}"></kwc-i18n>
     <kwc-i18n key="page-shows.table.author" var="{{i18nAuthor}}"></kwc-i18n>
