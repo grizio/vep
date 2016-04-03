@@ -155,6 +155,10 @@
       </div>
 
       <div class="content">
+        <kwc-callout type="warning" closeable show="{{_showUseCookies}}">
+          <p><kwc-i18n key="global.use-cookies" show></kwc-i18n></p>
+        </kwc-callout>
+
         <app-router mode="pushstate" trailingSlash="ignore">
           <app-route path="/" import="/dist/pages/cms/page-home/page-home.html"></app-route>
           <app-route path="/shows" import="/dist/pages/shows/page-shows/page-shows.html"></app-route>

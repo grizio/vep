@@ -13,6 +13,11 @@
         _logged: {
           type: Boolean,
           value: null
+        },
+        _showUseCookies: {
+          type: Boolean,
+          value: true,
+          observer: "_showUseCookiesChanged"
         }
       };
 
@@ -24,6 +29,8 @@
 
     attached() {
       this._buildMenu();
+      this._showUseCookies = localStorage["use-cookies"] !== "hide";
+      this.isAttached = true;
     }
 
     logout(e) {
@@ -38,6 +45,12 @@
 
     _onLogin(e) {
       this._logged = e.detail.logged;
+    }
+
+    _showUseCookiesChanged(value) {
+      if (this.isAttached && !value) {
+        localStorage["use-cookies"] = "hide";
+      }
     }
   }
 

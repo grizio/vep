@@ -2,7 +2,8 @@
   "global": {
     "previous": "Précédent",
     "next": "Suivant",
-    "validate": "Valider"
+    "validate": "Valider",
+    "use-cookies": "En poursuivant votre navigation sur ce site, vous acceptez l’utilisation de cookies pour améliorer votre navigation. Ils ne seront pas exploités à des fins publicitaires ou de tracking."
   },
   "vep-app": {
     "topbar": {
