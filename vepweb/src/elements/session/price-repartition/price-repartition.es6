@@ -15,7 +15,9 @@
         },
         value: {
           type: Object,
-          value: {}
+          value: {},
+          reflectToAttribute: true,
+          notify: true
         },
         _i18nErrorInvalidValue: {
           type: String,
@@ -26,14 +28,35 @@
     }
 
     attached() {
+      const that = this;
       this.addEventListener("value-changed", (e) => {
         e.preventDefault();
         const value = {};
-        Array.from(this.querySelectorAll("kwc-field")).forEach((field) => {
+        Array.from(that.querySelectorAll("kwc-field")).forEach((field) => {
           value[field.getAttribute("data-id")] = field.value === "{{prices[item.id]}}" ? 0 : parseInt(field.value);
         });
-        this.value = value;
+        if (!that._isSameObject(that.value, value)) {
+          that.value = value;
+        }
       }, true);
+    }
+
+    _isSameObject(obj1, obj2) {
+      for (let key in obj1) {
+        if (obj1.hasOwnProperty(key)) {
+          if (obj1[key] !== obj2[key]) {
+            return false;
+          }
+        }
+      }
+      for (let key in obj2) {
+        if (obj2.hasOwnProperty(key)) {
+          if (obj2[key] !== obj1[key]) {
+            return false;
+          }
+        }
+      }
+      return true;
     }
 
     // kwc-field compatibility

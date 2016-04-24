@@ -49,22 +49,27 @@
     }
 
     attached() {
-      this.addEventListener("click", (e) => {
-        if (this.enabled) {
-          const classList = e.target.classList;
-          if (classList.contains("seat")) {
-            e.preventDefault();
-            if (!classList.contains("taken")) {
-              const seat = this._seats.find((s) => s.c === e.target.innerText);
-              seat.selected = !seat.selected;
-            }
-            this.value = this._seats.filter((s) => !!s.selected);
-            const seats = this._seats;
-            this._seats = null;
-            this.async(() => this._seats = seats);
+      const that = this;
+
+      this.addEventListener("click", (e) => this._seatTap(e, that), true);
+      this.addEventListener("touchend", (e) => this._seatTap(e, that), true);
+    }
+
+    _seatTap(e, that) {
+      if (this.enabled) {
+        const classList = e.target.classList;
+        if (classList.contains("seat")) {
+          e.preventDefault();
+          if (!classList.contains("taken")) {
+            const seat = that._seats.find((s) => s.c === e.target.textContent);
+            seat.selected = !seat.selected;
           }
+          this.value = this._seats.filter((s) => !!s.selected);
+          const seats = that._seats;
+          that._seats = null;
+          that.async(() => that._seats = seats);
         }
-      }, true)
+      }
     }
 
     // Field behavior compatibility
