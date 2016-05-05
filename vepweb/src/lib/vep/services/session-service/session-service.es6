@@ -24,6 +24,22 @@
       });
     }
 
+    create(session) {
+      return http.post(`/session/${session.theater}`, {
+        date: session.date,
+        reservationEndDate: session.reservationEndDate,
+        name: session.shows[0],
+        prices: session.prices.map((p) => {
+          return {
+            name: p.name,
+            price: parseInt(p.price) * 100,
+            condition: p.condition
+          }
+        }),
+        shows: session.shows
+      });
+    }
+
     reserve(theater, session, reservation) {
       return http.post(`reservation/${theater}/${session}`, reservation);
     }

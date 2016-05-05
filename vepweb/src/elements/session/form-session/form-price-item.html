@@ -1,0 +1,30 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/bower_components/kwc-field/kwc-field.html">
+
+<dom-module id="form-price-item">
+  <template>
+    <kwc-field id="name">
+      <span class="kwc-field-label"><kwc-i18n key="page-form-session.form-price.name.label" show></kwc-i18n></span>
+      <input type="text" class="kwc-field-field" required>
+    </kwc-field>
+
+    <kwc-field id="price">
+      <span class="kwc-field-label"><kwc-i18n key="page-form-session.form-price.price.label" show></kwc-i18n></span>
+      <input type="number" min="0" step=".01" class="kwc-field-field" required>
+    </kwc-field>
+
+    <kwc-field id="condition">
+      <span class="kwc-field-label"><kwc-i18n key="page-form-session.form-price.condition.label" show></kwc-i18n></span>
+      <input type="text" class="kwc-field-field">
+    </kwc-field>
+
+    <button class="remove btn secondary" id="remove">
+      <kwc-i18n key="page-form-session.form-price.remove" show></kwc-i18n>
+    </button>
+
+    <kwc-i18n key="page-form-session.form-price.correct-children" var="{{messageCorrectChildren}}"></kwc-i18n>
+  </template>
+
+  <script src="./form-price-item.js" inline></script>
+</dom-module>

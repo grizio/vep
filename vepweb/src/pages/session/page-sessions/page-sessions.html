@@ -7,6 +7,11 @@
 <dom-module id="page-sessions">
   <template>
     <h1><kwc-i18n key="page-sessions.title" show></kwc-i18n></h1>
+
+    <on-granted roles="session-manager" block>
+      <a href="/session/create" class="btn primary"><kwc-i18n key="page-sessions.create" show></kwc-i18n></a>
+    </on-granted>
+
     <kwc-table data="[[sessions]]">
       <kwc-table-column header="[[i18nTheater]]" property="theaterName" sortable></kwc-table-column>
       <kwc-table-column header="[[i18nDate]]" property="date" sortable>
@@ -28,6 +33,10 @@
         </kwc-table-cell>
       </kwc-table-column>
     </kwc-table>
+
+    <on-granted roles="session-manager" block>
+      <a href="/session/create" class="btn primary"><kwc-i18n key="page-sessions.create" show></kwc-i18n></a>
+    </on-granted>
 
     <kwc-i18n key="page-sessions.table.theater" var="{{i18nTheater}}"></kwc-i18n>
     <kwc-i18n key="page-sessions.table.shows" var="{{i18nShows}}"></kwc-i18n>

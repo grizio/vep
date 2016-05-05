@@ -145,7 +145,8 @@
       "theater": "Théâtre",
       "shows": "Pièces",
       "date": "Date"
-    }
+    },
+    "create": "Ajouter une séance"
   },
   "page-read-session": {
     "shows": {
@@ -373,5 +374,68 @@
     },
     "submit": "Valider",
     "return": "Retourner à la liste des pièces"
+  },
+  "page-form-session": {
+    "title": {
+      "create": "Ajouter une séance",
+      "update": "Modifier la séance {1}"
+    },
+    "steps": {
+      "general": {
+        "title": "Informations générales",
+        "theater": {
+          "label": "Théâtre",
+          "placeholder": "Choisissez un théâtre"
+        },
+        "date": {
+          "label": "Date"
+        },
+        "reservationEndDate": {
+          "label": "Date de fin de réservation"
+        }
+      },
+      "shows": {
+        "title": "Pièces",
+        "label": "Sélectionner"
+      },
+      "prices": {
+        "title": "Prix"
+      },
+      "summary": {
+        "title": "Résumé",
+        "general-info": "Informations générales",
+        "theater": "Théâtre :",
+        "date": "Date de la séance :",
+        "reservationEndDate": "Date de fin de réservation :",
+        "shows": "Pièces",
+        "prices": "Prix"
+      }
+    },
+    "show-selection": {
+      "remove": "Supprimer",
+      "add": "Ajouter",
+      "default-option": "Choisissez",
+      "message-double": "Veuillez ne sélectionner qu'une fois chaque pièce"
+    },
+    "form-price": {
+      "add": "Ajouter",
+      "remove": "Supprimer",
+      "message-double": "Deux prix ont la même valeur",
+      "name": {
+        "label": "Nom"
+      },
+      "price": {
+        "label": "Prix"
+      },
+      "condition": {
+        "label": "Condition"
+      },
+      "correct-children": "Veuillez corriger les champs dans la liste des prix",
+      "message-invalid": "Veuillez corriger les champs invalides"
+    },
+    "success": {
+      "header": "Séance créée",
+      "body": "La séance a bien été créée. Vous pouvez en créer une nouvelle basée sur cette dernière"
+    }
   }
 }

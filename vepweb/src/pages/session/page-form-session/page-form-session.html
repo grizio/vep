@@ -1,0 +1,138 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="/bower_components/kwc-form-steps/kwc-form-steps.html">
+<link rel="import" href="/bower_components/kwc-form-steps/kwc-form-step.html">
+<link rel="import" href="/bower_components/kwc-field/kwc-field.html">
+<link rel="import" href="/bower_components/kwc-date-format/kwc-date-format.html">
+<link rel="import" href="/dist/elements/on-granted/on-granted.html">
+<link rel="import" href="/dist/lib/vep/services/theater-service/theater-service.html">
+<link rel="import" href="/dist/lib/vep/services/session-service/session-service.html">
+<link rel="import" href="/dist/elements/session/form-session/show-selection-list.html">
+<link rel="import" href="/dist/elements/session/form-session/form-price-list.html">
+<link rel="import" href="/dist/elements/show/show-title/show-title.html">
+<link rel="import" href="/dist/elements/theater/theater-name/theater-name.html">
+
+<dom-module id="page-form-session">
+  <template>
+    <on-granted roles="session-manager">
+      <h1 hidden$="[[!isCreation]]">
+        <kwc-i18n key="page-form-session.title.create" show></kwc-i18n>
+      </h1>
+      <h1 hidden$="[[isCreation]]">
+        <kwc-i18n key="page-form-session.title.update" show p1="[[session.title]]"></kwc-i18n>
+      </h1>
+
+      <kwc-form-steps id="form" previous-label="[[i18nPrevious]]" next-label="[[i18nNext]]"
+                      validate-label="[[i18nValidate]]">
+        <kwc-form-step title="[[i18nStepGeneralTitle]]">
+          <kwc-callout closeable show="[[showSuccess]]" header="[[i18nSuccessHeader]]">
+            <p>[[i18nSuccessBody]]</p>
+          </kwc-callout>
+
+          <kwc-field value="{{session.theater}}">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-session.steps.general.theater.label" show></kwc-i18n>
+            </span>
+            <select class="kwc-field-field" required>
+              <option value="">[[i18nStepGeneralTheaterPlaceholder]]</option>
+              <template is="dom-repeat" items="[[theaters]]">
+                <option value="[[item.canonical]]">[[item.name]]</option>
+              </template>
+            </select>
+          </kwc-field>
+
+          <kwc-field value="{{session.date}}">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-session.steps.general.date.label" show></kwc-i18n>
+            </span>
+            <input type="datetime-local" class="kwc-field-field" required>
+          </kwc-field>
+
+          <kwc-field value="{{session.reservationEndDate}}">
+            <span class="kwc-field-label">
+              <kwc-i18n key="page-form-session.steps.general.reservationEndDate.label" show></kwc-i18n>
+            </span>
+            <input type="datetime-local" class="kwc-field-field" required>
+          </kwc-field>
+        </kwc-form-step>
+
+        <kwc-form-step title="[[i18nStepShowsTitle]]">
+          <kwc-field value="{{session.shows}}">
+            <span class="kwc-field-label"><kwc-i18n key="page-form-session.steps.shows.label" show></kwc-i18n></span>
+            <show-selection-list class="kwc-field-field"></show-selection-list>
+          </kwc-field>
+        </kwc-form-step>
+
+        <kwc-form-step title="[[i18nStepPricesTitle]]">
+          <kwc-field value="{{session.prices}}">
+            <span class="kwc-field-label"><kwc-i18n key="page-form-session.steps.prices.label" show></kwc-i18n></span>
+            <form-price-list class="kwc-field-field"></form-price-list>
+          </kwc-field>
+        </kwc-form-step>
+
+        <kwc-form-step title="[[i18nStepSummaryTitle]]">
+          <h3>
+            <kwc-i18n key="page-form-session.steps.summary.general-info" show></kwc-i18n>
+          </h3>
+
+          <ul>
+            <li>
+              <kwc-i18n key="page-form-session.steps.summary.theater" show></kwc-i18n>
+              <theater-name canonical="[[session.theater]]"></theater-name>
+            </li>
+            <li>
+              <kwc-i18n key="page-form-session.steps.summary.date" show></kwc-i18n>
+              <kwc-date-format date="[[session.date]]" format="dddd Do MMMM YYYY HH:mm"></kwc-date-format>
+            </li>
+            <li>
+              <kwc-i18n key="page-form-session.steps.summary.reservationEndDate" show></kwc-i18n>
+              <kwc-date-format date="[[session.reservationEndDate]]" format="dddd Do MMMM YYYY HH:mm"></kwc-date-format>
+            </li>
+          </ul>
+
+          <h3>
+            <kwc-i18n key="page-form-session.steps.summary.shows" show></kwc-i18n>
+          </h3>
+
+          <ul>
+            <template is="dom-repeat" items="[[session.shows]]">
+              <li>
+                <show-title canonical="[[ item ]]"></show-title>
+              </li>
+            </template>
+          </ul>
+
+          <h3>
+            <kwc-i18n key="page-form-session.steps.summary.prices" show></kwc-i18n>
+          </h3>
+
+          <ul>
+            <template is="dom-repeat" items="[[session.prices]]">
+              <li>
+                [[ item.name ]] :
+                [[ item.price ]]&euro;
+                <template is="dom-if" if="[[item.condition]]">
+                  ([[ item.condition ]])
+                </template>
+              </li>
+            </template>
+          </ul>
+        </kwc-form-step>
+      </kwc-form-steps>
+    </on-granted>
+
+    <kwc-i18n key="global.previous" var="{{i18nPrevious}}"></kwc-i18n>
+    <kwc-i18n key="global.next" var="{{i18nNext}}"></kwc-i18n>
+    <kwc-i18n key="global.validate" var="{{i18nValidate}}"></kwc-i18n>
+    <kwc-i18n key="page-form-session.steps.general.title" var="{{i18nStepGeneralTitle}}"></kwc-i18n>
+    <kwc-i18n key="page-form-session.steps.general.theater.placeholder"
+              var="{{i18nStepGeneralTheaterPlaceholder}}"></kwc-i18n>
+    <kwc-i18n key="page-form-session.steps.shows.title" var="{{i18nStepShowsTitle}}"></kwc-i18n>
+    <kwc-i18n key="page-form-session.steps.prices.title" var="{{i18nStepPricesTitle}}"></kwc-i18n>
+    <kwc-i18n key="page-form-session.steps.summary.title" var="{{i18nStepSummaryTitle}}"></kwc-i18n>
+    <kwc-i18n key="page-form-session.success.header" var="{{i18nSuccessHeader}}"></kwc-i18n>
+    <kwc-i18n key="page-form-session.success.body" var="{{i18nSuccessBody}}"></kwc-i18n>
+  </template>
+
+  <script src="./page-form-session.js" inline></script>
+</dom-module>

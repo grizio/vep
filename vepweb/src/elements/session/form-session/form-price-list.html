@@ -1,0 +1,25 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/kwc-i18n/kwc-i18n.html">
+<link rel="import" href="form-price-item.html">
+
+<dom-module id="form-price-list">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <div id="prices">
+      <form-price-item></form-price-item>
+    </div>
+
+    <button id="add" class="btn primary">
+      <kwc-i18n key="page-form-session.form-price.add" show></kwc-i18n>
+    </button>
+    <kwc-i18n key="page-form-session.form-price.message-double" var="{{messageDouble}}"></kwc-i18n>
+    <kwc-i18n key="page-form-session.form-price.message-invalid" var="{{messageInvalid}}"></kwc-i18n>
+  </template>
+
+  <script src="./form-price-list.js" inline></script>
+</dom-module>
