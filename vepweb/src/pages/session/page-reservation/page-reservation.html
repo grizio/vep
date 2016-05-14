@@ -43,7 +43,7 @@
     </style>
 
     <h1><kwc-i18n key="page-reservation.title" show p1="[[session.name]]" p2="[[sessionDateFormat]]"></kwc-i18n></h1>
-    <kwc-date-format date="[[session.date]]" format="dddd DD MMMM YYYY HH:mm" output="{{sessionDateFormat}}" hidden></kwc-date-format>
+    <kwc-date-format date="[[session.strDate]]" format="dddd DD MMMM YYYY HH:mm" output="{{sessionDateFormat}}" hidden></kwc-date-format>
 
     <kwc-callout type="error" hidden$="[[!hasError]]">
       <template is="dom-repeat" items="[[errors]]">

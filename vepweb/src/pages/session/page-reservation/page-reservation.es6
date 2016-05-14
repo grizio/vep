@@ -55,6 +55,10 @@
       return new Date(this._session.date);
     }
 
+    get strDate() {
+      return this._session.date;
+    }
+
     get name() {
       return this._session.name;
     }
