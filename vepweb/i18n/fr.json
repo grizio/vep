@@ -218,7 +218,6 @@
       "title": "Votre réservation a bien été prise en compte",
       "description": {
         "got-email": "Vous allez recevoir un mail de confirmation à l'adresse que vous avez indiquée.",
-        "need-payment": "Toutefois, la réservation ne deviendra définitive qu'à réception de votre réglement.",
         "signal": "Si vous ne recevez pas de mail de confirmation dans l'heure qui suit, veuillez nous le signaler dans la page de ",
         "contact": "contact"
       }
