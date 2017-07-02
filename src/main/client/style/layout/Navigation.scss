@@ -1,0 +1,61 @@
+@import "../settings/index";
+
+.left-navigation {
+  height: 100%;
+  overflow-y: auto;
+  border-right: 1px solid #e0e0e0;
+  background-color: #fff;
+
+  .sitename {
+    a {
+      text-decoration: none;
+      color: $color-normal;
+      font-size: 25px;
+      font-weight: 600;
+    }
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  nav {
+    .menu-group {
+      a {
+        font-weight: bold;
+        text-decoration: none;
+        color: $color-normal;
+        display: block;
+        padding: 10px;
+
+        &:hover {
+          color: $color-hover;
+        }
+      }
+
+      &.active a {
+        color: $color-active;
+      }
+
+      .menu-item {
+        a, span {
+          color: $color-normal;
+          font-weight: 400;
+          text-decoration: none;
+          display: block;
+          padding: 10px 10px 10px 45px;
+
+          &:hover {
+            color: $color-hover;
+          }
+        }
+
+        &.active a {
+          color: $color-active;
+        }
+
+        &.disabled span {
+          color: $color-disabled;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}

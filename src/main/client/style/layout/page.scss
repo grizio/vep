@@ -1,0 +1,28 @@
+@import "../settings/index";
+
+.page {
+  height: 100%;
+  overflow-y: auto;
+
+  > header {
+    background-color: $color-primary;
+    color: $color-active-reverse;
+    padding: 50px;
+    font-size: 56px;
+  }
+
+  > section {
+    padding: 50px;
+    color: $color-normal;
+
+    h1 {
+      color: $color-primary;
+      font-size: 34px;
+      font-weight: 400;
+    }
+
+    p {
+      text-align: justify;
+    }
+  }
+}

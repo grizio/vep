@@ -27,6 +27,8 @@
     "typescript": "2.4.1"
   },
   "dependencies": {
+    "@types/classnames": "^2.2.0",
+    "classnames": "^2.2.5",
     "preact": "8.1.0",
     "preact-compat": "3.16.0",
     "preact-router": "2.5.2"

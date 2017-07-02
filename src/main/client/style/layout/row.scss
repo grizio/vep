@@ -1,0 +1,24 @@
+.row {
+  display: flex;
+  width: 100%;
+
+  &.middle {
+    align-items: center;
+  }
+  &.center {
+    justify-content: center;
+  }
+}
+
+.row:not(.no-separator) {
+  .col {
+    padding: 5px;
+  }
+}
+
+@for $i from 1 through 10 {
+  .col-#{$i} {
+    @extend .col;
+    flex-grow: $i;
+  }
+}
