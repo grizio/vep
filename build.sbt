@@ -1,7 +1,3 @@
-import java.nio.file.Paths
-
-import scala.sys.process.Process
-
 name := "vep"
 
 version := "1.0"
@@ -31,3 +27,6 @@ buildClient := {
 prod := {}
 
 prod <<= prod.dependsOn(buildClient, compile in Compile)
+
+enablePlugins(JavaAppPackaging)
+mappings in (Compile, packageDoc) := Seq()
