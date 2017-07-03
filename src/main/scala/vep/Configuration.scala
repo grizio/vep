@@ -14,8 +14,19 @@ case class DatabaseConfiguration(
   name: String
 )
 
+object Environment extends Enumeration {
+  val dev, prod = Value
+
+  def fromString(value: String): Environment.Value = {
+    values.find(_.toString == value)
+      .getOrElse(prod)
+  }
+}
+
 class Configuration {
   private val config = ConfigFactory.load()
+
+  lazy val environment: Environment.Value = Environment.fromString(config.getString("vep.environment"))
 
   lazy val server = ServerConfiguration(
     host = config.getString("vep.server.host"),

@@ -16,9 +16,11 @@ object Boot extends App {
 
   val bindingFuture = Http().bindAndHandle(router.route, configuration.server.host, configuration.server.port)
   println(s"Server online at http://${configuration.server.host}:${configuration.server.port}")
-  println("Press RETURN to stop...")
-  StdIn.readLine()
-  bindingFuture
-    .flatMap(_.unbind())
-    .onComplete(_ => system.terminate())
+  if (configuration.environment == Environment.dev) {
+    println("Press RETURN to stop...")
+    StdIn.readLine()
+    bindingFuture
+      .flatMap(_.unbind())
+      .onComplete(_ => system.terminate())
+  }
 }
