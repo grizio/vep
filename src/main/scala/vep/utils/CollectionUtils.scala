@@ -12,6 +12,13 @@ object CollectionUtils {
       Seq.empty
     }
   }
+  def scalaSeq[A](array: Array[A]): Seq[A] = {
+    if (array != null) {
+      array.toSeq
+    } else {
+      Seq.empty
+    }
+  }
 
   def scalaSeq[A](stream: java.util.stream.Stream[A]): Seq[A] = {
     if (stream != null) {

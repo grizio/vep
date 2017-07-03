@@ -9,6 +9,7 @@ case class ServerConfiguration(
 
 case class DatabaseConfiguration(
   host: String,
+  port: Int,
   username: String,
   password: String,
   name: String
@@ -35,6 +36,7 @@ class Configuration {
 
   lazy val database = DatabaseConfiguration(
     host = config.getString("vep.database.host"),
+    port = config.getInt("vep.database.port"),
     username = config.getString("vep.database.username"),
     password = config.getString("vep.database.password"),
     name = config.getString("vep.database.name")

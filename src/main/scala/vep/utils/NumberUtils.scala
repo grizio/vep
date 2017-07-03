@@ -34,4 +34,21 @@ object NumberUtils {
       case _: Throwable => None
     }
   }
+
+  def isLong(string: String): Boolean = {
+    try {
+      string.toLong
+      true
+    } catch {
+      case _: Throwable => false
+    }
+  }
+
+  def toLongOpt(string: String): Option[Long] = {
+    try {
+      Some(string.toLong)
+    } catch {
+      case _: Throwable => None
+    }
+  }
 }
