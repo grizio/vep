@@ -1,9 +1,8 @@
-import preact from "preact";
+import preact from "preact"
 
-import Home from "../routes/home";
-import Profile from "../routes/profile";
-import {Router} from "preact-router/src";
-import Navigation from "./Navigation";
+import {Router} from "preact-router/src"
+import Navigation from "./Navigation"
+import Home from "./common/home/home"
 
 interface AppState {
   url: string
@@ -12,22 +11,20 @@ interface AppState {
 export default class App extends preact.Component<any, AppState> {
   handleRoute = (e: any) => {
     this.setState({url: e.url})
-  };
+  }
 
   render() {
     return (
       <div id="app" class="row no-separator">
-        <div class="col">
+        <div class="col col-fix-450">
           <Navigation />
         </div>
-        <div class="col-1">
+        <div class="col-fill">
           <Router onChange={this.handleRoute}>
             <Home path="/"/>
-            <Profile path="/shows" user="me"/>
-            <Profile path="/profile/:user"/>
           </Router>
         </div>
       </div>
-    );
+    )
   }
 }

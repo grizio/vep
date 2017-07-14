@@ -22,3 +22,16 @@
     flex-grow: $i;
   }
 }
+
+.col-fill {
+  @extend .col;
+  flex-grow: 1;
+}
+
+@for $i from 1 through 20 {
+  .col-fix-#{$i * 50} {
+    @extend .col;
+    flex-basis: #{$i * 50}px;
+    flex-shrink: 0;
+  }
+}

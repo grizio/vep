@@ -1,5 +1,5 @@
 import preact from "preact";
-import Page from "../../components/Page";
+import Page from "../../framework/components/Page";
 
 export default class Home extends preact.Component<any, any> {
   render() {
