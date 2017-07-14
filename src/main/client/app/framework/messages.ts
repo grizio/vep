@@ -5,7 +5,10 @@ const messages = {
       `Le mot de passe est trop faible, veuillez ajouter des lettres majuscules, minuscules, chiffres ou caractères spéciaux (score: ${got}/${expected  })`
   },
   user: {
-    differentPassword: "Les mots de passe sont différents"
+    differentPassword: "Les mots de passe sont différents",
+    activation: {
+      done: "Votre compte a bien été activé. Vous pouvez dès à présent vous connecter."
+    }
   },
   http: {
     serverError: "Une erreur est survenue lors de l'appel au serveur. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l'administrateur.",

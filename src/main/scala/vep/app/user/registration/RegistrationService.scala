@@ -32,4 +32,33 @@ class RegistrationService(
       .apply()
     user
   }
+
+  def activate(email: String, activationKey: String): Validation[Unit] = withCommandTransaction { implicit session =>
+    userService.findByEmail(email) match {
+      case Some(user) =>
+        user.activationKey match {
+          case Some(userActivationKey) =>
+            if (BCrypt.checkpw(activationKey, userActivationKey)) {
+              removeActivationKey(email)
+              Valid()
+            } else {
+              Invalid(UserMessages.invalidActivationKey)
+            }
+          case None =>
+            Valid()
+        }
+      case None =>
+        Invalid(UserMessages.unknown)
+    }
+  }
+
+  private def removeActivationKey(email: String)(implicit session: DBSession): Unit = {
+    sql"""
+      UPDATE users
+      SET activationKey = NULL
+      where email = ${email}
+    """
+      .executeUpdate()
+      .apply()
+  }
 }
