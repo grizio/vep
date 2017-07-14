@@ -1,6 +1,9 @@
-import preact from "preact";
-import {Link} from "preact-router/src";
-import classnames from "classnames";
+import preact from "preact"
+import {Link} from "preact-router/src"
+import classnames from "classnames"
+import {SessionState, sessionStore} from "./framework/session/sessionStore"
+import StoreListenerComponent from "./framework/utils/dom"
+import {logout} from "./framework/session/sessionActions"
 
 interface MenuGroupProps {
   name: string
@@ -10,21 +13,28 @@ interface MenuGroupProps {
 
 interface MenuItemProps {
   name: string
-  href: string
+  href?: string
+  action?: Function
   regex?: string
   disabled?: string
 }
 
-export default function Navigation() {
-  return (
-    <div class="left-navigation">
-      <Sitename />
-      <Nav />
-    </div>
-  )
+export default class Navigation extends StoreListenerComponent<any, SessionState> {
+  constructor() {
+    super(sessionStore)
+  }
+
+  render(props: any, state: SessionState) {
+    return (
+      <div class="left-navigation">
+        {renderSitename()}
+        {renderNav(state)}
+      </div>
+    )
+  }
 }
 
-function Sitename() {
+function renderSitename() {
   return (
     <div class="sitename">
       <Link href="/" class="row middle center">
@@ -35,7 +45,7 @@ function Sitename() {
   )
 }
 
-function Nav() {
+function renderNav(state: SessionState) {
   return (
     <nav>
       <MenuGroup name="Accueil" href="/" />
@@ -56,14 +66,23 @@ function Nav() {
         <MenuItem name="Ateliers chant" href="/page/atelier-chant" />
       </MenuGroup>
       <MenuGroup name="Mon espace" href="/personal/login" regex="/personal(/.*)?">
-        <MenuItem name="Se connecter" href="/personal/login" />
-        <MenuItem name="S'inscrire" href="/personal/register" />
-        <MenuItem name="Ma fiche" href="/personal/my-card" disabled="Veuillez vous connecter pour accéder à ce menu" />
-        <MenuItem name="(Ré)inscription aux activités" href="/personal/register" disabled="Veuillez vous connecter pour accéder à ce menu" />
+        {isNotLoggedIn(state) && <MenuItem name="Se connecter" href="/personal/login" />}
+        {isNotLoggedIn(state) && <MenuItem name="S'inscrire" href="/personal/register" />}
+        {isLoggedIn(state) && <MenuItem name="Ma fiche" href="/personal/my-card" />}
+        {isLoggedIn(state) && <MenuItem name="(Ré)inscription aux activités" href="/personal/register" />}
+        {isLoggedIn(state) && <MenuItem name="Déconnexion" action={logout} />}
       </MenuGroup>
       <MenuGroup name="Nous contacter" href="/contact" />
     </nav>
   )
+}
+
+function isLoggedIn(state: SessionState) {
+  return !!state.user
+}
+
+function isNotLoggedIn(state: SessionState) {
+  return !isLoggedIn(state)
 }
 
 function MenuGroup(props: MenuGroupProps) {
@@ -84,6 +103,14 @@ function MenuItem(props: MenuItemProps) {
         <span title={props.disabled}>
           {props.name}
         </span>
+      </div>
+    )
+  } else if (props.action) {
+    return (
+      <div class={classnames("menu-item", {"active": isElementActive(props)})}>
+        <Link href="#" onClick={props.action}>
+          {props.name}
+        </Link>
       </div>
     )
   } else {

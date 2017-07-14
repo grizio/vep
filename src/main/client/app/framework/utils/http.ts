@@ -1,7 +1,7 @@
 import {forceStartWith} from "./strings"
 import messages from "../messages"
-//import {logout} from "../session/sessionActions"
-//import {sessionStore} from "../session/sessionStore"
+import {logout} from "../session/sessionActions"
+import {sessionStore} from "../session/sessionStore"
 
 type Method = "GET" | "POST" | "PUT" | "DELETE"
 
@@ -36,7 +36,7 @@ export function request<T>(parameters: RequestParameters): Promise<T> {
         } else {
           if (xhr.status == 401 || xhr.status == 403) {
             console.error(`Not enough rights to do the action ${JSON.stringify(parameters)} (status: ${xhr.status})`)
-            //logout()
+            logout()
             reject([messages.http.notAccess])
           }
           try {
@@ -68,13 +68,10 @@ function realUrl(url: string): string {
 }
 
 function sessionToken(): string {
-  return null
-  /*
   const http = sessionStore.state.http
   if (http) {
     return btoa(`${http.email}:${http.token}`)
   } else {
     return null
   }
-  */
 }
