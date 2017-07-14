@@ -1,0 +1,104 @@
+@import "../settings";
+
+form {
+  .field {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      display: block;
+      padding-top: 16px;
+      font-size: 12px;
+      order: 1;
+    }
+
+    .error-message {
+      color: $color-error;
+      font-size: 12px;
+      order: 3;
+
+      &.none {
+        visibility: hidden;
+      }
+    }
+
+    input {
+      font-size: 18px;
+      padding: 8px 0;
+      border: none;
+      border-bottom: 1px solid $color-primary;
+      background-color: transparent;
+      width: 100%;
+      outline: none;
+      order: 2;
+
+      &, &::placeholder, & ~ label, & ~ .error-message {
+        transition: $form-transition;
+      }
+
+      &.success:not(:focus) {
+        color: $color-success;
+        border-bottom: 1px solid $color-success;
+
+        &::placeholder {
+          color: $color-success;
+        }
+
+        & ~ label {
+          color: $color-success;
+        }
+
+        & ~ .error-message {
+          color: $color-success;
+        }
+      }
+
+      &.error:not(:focus) {
+        color: $color-error;
+        border-bottom: 1px solid $color-error;
+        box-shadow: 0 1px 0 0 $color-error;
+
+        &::placeholder {
+          color: $color-error;
+        }
+
+        & ~ label {
+          color: $color-error;
+        }
+
+        & ~ .error-message {
+          color: $color-error;
+        }
+      }
+
+      &:focus {
+        box-shadow: 0 1px 0 0 $color-primary;
+        caret-color: $color-primary;
+
+        &::placeholder {
+          color: $color-primary;
+        }
+
+        & ~ label {
+          color: $color-primary;
+        }
+
+        & ~ .error-message {
+          color: $color-invisible;
+        }
+      }
+    }
+  }
+
+  .required-information {
+    margin-top: 20px;
+  }
+
+  .actions {
+    margin-top: 20px;
+
+    button, a {
+      margin-right: 15px;
+    }
+  }
+}

@@ -29,6 +29,7 @@
   "dependencies": {
     "@types/classnames": "^2.2.0",
     "classnames": "^2.2.5",
+    "fluxx": "^0.14.15",
     "preact": "8.1.0",
     "preact-compat": "3.16.0",
     "preact-router": "2.5.2"

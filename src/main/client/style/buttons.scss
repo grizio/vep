@@ -1,0 +1,42 @@
+@import "settings";
+
+.button {
+  border: none;
+  font-size: 15px;
+  padding: 15px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all ease-in-out $default-transition-duration;
+  outline: none;
+  text-decoration: none;
+
+  &.primary {
+    &.flat {
+      background-color: transparent;
+      color: $color-primary;
+    }
+    &:not(.flat) {
+      background-color: $color-primary;
+      color: $color-primary-reverse;
+
+      &:hover {
+        background-color: $color-primary-hover;
+      }
+    }
+  }
+
+  &.secondary {
+    &.flat {
+      background-color: transparent;
+      color: $color-secondary;
+    }
+    &:not(.flat) {
+      background-color: $color-secondary;
+      color: $color-secondary-reverse;
+
+      &:hover {
+        background-color: $color-secondary-hover;
+      }
+    }
+  }
+}

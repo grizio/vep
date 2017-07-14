@@ -1,7 +1,30 @@
 $color-normal: #212121;
+
 $color-primary: #303f9f;
 $color-primary-reverse: #fff;
+$color-primary-hover: #5c6bc0;
+
+$color-secondary: #7f7f7f;
+$color-secondary-reverse: #f2f2f2;
+$color-secondary-hover: #9e9e9e;
+
 $color-active: $color-primary;
 $color-active-reverse: $color-primary-reverse;
+
 $color-disabled: #9e9e9e;
+
 $color-hover: #283593;
+
+$color-success: #4caf50;
+$color-success-reverse: #fff;
+$color-success-hover: #388e3c;
+
+$color-error: #ee6e73;
+$color-error-reverse: #fff;
+$color-error-hover: #b71c1c;
+
+$color-invisible: transparent;
+
+$default-transition-duration: 200ms;
+
+$form-transition: all ease-in-out $default-transition-duration;

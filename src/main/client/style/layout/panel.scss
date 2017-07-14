@@ -1,0 +1,48 @@
+@import "../settings";
+
+.panel {
+  border-radius: 2px;
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .panel-content {
+    flex-grow: 1;
+
+    p {
+      margin: 15px;
+    }
+  }
+
+  .panel-close {
+    margin: 5px;
+    span {
+      display: block;
+      border-radius: 100%;
+      padding: 5px;
+      width:30px;
+      height:30px;
+      text-align: center;
+      cursor: pointer;
+    }
+  }
+
+  &.success {
+    background-color: $color-success;
+    color: $color-success-reverse;
+
+    .panel-close span:hover {
+      background-color: $color-success-hover;
+    }
+  }
+
+  &.error {
+    background-color: $color-error;
+    color: $color-error-reverse;
+
+    .panel-close span:hover {
+      background-color: $color-error-hover;
+    }
+  }
+}
