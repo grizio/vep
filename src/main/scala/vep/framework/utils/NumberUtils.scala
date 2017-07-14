@@ -1,4 +1,4 @@
-package vep.utils
+package vep.framework.utils
 
 object NumberUtils {
   def isDouble(string: String): Boolean = {

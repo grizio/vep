@@ -6,8 +6,8 @@ import java.nio.file.Files
 import com.typesafe.scalalogging.Logger
 import scalikejdbc._
 import vep.Configuration
-import vep.service.DatabaseContainer
-import vep.utils.{CollectionUtils, NumberUtils}
+import vep.framework.database.DatabaseContainer
+import vep.framework.utils.{CollectionUtils, NumberUtils}
 
 case class EvolutionFile(version: Long, file: File)
 

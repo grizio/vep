@@ -3,6 +3,7 @@ package vep
 import com.typesafe.config.ConfigFactory
 
 case class ServerConfiguration(
+  protocol: String,
   host: String,
   port: Int
 )
@@ -30,6 +31,7 @@ class Configuration {
   lazy val environment: Environment.Value = Environment.fromString(config.getString("vep.environment"))
 
   lazy val server = ServerConfiguration(
+    protocol = config.getString("vep.server.protocol"),
     host = config.getString("vep.server.host"),
     port = config.getInt("vep.server.port")
   )

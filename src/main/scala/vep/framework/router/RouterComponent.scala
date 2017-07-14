@@ -1,7 +1,6 @@
-package vep.router
+package vep.framework.router
 
 import akka.http.scaladsl.server._
-import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.unmarshalling.FromRequestUnmarshaller
 
 trait RouterComponent {

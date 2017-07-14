@@ -1,4 +1,4 @@
-package vep.service
+package vep.framework.database
 
 import scalikejdbc.{ConnectionPool, DB, DBSession}
 import vep.Configuration

@@ -1,4 +1,4 @@
-package vep.router
+package vep.app
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
