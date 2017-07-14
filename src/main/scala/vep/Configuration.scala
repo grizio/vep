@@ -16,6 +16,17 @@ case class DatabaseConfiguration(
   name: String
 )
 
+case class EmailConfiguration(
+  tls: Boolean,
+  ssl: Boolean,
+  port: Int,
+  host: String,
+  email: String,
+  user: String,
+  password: String,
+  replyTo: String
+)
+
 object Environment extends Enumeration {
   val dev, prod = Value
 
@@ -43,4 +54,23 @@ class Configuration {
     password = config.getString("vep.database.password"),
     name = config.getString("vep.database.name")
   )
+
+  lazy val email = EmailConfiguration(
+    tls = config.getBoolean("vep.mail.tls"),
+    ssl = config.getBoolean("vep.mail.ssl"),
+    port = config.getInt("vep.mail.port"),
+    host = config.getString("vep.mail.host"),
+    email = config.getString("vep.mail.email"),
+    user = config.getString("vep.mail.username"),
+    password = config.getString("vep.mail.password"),
+    replyTo = config.getString("vep.email.replyTo")
+  )
+
+  lazy val baseUrl: String = {
+    val port = environment match {
+      case Environment.dev => ":" + server.port
+      case _ => ""
+    }
+    s"${server.protocol}://${server.host}${port}"
+  }
 }

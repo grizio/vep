@@ -51,4 +51,8 @@ object NumberUtils {
       case _: Throwable => None
     }
   }
+
+  def random(min: Int, max: Int): Int = {
+    Math.floor(Math.random() * (max - min) + min).toInt
+  }
 }
