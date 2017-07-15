@@ -24,14 +24,21 @@
         color: $color-normal;
         display: block;
         padding: 10px;
+        background-color: rgba(0,0,0,0.0);
+        transition: $default-transition-duration;
 
         &:hover {
           color: $color-hover;
+          background-color: rgba(0,0,0,0.05);
         }
       }
 
-      &.active a {
+      &.active > a {
         color: $color-active;
+
+        &:before {
+          content: "> ";
+        }
       }
 
       .menu-item {
@@ -40,7 +47,7 @@
           font-weight: 400;
           text-decoration: none;
           display: block;
-          padding: 10px 10px 10px 45px;
+          padding: 10px 10px 10px 30px;
 
           &:hover {
             color: $color-hover;
@@ -49,6 +56,10 @@
 
         &.active a {
           color: $color-active;
+
+          &:before {
+            content: "> ";
+          }
         }
 
         &.disabled span {
