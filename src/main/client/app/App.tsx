@@ -5,6 +5,7 @@ import Navigation from "./Navigation"
 import Home from "./common/home/home"
 import Register from "./user/registration/register/register"
 import Login from "./user/session/login/login"
+import Contact from "./common/contact/contact/contact";
 
 interface AppState {
   url: string
@@ -24,6 +25,8 @@ export default class App extends preact.Component<any, AppState> {
         <div class="col-fill">
           <Router onChange={this.handleRoute}>
             <Home path="/"/>
+            <Contact path="/contact"/>
+
             <Register path="/personal/register" />
             <Login path="/personal/login" />
           </Router>

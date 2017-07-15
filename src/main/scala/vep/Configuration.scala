@@ -56,13 +56,13 @@ class Configuration {
   )
 
   lazy val email = EmailConfiguration(
-    tls = config.getBoolean("vep.mail.tls"),
-    ssl = config.getBoolean("vep.mail.ssl"),
-    port = config.getInt("vep.mail.port"),
-    host = config.getString("vep.mail.host"),
-    email = config.getString("vep.mail.email"),
-    user = config.getString("vep.mail.username"),
-    password = config.getString("vep.mail.password"),
+    tls = config.getBoolean("vep.email.tls"),
+    ssl = config.getBoolean("vep.email.ssl"),
+    port = config.getInt("vep.email.port"),
+    host = config.getString("vep.email.host"),
+    email = config.getString("vep.email.email"),
+    user = config.getString("vep.email.username"),
+    password = config.getString("vep.email.password"),
     replyTo = config.getString("vep.email.replyTo")
   )
 

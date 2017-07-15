@@ -19,23 +19,48 @@ export default function Input(props: InputProps) {
     : successIsShown(props.fieldValidation) ? "success" : ""
   return (
     <div class="field">
-      <input
-        type={props.type || "text"}
-        name={props.name}
-        id={props.id}
-        placeholder={props.placeholder || props.label}
-        required={props.required}
-        onInput={e => props.onUpdate((e.target as HTMLInputElement).value)}
-        value={props.fieldValidation ? props.fieldValidation.value || "" : ""}
-        class={className}
-      />
+      {
+        props.type === "textarea"
+          ? renderTextarea(props, className)
+          : renderInput(props, className)
+      }
       <label for={props.id}>{label}</label>
-      {showError(props.fieldValidation)}
+      {renderError(props.fieldValidation)}
     </div>
   )
 }
 
-function showError(fieldValidation: FieldValidation<string>) {
+function renderInput(props: InputProps, className: string) {
+  return (
+    <input
+      type={props.type || "text"}
+      name={props.name}
+      id={props.id}
+      placeholder={props.placeholder || props.label}
+      required={props.required}
+      onInput={e => props.onUpdate((e.target as HTMLInputElement).value)}
+      value={props.fieldValidation ? props.fieldValidation.value || "" : ""}
+      class={className}
+    />
+  )
+}
+
+function renderTextarea(props: InputProps, className: string) {
+  return (
+    <textarea
+      style={{height: `${props.fieldValidation.value.split("\n").length * 22 + 40}px`}}
+      name={props.name}
+      id={props.id}
+      placeholder={props.placeholder || props.label}
+      required={props.required}
+      onInput={e => props.onUpdate((e.target as HTMLInputElement).value)}
+      class={className}
+      value={props.fieldValidation ? props.fieldValidation.value || "" : ""}
+    />
+  )
+}
+
+function renderError(fieldValidation: FieldValidation<string>) {
   if (errorIsShown(fieldValidation)) {
     return fieldValidation.errors.map((error, i) =>
       <span class="error-message" key={i.toString()}>{fieldValidation.errors}</span>

@@ -2,7 +2,11 @@ const messages = {
   common: {
     invalidEmail: "L'adresse e-mail est invalide",
     invalidPasswordScore: (got: number, expected: number) =>
-      `Le mot de passe est trop faible, veuillez ajouter des lettres majuscules, minuscules, chiffres ou caractères spéciaux (score: ${got}/${expected  })`
+      `Le mot de passe est trop faible, veuillez ajouter des lettres majuscules, minuscules, chiffres ou caractères spéciaux (score: ${got}/${expected  })`,
+    emptyString: "Veuillez remplir ce champ",
+    contact: {
+      differentEmail: "Les adresses e-mail sont différentes"
+    }
   },
   user: {
     differentPassword: "Les mots de passe sont différents",

@@ -3,7 +3,7 @@ package vep.framework.mailer
 import vep.Configuration
 
 trait Mailer {
-  def send(email: String, title: String, content: String, replyToVep: Boolean = false): Unit
+  def send(email: String, title: String, content: String, replyTo: Option[String] = None): Unit
 }
 
 class DefaultMailer(
@@ -11,19 +11,19 @@ class DefaultMailer(
 ) extends Mailer {
   private val mailerActor = MailerActor.emailActor(configuration)
 
-  override def send(email: String, title: String, content: String, replyToVep: Boolean = false): Unit = {
+  override def send(email: String, title: String, content: String, replyTo: Option[String] = None): Unit = {
     mailerActor ! EmailMessage(
       subject = title,
       recipient = email,
       html = Some(content),
       text = Some(content),
-      replyTo = if (replyToVep) Some(configuration.email.replyTo) else None
+      replyTo = replyTo
     )
   }
 }
 
 class ConsoleMailer extends Mailer {
-  override def send(email: String, title: String, content: String, replyToVep: Boolean = false): Unit = {
+  override def send(email: String, title: String, content: String, replyTo: Option[String] = None): Unit = {
     println(
       s"""
          |=====
@@ -31,6 +31,7 @@ class ConsoleMailer extends Mailer {
          |To: $email
          |Title: $title
          |Content: $content
+         |Reply to: ${replyTo.getOrElse("<none>")}
          |Mail end
          |=====
       """.stripMargin)

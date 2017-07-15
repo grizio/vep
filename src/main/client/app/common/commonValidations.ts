@@ -47,3 +47,13 @@ function containsSpecialCharacter(value: String) {
   }
   return false
 }
+
+export function validateNonEmpty(value: string): Validation<string> {
+  return Valid(value)
+      .filter(value => value && value !== "", messages.common.emptyString)
+}
+
+export function validateNonBlank(value: string): Validation<string> {
+  return validateNonEmpty(value)
+    .filter(value => value.trim() !== "", messages.common.emptyString)
+}

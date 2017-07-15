@@ -40,4 +40,14 @@ class CommonVerifications {
   private def containsNumber(value: String) = value.exists(char => char.isDigit)
 
   private def containsSpecialCharacter(value: String) = value.exists(char => !char.isLetterOrDigit)
+
+  def verifyNonEmpty(value: String): Validation[String] = {
+    Valid(value)
+      .filter(_.nonEmpty, CommonMessages.errorIsEmpty)
+  }
+
+  def verifyNonBlank(value: String): Validation[String] = {
+    Valid(value.trim)
+      .filter(_.nonEmpty, CommonMessages.errorIsBlank)
+  }
 }
