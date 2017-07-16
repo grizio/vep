@@ -1,30 +1,36 @@
 import preact from "preact";
-import {sessionStore, UserRole} from "../session/sessionStore";
+import {SessionState, sessionStore, UserRole} from "../session/sessionStore";
 import Panel from "./Panel";
 import {Link} from "preact-router/src";
 import {PrimaryButton, SecondaryButton} from "./buttons";
+import StoreListenerComponent from "../utils/dom";
 
 interface PageProps {
   title: string
   role?: UserRole
 }
 
-export default function Page(props: PageProps) {
-  return (
-    <div class="page">
-      <header>
-        {props.title}
-      </header>
-      <section>
-        {
-          canAccess(props)
-            ? props["children"]
-            : renderErrorAccess()
-        }
+export default class Page extends StoreListenerComponent<PageProps, SessionState> {
+  constructor() {
+    super(sessionStore)
+  }
 
-      </section>
-    </div>
-  )
+  render(props: PageProps, state: SessionState) {
+    return (
+      <div class="page">
+        <header>
+          {props.title}
+        </header>
+        <section>
+          {
+            canAccess(props, state)
+              ? props["children"]
+              : renderErrorAccess()
+          }
+        </section>
+      </div>
+    )
+  }
 }
 
 function renderErrorAccess() {
@@ -49,12 +55,12 @@ function renderErrorAccess() {
   )
 }
 
-function canAccess(props: PageProps): boolean {
+function canAccess(props: PageProps, state: SessionState): boolean {
   switch (props.role) {
     case "user":
-      return !!sessionStore.state.user
+      return !!state.user
     case "admin":
-      return sessionStore.state.user && sessionStore.state.user.role === "admin"
+      return state.user && state.user.role === "admin"
     default:
       return true
   }
