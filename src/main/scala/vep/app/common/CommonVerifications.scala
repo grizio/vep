@@ -1,5 +1,6 @@
 package vep.app.common
 
+import vep.framework.utils.StringUtils
 import vep.framework.validation.{Valid, Validation}
 
 import scala.util.matching.Regex
@@ -25,21 +26,13 @@ class CommonVerifications {
 
   private def computeSecurityScore(value: String): Long = {
     var total = 0
-    if (containsUppercaseLetter(value)) total += scoreAdditionWhenUppercaseLetter
-    if (containsLowercaseLetter(value)) total += scoreAdditionWhenLowercaseLetter
-    if (containsNumber(value)) total += scoreAdditionWhenNumber
-    if (containsSpecialCharacter(value)) total += scoreAdditionWhenSpecialCharacter
+    if (StringUtils.containsUppercaseLetter(value)) total += scoreAdditionWhenUppercaseLetter
+    if (StringUtils.containsLowercaseLetter(value)) total += scoreAdditionWhenLowercaseLetter
+    if (StringUtils.containsNumber(value)) total += scoreAdditionWhenNumber
+    if (StringUtils.containsSpecialCharacter(value)) total += scoreAdditionWhenSpecialCharacter
     total *= value.length * scoreMultiplicationByCharacter
     total
   }
-
-  private def containsUppercaseLetter(value: String) = value.exists(char => char.isLetter && char.isUpper)
-
-  private def containsLowercaseLetter(value: String) = value.exists(char => char.isLetter && char.isLower)
-
-  private def containsNumber(value: String) = value.exists(char => char.isDigit)
-
-  private def containsSpecialCharacter(value: String) = value.exists(char => !char.isLetterOrDigit)
 
   def verifyNonEmpty(value: String): Validation[String] = {
     Valid(value)
@@ -49,5 +42,15 @@ class CommonVerifications {
   def verifyNonBlank(value: String): Validation[String] = {
     Valid(value.trim)
       .filter(_.nonEmpty, CommonMessages.errorIsBlank)
+  }
+
+  def verifyNonEmptySeq[A](value: Seq[A]): Validation[Seq[A]] = {
+    Valid(value)
+      .filter(_.nonEmpty, CommonMessages.errorIsSeqEmpty)
+  }
+
+  def verifyIsPositive(value: Int): Validation[Int] = {
+    Valid(value)
+      .filter(_ > 0, CommonMessages.isNotPositive)
   }
 }

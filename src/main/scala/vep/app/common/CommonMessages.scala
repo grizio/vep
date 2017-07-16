@@ -5,4 +5,6 @@ object CommonMessages {
   val invalidPassword = "Le mot de passe est trop simple, tentez de rajouter des lettres majuscules, minuscules, chiffres et caractères spéciaux"
   val errorIsEmpty = "Veuillez renseigner le champ"
   val errorIsBlank = "Veuillez renseigner le champ"
+  val errorIsSeqEmpty = "Veuillez indiquer au moins un élément"
+  val isNotPositive = "Veuillez indiquer un nom strictement positif"
 }

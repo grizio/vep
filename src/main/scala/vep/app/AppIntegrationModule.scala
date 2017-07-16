@@ -3,6 +3,7 @@ package vep.app
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
 import vep.app.common.{CommonIntegrationModule, CommonVerifications}
+import vep.app.production.ProductionIntegrationModule
 import vep.app.user.UserIntegrationModule
 import vep.{Configuration, Environment}
 import vep.framework.mailer.{ConsoleMailer, DefaultMailer, Mailer}
@@ -13,6 +14,7 @@ import scala.concurrent.ExecutionContext
 trait AppIntegrationModule
   extends UserIntegrationModule
     with CommonIntegrationModule
+    with ProductionIntegrationModule
     with AppRouter {
   def executionContext: ExecutionContext
 
@@ -30,7 +32,7 @@ trait AppRouter {
 
   lazy val apiRoute: Route = {
     val route = pathPrefix("api") {
-      commonRoute ~ userRoute
+      commonRoute ~ userRoute ~ productionRoute
     }
     if (configuration.environment == Environment.dev) {
       CorsHelper.withCors(route)
