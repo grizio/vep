@@ -60,6 +60,14 @@ export function isNotNumber(char: string): boolean {
   return !isNumber(char)
 }
 
+export function isLetter(char: string): boolean {
+  return char && char.toUpperCase() !== char.toLowerCase()
+}
+
+export function isNotLetter(char: string): boolean {
+  return !isLetter(char)
+}
+
 export function hasUppercase(str: string): boolean {
   if (!str) return false
 

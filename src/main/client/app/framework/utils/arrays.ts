@@ -1,3 +1,4 @@
+import {Function1} from "../lib";
 export function min<A>(array: Array<A>): A {
   if (array.length) {
     let minValue = array[0]
@@ -54,4 +55,14 @@ export function isNotEmpty<A>(array: Array<A> | ReadonlyArray<A>): boolean {
 
 export function allEmpty<A>(...arrays: Array<Array<A> | ReadonlyArray<A>>): boolean {
   return isEmpty(arrays) || arrays.every(isEmpty)
+}
+
+export function fill<A>(length: number, element: A = null): Array<A> {
+  return Array(length).fill(element)
+}
+
+export function fillWith<A>(length: number, computeElement: Function1<number, A>): Array<A> {
+  return Array(length)
+    .fill(null)
+    .map((_, index) => computeElement(index))
 }

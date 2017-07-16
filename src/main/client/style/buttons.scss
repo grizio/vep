@@ -51,4 +51,26 @@
       }
     }
   }
+
+  &.action {
+    background-color: transparent;
+    padding: 15px;
+    text-transform: uppercase;
+
+    &:not(.delete) {
+      color: $color-action;
+
+      &:hover {
+        color: $color-action-hover;
+      }
+    }
+
+    &.delete {
+      color: $color-action-delete;
+
+      &:hover {
+        color: $color-action-delete-hover;
+      }
+    }
+  }
 }

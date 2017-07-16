@@ -19,7 +19,7 @@
 @for $i from 1 through 10 {
   .col-#{$i} {
     @extend .col;
-    flex-grow: $i;
+    flex: $i;
   }
 }
 
