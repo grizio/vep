@@ -40,8 +40,8 @@ export default class TheaterCreation extends StoreListenerComponent<TheaterCreat
       <Form
         submit="Créer le théâtre"
         onSubmit={this.onSubmit}
-        cancel="Revenir à l'accueil"
-        onCancel="/"
+        cancel="Revenir à la liste"
+        onCancel="/production/theaters"
         errors={state.errors}
         closeErrors={actions.closeErrors}
       >
@@ -93,7 +93,7 @@ export default class TheaterCreation extends StoreListenerComponent<TheaterCreat
           Le théâtre a bien été créé.
         </p>
         <p>
-          <PrimaryButton message="Revenir à l'accueil" href="/" />
+          <PrimaryButton message="Revenir à la liste" href="/production/theaters" />
         </p>
       </Panel>
     )

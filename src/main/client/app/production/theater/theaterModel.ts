@@ -1,3 +1,11 @@
+export interface Theater {
+  id: string
+  name: string
+  address: string
+  content: string
+  seats: Array<Seat>
+}
+
 export interface TheaterCreation {
   name: string
   address: string

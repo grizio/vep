@@ -68,6 +68,7 @@ function renderNav(state: SessionState) {
       {
         isGranted(state, "admin") &&
         <MenuGroup name="Les théâtres" href="/production/theaters">
+          <MenuItem name="Tous les théâtres" href="/production/theaters" />
           <MenuItem name="Créer un nouveau théâtre" href="/production/theaters/create" />
         </MenuGroup>
       }
