@@ -6,6 +6,7 @@ import Home from "./common/home/home"
 import Register from "./user/registration/register/register"
 import Login from "./user/session/login/login"
 import Contact from "./common/contact/contact/contact";
+import TheaterCreation from "./production/theater/theaterCreation/theaterCreation";
 
 interface AppState {
   url: string
@@ -29,6 +30,8 @@ export default class App extends preact.Component<any, AppState> {
 
             <Register path="/personal/register" />
             <Login path="/personal/login" />
+
+            <TheaterCreation path="/production/theaters/create" />
           </Router>
         </div>
       </div>

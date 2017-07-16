@@ -19,7 +19,7 @@ export interface SessionUser {
   role: UserRole
 }
 
-type UserRole = "user" | "admin"
+export type UserRole = "user" | "admin"
 
 const initialState: SessionState = (() => {
   const localSession = localStorage.getItem(sessionStorageKey)

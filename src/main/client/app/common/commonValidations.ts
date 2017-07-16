@@ -57,3 +57,13 @@ export function validateNonBlank(value: string): Validation<string> {
   return validateNonEmpty(value)
     .filter(value => value.trim() !== "", messages.common.emptyString)
 }
+
+export function validateNonEmptyArray<A>(value: Array<A>): Validation<Array<A>> {
+  return Valid(value)
+    .filter(value => value && value.length > 0, messages.common.emptyArray)
+}
+
+export function validatePositiveNumber(value: number): Validation<number> {
+  return Valid(value)
+    .filter(value => value !== null && value !== undefined && value > 0, messages.common.notPositive)
+}

@@ -1,3 +1,5 @@
+import {Function1} from "../lib";
+import {copy} from "./object";
 interface Function<A, B> {
   (input: A): B
 }
@@ -86,7 +88,7 @@ class InvalidImpl implements Validation<any> {
 
 export interface FieldValidation<A> {
   value: A
-  errors: Array<string>
+  errors: ReadonlyArray<string>
   changed: boolean
 }
 
@@ -99,7 +101,7 @@ export function defaultFieldValidation<A>(defaultValue: A): FieldValidation<A> {
 }
 
 export function updateFieldValidation<A>(previous: FieldValidation<A>, value: A, validation: Validation<A>): FieldValidation<A> {
-  return Object.assign({}, previous, {
+  return copy(previous, {
     value: value,
     errors: validation.listErrors(),
     changed: true
@@ -107,8 +109,14 @@ export function updateFieldValidation<A>(previous: FieldValidation<A>, value: A,
 }
 
 export function updateUnchangedFieldValidation<A>(previous: FieldValidation<A>, value: A, validation: Validation<A>): FieldValidation<A> {
-  return Object.assign({}, previous, {
+  return copy(previous, {
     value: value,
     errors: validation.listErrors()
+  })
+}
+
+export function refreshValidation<A>(previous: FieldValidation<A>, validation: Function1<A, Validation<A>>): FieldValidation<A> {
+  return Object.assign({}, previous, {
+    errors: validation(previous.value).listErrors()
   })
 }

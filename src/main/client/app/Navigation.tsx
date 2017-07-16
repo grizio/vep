@@ -65,13 +65,27 @@ function renderNav(state: SessionState) {
         <MenuItem name="Ateliers théâtre" href="/page/les-ateliers" />
         <MenuItem name="Ateliers chant" href="/page/atelier-chant" />
       </MenuGroup>
-      <MenuGroup name="Mon espace" href="/personal/login" regex="/personal(/.*)?">
-        {isNotLoggedIn(state) && <MenuItem name="Se connecter" href="/personal/login" />}
-        {isNotLoggedIn(state) && <MenuItem name="S'inscrire" href="/personal/register" />}
-        {isLoggedIn(state) && <MenuItem name="Ma fiche" href="/personal/my-card" />}
-        {isLoggedIn(state) && <MenuItem name="(Ré)inscription aux activités" href="/personal/register" />}
-        {isLoggedIn(state) && <MenuItem name="Déconnexion" action={logout} />}
-      </MenuGroup>
+      {
+        isGranted(state, "admin") &&
+        <MenuGroup name="Les théâtres" href="/production/theaters">
+          <MenuItem name="Créer un nouveau théâtre" href="/production/theaters/create" />
+        </MenuGroup>
+      }
+      {
+        isNotLoggedIn(state) &&
+        <MenuGroup name="Mon espace" href="/personal/login" regex="/personal(/.*)?">
+          <MenuItem name="Se connecter" href="/personal/login" />
+          <MenuItem name="S'inscrire" href="/personal/register" />
+        </MenuGroup>
+      }
+      {
+        isLoggedIn(state) &&
+        <MenuGroup name={`Mon espace (${state.user.email})`} href="/personal/login" regex="/personal(/.*)?">
+          <MenuItem name="Ma fiche" href="/personal/my-card" />
+          <MenuItem name="(Ré)inscription aux activités" href="/personal/register" />
+          <MenuItem name="Déconnexion" action={logout} />
+        </MenuGroup>
+      }
       <MenuGroup name="Nous contacter" href="/contact" />
     </nav>
   )
@@ -83,6 +97,10 @@ function isLoggedIn(state: SessionState) {
 
 function isNotLoggedIn(state: SessionState) {
   return !isLoggedIn(state)
+}
+
+function isGranted(state: SessionState, role: string) {
+  return isLoggedIn(state) && state.user.role === role
 }
 
 function MenuGroup(props: MenuGroupProps) {

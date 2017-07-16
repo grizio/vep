@@ -8,8 +8,20 @@ interface InputProps {
   type?: string
   placeholder?: string
   required?: boolean
+  disabled?: boolean
   onUpdate(value: string): void
   fieldValidation: FieldValidation<string>
+}
+
+interface InputNumberProps {
+  id: string
+  label: string
+  name: string
+  placeholder?: string
+  required?: boolean
+  disabled?: boolean
+  onUpdate(value: number): void
+  fieldValidation: FieldValidation<number>
 }
 
 export default function Input(props: InputProps) {
@@ -30,6 +42,26 @@ export default function Input(props: InputProps) {
   )
 }
 
+export function InputNumber(props: InputNumberProps) {
+  return (
+    <Input
+      id={props.id}
+      label={props.label}
+      name={props.name}
+      type="number"
+      placeholder={props.placeholder}
+      required={props.required}
+      disabled={props.disabled}
+      onUpdate={props.onUpdate ? (n) => props.onUpdate(parseInt(n, 10)) : null}
+      fieldValidation={{
+        value: props.fieldValidation.value.toString(),
+        errors: props.fieldValidation.errors,
+        changed: props.fieldValidation.changed
+      }}
+    />
+  )
+}
+
 function renderInput(props: InputProps, className: string) {
   return (
     <input
@@ -38,6 +70,7 @@ function renderInput(props: InputProps, className: string) {
       id={props.id}
       placeholder={props.placeholder || props.label}
       required={props.required}
+      disabled={props.disabled}
       onInput={e => props.onUpdate((e.target as HTMLInputElement).value)}
       value={props.fieldValidation ? props.fieldValidation.value || "" : ""}
       class={className}
@@ -53,6 +86,7 @@ function renderTextarea(props: InputProps, className: string) {
       id={props.id}
       placeholder={props.placeholder || props.label}
       required={props.required}
+      disabled={props.disabled}
       onInput={e => props.onUpdate((e.target as HTMLInputElement).value)}
       class={className}
       value={props.fieldValidation ? props.fieldValidation.value || "" : ""}

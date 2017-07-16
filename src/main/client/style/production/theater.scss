@@ -1,0 +1,71 @@
+@import "../settings";
+
+.plan {
+  .canvas {
+    position: relative;
+    margin: auto;
+
+    .seat {
+      position: absolute;
+      border: 1px solid #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: $default-transition;
+
+      &.invalid {
+        border: 1px solid $color-error;
+        box-shadow: 0 0 5px $color-error;
+      }
+
+      &.normal {
+        cursor: pointer;
+        border-radius: 2px;
+        &:not(.taken):not(.selected) {
+          background-color: $color-primary-reverse;
+          color: $color-primary;
+
+          &:hover {
+            background-color: $color-primary;
+            color: $color-primary-reverse;
+          }
+        }
+      }
+
+      &.strap {
+        cursor: pointer;
+        border-radius: 100px;
+        &:not(.taken):not(.selected) {
+          background-color: $color-secondary-reverse;
+          color: $color-secondary;
+
+          &:hover {
+            background-color: $color-secondary;
+            color: $color-secondary-reverse;
+          }
+        }
+      }
+
+      &.taken {
+        background-color: $color-error;
+        color: $color-error-reverse;
+        cursor: not-allowed;
+      }
+
+      &.selected {
+        background-color: $color-success;
+        color: $color-success-reverse;
+
+        &:hover {
+          background-color: $color-secondary-reverse;
+          color: $color-success;
+        }
+      }
+
+      &.stage {
+        cursor: default;
+        background-color: $color-disabled;
+      }
+    }
+  }
+}

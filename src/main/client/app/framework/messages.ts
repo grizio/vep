@@ -4,6 +4,9 @@ const messages = {
     invalidPasswordScore: (got: number, expected: number) =>
       `Le mot de passe est trop faible, veuillez ajouter des lettres majuscules, minuscules, chiffres ou caractères spéciaux (score: ${got}/${expected  })`,
     emptyString: "Veuillez remplir ce champ",
+    emptyArray: "Veuillez indiquer au moins un élément",
+    invalidCanonical: "Le format d'url est invalide (caractères autorisés: lettres minuscules, chiffres et -)",
+    notPositive: "Veuillez indiquer un nombre entier positif",
     contact: {
       differentEmail: "Les adresses e-mail sont différentes"
     }

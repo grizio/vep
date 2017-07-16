@@ -27,4 +27,6 @@ $color-invisible: transparent;
 
 $default-transition-duration: 200ms;
 
-$form-transition: all ease-in-out $default-transition-duration;
+$default-transition: all ease-in-out $default-transition-duration;;
+
+$form-transition: $default-transition;
