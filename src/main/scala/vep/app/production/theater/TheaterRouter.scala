@@ -14,7 +14,11 @@ class TheaterRouter(
   val executionContext: ExecutionContext
 ) extends RouterComponent {
   lazy val route: Route = {
-    create
+    findAll ~ create
+  }
+
+  def findAll: Route = adminGet("production" / "theaters") { _ =>
+    Ok(theaterService.findAll())
   }
 
   def create: Route = adminPost("production" / "theaters", as[TheaterCreation]) { (theaterCreation, _) =>

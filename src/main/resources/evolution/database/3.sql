@@ -2,7 +2,7 @@ CREATE TABLE theater (
   id      VARCHAR(255) NOT NULL,
   name    VARCHAR(255) NOT NULL,
   address VARCHAR(255) NOT NULL,
-  content VARCHAR(255) NOT NULL,
+  content TEXT         NOT NULL,
   PRIMARY KEY (id)
 );
 
