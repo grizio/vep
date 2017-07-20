@@ -17,6 +17,14 @@ const messages = {
       done: "Votre compte a bien été activé. Vous pouvez dès à présent vous connecter."
     }
   },
+  production: {
+    list: {
+      loading: "Veuillez patienter pendant que nous retrouvons la liste sous une liasse de poussière."
+    },
+    form: {
+      loading: "Veuillez patienter pendant que nous trions la liste des sièges."
+    }
+  },
   http: {
     serverError: "Une erreur est survenue lors de l'appel au serveur. Veuillez réessayer ultérieurement. Si le problème persiste, merci de contacter l'administrateur.",
     notAccess: "Vous avez été déconnecté."

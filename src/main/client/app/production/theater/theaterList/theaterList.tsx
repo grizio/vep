@@ -7,6 +7,8 @@ import CardCollection from "../../../framework/components/card/CardCollection";
 import {RichContent} from "../../../framework/components/RichContent";
 import {findAllTheaters} from "../theaterApi";
 import * as actions from "./theaterListActions";
+import Loading from "../../../framework/components/Loading";
+import messages from "../../../framework/messages";
 
 export interface TheaterListProps {
   path: string
@@ -27,7 +29,9 @@ export default class TheaterList extends StoreListenerComponent<TheaterListProps
     if (this.mounted) {
       return (
         <Page title="Liste des théâtres" role="admin">
-          {this.renderCards(state)}
+          <Loading loading={!state.theaters} message={messages.production.list.loading}>
+            {state.theaters && this.renderCards(state)}
+          </Loading>
         </Page>
       )
     } else {
@@ -44,7 +48,7 @@ export default class TheaterList extends StoreListenerComponent<TheaterListProps
               <p>📍 {theater.address}</p>
               <RichContent content={theater.content} limit={100} />
             </CardContent>
-            <CardAction>Éditer</CardAction>
+            <CardAction href={`/production/theaters/update/${theater.id}`}>Éditer</CardAction>
             <CardAction className="delete">Supprimer</CardAction>
           </Card>
         ))}

@@ -22,6 +22,16 @@ class TheaterVerifications(
     }
   }
 
+  def verify(theater: Theater, theaterId: String): Validation[Theater] = {
+    Validation.all(
+      commonVerifications.verifyEquals(theater.id, theaterId),
+      commonVerifications.verifyNonBlank(theater.name),
+      commonVerifications.verifyNonBlank(theater.address),
+      commonVerifications.verifyNonBlank(theater.content),
+      verifySeats(theater.seats)
+    ) map { _ => theater }
+  }
+
   private def verifySeats(seats: Seq[Seat]): Validation[Seq[Seat]] = {
     Valid(seats)
       .flatMap(commonVerifications.verifyNonEmptySeq)

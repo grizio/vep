@@ -32,6 +32,21 @@ class TheaterService(
       .apply()
   }
 
+  def find(id: String): Option[Theater] = withQueryConnection { implicit session =>
+    findTheater(id)
+      .map(theater => theater.copy(seats = findSeatsByTheater(theater.id)))
+  }
+
+  private def findTheater(id: String)(implicit session: DBSession): Option[Theater] = {
+    sql"""
+      SELECT * FROM theater
+      WHERE id = $id
+    """
+      .map(Theater.apply)
+      .single()
+      .apply()
+  }
+
   def create(theater: Theater): Validation[Theater] = withCommandTransaction { implicit session =>
     insertTheater(theater)
     theater.seats.foreach(insertSeat(_, theater.id))
@@ -51,6 +66,35 @@ class TheaterService(
     sql"""
       INSERT INTO theater_seat(theater_id, c, x, y, w, h, t)
       VALUES(${theaterId}, ${seat.c}, ${seat.x}, ${seat.y}, ${seat.w}, ${seat.h}, ${seat.t})
+    """
+      .execute()
+      .apply()
+  }
+
+  def update(theater: Theater): Validation[Theater] = withCommandTransaction { implicit session =>
+    updateTheater(theater)
+    removeAllSeats(theater.id)
+    theater.seats.foreach(insertSeat(_, theater.id))
+    Valid(theater)
+  }
+
+  private def updateTheater(theater: Theater): Unit = withCommandTransaction { implicit session =>
+    sql"""
+      UPDATE theater SET
+       name = ${theater.name},
+       address = ${theater.address},
+       content = ${theater.content}
+      WHERE
+        id = ${theater.id}
+    """
+      .execute()
+      .apply()
+  }
+
+  private def removeAllSeats(theaterId: String)(implicit session: DBSession): Unit = {
+    sql"""
+      DELETE FROM theater_seat
+      WHERE theater_id = ${theaterId}
     """
       .execute()
       .apply()

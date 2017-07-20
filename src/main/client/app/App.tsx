@@ -6,8 +6,8 @@ import Home from "./common/home/home"
 import Register from "./user/registration/register/register"
 import Login from "./user/session/login/login"
 import Contact from "./common/contact/contact/contact";
-import TheaterCreation from "./production/theater/theaterCreation/theaterCreation";
 import TheaterList from "./production/theater/theaterList/theaterList";
+import {TheaterCreation, TheaterUpdate} from "./production/theater/theaterForm/index";
 
 interface AppState {
   url: string
@@ -34,6 +34,7 @@ export default class App extends preact.Component<any, AppState> {
 
             <TheaterList path="/production/theaters" />
             <TheaterCreation path="/production/theaters/create" />
+            <TheaterUpdate path="/production/theaters/update/:id" />
           </Router>
         </div>
       </div>

@@ -42,7 +42,7 @@ export function CardContent(props: CardContentProps) {
 
 export function CardAction(props: CardActionProps) {
   return (
-    <ActionButton message={props.children.toString()} href="#" className={props.className} />
+    <ActionButton message={props.children.toString()} href={props.href} className={props.className} />
   )
 }
 

@@ -1,15 +1,16 @@
 import {LocalStore} from "fluxx"
-import * as actions from "./theaterCreationActions"
+import * as actions from "./theaterFormActions"
 import {
   defaultFieldValidation, FieldValidation, refreshValidation, updateFieldValidation
 } from "../../../framework/utils/Validation"
 import {validateNonBlank, validateNonEmptyArray, validatePositiveNumber} from "../../../common/commonValidations"
 import {append, remove, replace} from "../../../framework/utils/arrays";
 import {copy, notNullOrUndefined} from "../../../framework/utils/object";
-import {SeatType} from "../theaterModel";
+import {Seat, SeatType} from "../theaterModel";
 
-export interface TheaterCreationState {
-  step: "form" | "success"
+export interface TheaterFormState {
+  step: "loading" | "form" | "success"
+  id?: string
   name: FieldValidation<string>
   address: FieldValidation<string>
   content: FieldValidation<string>
@@ -27,24 +28,32 @@ export interface SeatValidation {
   t: FieldValidation<SeatType>
 }
 
-const initialState: TheaterCreationState = {
-  step: "form",
+const initialState: TheaterFormState = {
+  step: "loading",
   name: defaultFieldValidation(""),
   address: defaultFieldValidation(""),
   content: defaultFieldValidation(""),
   seats: defaultFieldValidation([])
 }
 
-const initialSeat: SeatValidation = {
-  c: defaultFieldValidation(""),
-  x: defaultFieldValidation(0),
-  y: defaultFieldValidation(0),
-  w: defaultFieldValidation(50),
-  h: defaultFieldValidation(50),
-  t: defaultFieldValidation("normal" as SeatType)
-}
+const initialSeat: SeatValidation = seatToSeatValidation({c: "", x: 0, y: 0, w: 50, h: 50, t: "normal" as SeatType})
 
-export const theaterCreationStore = () => LocalStore(initialState, on => {
+export const theaterFormStore = () => LocalStore(initialState, on => {
+  on(actions.initialize, (state, value) => {
+    return copy(state, {
+      step: "form",
+      id: value.id,
+      name: defaultFieldValidation(value.name),
+      address: defaultFieldValidation(value.address),
+      content: defaultFieldValidation(value.content),
+      seats: defaultFieldValidation(value.seats.map(seatToSeatValidation))
+    })
+  })
+
+  on(actions.initializeEmpty, (state) => {
+    return copy(state, {step: "form"})
+  })
+
   on(actions.updateName, (state, value) => {
     return copy(state, {
       name: updateFieldValidation(state.name, value, validateNonBlank(value))
@@ -122,7 +131,7 @@ export const theaterCreationStore = () => LocalStore(initialState, on => {
   })
 })
 
-function createNewSeat(state: TheaterCreationState) {
+function createNewSeat(state: TheaterFormState) {
   if (notNullOrUndefined(state.selectedSeat)) {
     const seat = state.seats.value[state.selectedSeat]
     return copy(seat, {
@@ -134,7 +143,7 @@ function createNewSeat(state: TheaterCreationState) {
   }
 }
 
-function replaceSeat(state: TheaterCreationState, index: number, field: string, value: any): TheaterCreationState {
+function replaceSeat(state: TheaterFormState, index: number, field: string, value: any): TheaterFormState {
   return copy(state, {
     seats: copy(state.seats, {
       value: replace(state.seats.value, index, validateSeat(copySeat(state.seats.value[index], field, value)))
@@ -156,5 +165,16 @@ function validateSeat(seat: SeatValidation): SeatValidation {
     w: refreshValidation(seat.w, validatePositiveNumber),
     h: refreshValidation(seat.h, validatePositiveNumber),
     t: refreshValidation(seat.t, (t) => validateNonBlank(t).map(_ => t))
+  }
+}
+
+function seatToSeatValidation(seat: Seat): SeatValidation {
+  return {
+    c: defaultFieldValidation(seat.c),
+    x: defaultFieldValidation(seat.x),
+    y: defaultFieldValidation(seat.y),
+    w: defaultFieldValidation(seat.w),
+    h: defaultFieldValidation(seat.h),
+    t: defaultFieldValidation(seat.t)
   }
 }

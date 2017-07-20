@@ -2,11 +2,11 @@ import preact from "preact"
 import {Seat, SeatType} from "../theaterModel"
 import {allEmpty, isNotEmpty, max, min} from "../../../framework/utils/arrays"
 import {PrimaryButton, SecondaryButton} from "../../../framework/components/buttons"
-import * as actions from "./theaterCreationActions"
+import * as actions from "./theaterFormActions"
 import Input, {InputNumber} from "../../../framework/components/form/Input";
 import Select from "../../../framework/components/form/Select";
 import {defaultFieldValidation, FieldValidation} from "../../../framework/utils/Validation";
-import {SeatValidation} from "./theaterCreationStore";
+import {SeatValidation} from "./theaterFormStore";
 import {nullOrUndefined} from "../../../framework/utils/object";
 import classnames from "classnames";
 import Panel from "../../../framework/components/Panel";

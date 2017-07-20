@@ -53,4 +53,9 @@ class CommonVerifications {
     Valid(value)
       .filter(_ > 0, CommonMessages.isNotPositive)
   }
+
+  def verifyEquals[A](value: A, expected: A): Validation[A] = {
+    Valid(value)
+      .filter(_ == expected, CommonMessages.isDifferent(value, expected))
+  }
 }

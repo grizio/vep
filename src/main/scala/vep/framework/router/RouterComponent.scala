@@ -9,6 +9,7 @@ import akka.http.scaladsl.server.directives.AuthenticationDirective
 import akka.http.scaladsl.unmarshalling.FromRequestUnmarshaller
 import org.mindrot.jbcrypt.BCrypt
 import spray.json.{JsString, JsValue, JsonWriter}
+import vep.app.common.CommonMessages
 import vep.app.user.{User, UserRole, UserService}
 import vep.framework.utils.JsonProtocol
 import vep.framework.validation.{Invalid, Valid, Validation}
@@ -115,6 +116,13 @@ trait RouterComponent extends JsonProtocol with SprayJsonSupport {
     validation match {
       case Valid(value) => innerRoute(value)
       case invalid: Invalid => ctx => ctx.complete(BadRequest(invalid))
+    }
+  }
+
+  protected def found[A](elementOpt: Option[A], error: String = CommonMessages.notFound)(innerRoute: A => Route): Route = {
+    elementOpt match {
+      case Some(value) => innerRoute(value)
+      case None => ctx => ctx.complete(NotFound(Invalid(error)))
     }
   }
 

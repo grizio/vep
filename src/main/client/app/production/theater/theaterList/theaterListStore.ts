@@ -8,7 +8,7 @@ export interface TheaterListState {
 }
 
 const initialState: TheaterListState = {
-  theaters: []
+  theaters: null
 }
 
 export const theaterListStore = () => LocalStore(initialState, on => {

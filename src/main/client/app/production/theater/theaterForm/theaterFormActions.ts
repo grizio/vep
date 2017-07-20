@@ -1,4 +1,9 @@
 import { Action } from 'fluxx'
+import {Theater} from "../theaterModel";
+
+export const initializeEmpty = Action("initializeEmpty")
+
+export const initialize = Action<Theater>("initialize")
 
 export const updateName = Action<string>("updateName")
 

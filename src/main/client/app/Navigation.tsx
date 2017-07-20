@@ -67,7 +67,7 @@ function renderNav(state: SessionState) {
       </MenuGroup>
       {
         isGranted(state, "admin") &&
-        <MenuGroup name="Les théâtres" href="/production/theaters">
+        <MenuGroup name="Les théâtres" href="/production/theaters" regex="/production/theaters(/.*)?">
           <MenuItem name="Tous les théâtres" href="/production/theaters" />
           <MenuItem name="Créer un nouveau théâtre" href="/production/theaters/create" />
         </MenuGroup>

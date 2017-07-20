@@ -8,10 +8,25 @@ export function findAllTheaters(): Promise<Array<Theater>> {
   })
 }
 
+export function findTheater(id: string): Promise<Theater> {
+  return request({
+    method: "GET",
+    url: `production/theaters/${id}`
+  })
+}
+
 export function createTheater(theater: TheaterCreation) {
   return request({
     method: "POST",
     url: "production/theaters",
+    entity: theater
+  })
+}
+
+export function updateTheater(theater: Theater) {
+  return request({
+    method: "PUT",
+    url: `production/theaters/${theater.id}`,
     entity: theater
   })
 }

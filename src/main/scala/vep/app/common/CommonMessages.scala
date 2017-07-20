@@ -7,4 +7,6 @@ object CommonMessages {
   val errorIsBlank = "Veuillez renseigner le champ"
   val errorIsSeqEmpty = "Veuillez indiquer au moins un élément"
   val isNotPositive = "Veuillez indiquer un nom strictement positif"
+  def isDifferent[A](value: A, expected: A) = s"${value} est différent de ${expected}"
+  def notFound = "L'élément n'a pas été trouvé"
 }

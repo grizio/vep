@@ -4,30 +4,44 @@ import Form from "../../../framework/components/form/Form"
 import Input from "../../../framework/components/form/Input"
 import Panel from "../../../framework/components/Panel"
 import StoreListenerComponent from "../../../framework/utils/dom"
-import {TheaterCreationState, theaterCreationStore} from "./theaterCreationStore";
-import * as actions from "./theaterCreationActions";
-import {createTheater} from "../theaterApi";
+import {TheaterFormState, theaterFormStore} from "./theaterFormStore";
+import * as actions from "./theaterFormActions";
+import {createTheater, findTheater, updateTheater} from "../theaterApi";
 import {TheaterPlanEdition} from "./theaterPlanEdition";
 import {PrimaryButton} from "../../../framework/components/buttons";
+import {Theater, TheaterCreation} from "../theaterModel";
+import Loading from "../../../framework/components/Loading";
+import messages from "../../../framework/messages";
 
-export interface TheaterCreationProps {
-  path: string
+export interface TheaterFormProps {
+  id?: string
 }
 
-export default class TheaterCreation extends StoreListenerComponent<TheaterCreationProps, TheaterCreationState> {
+export default class TheaterForm extends StoreListenerComponent<TheaterFormProps, TheaterFormState> {
   constructor() {
-    super(theaterCreationStore())
+    super(theaterFormStore())
   }
 
-  render(props: TheaterCreationProps, state: TheaterCreationState) {
+  componentDidMount() {
+    super.componentDidMount()
+    if (this.props.id) {
+      findTheater(this.props.id).then(actions.initialize)
+    } else {
+      actions.initializeEmpty()
+    }
+  }
+
+  render(props: TheaterFormProps, state: TheaterFormState) {
     if (this.mounted) {
       return (
-        <Page title="Créer un nouveau théâtre" role="admin">
-          {
-            state.step === "form"
-              ? this.renderForm(state)
-              : this.renderSuccess()
-          }
+        <Page title={props.id ? "Modifier un théâtre" : "Créer un nouveau théatre"} role="admin">
+          <Loading loading={state.step === "loading"} message={messages.production.form.loading}>
+            {
+              state.step === "form"
+                ? this.renderForm(props, state)
+                : this.renderSuccess(props, state)
+            }
+          </Loading>
         </Page>
       )
     } else {
@@ -35,10 +49,10 @@ export default class TheaterCreation extends StoreListenerComponent<TheaterCreat
     }
   }
 
-  renderForm(state: TheaterCreationState) {
+  renderForm(props: TheaterFormProps, state: TheaterFormState) {
     return (
       <Form
-        submit="Créer le théâtre"
+        submit={props.id === "update" ? "Modifier le théâtre" : "Créer le théâtre"}
         onSubmit={this.onSubmit}
         cancel="Revenir à la liste"
         onCancel="/production/theaters"
@@ -86,11 +100,11 @@ export default class TheaterCreation extends StoreListenerComponent<TheaterCreat
     )
   }
 
-  renderSuccess() {
+  renderSuccess(props: TheaterFormProps, state: TheaterFormState) {
     return (
       <Panel type="success">
         <p>
-          Le théâtre a bien été créé.
+          {props.id === "update" ? "Le théâtre a bien été modifié." : "Le théâtre a bien été créé."}
         </p>
         <p>
           <PrimaryButton message="Revenir à la liste" href="/production/theaters" />
@@ -100,7 +114,8 @@ export default class TheaterCreation extends StoreListenerComponent<TheaterCreat
   }
 
   onSubmit = () => {
-    createTheater({
+    const normalizedTheater: Theater | TheaterCreation = {
+      id: this.state.id,
       name: this.state.name.value,
       address: this.state.address.value,
       content: this.state.content.value,
@@ -112,7 +127,11 @@ export default class TheaterCreation extends StoreListenerComponent<TheaterCreat
         h: _.h.value,
         t: _.t.value
       }))
-    })
+    }
+    const action = normalizedTheater.id
+      ? updateTheater(normalizedTheater)
+      : createTheater(normalizedTheater)
+    action
       .then(() => actions.success())
       .catch(errors => actions.updateErrors(errors))
   }
