@@ -27,7 +27,9 @@
     "typescript": "2.4.1"
   },
   "dependencies": {
+    "@types/autosize": "^3.0.4",
     "@types/classnames": "^2.2.0",
+    "autosize": "^4.0.0",
     "classnames": "^2.2.5",
     "fluxx": "^0.14.15",
     "preact": "8.1.0",

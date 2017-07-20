@@ -1,5 +1,6 @@
 import preact from "preact"
 import {FieldValidation} from "../../utils/Validation"
+import autosize from "autosize"
 
 interface InputProps {
   id: string
@@ -26,15 +27,12 @@ interface InputNumberProps {
 
 export default function Input(props: InputProps) {
   const label = props.required ? `${props.label} *` : props.label
-  const className = errorIsShown(props.fieldValidation)
-    ? "error"
-    : successIsShown(props.fieldValidation) ? "success" : ""
   return (
     <div class="field">
       {
         props.type === "textarea"
-          ? renderTextarea(props, className)
-          : renderInput(props, className)
+          ? renderTextarea(props)
+          : renderInput(props)
       }
       <label for={props.id}>{label}</label>
       {renderError(props.fieldValidation)}
@@ -62,7 +60,10 @@ export function InputNumber(props: InputNumberProps) {
   )
 }
 
-function renderInput(props: InputProps, className: string) {
+function renderInput(props: InputProps) {
+  const className = errorIsShown(props.fieldValidation)
+    ? "error"
+    : successIsShown(props.fieldValidation) ? "success" : ""
   return (
     <input
       type={props.type || "text"}
@@ -78,20 +79,37 @@ function renderInput(props: InputProps, className: string) {
   )
 }
 
-function renderTextarea(props: InputProps, className: string) {
-  return (
-    <textarea
-      style={{height: `${props.fieldValidation.value.split("\n").length * 22 + 40}px`}}
-      name={props.name}
-      id={props.id}
-      placeholder={props.placeholder || props.label}
-      required={props.required}
-      disabled={props.disabled}
-      onInput={e => props.onUpdate((e.target as HTMLInputElement).value)}
-      class={className}
-      value={props.fieldValidation ? props.fieldValidation.value || "" : ""}
-    />
-  )
+function renderTextarea(props: InputProps) {
+  return <Textarea {...props} />
+}
+
+class Textarea extends preact.Component<InputProps, null> {
+  private textarea: HTMLTextAreaElement;
+
+  componentDidMount() {
+    autosize(this.textarea)
+  }
+
+  render(props: InputProps) {
+    const className = errorIsShown(props.fieldValidation)
+      ? "error"
+      : successIsShown(props.fieldValidation) ? "success" : ""
+    return (
+      <textarea
+        name={props.name}
+        id={props.id}
+        placeholder={props.placeholder || props.label}
+        required={props.required}
+        disabled={props.disabled}
+        onInput={e => props.onUpdate((e.target as HTMLInputElement).value)}
+        class={className}
+        value={props.fieldValidation ? props.fieldValidation.value || "" : ""}
+        ref={(textarea) => {
+          this.textarea = textarea as HTMLTextAreaElement
+        }}
+      />
+    )
+  }
 }
 
 function renderError(fieldValidation: FieldValidation<string>) {
