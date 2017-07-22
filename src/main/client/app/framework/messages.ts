@@ -32,6 +32,11 @@ const messages = {
       },
       form: {
         loading: "Veuillez patienter pendant que les comédiens finissent leur café."
+      },
+      show: {
+        form: {
+          loading: "Veuillez patienter pendant que nous terminons notre scène."
+        }
       }
     }
   },

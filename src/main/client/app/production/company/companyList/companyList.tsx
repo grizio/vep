@@ -51,6 +51,7 @@ export default class CompanyList extends StoreListenerComponent<CompanyListProps
                 <p>📍 {company.address}</p>
                 <RichContent content={company.content} limit={100}/>
               </CardContent>
+              <CardAction href={`/production/companies/${company.id}/shows/create`}>Nouvelle pièce</CardAction>
               <CardAction href={`/production/companies/update/${company.id}`}>Éditer</CardAction>
               <CardAction className="delete" action={() => this.deleteCompany(company)}>Supprimer</CardAction>
             </Card>
