@@ -46,6 +46,13 @@ export function findShowsByCompany(company: string): Promise<Array<Show>> {
   })
 }
 
+export function findShow(company: string, id: string): Promise<Show> {
+  return request({
+    method: "GET",
+    url: `production/companies/${company}/shows/${id}`
+  })
+}
+
 export function createShow(company: string, show: ShowCreation) {
   return request({
     method: "POST",

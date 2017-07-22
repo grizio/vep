@@ -16,7 +16,7 @@ class ShowRouter(
   val executionContext: ExecutionContext
 ) extends RouterComponent {
   lazy val route: Route = {
-    findAll ~ create
+    findAll ~ find ~ create ~ update
   }
 
   def findAll: Route = adminGet("production" / "companies" / Segment / "shows").apply { (companyId, _) =>
@@ -25,10 +25,28 @@ class ShowRouter(
     }
   }
 
+  def find: Route = adminGet("production" / "companies" / Segment / "shows" / Segment).apply { (companyId, showId, _) =>
+    found(companyService.find(companyId)) { company =>
+      found(showService.findFromCompany(company, showId)) { show =>
+        Ok(show)
+      }
+    }
+  }
+
   def create: Route = adminPost("production" / "companies" / Segment / "shows", as[ShowCreation]).apply { (companyId, showCreation, _) =>
     found(companyService.find(companyId)) { company =>
       verifying(showVerifications.verifyCreation(showCreation)) { show =>
         verifying(showService.create(show, company)) { show =>
+          Ok(show)
+        }
+      }
+    }
+  }
+
+  def update: Route = adminPut("production" / "companies" / Segment / "shows" / Segment, as[Show]).apply { (companyId, showId, show, _) =>
+    found(companyService.find(companyId)) { company =>
+      verifying(showVerifications.verify(show, showId)) { show =>
+        verifying(showService.update(show)) { show =>
           Ok(show)
         }
       }

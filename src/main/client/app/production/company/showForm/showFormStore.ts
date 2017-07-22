@@ -26,8 +26,20 @@ const initialState: ShowFormState = {
 }
 
 export const showFormStore = () => LocalStore(initialState, on => {
-  on(actions.initialize, (state, {company}) => {
-    return copy(state, {step: "form", company})
+  on(actions.initialize, (state, {company, show}) => {
+    if (show) {
+      return copy(state, {
+        step: "form",
+        company,
+        id: show.id,
+        title: defaultFieldValidation(show.title),
+        author: defaultFieldValidation(show.author),
+        director: defaultFieldValidation(show.director),
+        content: defaultFieldValidation(show.content)
+      })
+    } else {
+      return copy(state, {step: "form", company})
+    }
   })
 
   on(actions.updateTitle, (state, value) => {

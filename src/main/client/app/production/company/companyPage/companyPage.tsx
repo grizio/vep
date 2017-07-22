@@ -82,7 +82,7 @@ export default class CompanyPage extends StoreListenerComponent<CompanyPageProps
                 <RichContent content={show.content} limit={100}/>
               </CardContent>
               <CardAction
-                href={`/production/companies/update/${company.id}/shows/${show.id}/update`}>Éditer</CardAction>
+                href={`/production/companies/${company.id}/shows/update/${show.id}`}>Éditer</CardAction>
               <CardAction className="delete" action={() => this.deleteShow(show)}>Supprimer</CardAction>
             </Card>
           ))}

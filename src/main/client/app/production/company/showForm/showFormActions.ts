@@ -1,7 +1,7 @@
 import { Action } from 'fluxx'
-import {Company} from "../companyModel";
+import {Company, Show} from "../companyModel";
 
-export const initialize = Action<{company: Company}>("initialize")
+export const initialize = Action<{company: Company, show?: Show}>("initialize")
 
 export const updateTitle = Action<string>("updateTitle")
 

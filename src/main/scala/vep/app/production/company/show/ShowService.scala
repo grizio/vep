@@ -23,6 +23,21 @@ class ShowService(
       .apply()
   }
 
+  def findFromCompany(company: Company, id: String): Option[Show] = withQueryConnection { implicit session =>
+    findShowFromCompany(company, id)
+  }
+
+  private def findShowFromCompany(company: Company, id: String)(implicit session: DBSession): Option[Show] = {
+    sql"""
+      SELECT * FROM show
+      WHERE id = ${id}
+      AND   company = ${company.id}
+    """
+      .map(Show.apply)
+      .single()
+      .apply()
+  }
+
   def create(show: Show, company: Company): Validation[Show] = withCommandTransaction { implicit session =>
     insertShow(show, company)
     Valid(show)
@@ -32,6 +47,24 @@ class ShowService(
     sql"""
       INSERT INTO show(id, title, author, director, content, company)
       VALUES (${show.id}, ${show.title}, ${show.author}, ${show.director}, ${show.content}, ${company.id})
+    """
+      .execute()
+      .apply()
+  }
+
+  def update(show: Show): Validation[Show] = withCommandTransaction { implicit session =>
+    updateShow(show)
+    Valid(show)
+  }
+
+  private def updateShow(show: Show)(implicit session: DBSession): Unit = {
+    sql"""
+      UPDATE show
+      SET title = ${show.title},
+          author = ${show.author},
+          director = ${show.director},
+          content = ${show.content}
+      WHERE id = ${show.id}
     """
       .execute()
       .apply()

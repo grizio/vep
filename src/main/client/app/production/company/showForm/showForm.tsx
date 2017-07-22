@@ -11,7 +11,7 @@ import messages from "../../../framework/messages";
 import StoreListenerComponent from "../../../framework/utils/dom"
 import {ShowFormState, showFormStore} from "./showFormStore";
 import * as actions from "./showFormActions";
-import {createShow, findCompany, updateShow} from "../companyApi";
+import {createShow, findCompany, findShow, updateShow} from "../companyApi";
 import {Company, Show, ShowCreation} from "../companyModel";
 
 export interface ShowFormProps {
@@ -26,8 +26,16 @@ export default class ShowForm extends StoreListenerComponent<ShowFormProps, Show
 
   componentDidMount() {
     super.componentDidMount()
-    findCompany(this.props.company)
-      .then(company => actions.initialize({company}))
+    if (this.props.id) {
+      Promise.all([
+        findCompany(this.props.company),
+        findShow(this.props.company, this.props.id)
+      ])
+        .then(([company, show]) => actions.initialize({company, show}))
+    } else {
+      findCompany(this.props.company)
+        .then(company => actions.initialize({company}))
+    }
   }
 
   render(props: ShowFormProps, state: ShowFormState) {

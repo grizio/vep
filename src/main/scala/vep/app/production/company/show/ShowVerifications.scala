@@ -8,17 +8,27 @@ import vep.framework.validation.{Validation, ~}
 class ShowVerifications(
   commonVerifications: CommonVerifications
 ) {
-  def verifyCreation(companyCreation: ShowCreation): Validation[Show] = {
+  def verifyCreation(showCreation: ShowCreation): Validation[Show] = {
     Validation.all(
-      commonVerifications.verifyNonBlank(companyCreation.title),
-      commonVerifications.verifyNonBlank(companyCreation.author),
-      commonVerifications.verifyNonBlank(companyCreation.director),
-      commonVerifications.verifyNonBlank(companyCreation.content)
+      commonVerifications.verifyNonBlank(showCreation.title),
+      commonVerifications.verifyNonBlank(showCreation.author),
+      commonVerifications.verifyNonBlank(showCreation.director),
+      commonVerifications.verifyNonBlank(showCreation.content)
     ) map {
       case title ~ author ~ director ~ content => Show(
         UUID.randomUUID().toString,
         title, author, director, content
       )
     }
+  }
+
+  def verify(show: Show, showId: String): Validation[Show] = {
+    Validation.all(
+      commonVerifications.verifyEquals(show.id, showId),
+      commonVerifications.verifyNonBlank(show.title),
+      commonVerifications.verifyNonBlank(show.author),
+      commonVerifications.verifyNonBlank(show.director),
+      commonVerifications.verifyNonBlank(show.content)
+    ) map { _ => show }
   }
 }
