@@ -7,7 +7,7 @@ import {Card, CardAction, CardContent} from "../../../framework/components/card/
 import Loading from "../../../framework/components/Loading";
 import messages from "../../../framework/messages";
 import {CompanyPageState, companyPageStore} from "./companyPageStore";
-import {findCompany, findShowsByCompany} from "../companyApi";
+import {deleteShow, findCompany, findShowsByCompany} from "../companyApi";
 import * as actions from "./companyPageActions";
 import {Company, Show} from "../companyModel";
 
@@ -92,6 +92,6 @@ export default class CompanyPage extends StoreListenerComponent<CompanyPageProps
   }
 
   deleteShow(show: Show) {
-    //deleteShow(show).then(() => this.initialize())
+    deleteShow(this.state.company.id, show).then(() => this.initialize())
   }
 }

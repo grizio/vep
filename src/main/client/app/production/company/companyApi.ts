@@ -68,3 +68,10 @@ export function updateShow(company: string, show: Show) {
     entity: show
   })
 }
+
+export function deleteShow(company: string, show: Show) {
+  return request({
+    method: "DELETE",
+    url: `production/companies/${company}/shows/${show.id}`
+  })
+}

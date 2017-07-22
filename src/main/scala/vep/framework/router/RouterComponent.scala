@@ -92,6 +92,10 @@ trait RouterComponent extends JsonProtocol with SprayJsonSupport {
     publicDelete(pm) & onAuthenticated
   }
 
+  protected def userDelete[L1, L2, T](pm: PathMatcher[(L1, L2)])(implicit dummyImplicit: DummyImplicit2): Directive[(L1, L2, User)] = {
+    publicDelete(pm) & onAuthenticated
+  }
+
   protected def adminGet(pm: PathMatcher0): Directive1[User] = {
     userGet(pm).filter(_.role == UserRole.admin)
   }
@@ -130,6 +134,10 @@ trait RouterComponent extends JsonProtocol with SprayJsonSupport {
 
   protected def adminDelete[L](pm: PathMatcher1[L])(implicit dummyImplicit: DummyImplicit): Directive[(L, User)] = {
     userDelete(pm).tfilter { case (_, user) => user.role == UserRole.admin }
+  }
+
+  protected def adminDelete[L1, L2](pm: PathMatcher[(L1, L2)])(implicit dummyImplicit: DummyImplicit2): Directive[(L1, L2, User)] = {
+    userDelete(pm).tfilter { case (_, _, user) => user.role == UserRole.admin }
   }
 
   protected def verifying[A](validation: Validation[A])(innerRoute: A => Route): Route = {
