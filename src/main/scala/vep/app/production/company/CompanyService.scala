@@ -67,4 +67,17 @@ class CompanyService(
       .execute()
       .apply()
   }
+
+  def delete(companyId: String): Validation[Unit] = withCommandTransaction { implicit session =>
+    deleteCompany(companyId)
+    Valid()
+  }
+
+  private def deleteCompany(companyId: String)(implicit session: DBSession): Unit = {
+    sql"""
+      DELETE FROM company WHERE id = ${companyId}
+    """
+      .execute()
+      .apply()
+  }
 }

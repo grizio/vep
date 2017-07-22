@@ -30,3 +30,11 @@ export function updateCompany(company: Company) {
     entity: company
   })
 }
+
+export function deleteCompany(company: Company) {
+  return request({
+    method: "DELETE",
+    url: `production/companies/${company.id}`,
+    entity: company
+  })
+}

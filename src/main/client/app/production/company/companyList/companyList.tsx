@@ -5,7 +5,7 @@ import {CompanyListState, companyListStore} from "./companyListStore";
 import {Card, CardAction, CardContent} from "../../../framework/components/card/Card";
 import CardCollection from "../../../framework/components/card/CardCollection";
 import {RichContent} from "../../../framework/components/RichContent";
-import {findAllCompanies} from "../companyApi";
+import {deleteCompany, findAllCompanies} from "../companyApi";
 import * as actions from "./companyListActions";
 import Loading from "../../../framework/components/Loading";
 import messages from "../../../framework/messages";
@@ -52,7 +52,7 @@ export default class CompanyList extends StoreListenerComponent<CompanyListProps
                 <RichContent content={company.content} limit={100}/>
               </CardContent>
               <CardAction href={`/production/companies/update/${company.id}`}>Éditer</CardAction>
-              <CardAction className="delete" action={() => this.deleteTheater(company)}>Supprimer</CardAction>
+              <CardAction className="delete" action={() => this.deleteCompany(company)}>Supprimer</CardAction>
             </Card>
           ))}
         </CardCollection>
@@ -64,7 +64,7 @@ export default class CompanyList extends StoreListenerComponent<CompanyListProps
     findAllCompanies().then(actions.updateList)
   }
 
-  deleteTheater(company: Company) {
-    //deleteCompany(company).then(() => this.initialize())
+  deleteCompany(company: Company) {
+    deleteCompany(company).then(() => this.initialize())
   }
 }
