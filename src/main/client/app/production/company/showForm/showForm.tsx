@@ -83,7 +83,7 @@ export default class ShowForm extends StoreListenerComponent<ShowFormProps, Show
         submit={props.id ? "Modifier la pièce" : "Créer la pièce"}
         onSubmit={this.onSubmit}
         cancel={`Revenir sur la fiche de ${state.company.name}`}
-        onCancel={`/production/companies/${state.company.id}`}
+        onCancel={`/production/companies/page/${state.company.id}`}
         errors={state.errors}
         closeErrors={actions.closeErrors}
       >
@@ -142,7 +142,7 @@ export default class ShowForm extends StoreListenerComponent<ShowFormProps, Show
         </p>
         <p>
           <PrimaryButton message={`Revenir sur la fiche de ${state.company.name}`}
-                         href={`/production/companies/${state.company.id}`}/>
+                         href={`/production/companies/page/${state.company.id}`}/>
         </p>
       </Panel>
     )

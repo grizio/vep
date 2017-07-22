@@ -41,7 +41,7 @@ export default class App extends preact.Component<any, AppState> {
             <TheaterUpdate path="/production/theaters/update/:id" />
 
             <CompanyList path="/production/companies" />
-            <CompanyPage path="/production/companies/:id" />
+            <CompanyPage path="/production/companies/page/:id" />
             <CompanyCreation path="/production/companies/create" />
             <CompanyUpdate path="/production/companies/update/:id" />
 
