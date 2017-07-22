@@ -9,6 +9,19 @@ import vep.framework.validation.{Valid, Validation}
 class CompanyService(
   val configuration: Configuration
 ) extends DatabaseContainer {
+  def findAll(): Seq[Company] = withQueryConnection { implicit session =>
+    findAllCompanies()
+  }
+
+  private def findAllCompanies()(implicit session: DBSession): Seq[Company] = {
+    sql"""
+      SELECT * FROM company
+    """
+      .map(Company.apply)
+      .list()
+      .apply()
+  }
+
   def create(company: Company): Validation[Company] = withCommandTransaction { implicit session =>
     insertCompany(company)
     Valid(company)

@@ -1,4 +1,4 @@
-import {Function1} from "../lib";
+import {Function1, Function2} from "../lib";
 export function min<A>(array: Array<A>): A {
   if (array.length) {
     let minValue = array[0]
@@ -65,4 +65,10 @@ export function fillWith<A>(length: number, computeElement: Function1<number, A>
   return Array(length)
     .fill(null)
     .map((_, index) => computeElement(index))
+}
+
+export function sort<A>(array: Array<A>, compare: Function2<A, A, number>): Array<A> {
+  const arrayToSort = [].concat(array)
+  arrayToSort.sort(compare)
+  return arrayToSort
 }

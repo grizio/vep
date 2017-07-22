@@ -27,6 +27,9 @@ const messages = {
       }
     },
     company: {
+      list: {
+        loading: "Veuillez patienter pendant que nous cherchons toutes les troupes."
+      },
       form: {
         loading: "Veuillez patienter pendant que les comédiens finissent leur café."
       }

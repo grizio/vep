@@ -15,7 +15,11 @@ class CompanyRouter(
   val executionContext: ExecutionContext
 ) extends RouterComponent {
   lazy val route: Route = {
-    create
+    findAll ~ create
+  }
+
+  def findAll: Route = adminGet("production" / "companies") { _ =>
+    Ok(companyService.findAll())
   }
 
   def create: Route = adminPost("production" / "companies", as[CompanyCreation]) { (companyCreation, _) =>
