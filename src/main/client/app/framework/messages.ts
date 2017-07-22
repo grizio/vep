@@ -30,6 +30,9 @@ const messages = {
       list: {
         loading: "Veuillez patienter pendant que nous cherchons toutes les troupes."
       },
+      page: {
+        loading: "Veuillez patienter pendant que la troupe se remet en ordre."
+      },
       form: {
         loading: "Veuillez patienter pendant que les comédiens finissent leur café."
       },

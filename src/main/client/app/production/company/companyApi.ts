@@ -39,10 +39,17 @@ export function deleteCompany(company: Company) {
   })
 }
 
+export function findShowsByCompany(company: string): Promise<Array<Show>> {
+  return request({
+    method: "GET",
+    url: `production/companies/${company}/shows`
+  })
+}
+
 export function createShow(company: string, show: ShowCreation) {
   return request({
     method: "POST",
-    url: `production/companies/${company}`,
+    url: `production/companies/${company}/shows`,
     entity: show
   })
 }
@@ -50,7 +57,7 @@ export function createShow(company: string, show: ShowCreation) {
 export function updateShow(company: string, show: Show) {
   return request({
     method: "PUT",
-    url: `production/companies/${company}/${show.id}`,
+    url: `production/companies/${company}/shows/${show.id}`,
     entity: show
   })
 }

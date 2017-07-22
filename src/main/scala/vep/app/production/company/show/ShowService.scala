@@ -9,6 +9,20 @@ import vep.framework.validation.{Valid, Validation}
 class ShowService(
   val configuration: Configuration
 ) extends DatabaseContainer {
+  def findByCompany(company: Company): Seq[Show] = withQueryConnection { implicit session =>
+    findShowsByCompany(company)
+  }
+
+  private def findShowsByCompany(company: Company)(implicit session: DBSession): Seq[Show] = {
+    sql"""
+      SELECT * FROM show
+      WHERE company = ${company.id}
+    """
+      .map(Show.apply)
+      .list()
+      .apply()
+  }
+
   def create(show: Show, company: Company): Validation[Show] = withCommandTransaction { implicit session =>
     insertShow(show, company)
     Valid(show)
