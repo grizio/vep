@@ -75,6 +75,7 @@ function renderNav(state: SessionState) {
       {
         isGranted(state, "admin") &&
         <MenuGroup name="Les troupes" href="/production/companies" regex="/production/companies(/.*)?">
+          <MenuItem name="Toutes les troupes" href="/production/companies" />
           <MenuItem name="Créer une nouvelle troupe" href="/production/companies/create" />
         </MenuGroup>
       }
