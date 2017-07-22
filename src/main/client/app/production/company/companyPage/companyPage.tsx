@@ -10,6 +10,7 @@ import {CompanyPageState, companyPageStore} from "./companyPageStore";
 import {deleteShow, findCompany, findShowsByCompany} from "../companyApi";
 import * as actions from "./companyPageActions";
 import {Company, Show} from "../companyModel";
+import {PrimaryButton} from "../../../framework/components/buttons";
 
 export interface CompanyPageProps {
   path: string
@@ -87,6 +88,7 @@ export default class CompanyPage extends StoreListenerComponent<CompanyPageProps
             </Card>
           ))}
         </CardCollection>
+        <PrimaryButton message="Ajouter une pièce" href={`/production/companies/${company.id}/shows/create`}/>
       </section>
     )
   }
