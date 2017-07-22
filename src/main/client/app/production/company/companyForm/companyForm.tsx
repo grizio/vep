@@ -6,7 +6,7 @@ import Panel from "../../../framework/components/Panel"
 import StoreListenerComponent from "../../../framework/utils/dom"
 import {CompanyFormState, companyFormStore} from "./companyFormStore";
 import * as actions from "./companyFormActions";
-import {createCompany} from "../companyApi";
+import {createCompany, findCompany, updateCompany} from "../companyApi";
 import {PrimaryButton} from "../../../framework/components/buttons";
 import {Company, CompanyCreation} from "../companyModel";
 import Loading from "../../../framework/components/Loading";
@@ -24,7 +24,11 @@ export default class CompanyForm extends StoreListenerComponent<CompanyFormProps
 
   componentDidMount() {
     super.componentDidMount()
-    actions.initializeEmpty()
+    if (this.props.id) {
+      findCompany(this.props.id).then(actions.initialize)
+    } else {
+      actions.initializeEmpty()
+    }
   }
 
   render(props: CompanyFormProps, state: CompanyFormState) {
@@ -48,7 +52,7 @@ export default class CompanyForm extends StoreListenerComponent<CompanyFormProps
   renderForm(props: CompanyFormProps, state: CompanyFormState) {
     return (
       <Form
-        submit={props.id === "update" ? "Modifier la troupe" : "Créer la troupe"}
+        submit={props.id ? "Modifier la troupe" : "Créer la troupe"}
         onSubmit={this.onSubmit}
         cancel="Revenir à la liste"
         onCancel="/production/companies"
@@ -105,7 +109,7 @@ export default class CompanyForm extends StoreListenerComponent<CompanyFormProps
     return (
       <Panel type="success">
         <p>
-          {props.id === "update" ? "La troupe a bien été modifiée." : "La troupe a bien été créée."}
+          {props.id ? "La troupe a bien été modifiée." : "La troupe a bien été créée."}
         </p>
         <p>
           <PrimaryButton message="Revenir à la liste" href="/production/companies" />
@@ -122,7 +126,9 @@ export default class CompanyForm extends StoreListenerComponent<CompanyFormProps
       content: this.state.content.value,
       isVep: this.state.isVep.value
     }
-    const action = createCompany(normalizedCompany)
+    const action = normalizedCompany.id
+      ? updateCompany(normalizedCompany)
+      : createCompany(normalizedCompany)
     action
       .then(() => actions.success())
       .catch(errors => actions.updateErrors(errors))

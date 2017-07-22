@@ -22,6 +22,20 @@ class CompanyService(
       .apply()
   }
 
+  def find(id: String): Option[Company] = withQueryConnection { implicit session =>
+    findCompany(id)
+  }
+
+  private def findCompany(id: String)(implicit session: DBSession): Option[Company] = {
+    sql"""
+      SELECT * FROM company
+      WHERE id = ${id}
+    """
+      .map(Company.apply)
+      .single()
+      .apply()
+  }
+
   def create(company: Company): Validation[Company] = withCommandTransaction { implicit session =>
     insertCompany(company)
     Valid(company)
@@ -31,6 +45,24 @@ class CompanyService(
     sql"""
       INSERT INTO company(id, name, address, isVep, content)
       VALUES (${company.id}, ${company.name}, ${company.address}, ${company.isVep}, ${company.content})
+    """
+      .execute()
+      .apply()
+  }
+
+  def update(company: Company): Validation[Company] = withCommandTransaction { implicit session =>
+    updateCompany(company)
+    Valid(company)
+  }
+
+  private def updateCompany(company: Company)(implicit session: DBSession): Unit = {
+    sql"""
+      UPDATE company
+      SET name = ${company.name},
+          address = ${company.address},
+          isVep = ${company.isVep},
+          content = ${company.content}
+      WHERE id = ${company.id}
     """
       .execute()
       .apply()

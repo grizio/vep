@@ -25,6 +25,17 @@ const initialState: CompanyFormState = {
 }
 
 export const companyFormStore = () => LocalStore(initialState, on => {
+  on(actions.initialize, (state, value) => {
+    return copy(state, {
+      step: "form",
+      id: value.id,
+      name: defaultFieldValidation(value.name),
+      address: defaultFieldValidation(value.address),
+      isVep: defaultFieldValidation(value.isVep),
+      content: defaultFieldValidation(value.content)
+    })
+  })
+
   on(actions.initializeEmpty, (state) => {
     return copy(state, {step: "form"})
   })

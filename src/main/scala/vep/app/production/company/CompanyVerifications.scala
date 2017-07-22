@@ -21,4 +21,13 @@ class CompanyVerifications(
       )
     }
   }
+
+  def verify(company: Company, companyId: String): Validation[Company] = {
+    Validation.all(
+      commonVerifications.verifyEquals(company.id, companyId),
+      commonVerifications.verifyNonBlank(company.name),
+      commonVerifications.verifyNonBlank(company.address),
+      commonVerifications.verifyNonBlank(company.content)
+    ) map { _ => company }
+  }
 }
