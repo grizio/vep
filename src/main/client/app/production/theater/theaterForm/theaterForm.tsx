@@ -39,7 +39,7 @@ export default class TheaterForm extends StoreListenerComponent<TheaterFormProps
             {
               state.step === "form"
                 ? this.renderForm(props, state)
-                : this.renderSuccess(props, state)
+                : this.renderSuccess(props)
             }
           </Loading>
         </Page>
@@ -52,7 +52,7 @@ export default class TheaterForm extends StoreListenerComponent<TheaterFormProps
   renderForm(props: TheaterFormProps, state: TheaterFormState) {
     return (
       <Form
-        submit={props.id === "update" ? "Modifier le théâtre" : "Créer le théâtre"}
+        submit={props.id ? "Modifier le théâtre" : "Créer le théâtre"}
         onSubmit={this.onSubmit}
         cancel="Revenir à la liste"
         onCancel="/production/theaters"
@@ -100,11 +100,11 @@ export default class TheaterForm extends StoreListenerComponent<TheaterFormProps
     )
   }
 
-  renderSuccess(props: TheaterFormProps, state: TheaterFormState) {
+  renderSuccess(props: TheaterFormProps) {
     return (
       <Panel type="success">
         <p>
-          {props.id === "update" ? "Le théâtre a bien été modifié." : "Le théâtre a bien été créé."}
+          {props.id ? "Le théâtre a bien été modifié." : "Le théâtre a bien été créé."}
         </p>
         <p>
           <PrimaryButton message="Revenir à la liste" href="/production/theaters" />
