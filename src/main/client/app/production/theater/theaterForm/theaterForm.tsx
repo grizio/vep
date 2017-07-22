@@ -35,7 +35,7 @@ export default class TheaterForm extends StoreListenerComponent<TheaterFormProps
     if (this.mounted) {
       return (
         <Page title={props.id ? "Modifier un théâtre" : "Créer un nouveau théatre"} role="admin">
-          <Loading loading={state.step === "loading"} message={messages.production.form.loading}>
+          <Loading loading={state.step === "loading"} message={messages.production.theater.form.loading}>
             {
               state.step === "form"
                 ? this.renderForm(props, state)

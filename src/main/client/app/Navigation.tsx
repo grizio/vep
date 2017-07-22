@@ -73,6 +73,12 @@ function renderNav(state: SessionState) {
         </MenuGroup>
       }
       {
+        isGranted(state, "admin") &&
+        <MenuGroup name="Les troupes" href="/production/companies" regex="/production/companies(/.*)?">
+          <MenuItem name="Créer une nouvelle troupe" href="/production/companies/create" />
+        </MenuGroup>
+      }
+      {
         isNotLoggedIn(state) &&
         <MenuGroup name="Mon espace" href="/personal/login" regex="/personal(/.*)?">
           <MenuItem name="Se connecter" href="/personal/login" />

@@ -29,7 +29,7 @@ export default class TheaterList extends StoreListenerComponent<TheaterListProps
     if (this.mounted) {
       return (
         <Page title="Liste des théâtres" role="admin">
-          <Loading loading={!state.theaters} message={messages.production.list.loading}>
+          <Loading loading={!state.theaters} message={messages.production.theater.list.loading}>
             {state.theaters && this.renderCards(state)}
           </Loading>
         </Page>

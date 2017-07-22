@@ -5,7 +5,7 @@ form {
     display: flex;
     flex-direction: column;
 
-    label {
+    label:not(.switch) {
       display: block;
       padding-top: 16px;
       font-size: 12px;
@@ -22,7 +22,7 @@ form {
       }
     }
 
-    input, textarea, select {
+    input, textarea, select, .switch {
       font-size: 18px;
       padding: 8px 0;
       border: none;
@@ -92,6 +92,115 @@ form {
       &[disabled] {
         color: $color-disabled;
         cursor: not-allowed;
+      }
+
+      &.switch {
+        border-bottom: none;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        .left-placeholder {
+          order: 1;
+          transition: $form-transition;
+        }
+        input {
+          order: 2;
+          width: 0;
+          height: 0;
+          opacity: 0;
+        }
+        .lever {
+          order: 3;
+          display: inline-block;
+          width: 36px;
+          height: 14px;
+          border-radius: 15px;
+          margin: 0 15px;
+          position: relative;
+          transition: $form-transition;
+
+          &:before {
+            content: " ";
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            top: -3px;
+            border-radius: 40px;
+            transition: $form-transition;
+            background-color: rgba(38, 166, 154, 0.15);
+          }
+          &:after {
+            content: " ";
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            top: -3px;
+            border-radius: 20px;
+            transition: $form-transition;
+            box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+          }
+        }
+        .right-placeholder {
+          order: 4;
+          transition: $form-transition;
+        }
+
+        input:not(:checked) {
+          & ~ .lever {
+            background-color: rgba(0, 0, 0, 0.38);
+            &:before {
+              background-color: rgba(0, 0, 0, 0.1);
+              left: 0;
+            }
+            &:after {
+              background-color: #f1f1f1;
+              left: 0;
+            }
+          }
+          &:focus ~ .lever:before {
+            left: -9px;
+          }
+
+          & ~ .left-placeholder {
+            color: $color-primary
+          }
+          & ~ .right-placeholder {
+            color: $color-secondary
+          }
+        }
+
+        input:checked {
+          & ~ .lever {
+            background-color: #84c7c1;
+            &:before {
+              background-color: rgba(38, 166, 154, 0.2);
+              left: 18px;
+            }
+            &:after {
+              background-color: #26a69a;
+              left: 18px;
+            }
+          }
+          &:focus ~ .lever:before {
+            left: 10px;
+          }
+
+          & ~ .left-placeholder {
+            color: $color-secondary
+          }
+          & ~ .right-placeholder {
+            color: $color-primary
+          }
+        }
+
+        input:focus ~ .lever:before {
+          width: 36px;
+          height: 36px;
+          top: -11px;
+        }
       }
     }
 

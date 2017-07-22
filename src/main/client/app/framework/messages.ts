@@ -18,11 +18,18 @@ const messages = {
     }
   },
   production: {
-    list: {
-      loading: "Veuillez patienter pendant que nous retrouvons la liste sous une liasse de poussière."
+    theater: {
+      list: {
+        loading: "Veuillez patienter pendant que nous retrouvons la liste sous une liasse de poussière."
+      },
+      form: {
+        loading: "Veuillez patienter pendant que nous trions la liste des sièges."
+      }
     },
-    form: {
-      loading: "Veuillez patienter pendant que nous trions la liste des sièges."
+    company: {
+      form: {
+        loading: "Veuillez patienter pendant que les comédiens finissent leur café."
+      }
     }
   },
   http: {
