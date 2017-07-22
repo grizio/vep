@@ -11,5 +11,5 @@ trait ProductionIntegrationModule
     with CompanyIntegrationModule {
   def configuration: Configuration
 
-  lazy val productionRoute: Route = theaterRouter.route ~ companyRouter.route
+  lazy val productionRoute: Route = theaterRouter.route ~ companyRoute
 }
