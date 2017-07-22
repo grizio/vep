@@ -30,3 +30,10 @@ export function updateTheater(theater: Theater) {
     entity: theater
   })
 }
+
+export function deleteTheater(theater: Theater) {
+  return request({
+    method: "DELETE",
+    url: `production/theaters/${theater.id}`
+  })
+}

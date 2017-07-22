@@ -14,7 +14,7 @@ class TheaterRouter(
   val executionContext: ExecutionContext
 ) extends RouterComponent {
   lazy val route: Route = {
-    findAll ~ find ~ create ~ update
+    findAll ~ find ~ create ~ update ~ delete
   }
 
   def findAll: Route = adminGet("production" / "theaters") { _ =>
@@ -40,6 +40,12 @@ class TheaterRouter(
       verifying(theaterService.update(theater)) { theater =>
         Ok(theater)
       }
+    }
+  }
+
+  def delete: Route = adminDelete("production" / "theaters" / Segment).apply { (theaterId, _) =>
+    verifying(theaterService.delete(theaterId)) { _ =>
+      Ok("")
     }
   }
 }

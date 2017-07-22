@@ -5,10 +5,11 @@ import {TheaterListState, theaterListStore} from "./theaterListStore";
 import {Card, CardAction, CardContent} from "../../../framework/components/card/Card";
 import CardCollection from "../../../framework/components/card/CardCollection";
 import {RichContent} from "../../../framework/components/RichContent";
-import {findAllTheaters} from "../theaterApi";
+import {deleteTheater, findAllTheaters} from "../theaterApi";
 import * as actions from "./theaterListActions";
 import Loading from "../../../framework/components/Loading";
 import messages from "../../../framework/messages";
+import {Theater} from "../theaterModel";
 
 export interface TheaterListProps {
   path: string
@@ -21,8 +22,7 @@ export default class TheaterList extends StoreListenerComponent<TheaterListProps
 
   componentDidMount() {
     super.componentDidMount()
-    findAllTheaters()
-      .then(actions.updateList)
+    this.initialize()
   }
 
   render(props: TheaterListProps, state: TheaterListState) {
@@ -49,10 +49,18 @@ export default class TheaterList extends StoreListenerComponent<TheaterListProps
               <RichContent content={theater.content} limit={100} />
             </CardContent>
             <CardAction href={`/production/theaters/update/${theater.id}`}>Éditer</CardAction>
-            <CardAction className="delete">Supprimer</CardAction>
+            <CardAction className="delete" action={() => this.deleteTheater(theater)}>Supprimer</CardAction>
           </Card>
         ))}
       </CardCollection>
     )
+  }
+
+  initialize() {
+    findAllTheaters().then(actions.updateList)
+  }
+
+  deleteTheater(theater: Theater) {
+    deleteTheater(theater).then(() => this.initialize())
   }
 }

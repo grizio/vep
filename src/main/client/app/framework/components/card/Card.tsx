@@ -41,9 +41,15 @@ export function CardContent(props: CardContentProps) {
 }
 
 export function CardAction(props: CardActionProps) {
-  return (
-    <ActionButton message={props.children.toString()} href={props.href} className={props.className} />
-  )
+  if (props.action) {
+    return (
+      <ActionButton message={props.children.toString()} action={props.action} className={props.className} />
+    )
+  } else {
+    return (
+      <ActionButton message={props.children.toString()} href={props.href} className={props.className} />
+    )
+  }
 }
 
 function renderImage(props: CardProps) {

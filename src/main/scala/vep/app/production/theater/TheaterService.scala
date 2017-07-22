@@ -99,4 +99,19 @@ class TheaterService(
       .execute()
       .apply()
   }
+
+  def delete(theaterId: String): Validation[Unit] = withCommandTransaction { implicit session =>
+    removeAllSeats(theaterId)
+    deleteTheater(theaterId)
+    Valid()
+  }
+
+  private def deleteTheater(theaterId: String)(implicit session: DBSession): Unit = {
+    sql"""
+      DELETE FROM theater
+      WHERE id = ${theaterId}
+    """
+      .execute()
+      .apply()
+  }
 }
