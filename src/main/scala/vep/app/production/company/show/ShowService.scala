@@ -38,6 +38,22 @@ class ShowService(
       .apply()
   }
 
+  def findNext(): Seq[ShowMeta] = withQueryConnection { implicit session =>
+    findNextShows()
+  }
+
+  private def findNextShows()(implicit session: DBSession): Seq[ShowMeta] = {
+    sql"""
+      SELECT s.* FROM show s
+      JOIN play p ON p.show = s.id
+      WHERE p.date > CURRENT_TIMESTAMP
+      ORDER BY p.date ASC
+    """
+      .map(ShowMeta.apply)
+      .list()
+      .apply()
+  }
+
   def create(show: Show, company: Company): Validation[Show] = withCommandTransaction { implicit session =>
     insertShow(show, company)
     Valid(show)

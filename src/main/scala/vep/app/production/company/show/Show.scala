@@ -40,3 +40,23 @@ object ShowCreation {
 
   implicit val showCreationFormat: RootJsonFormat[ShowCreation] = jsonFormat4(ShowCreation.apply)
 }
+
+case class ShowMeta(
+  id: String,
+  title: String,
+  company: String
+)
+
+object ShowMeta {
+  import JsonProtocol._
+
+  def apply(resultSet: WrappedResultSet): ShowMeta = {
+    new ShowMeta(
+      id = resultSet.string("id"),
+      title = resultSet.string("title"),
+      company = resultSet.string("company")
+    )
+  }
+
+  implicit val showMetaFormat: RootJsonFormat[ShowMeta] = jsonFormat3(ShowMeta.apply)
+}

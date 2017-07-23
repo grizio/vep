@@ -1,5 +1,8 @@
 import {request} from "../../framework/utils/http";
-import {Company, CompanyCreation, Play, PlayCreation, PlayUpdate, Show, ShowCreation} from "./companyModel";
+import {
+  Company, CompanyCreation, Play, PlayCreation, PlayMeta, PlayUpdate, Show, ShowCreation,
+  ShowMeta
+} from "./companyModel";
 import {copy} from "../../framework/utils/object";
 import {localIsoFormat, localIsoFormatToDate} from "../../framework/utils/dates";
 
@@ -55,6 +58,13 @@ export function findShow(company: string, id: string): Promise<Show> {
   })
 }
 
+export function findNextShows(): Promise<Array<ShowMeta>> {
+  return request({
+    method: "GET",
+    url: `production/shows/next`
+  })
+}
+
 export function createShow(company: string, show: ShowCreation) {
   return request({
     method: "POST",
@@ -82,20 +92,21 @@ export function findPlaysByShow(company: string, show: string): Promise<Array<Pl
   return request<Array<Play>>({
     method: "GET",
     url: `production/companies/${company}/shows/${show}/plays`
-  }).then(plays => plays.map(play => copy(play, {
-    date: localIsoFormatToDate(play.date as any),
-    reservationEndDate: localIsoFormatToDate(play.reservationEndDate as any)
-  })))
+  }).then(plays => plays.map(jsonToPlay))
 }
 
 export function findPlay(company: string, show: string, id: string): Promise<Play> {
   return request<Play>({
     method: "GET",
     url: `production/companies/${company}/shows/${show}/plays/${id}`
-  }).then(play => copy(play, {
-    date: localIsoFormatToDate(play.date as any),
-    reservationEndDate: localIsoFormatToDate(play.reservationEndDate as any)
-  }))
+  }).then(jsonToPlay)
+}
+
+export function findNextPlays(): Promise<Array<PlayMeta>> {
+  return request<Array<PlayMeta>>({
+    method: "GET",
+    url: `production/plays/next`
+  }).then(plays => plays.map(jsonToPlayMeta))
 }
 
 export function createPlay(company: string, show: string, play: PlayCreation) {
@@ -124,5 +135,18 @@ export function deletePlay(company: string, show: string, play: Play) {
   return request({
     method: "DELETE",
     url: `production/companies/${company}/shows/${show}/plays/${play.id}`
+  })
+}
+
+function jsonToPlay(play: Play): Play {
+  return copy(play, {
+    date: localIsoFormatToDate(play.date as any),
+    reservationEndDate: localIsoFormatToDate(play.reservationEndDate as any)
+  })
+}
+
+function jsonToPlayMeta(play: PlayMeta): PlayMeta {
+  return copy(play, {
+    date: localIsoFormatToDate(play.date as any)
   })
 }

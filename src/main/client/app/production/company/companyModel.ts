@@ -30,6 +30,12 @@ export interface ShowCreation {
   content: string
 }
 
+export interface ShowMeta {
+  id: string
+  title: string
+  company: string
+}
+
 export interface Play {
   id: string
   theater: Theater
@@ -57,4 +63,12 @@ export interface PlayPrice {
   name: string
   value: number
   condition: string
+}
+
+export interface PlayMeta {
+  id: string
+  date: Date
+  show: string
+  showId: string
+  company: string
 }

@@ -92,3 +92,11 @@ export function equal<A>(array1: Array<A> | ReadonlyArray<A>, array2: Array<A> |
     }
   }
 }
+
+export function take<A>(array: Array<A>, count: number): Array<A> {
+  if (array) {
+    return array.slice(0, count)
+  } else {
+    return []
+  }
+}

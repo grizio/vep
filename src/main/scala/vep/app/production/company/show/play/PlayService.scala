@@ -56,6 +56,23 @@ class PlayService(
       .apply()
   }
 
+  def findNext(): Seq[PlayMeta] = withQueryConnection { implicit session =>
+    findNextPlays()
+  }
+
+  private def findNextPlays()(implicit session: DBSession): Seq[PlayMeta] = {
+    sql"""
+      SELECT p.id, p.date, s.title, s.id as showId, c.id as companyId FROM play p
+      JOIN show s ON s.id = p.show
+      JOIN company c ON c.id = s.company
+      WHERE date > CURRENT_TIMESTAMP
+      ORDER BY date ASC
+    """
+      .map(PlayMeta.apply)
+      .list()
+      .apply()
+  }
+
   def create(play: Play, show: Show): Validation[Play] = withCommandTransaction { implicit session =>
     insertPlay(play, show)
     play.prices.foreach(insertPrice(_, play))

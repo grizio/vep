@@ -1,7 +1,7 @@
 import preact from "preact"
 
 import {Router} from "preact-router/src"
-import Navigation from "./Navigation"
+import Navigation from "./navigation/Navigation"
 import Home from "./common/home/home"
 import Register from "./user/registration/register/register"
 import Login from "./user/session/login/login"

@@ -1,9 +1,13 @@
 import preact from "preact"
 import {Link} from "preact-router/src"
 import classnames from "classnames"
-import {SessionState, sessionStore} from "./framework/session/sessionStore"
-import StoreListenerComponent from "./framework/utils/dom"
-import {logout} from "./framework/session/sessionActions"
+import StoreListenerComponent from "../framework/utils/dom"
+import {logout} from "../framework/session/sessionActions"
+import {NavigationState, navigationStore} from "./NavigationStore"
+import {findNextPlays, findNextShows} from "../production/company/companyApi"
+import * as actions from "./NavigationActions"
+import {shortDateFormat} from "../framework/utils/dates";
+import * as arrays from "../framework/utils/arrays";
 
 interface MenuGroupProps {
   name: string
@@ -19,12 +23,20 @@ interface MenuItemProps {
   disabled?: string
 }
 
-export default class Navigation extends StoreListenerComponent<any, SessionState> {
+export default class Navigation extends StoreListenerComponent<any, NavigationState> {
   constructor() {
-    super(sessionStore)
+    super(navigationStore())
   }
 
-  render(props: any, state: SessionState) {
+  componentDidMount() {
+    super.componentDidMount()
+    Promise.all([
+      findNextShows(),
+      findNextPlays()
+    ]).then(([shows, plays]) => actions.initialize({shows, plays}))
+  }
+
+  render(props: any, state: NavigationState) {
     return (
       <div class="left-navigation">
         {renderSitename()}
@@ -45,18 +57,12 @@ function renderSitename() {
   )
 }
 
-function renderNav(state: SessionState) {
+function renderNav(state: NavigationState) {
   return (
     <nav>
       <MenuGroup name="Accueil" href="/" />
-      <MenuGroup name="Les prochaines pièces" href="/shows" regex="/show(s|/.*)">
-        <MenuItem name="Les Rustres" href="/show/read/les-rustres" />
-        <MenuItem name="Amour Passion et CX Diesel" href="/show/read/amour-passion-et-cx-diesel" />
-      </MenuGroup>
-      <MenuGroup name="Les prochaines séances" href="/sessions" regex="/session(s|/.*)">
-        <MenuItem name="01/01/2017 20:30 - Les Rustres" href="/session/x" />
-        <MenuItem name="02/01/2017 15:30 - Amour Passion et CX Diesel" href="/session/x" />
-      </MenuGroup>
+      {renderNextShows(state)}
+      {renderNextPlays(state)}
       <MenuGroup name="L'association" href="/page/l'association">
         <MenuItem name="Le bureau" href="/page/bureau" />
         <MenuItem name="Historique" href="/page/historique" />
@@ -88,7 +94,7 @@ function renderNav(state: SessionState) {
       }
       {
         isLoggedIn(state) &&
-        <MenuGroup name={`Mon espace (${state.user.email})`} href="/personal/login" regex="/personal(/.*)?">
+        <MenuGroup name={`Mon espace (${state.session.user.email})`} href="/personal/login" regex="/personal(/.*)?">
           <MenuItem name="Ma fiche" href="/personal/my-card" />
           <MenuItem name="(Ré)inscription aux activités" href="/personal/register" />
           <MenuItem name="Déconnexion" action={logout} />
@@ -99,16 +105,44 @@ function renderNav(state: SessionState) {
   )
 }
 
-function isLoggedIn(state: SessionState) {
-  return !!state.user
+function renderNextShows(state: NavigationState) {
+  if (state.shows && state.shows.length) {
+    return (
+      <MenuGroup name="Les prochaines pièces" href="/shows" regex="/show(s|/.*)">
+        {arrays.take(state.shows, 5).map(show =>
+          <MenuItem name={show.title} href={`/production/companies/${show.company}/shows/page/${show.id}`}/>
+        )}
+      </MenuGroup>
+    )
+  } else {
+    return <MenuGroup name="Les prochaines pièces" href="/shows" regex="/show(s|/.*)"/>
+  }
 }
 
-function isNotLoggedIn(state: SessionState) {
+function renderNextPlays(state: NavigationState) {
+  if (state.plays && state.plays.length) {
+    return (
+      <MenuGroup name="Les prochaines séances" href="/plays" regex="/play(s|/.*)">
+        {arrays.take(state.plays, 5).map(play =>
+          <MenuItem name={`${shortDateFormat(play.date)} • ${play.show}`} href={`#`}/>
+        )}
+      </MenuGroup>
+    )
+  } else {
+    return <MenuGroup name="Les prochaines séances" href="/plays" regex="/play(s|/.*)"/>
+  }
+}
+
+function isLoggedIn(state: NavigationState) {
+  return (state.session && state.session.user)
+}
+
+function isNotLoggedIn(state: NavigationState) {
   return !isLoggedIn(state)
 }
 
-function isGranted(state: SessionState, role: string) {
-  return isLoggedIn(state) && state.user.role === role
+function isGranted(state: NavigationState, role: string) {
+  return isLoggedIn(state) && state.session.user.role === role
 }
 
 function MenuGroup(props: MenuGroupProps) {

@@ -80,3 +80,27 @@ object PlayView {
 
   implicit val playViewFormat: RootJsonFormat[PlayView] = jsonFormat5(PlayView.apply)
 }
+
+case class PlayMeta(
+  id: String,
+  date: DateTime,
+  show: String,
+  showId: String,
+  company: String
+)
+
+object PlayMeta {
+  import JsonProtocol._
+
+  def apply(resultSet: WrappedResultSet): PlayMeta = {
+    new PlayMeta(
+      id = resultSet.string("id"),
+      date = resultSet.jodaDateTime("date"),
+      show = resultSet.string("title"),
+      showId = resultSet.string("showId"),
+      company = resultSet.string("companyId")
+    )
+  }
+
+  implicit val playMetaFormat: RootJsonFormat[PlayMeta] = jsonFormat5(PlayMeta.apply)
+}
