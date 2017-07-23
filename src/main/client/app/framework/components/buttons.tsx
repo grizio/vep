@@ -45,6 +45,14 @@ export function FlatSecondaryButton(props: ButtonProps) {
   return renderButtonOrLink(props, "flat secondary")
 }
 
+export function DeleteButton(props: ButtonProps) {
+  return renderButtonOrLink(props, "delete")
+}
+
+export function IconDeleteButton(props: ButtonProps) {
+  return renderButtonOrLink(props, "icon delete")
+}
+
 export function ActionButton(props: ButtonProps) {
   return renderButtonOrLink(props, "action")
 }

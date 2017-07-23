@@ -1,4 +1,5 @@
 import {Function1, Function2} from "../lib";
+
 export function min<A>(array: Array<A>): A {
   if (array.length) {
     let minValue = array[0]
@@ -71,4 +72,23 @@ export function sort<A>(array: Array<A>, compare: Function2<A, A, number>): Arra
   const arrayToSort = [].concat(array)
   arrayToSort.sort(compare)
   return arrayToSort
+}
+
+export function equal<A>(array1: Array<A> | ReadonlyArray<A>, array2: Array<A> | ReadonlyArray<A>): boolean {
+  if (!array1 && !array2) {
+    return true
+  } else if (!array1 || !array2) {
+    return false
+  } else {
+    if (array1.length === array2.length) {
+      for (let i = 0; i < array1.length; i++) {
+        if (array1[i] !== array2[i]) {
+          return false
+        }
+      }
+      return true
+    } else {
+      return false
+    }
+  }
 }
