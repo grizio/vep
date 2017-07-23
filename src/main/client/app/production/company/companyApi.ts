@@ -1,5 +1,5 @@
 import {request} from "../../framework/utils/http";
-import {Company, CompanyCreation, Play, PlayCreation, Show, ShowCreation} from "./companyModel";
+import {Company, CompanyCreation, Play, PlayCreation, PlayUpdate, Show, ShowCreation} from "./companyModel";
 import {copy} from "../../framework/utils/object";
 import {localIsoFormat, localIsoFormatToDate} from "../../framework/utils/dates";
 
@@ -88,10 +88,31 @@ export function findPlaysByShow(company: string, show: string): Promise<Array<Pl
   })))
 }
 
+export function findPlay(company: string, show: string, id: string): Promise<Play> {
+  return request<Play>({
+    method: "GET",
+    url: `production/companies/${company}/shows/${show}/plays/${id}`
+  }).then(play => copy(play, {
+    date: localIsoFormatToDate(play.date as any),
+    reservationEndDate: localIsoFormatToDate(play.reservationEndDate as any)
+  }))
+}
+
 export function createPlay(company: string, show: string, play: PlayCreation) {
   return request({
     method: "POST",
     url: `production/companies/${company}/shows/${show}/plays`,
+    entity: copy(play, {
+      date: localIsoFormat(play.date),
+      reservationEndDate: localIsoFormat(play.reservationEndDate)
+    } as any)
+  })
+}
+
+export function updatePlay(company: string, show: string, play: PlayUpdate) {
+  return request({
+    method: "PUT",
+    url: `production/companies/${company}/shows/${show}/plays/${play.id}`,
     entity: copy(play, {
       date: localIsoFormat(play.date),
       reservationEndDate: localIsoFormat(play.reservationEndDate)

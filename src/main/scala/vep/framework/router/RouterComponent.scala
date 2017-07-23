@@ -52,6 +52,10 @@ trait RouterComponent extends JsonProtocol with SprayJsonSupport {
     put & path(pm) & entity(um)
   }
 
+  protected def publicPut[L1, L2, L3, T](pm: PathMatcher[(L1, L2, L3)], um: FromRequestUnmarshaller[T])(implicit dummyImplicit: DummyImplicit3): Directive[(L1, L2, L3, T)] = {
+    put & path(pm) & entity(um)
+  }
+
   protected def publicDelete[L, T](pm: PathMatcher[L]): Directive[L] = {
     delete & path(pm)
   }
@@ -65,6 +69,10 @@ trait RouterComponent extends JsonProtocol with SprayJsonSupport {
   }
 
   protected def userGet[L1, L2](pm: PathMatcher[(L1, L2)])(implicit dummyImplicit: DummyImplicit2): Directive[(L1, L2, User)] = {
+    publicGet(pm) & onAuthenticated
+  }
+
+  protected def userGet[L1, L2, L3](pm: PathMatcher[(L1, L2, L3)])(implicit dummyImplicit: DummyImplicit3): Directive[(L1, L2, L3, User)] = {
     publicGet(pm) & onAuthenticated
   }
 
@@ -92,6 +100,10 @@ trait RouterComponent extends JsonProtocol with SprayJsonSupport {
     publicPut(pm, um) & onAuthenticated
   }
 
+  protected def userPut[L1, L2, L3, T](pm: PathMatcher[(L1, L2, L3)], um: FromRequestUnmarshaller[T])(implicit dummyImplicit: DummyImplicit3): Directive[(L1, L2, L3, T, User)] = {
+    publicPut(pm, um) & onAuthenticated
+  }
+
   protected def userDelete[T](pm: PathMatcher0): Directive1[User] = {
     publicDelete(pm) & onAuthenticated
   }
@@ -116,6 +128,10 @@ trait RouterComponent extends JsonProtocol with SprayJsonSupport {
     userGet(pm).tfilter { case (_, _, user) => user.role == UserRole.admin }
   }
 
+  protected def adminGet[L1, L2, L3](pm: PathMatcher[(L1, L2, L3)])(implicit dummyImplicit: DummyImplicit3): Directive[(L1, L2, L3, User)] = {
+    userGet(pm).tfilter { case (_, _, _, user) => user.role == UserRole.admin }
+  }
+
   protected def adminPost[T](pm: PathMatcher0, um: FromRequestUnmarshaller[T]): Directive[(T, User)] = {
     userPost(pm, um).tfilter { case (_, user) => user.role == UserRole.admin }
   }
@@ -138,6 +154,10 @@ trait RouterComponent extends JsonProtocol with SprayJsonSupport {
 
   protected def adminPut[L1, L2, T](pm: PathMatcher[(L1, L2)], um: FromRequestUnmarshaller[T])(implicit dummyImplicit: DummyImplicit2): Directive[(L1, L2, T, User)] = {
     userPut(pm, um).tfilter { case (_, _, _, user) => user.role == UserRole.admin }
+  }
+
+  protected def adminPut[L1, L2, L3, T](pm: PathMatcher[(L1, L2, L3)], um: FromRequestUnmarshaller[T])(implicit dummyImplicit: DummyImplicit3): Directive[(L1, L2, L3, T, User)] = {
+    userPut(pm, um).tfilter { case (_, _, _, _, user) => user.role == UserRole.admin }
   }
 
   protected def adminDelete(pm: PathMatcher0): Directive1[User] = {
@@ -211,6 +231,12 @@ trait RouterComponent extends JsonProtocol with SprayJsonSupport {
 
   object DummyImplicit2 {
     implicit def dummyImplicit2: DummyImplicit2 = new DummyImplicit2
+  }
+
+  class DummyImplicit3
+
+  object DummyImplicit3 {
+    implicit def dummyImplicit3: DummyImplicit3 = new DummyImplicit3
   }
 }
 

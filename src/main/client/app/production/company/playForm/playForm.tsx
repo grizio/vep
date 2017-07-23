@@ -10,8 +10,8 @@ import messages from "../../../framework/messages";
 import StoreListenerComponent from "../../../framework/utils/dom"
 import {DateValidation, PlayFormState, playFormStore, PriceValidation} from "./playFormStore";
 import * as actions from "./playFormActions";
-import {createPlay, findCompany, findShow} from "../companyApi";
-import {Company, PlayCreation, Show} from "../companyModel";
+import {createPlay, findCompany, findPlay, findShow, updatePlay} from "../companyApi";
+import {Company, PlayCreation, PlayUpdate, Show} from "../companyModel";
 import {findAllTheaters} from "../../theater/theaterApi";
 import Select from "../../../framework/components/form/Select";
 import {InputDateTime} from "../../../framework/components/form/InputDate";
@@ -31,12 +31,22 @@ export default class PlayForm extends StoreListenerComponent<PlayFormProps, Play
 
   componentDidMount() {
     super.componentDidMount()
-    Promise.all([
-      findCompany(this.props.company),
-      findShow(this.props.company, this.props.show),
-      findAllTheaters()
-    ])
-      .then(([company, show, theaters]) => actions.initialize({company, show, theaters}))
+    if (this.props.id) {
+      Promise.all([
+        findCompany(this.props.company),
+        findShow(this.props.company, this.props.show),
+        findPlay(this.props.company, this.props.show, this.props.id),
+        findAllTheaters()
+      ])
+        .then(([company, show, play, theaters]) => actions.initialize({company, show, play, theaters}))
+    } else {
+      Promise.all([
+        findCompany(this.props.company),
+        findShow(this.props.company, this.props.show),
+        findAllTheaters()
+      ])
+        .then(([company, show, theaters]) => actions.initialize({company, show, theaters}))
+    }
   }
 
   render(props: PlayFormProps, state: PlayFormState) {
@@ -89,13 +99,13 @@ export default class PlayForm extends StoreListenerComponent<PlayFormProps, Play
           onUpdate={actions.updateTheater}
         />
 
-        {this.renderFormDates(state.dates)}
+        {this.renderFormDates(state, state.dates)}
         {this.renderFormPrices(state.prices)}
       </Form>
     )
   }
 
-  renderFormDates(dates: FieldValidation<Array<DateValidation>>) {
+  renderFormDates(state: PlayFormState, dates: FieldValidation<Array<DateValidation>>) {
     return (
       <div>
         <h2>Dates</h2>
@@ -109,14 +119,14 @@ export default class PlayForm extends StoreListenerComponent<PlayFormProps, Play
             ) : null
         }
 
-        {dates.value.map(this.renderFormDate)}
+        {dates.value.map((date, index) => this.renderFormDate(state, date, index))}
 
-        <SecondaryButton message="Ajouter une Date" action={() => actions.addDate()}/>
+        {!state.id && <SecondaryButton message="Ajouter une Date" action={() => actions.addDate()}/> }
       </div>
     )
   }
 
-  renderFormDate(date: DateValidation, index: number) {
+  renderFormDate(state: PlayFormState, date: DateValidation, index: number) {
     return (
       <div class="row middle">
         <div class="col-fill">
@@ -139,9 +149,12 @@ export default class PlayForm extends StoreListenerComponent<PlayFormProps, Play
             onUpdate={value => actions.updateReservationEndDate({index, value})}
           />
         </div>
-        <div class="col-shrink">
-          <IconDeleteButton message="x" action={() => actions.removeDate(index)}/>
-        </div>
+        {
+          !state.id &&
+          <div class="col-shrink">
+            <IconDeleteButton message="x" action={() => actions.removeDate(index)}/>
+          </div>
+        }
       </div>
     )
   }
@@ -244,17 +257,21 @@ export default class PlayForm extends StoreListenerComponent<PlayFormProps, Play
           {props.id ? "La séance a bien été modifiée." : "Les séances ont bien été créées."}
         </p>
         <p>
-          <PrimaryButton message={`Revenir sur la fiche de ${state.company.name}`}
-                         href={`/production/companies/page/${state.company.id}`}/>
+          <PrimaryButton message={`Revenir sur la fiche de ${state.show.title}`}
+                         href={`/production/companies/${state.company.id}/shows/page/${state.show.id}`}/>
         </p>
       </Panel>
     )
   }
 
   onSubmit = () => {
-    const normalizedPlays: Array<PlayCreation> = this.getNormalizedPlays()
+    const normalizedPlays: Array<PlayCreation | PlayUpdate> = this.getNormalizedPlays()
     const action = Promise.all(
-      normalizedPlays.map(normalizedPlay => createPlay(this.state.company.id, this.state.show.id, normalizedPlay))
+      normalizedPlays.map(normalizedPlay => {
+        (normalizedPlay as PlayUpdate).id
+        ? updatePlay(this.state.company.id, this.state.show.id, normalizedPlay as PlayUpdate)
+        : createPlay(this.state.company.id, this.state.show.id, normalizedPlay)
+      })
     )
     action
       .then(() => actions.success())
@@ -263,6 +280,7 @@ export default class PlayForm extends StoreListenerComponent<PlayFormProps, Play
 
   getNormalizedPlays(): Array<PlayCreation> {
     return this.state.dates.value.map(date => ({
+      id: this.state.id,
       theater: this.state.theater.value,
       date: date.date.value,
       reservationEndDate: date.reservationEndDate.value,

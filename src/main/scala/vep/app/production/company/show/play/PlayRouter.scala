@@ -18,7 +18,7 @@ class PlayRouter(
   val executionContext: ExecutionContext
 ) extends RouterComponent {
   lazy val route: Route = {
-    findAll ~ create
+    findAll ~ find ~ create ~ update
   }
 
   def findAll: Route = adminGet("production" / "companies" / Segment / "shows" / Segment / "plays").apply { (companyId, showId, _) =>
@@ -29,11 +29,33 @@ class PlayRouter(
     }
   }
 
+  def find: Route = adminGet("production" / "companies" / Segment / "shows" / Segment / "plays" / Segment).apply { (companyId, showId, playId, _) =>
+    found(companyService.find(companyId)) { company =>
+      found(showService.findFromCompany(company, showId)) { show =>
+        found(playService.findFromShow(show, playId)) { play =>
+          Ok(play)
+        }
+      }
+    }
+  }
+
   def create: Route = adminPost("production" / "companies" / Segment / "shows" / Segment / "plays", as[PlayCreation]).apply { (companyId, showId, playCreation, _) =>
     found(companyService.find(companyId)) { company =>
       found(showService.findFromCompany(company, showId)) { show =>
         verifying(playVerifications.verifyCreation(playCreation)) { play =>
           verifying(playService.create(play, show)) { play =>
+            Ok(play)
+          }
+        }
+      }
+    }
+  }
+
+  def update: Route = adminPut("production" / "companies" / Segment / "shows" / Segment / "plays" / Segment, as[Play]).apply { (companyId, showId, playId, play, _) =>
+    found(companyService.find(companyId)) { company =>
+      found(showService.findFromCompany(company, showId)) { _ =>
+        verifying(playVerifications.verify(play, playId)) { play =>
+          verifying(playService.update(play)) { play =>
             Ok(play)
           }
         }

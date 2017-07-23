@@ -45,6 +45,7 @@ interface InputFieldProps {
 }
 
 interface InputFieldState {
+  mounted: boolean
   value: string
   focus: boolean
 }
@@ -104,6 +105,16 @@ export function InputTime(props: InputTimeProps) {
 }
 
 class InputDateField extends preact.Component<InputFieldProps, InputFieldState> {
+  constructor() {
+    super()
+    this.setState({mounted: false})
+  }
+
+  componentDidMount() {
+    const value = this.props.normalizeFromDate(this.props.fieldValidation.value)
+    this.setState({value, mounted: true})
+  }
+
   componentWillReceiveProps(nextProps: InputFieldProps) {
     if (nextProps.fieldValidation) {
       const newValue = this.props.normalizeFromDate(nextProps.fieldValidation.value)
@@ -114,7 +125,7 @@ class InputDateField extends preact.Component<InputFieldProps, InputFieldState> 
   }
 
   shouldComponentUpdate(nextProps: InputFieldProps, nextState: InputFieldState) {
-    const nextPropsValue = this.props.normalizeFromDate(nextProps.fieldValidation.value);
+    const nextPropsValue = this.props.normalizeFromDate(nextProps.fieldValidation.value)
     return nextProps.type !== this.props.type ||
       nextProps.id !== this.props.id ||
       nextProps.label !== this.props.label ||
@@ -123,7 +134,8 @@ class InputDateField extends preact.Component<InputFieldProps, InputFieldState> 
       nextProps.required !== this.props.required ||
       nextProps.disabled !== this.props.disabled ||
       nextPropsValue !== this.state.value && nextPropsValue !== nextState.value ||
-      nextState.focus !== this.state.focus
+      nextState.focus !== this.state.focus ||
+      nextState.mounted !== this.state.mounted
   }
 
   render(props: InputFieldProps, state: InputFieldState) {

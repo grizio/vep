@@ -6,7 +6,8 @@ export function longDateFormat(date: Date): string {
         year: "numeric",
         month: "long",
         day: "2-digit",
-        weekday: "long"
+        weekday: "long",
+        timeZone: "UTC"
       }
     )
   } else {
@@ -22,6 +23,7 @@ export function shortDateFormat(date: Date): string {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
+        timeZone: "UTC"
       }
     )
   } else {
@@ -39,7 +41,8 @@ export function longDateTimeFormat(date: Date): string {
         day: "2-digit",
         weekday: "long",
         hour: "2-digit",
-        minute: "2-digit"
+        minute: "2-digit",
+        timeZone: "UTC"
       }
     )
   } else {
@@ -56,7 +59,8 @@ export function shortDateTimeFormat(date: Date): string {
         month: "2-digit",
         day: "2-digit",
         hour: "2-digit",
-        minute: "2-digit"
+        minute: "2-digit",
+        timeZone: "UTC"
       }
     )
   } else {
@@ -70,7 +74,8 @@ export function timeFormat(date: Date): string {
       "fr",
       {
         hour: "2-digit",
-        minute: "2-digit"
+        minute: "2-digit",
+        timeZone: "UTC"
       }
     )
   } else {

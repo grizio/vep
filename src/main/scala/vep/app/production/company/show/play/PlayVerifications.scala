@@ -37,4 +37,14 @@ class PlayVerifications(
       commonVerifications.verifyIsPositive(price.value)
     ) map { _ => price }
   }
+
+  def verify(play: Play, playId: String): Validation[Play] = {
+    Validation.all(
+      commonVerifications.verifyEquals(play.id, playId),
+      commonVerifications.verifyIsDefined(theaterService.find(play.theater), TheaterMessage.unknownTheater),
+      commonVerifications.verifyIsAfterNow(play.date),
+      commonVerifications.verifyIsBefore(play.reservationEndDate, play.date),
+      verifyPrices(play.prices)
+    ) map { _ => play }
+  }
 }

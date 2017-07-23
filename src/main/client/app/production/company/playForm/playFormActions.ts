@@ -1,8 +1,8 @@
 import { Action } from 'fluxx'
-import {Company, Show} from "../companyModel";
+import {Company, Play, Show} from "../companyModel";
 import {Theater} from "../../theater/theaterModel";
 
-export const initialize = Action<{company: Company, show: Show, theaters: Array<Theater>}>("initialize")
+export const initialize = Action<{company: Company, show: Show, play?: Play, theaters: Array<Theater>}>("initialize")
 
 export const updateTheater = Action<string>("updateTheater")
 

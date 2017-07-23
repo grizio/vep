@@ -59,8 +59,30 @@ const initialState: PlayFormState = {
 }
 
 export const playFormStore = () => LocalStore(initialState, on => {
-  on(actions.initialize, (state, {company, show, theaters}) => {
-    return copy(state, {step: "form", company, show, availableTheaters: theaters})
+  on(actions.initialize, (state, {company, show, play, theaters}) => {
+    if (play) {
+      return copy(state, {
+        step: "form",
+        company,
+        show,
+        availableTheaters: theaters,
+        id: play.id,
+        theater: defaultFieldValidation(play.theater.id),
+        dates: defaultFieldValidation([{
+          date: defaultFieldValidation(play.date),
+          reservationEndDate: defaultFieldValidation(play.reservationEndDate)
+        }]),
+        prices: defaultFieldValidation(
+          play.prices.map(price => ({
+            name: defaultFieldValidation(price.name),
+            value: defaultFieldValidation(price.value),
+            condition: defaultFieldValidation(price.condition)
+          }))
+        )
+      })
+    } else {
+      return copy(state, {step: "form", company, show, availableTheaters: theaters})
+    }
   })
 
   on(actions.updateTheater, (state, value) => {

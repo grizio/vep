@@ -45,6 +45,14 @@ export interface PlayCreation {
   prices: Array<PlayPrice>
 }
 
+export interface PlayUpdate {
+  id: string
+  theater: string
+  date: Date
+  reservationEndDate: Date
+  prices: Array<PlayPrice>
+}
+
 export interface PlayPrice {
   name: string
   value: number

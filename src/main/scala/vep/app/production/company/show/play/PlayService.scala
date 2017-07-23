@@ -39,6 +39,23 @@ class PlayService(
       .apply()
   }
 
+  def findFromShow(show: Show, id: String): Option[PlayView] = withQueryConnection { implicit session =>
+    findPlayFromShow(show, id)
+      .map(play => play.copy(prices = findPricesByPlay(play)))
+      .flatMap(play => theaterService.find(play.theater).map(PlayView(play, _)))
+  }
+
+  private def findPlayFromShow(show: Show, id: String)(implicit session: DBSession): Option[Play] = {
+    sql"""
+      SELECT * FROM play
+      WHERE id = ${id}
+      AND   show = ${show.id}
+    """
+      .map(Play.apply)
+      .single()
+      .apply()
+  }
+
   def create(play: Play, show: Show): Validation[Play] = withCommandTransaction { implicit session =>
     insertPlay(play, show)
     play.prices.foreach(insertPrice(_, play))
@@ -58,6 +75,34 @@ class PlayService(
     sql"""
       INSERT INTO play_price(id, name, value, condition, play)
       VALUES (${UUID.randomUUID().toString}, ${price.name}, ${price.value}, ${price.condition}, ${play.id})
+    """
+      .execute()
+      .apply()
+  }
+
+  def update(play: Play): Validation[Play] = withCommandTransaction { implicit session =>
+    updatePlay(play)
+    removePricesFromPlay(play)
+    play.prices.foreach(insertPrice(_, play))
+    Valid(play)
+  }
+
+  private def updatePlay(play: Play)(implicit session: DBSession): Unit = {
+    sql"""
+      UPDATE play
+      SET theater = ${play.theater},
+          date = ${play.date},
+          reservationEndDate = ${play.reservationEndDate}
+       WHERE id = ${play.id}
+    """
+      .execute()
+      .apply()
+  }
+
+  private def removePricesFromPlay(play: Play)(implicit session: DBSession): Unit = {
+    sql"""
+      DELETE FROM play_price
+      WHERE play = ${play.id}
     """
       .execute()
       .apply()
