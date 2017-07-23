@@ -21,8 +21,7 @@ export interface PlayFormState {
   availableTheaters: Array<Theater>
   id?: string
   theater: FieldValidation<string>
-  date: FieldValidation<Date>
-  reservationEndDate: FieldValidation<Date>
+  dates: FieldValidation<Array<DateValidation>>
   prices: FieldValidation<Array<PriceValidation>>
   errors?: Array<string>
 }
@@ -31,6 +30,16 @@ export interface PriceValidation {
   name: FieldValidation<string>
   value: FieldValidation<number>
   condition: FieldValidation<string>
+}
+
+export interface DateValidation {
+  date: FieldValidation<Date>
+  reservationEndDate: FieldValidation<Date>
+}
+
+const defaultDateValidation: DateValidation = {
+  date: defaultFieldValidation(null),
+  reservationEndDate: defaultFieldValidation(null)
 }
 
 const defaultPriceValidation: PriceValidation = {
@@ -45,8 +54,7 @@ const initialState: PlayFormState = {
   show: null,
   availableTheaters: [],
   theater: defaultFieldValidation(""),
-  date: defaultFieldValidation(null),
-  reservationEndDate: defaultFieldValidation(null),
+  dates: defaultFieldValidation([defaultDateValidation]),
   prices: defaultFieldValidation([defaultPriceValidation])
 }
 
@@ -61,17 +69,27 @@ export const playFormStore = () => LocalStore(initialState, on => {
     })
   })
 
-  on(actions.updateDate, (state, value) => {
-    return copy(state, {
-      date: updateFieldValidation(state.date, value, validateNotNull(value).flatMap(validateFuture)),
-      reservationEndDate: updateUnchangedFieldValidation(state.reservationEndDate, state.reservationEndDate.value, validateReservationEndDate(state.reservationEndDate.value, value))
-    })
+  on(actions.addDate, (state) => {
+    return updateDates(state, arrays.append(state.dates.value, defaultDateValidation))
   })
 
-  on(actions.updateReservationEndDate, (state, value) => {
-    return copy(state, {
-      reservationEndDate: updateFieldValidation(state.reservationEndDate, value, validateReservationEndDate(value, state.date.value))
-    })
+  on(actions.removeDate, (state, index) => {
+    return updateDates(state, arrays.remove(state.dates.value, index))
+  })
+
+  on(actions.updateDate, (state, {index, value}) => {
+    const currentDate = state.dates.value[index]
+    return updateDates(state, arrays.replace(state.dates.value, index, copy(currentDate, {
+      date: updateFieldValidation(currentDate.date, value, validateNotNull(value).flatMap(validateFuture)),
+      reservationEndDate: updateUnchangedFieldValidation(currentDate.reservationEndDate, currentDate.reservationEndDate.value, validateReservationEndDate(currentDate.reservationEndDate.value, value))
+    })))
+  })
+
+  on(actions.updateReservationEndDate, (state, {index, value}) => {
+    const currentDate = state.dates.value[index]
+    return updateDates(state, arrays.replace(state.dates.value, index, copy(currentDate, {
+      reservationEndDate: updateFieldValidation(currentDate.reservationEndDate, value, validateReservationEndDate(value, currentDate.date.value))
+    })))
   })
 
   on(actions.addPrice, (state) => {
@@ -116,6 +134,16 @@ function validateReservationEndDate(reservationEndDate: Date, date: Date) {
   return validateNotNull(reservationEndDate)
     .flatMap(validateFuture)
     .filter(reservationEndDate => reservationEndDate < date, messages.production.company.show.play.form.reservationEndDateAfterDate)
+}
+
+function updateDates(state: PlayFormState, dates: Array<DateValidation>) {
+  return copy(state, {
+    dates: updateFieldValidation(state.dates, dates, validateDates(dates))
+  })
+}
+
+function validateDates(dates: Array<DateValidation>) {
+  return validateNonEmptyArray(dates)
 }
 
 function updatePrices(state: PlayFormState, prices: Array<PriceValidation>) {

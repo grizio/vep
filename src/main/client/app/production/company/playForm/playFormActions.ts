@@ -6,9 +6,13 @@ export const initialize = Action<{company: Company, show: Show, theaters: Array<
 
 export const updateTheater = Action<string>("updateTheater")
 
-export const updateDate = Action<Date>("updateDate")
+export const addDate = Action("addDate")
 
-export const updateReservationEndDate = Action<Date>("updateReservationEndDate")
+export const removeDate = Action<number>("removeDate")
+
+export const updateDate = Action<{index: number, value: Date}>("updateDate")
+
+export const updateReservationEndDate = Action<{index: number, value: Date}>("updateReservationEndDate")
 
 export const addPrice = Action("addPrice")
 

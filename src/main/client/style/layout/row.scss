@@ -28,6 +28,11 @@
   flex-grow: 1;
 }
 
+.col-shrink {
+  @extend .col;
+  flex-shrink: 1;
+}
+
 @for $i from 1 through 20 {
   .col-fix-#{$i * 50} {
     @extend .col;

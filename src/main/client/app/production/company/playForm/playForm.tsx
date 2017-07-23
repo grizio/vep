@@ -8,7 +8,7 @@ import {RichContent} from "../../../framework/components/RichContent";
 import {IconDeleteButton, PrimaryButton, SecondaryButton} from "../../../framework/components/buttons";
 import messages from "../../../framework/messages";
 import StoreListenerComponent from "../../../framework/utils/dom"
-import {PlayFormState, playFormStore, PriceValidation} from "./playFormStore";
+import {DateValidation, PlayFormState, playFormStore, PriceValidation} from "./playFormStore";
 import * as actions from "./playFormActions";
 import {createPlay, findCompany, findShow} from "../companyApi";
 import {Company, PlayCreation, Show} from "../companyModel";
@@ -42,7 +42,7 @@ export default class PlayForm extends StoreListenerComponent<PlayFormProps, Play
   render(props: PlayFormProps, state: PlayFormState) {
     if (this.mounted) {
       return (
-        <Page title={props.id ? "Modifier une séance" : "Créer une nouvelle séance"} role="admin">
+        <Page title={props.id ? "Modifier une séance" : "Créer de nouvelles séances"} role="admin">
           <Loading loading={state.step === "loading"} message={messages.production.company.show.form.loading}>
             {state.step === "form" && this.renderEdition(props, state)}
             {state.step === "success" && this.renderSuccess(props, state)}
@@ -71,7 +71,7 @@ export default class PlayForm extends StoreListenerComponent<PlayFormProps, Play
   renderForm(props: PlayFormProps, state: PlayFormState) {
     return (
       <Form
-        submit={props.id ? "Modifier la séance" : "Créer la séance"}
+        submit={props.id ? "Modifier la séance" : "Créer les séances"}
         onSubmit={this.onSubmit}
         cancel={`Revenir sur la fiche de ${state.company.name}`}
         onCancel={`/production/companies/page/${state.company.id}`}
@@ -89,26 +89,60 @@ export default class PlayForm extends StoreListenerComponent<PlayFormProps, Play
           onUpdate={actions.updateTheater}
         />
 
-        <InputDateTime
-          id="date"
-          label="Date de représentation"
-          name="date"
-          required
-          fieldValidation={state.date}
-          onUpdate={actions.updateDate}
-        />
-
-        <InputDateTime
-          id="reservationEndDate"
-          label="Date de fin des réservations"
-          name="reservationEndDate"
-          required
-          fieldValidation={state.reservationEndDate}
-          onUpdate={actions.updateReservationEndDate}
-        />
-
+        {this.renderFormDates(state.dates)}
         {this.renderFormPrices(state.prices)}
       </Form>
+    )
+  }
+
+  renderFormDates(dates: FieldValidation<Array<DateValidation>>) {
+    return (
+      <div>
+        <h2>Dates</h2>
+
+        {
+          (dates.changed && dates.errors && dates.errors.length)
+            ? (
+              <Panel type="error">
+                {dates.errors.map(error => <p>{error}</p>)}
+              </Panel>
+            ) : null
+        }
+
+        {dates.value.map(this.renderFormDate)}
+
+        <SecondaryButton message="Ajouter une Date" action={() => actions.addDate()}/>
+      </div>
+    )
+  }
+
+  renderFormDate(date: DateValidation, index: number) {
+    return (
+      <div class="row middle">
+        <div class="col-fill">
+          <InputDateTime
+            id="date"
+            label="Date de représentation"
+            name="date"
+            required
+            fieldValidation={date.date}
+            onUpdate={value => actions.updateDate({index, value})}
+          />
+        </div>
+        <div class="col-fill">
+          <InputDateTime
+            id="reservationEndDate"
+            label="Date de fin des réservations"
+            name="reservationEndDate"
+            required
+            fieldValidation={date.reservationEndDate}
+            onUpdate={value => actions.updateReservationEndDate({index, value})}
+          />
+        </div>
+        <div class="col-shrink">
+          <IconDeleteButton message="x" action={() => actions.removeDate(index)}/>
+        </div>
+      </div>
     )
   }
 
@@ -207,7 +241,7 @@ export default class PlayForm extends StoreListenerComponent<PlayFormProps, Play
     return (
       <Panel type="success">
         <p>
-          {props.id ? "La séance a bien été modifiée." : "La séance a bien été créée."}
+          {props.id ? "La séance a bien été modifiée." : "Les séances ont bien été créées."}
         </p>
         <p>
           <PrimaryButton message={`Revenir sur la fiche de ${state.company.name}`}
@@ -218,23 +252,25 @@ export default class PlayForm extends StoreListenerComponent<PlayFormProps, Play
   }
 
   onSubmit = () => {
-    const normalizedPlay: PlayCreation = this.getNormalizedPlay()
-    const action = createPlay(this.state.company.id, this.state.show.id, normalizedPlay)
+    const normalizedPlays: Array<PlayCreation> = this.getNormalizedPlays()
+    const action = Promise.all(
+      normalizedPlays.map(normalizedPlay => createPlay(this.state.company.id, this.state.show.id, normalizedPlay))
+    )
     action
       .then(() => actions.success())
       .catch(errors => actions.updateErrors(errors))
   }
 
-  getNormalizedPlay(): PlayCreation {
-    return {
+  getNormalizedPlays(): Array<PlayCreation> {
+    return this.state.dates.value.map(date => ({
       theater: this.state.theater.value,
-      date: this.state.date.value,
-      reservationEndDate: this.state.reservationEndDate.value,
+      date: date.date.value,
+      reservationEndDate: date.reservationEndDate.value,
       prices: this.state.prices.value.map(price => ({
         name: price.name.value,
         value: price.value.value,
         condition: price.condition.value
       }))
-    }
+    }))
   }
 }
