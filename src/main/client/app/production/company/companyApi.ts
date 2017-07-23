@@ -1,5 +1,7 @@
 import {request} from "../../framework/utils/http";
-import {Company, CompanyCreation, Show, ShowCreation} from "./companyModel";
+import {Company, CompanyCreation, PlayCreation, Show, ShowCreation} from "./companyModel";
+import {copy} from "../../framework/utils/object";
+import {localIsoFormat} from "../../framework/utils/dates";
 
 export function findAllCompanies(): Promise<Array<Company>> {
   return request({
@@ -73,5 +75,16 @@ export function deleteShow(company: string, show: Show) {
   return request({
     method: "DELETE",
     url: `production/companies/${company}/shows/${show.id}`
+  })
+}
+
+export function createPlay(company: string, show: string, play: PlayCreation) {
+  return request({
+    method: "POST",
+    url: `production/companies/${company}/shows/${show}/plays`,
+    entity: copy(play, {
+      date: localIsoFormat(play.date),
+      reservationEndDate: localIsoFormat(play.reservationEndDate)
+    } as any)
   })
 }

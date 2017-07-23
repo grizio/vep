@@ -27,3 +27,16 @@ export interface ShowCreation {
   director: string
   content: string
 }
+
+export interface PlayCreation {
+  theater: string
+  date: Date
+  reservationEndDate: Date
+  prices: Array<PlayPrice>
+}
+
+export interface PlayPrice {
+  name: string
+  value: number
+  condition: string
+}

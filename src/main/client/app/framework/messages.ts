@@ -1,5 +1,6 @@
 const messages = {
   common: {
+    isNull: "Veuillez remplir ce champ",
     invalidEmail: "L'adresse e-mail est invalide",
     invalidPasswordScore: (got: number, expected: number) =>
       `Le mot de passe est trop faible, veuillez ajouter des lettres majuscules, minuscules, chiffres ou caractères spéciaux (score: ${got}/${expected  })`,
@@ -7,6 +8,7 @@ const messages = {
     emptyArray: "Veuillez indiquer au moins un élément",
     invalidCanonical: "Le format d'url est invalide (caractères autorisés: lettres minuscules, chiffres et -)",
     notPositive: "Veuillez indiquer un nombre entier positif",
+    notFuture: "Veuillez indiquer une date dans le futur",
     contact: {
       differentEmail: "Les adresses e-mail sont différentes"
     }
@@ -39,6 +41,11 @@ const messages = {
       show: {
         form: {
           loading: "Veuillez patienter pendant que nous terminons notre scène."
+        },
+        play: {
+          form: {
+            reservationEndDateAfterDate: "Veuillez indiquer une date de fin de réservation antérieure à la date de la séance"
+          }
         }
       }
     }

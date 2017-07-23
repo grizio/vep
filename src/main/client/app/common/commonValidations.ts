@@ -48,9 +48,14 @@ function containsSpecialCharacter(value: String) {
   return false
 }
 
+export function validateNotNull<A>(value: A): Validation<A> {
+  return Valid(value)
+    .filter(value => value !== null && value !== undefined, messages.common.isNull)
+}
+
 export function validateNonEmpty(value: string): Validation<string> {
   return Valid(value)
-      .filter(value => value && value !== "", messages.common.emptyString)
+    .filter(value => value && value !== "", messages.common.emptyString)
 }
 
 export function validateNonBlank(value: string): Validation<string> {
@@ -66,4 +71,9 @@ export function validateNonEmptyArray<A>(value: Array<A>): Validation<Array<A>> 
 export function validatePositiveNumber(value: number): Validation<number> {
   return Valid(value)
     .filter(value => value !== null && value !== undefined && value > 0, messages.common.notPositive)
+}
+
+export function validateFuture(value: Date): Validation<Date> {
+  return Valid(value)
+    .filter(value => !value || value.getTime() > (new Date()).getTime(), messages.common.notFuture)
 }
