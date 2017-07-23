@@ -18,7 +18,7 @@ class PlayRouter(
   val executionContext: ExecutionContext
 ) extends RouterComponent {
   lazy val route: Route = {
-    findAll ~ find ~ create ~ update
+    findAll ~ find ~ create ~ update ~ delete
   }
 
   def findAll: Route = adminGet("production" / "companies" / Segment / "shows" / Segment / "plays").apply { (companyId, showId, _) =>
@@ -60,6 +60,12 @@ class PlayRouter(
           }
         }
       }
+    }
+  }
+
+  def delete: Route = adminDelete("production" / "companies" / Segment / "shows" / Segment / "plays" / Segment).apply { (companyId, showId, playId, _) =>
+    verifying(playService.delete(companyId, showId, playId)) { _ =>
+      Ok("")
     }
   }
 }

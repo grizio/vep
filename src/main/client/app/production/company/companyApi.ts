@@ -119,3 +119,10 @@ export function updatePlay(company: string, show: string, play: PlayUpdate) {
     } as any)
   })
 }
+
+export function deletePlay(company: string, show: string, play: Play) {
+  return request({
+    method: "DELETE",
+    url: `production/companies/${company}/shows/${show}/plays/${play.id}`
+  })
+}

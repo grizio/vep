@@ -7,7 +7,7 @@ import {Card, CardAction, CardContent} from "../../../framework/components/card/
 import Loading from "../../../framework/components/Loading";
 import messages from "../../../framework/messages";
 import {ShowPageState, showPageStore} from "./showPageStore";
-import {findCompany, findPlaysByShow, findShow} from "../companyApi";
+import {deletePlay, findCompany, findPlaysByShow, findShow} from "../companyApi";
 import * as actions from "./showPageActions";
 import {Company, Play, Show} from "../companyModel";
 import {PrimaryButton} from "../../../framework/components/buttons";
@@ -132,6 +132,6 @@ export default class ShowPage extends StoreListenerComponent<ShowPageProps, Show
   }
 
   deletePlay(play: Play) {
-    //deletePlay(this.state.company.id, this.state.show.id, play).then(() => this.initialize())
+    deletePlay(this.state.company.id, this.state.show.id, play).then(() => this.initialize())
   }
 }

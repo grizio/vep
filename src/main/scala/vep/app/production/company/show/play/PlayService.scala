@@ -82,7 +82,7 @@ class PlayService(
 
   def update(play: Play): Validation[Play] = withCommandTransaction { implicit session =>
     updatePlay(play)
-    removePricesFromPlay(play)
+    removePricesFromPlay(play.id)
     play.prices.foreach(insertPrice(_, play))
     Valid(play)
   }
@@ -99,10 +99,27 @@ class PlayService(
       .apply()
   }
 
-  private def removePricesFromPlay(play: Play)(implicit session: DBSession): Unit = {
+  private def removePricesFromPlay(playId: String)(implicit session: DBSession): Unit = {
     sql"""
       DELETE FROM play_price
-      WHERE play = ${play.id}
+      WHERE play = ${playId}
+    """
+      .execute()
+      .apply()
+  }
+
+  def delete(companyId: String, showId: String, playId: String): Validation[Unit] = withCommandTransaction { implicit session =>
+    removePricesFromPlay(playId)
+    deletePlay(companyId, showId, playId)
+    Valid()
+  }
+
+  private def deletePlay(companyId: String, showId: String, playId: String)(implicit session: DBSession): Unit = {
+    sql"""
+      DELETE FROM play
+      WHERE id = ${playId}
+      AND show = ${showId}
+      AND EXISTS(SELECT 1 FROM show WHERE id = ${showId} AND company = ${companyId})
     """
       .execute()
       .apply()
