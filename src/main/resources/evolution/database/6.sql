@@ -1,8 +1,8 @@
 CREATE TABLE play (
   id                 VARCHAR(255) NOT NULL,
   theater            VARCHAR(255) NOT NULL,
-  date               VARCHAR(255) NOT NULL,
-  reservationEndDate VARCHAR(255) NOT NULL,
+  date               TIMESTAMP NOT NULL,
+  reservationEndDate TIMESTAMP NOT NULL,
   show               VARCHAR(255) NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (theater) REFERENCES theater (id),
