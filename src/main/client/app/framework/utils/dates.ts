@@ -135,3 +135,7 @@ export function localIsoFormatToDate(text: string): Date {
     return null
   }
 }
+
+export function isAfterNow(date: Date): boolean {
+  return date.getTime() > (new Date()).getTime()
+}

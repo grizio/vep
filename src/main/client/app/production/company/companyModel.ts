@@ -1,3 +1,5 @@
+import {Theater} from "../theater/theaterModel";
+
 export interface Company {
   id: string
   name: string
@@ -26,6 +28,14 @@ export interface ShowCreation {
   author: string
   director: string
   content: string
+}
+
+export interface Play {
+  id: string
+  theater: Theater
+  date: Date
+  reservationEndDate: Date
+  prices: Array<PlayPrice>
 }
 
 export interface PlayCreation {

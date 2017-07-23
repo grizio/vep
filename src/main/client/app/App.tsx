@@ -13,6 +13,7 @@ import CompanyList from "./production/company/companyList/companyList";
 import {ShowCreation, ShowUpdate} from "./production/company/showForm/index";
 import CompanyPage from "./production/company/companyPage/companyPage";
 import {PlayCreation} from "./production/company/playForm/index";
+import ShowPage from "./production/company/showPage/showPage";
 
 interface AppState {
   url: string
@@ -46,10 +47,11 @@ export default class App extends preact.Component<any, AppState> {
             <CompanyCreation path="/production/companies/create" />
             <CompanyUpdate path="/production/companies/update/:id" />
 
+            <ShowPage path="/production/companies/:company/shows/page/:id" />
             <ShowCreation path="/production/companies/:company/shows/create" />
             <ShowUpdate path="/production/companies/:company/shows/update/:id" />
 
-            <PlayCreation path="/production/companies/:company/shows/:show/play/create" />
+            <PlayCreation path="/production/companies/:company/shows/:show/plays/create" />
           </Router>
         </div>
       </div>

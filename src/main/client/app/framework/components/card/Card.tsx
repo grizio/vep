@@ -1,10 +1,12 @@
 import preact from "preact";
 import {Function0} from "../../lib";
 import {ActionButton} from "../buttons";
+import {Link} from "preact-router/src";
 
 interface CardProps {
   title?: string
   image?: string
+  href?: string
   children?: Array<preact.VNode>
 }
 
@@ -23,10 +25,11 @@ export function Card(props: CardProps) {
   return (
     <div class="card">
       {renderImage(props)}
-      <div class="card-text">
-        {renderTitle(props)}
-        {renderContent(props)}
-      </div>
+      {
+        props.href
+          ? (<Link href={props.href} class="card-link">{renderText(props)}</Link>)
+          : (<div>{renderText(props)}</div>)
+      }
       {renderActions(props)}
     </div>
   )
@@ -62,6 +65,15 @@ function renderImage(props: CardProps) {
   } else {
     return null
   }
+}
+
+function renderText(props: CardProps) {
+  return (
+    <div class="card-text">
+      {renderTitle(props)}
+      {renderContent(props)}
+    </div>
+  )
 }
 
 function renderTitle(props: CardProps) {

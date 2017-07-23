@@ -1,7 +1,7 @@
 import {request} from "../../framework/utils/http";
-import {Company, CompanyCreation, PlayCreation, Show, ShowCreation} from "./companyModel";
+import {Company, CompanyCreation, Play, PlayCreation, Show, ShowCreation} from "./companyModel";
 import {copy} from "../../framework/utils/object";
-import {localIsoFormat} from "../../framework/utils/dates";
+import {localIsoFormat, localIsoFormatToDate} from "../../framework/utils/dates";
 
 export function findAllCompanies(): Promise<Array<Company>> {
   return request({
@@ -76,6 +76,16 @@ export function deleteShow(company: string, show: Show) {
     method: "DELETE",
     url: `production/companies/${company}/shows/${show.id}`
   })
+}
+
+export function findPlaysByShow(company: string, show: string): Promise<Array<Play>> {
+  return request<Array<Play>>({
+    method: "GET",
+    url: `production/companies/${company}/shows/${show}/plays`
+  }).then(plays => plays.map(play => copy(play, {
+    date: localIsoFormatToDate(play.date as any),
+    reservationEndDate: localIsoFormatToDate(play.reservationEndDate as any)
+  })))
 }
 
 export function createPlay(company: string, show: string, play: PlayCreation) {

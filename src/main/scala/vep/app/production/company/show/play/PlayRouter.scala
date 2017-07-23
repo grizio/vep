@@ -18,7 +18,15 @@ class PlayRouter(
   val executionContext: ExecutionContext
 ) extends RouterComponent {
   lazy val route: Route = {
-    create
+    findAll ~ create
+  }
+
+  def findAll: Route = adminGet("production" / "companies" / Segment / "shows" / Segment / "plays").apply { (companyId, showId, _) =>
+    found(companyService.find(companyId)) { company =>
+      found(showService.findFromCompany(company, showId)) { show =>
+        Ok(playService.findByShow(show))
+      }
+    }
   }
 
   def create: Route = adminPost("production" / "companies" / Segment / "shows" / Segment / "plays", as[PlayCreation]).apply { (companyId, showId, playCreation, _) =>

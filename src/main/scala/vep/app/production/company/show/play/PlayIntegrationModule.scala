@@ -23,7 +23,8 @@ trait PlayIntegrationModule {
     theaterService
   )
   lazy val playService = new PlayService(
-    configuration
+    configuration,
+    theaterService
   )
   lazy val playRouter = new PlayRouter(
     playVerifications,

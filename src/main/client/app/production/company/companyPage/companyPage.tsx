@@ -77,12 +77,12 @@ export default class CompanyPage extends StoreListenerComponent<CompanyPageProps
         <h2>Pièces jouées par {company.name}</h2>
         <CardCollection columns={3}>
           {shows.map(show => (
-            <Card title={show.title}>
+            <Card title={show.title} href={`/production/companies/${company.id}/shows/page/${show.id}`}>
               <CardContent>
                 <p>Écrit par <strong>{show.author}</strong> et mis en scène par <strong>{show.director}</strong></p>
                 <RichContent content={show.content} limit={100}/>
               </CardContent>
-              <CardAction href={`/production/companies/${company.id}/shows/${show.id}/play/create`}>+ séance</CardAction>
+              <CardAction href={`/production/companies/${company.id}/shows/${show.id}/plays/create`}>+ séance</CardAction>
               <CardAction
                 href={`/production/companies/${company.id}/shows/update/${show.id}`}>Éditer</CardAction>
               <CardAction className="delete" action={() => this.deleteShow(show)}>Supprimer</CardAction>

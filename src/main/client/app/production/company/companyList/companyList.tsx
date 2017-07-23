@@ -46,12 +46,11 @@ export default class CompanyList extends StoreListenerComponent<CompanyListProps
         <h2>{title}</h2>
         <CardCollection columns={2}>
           {companies.map(company => (
-            <Card title={company.name}>
+            <Card title={company.name} href={`/production/companies/page/${company.id}`}>
               <CardContent>
                 <p>📍 {company.address}</p>
                 <RichContent content={company.content} limit={100}/>
               </CardContent>
-              <CardAction href={`/production/companies/page/${company.id}`}>Plus d'information</CardAction>
               <CardAction href={`/production/companies/${company.id}/shows/create`}>Nouvelle pièce</CardAction>
               <CardAction href={`/production/companies/update/${company.id}`}>Éditer</CardAction>
               <CardAction className="delete" action={() => this.deleteCompany(company)}>Supprimer</CardAction>
