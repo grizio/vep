@@ -9,4 +9,7 @@ object CommonMessages {
   val isNotPositive = "Veuillez indiquer un nom strictement positif"
   def isDifferent[A](value: A, expected: A) = s"${value} est différent de ${expected}"
   def notFound = "L'élément n'a pas été trouvé"
+  val isNotFuture = "Veuillez indiquer une date postérieure à la date du jour"
+  val isBefore = "La date fournie n'est pas antérieure à la date de référence"
+  val isAfter = "La date fournie n'est pas postérieure la date de référence"
 }

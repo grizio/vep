@@ -3,6 +3,7 @@ package vep.app.common
 import akka.http.scaladsl.server.Route
 import vep.Configuration
 import vep.app.common.contact.ContactIntegrationModule
+import vep.app.common.verifications.CommonVerifications
 import vep.app.user.UserService
 
 trait CommonIntegrationModule

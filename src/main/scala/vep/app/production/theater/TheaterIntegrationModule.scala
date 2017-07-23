@@ -1,7 +1,7 @@
 package vep.app.production.theater
 
 import vep.Configuration
-import vep.app.common.CommonVerifications
+import vep.app.common.verifications.CommonVerifications
 import vep.app.user.UserService
 
 import scala.concurrent.ExecutionContext

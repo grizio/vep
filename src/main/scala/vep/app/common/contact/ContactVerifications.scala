@@ -1,6 +1,6 @@
 package vep.app.common.contact
 
-import vep.app.common.CommonVerifications
+import vep.app.common.verifications.CommonVerifications
 import vep.framework.validation.{Validation, ~}
 
 class ContactVerifications(

@@ -1,7 +1,7 @@
 package vep.app.common.contact
 
 import vep.Configuration
-import vep.app.common.CommonVerifications
+import vep.app.common.verifications.CommonVerifications
 import vep.app.user.UserService
 import vep.framework.mailer.Mailer
 

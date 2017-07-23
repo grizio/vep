@@ -1,7 +1,7 @@
 package vep.app.production.company.show
 
 import vep.Configuration
-import vep.app.common.CommonVerifications
+import vep.app.common.verifications.CommonVerifications
 import vep.app.production.company.CompanyService
 import vep.app.user.UserService
 

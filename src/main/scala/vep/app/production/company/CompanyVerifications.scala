@@ -2,7 +2,7 @@ package vep.app.production.company
 
 import java.util.UUID
 
-import vep.app.common.CommonVerifications
+import vep.app.common.verifications.CommonVerifications
 import vep.app.production.theater.{Seat, Theater, TheaterCreation, TheaterMessage}
 import vep.framework.validation.{Invalid, Valid, Validation, ~}
 

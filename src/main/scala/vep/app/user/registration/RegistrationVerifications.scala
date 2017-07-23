@@ -2,7 +2,7 @@ package vep.app.user.registration
 
 import java.util.UUID
 
-import vep.app.common.CommonVerifications
+import vep.app.common.verifications.CommonVerifications
 import vep.app.user.{User, UserRole}
 import vep.framework.utils.StringUtils
 import vep.framework.validation._

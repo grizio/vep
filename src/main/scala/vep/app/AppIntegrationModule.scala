@@ -2,7 +2,7 @@ package vep.app
 
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
-import vep.app.common.{CommonIntegrationModule, CommonVerifications}
+import vep.app.common.CommonIntegrationModule
 import vep.app.production.ProductionIntegrationModule
 import vep.app.user.UserIntegrationModule
 import vep.{Configuration, Environment}
