@@ -47,6 +47,11 @@ class ShowService(
       SELECT s.* FROM show s
       JOIN play p ON p.show = s.id
       WHERE p.date > CURRENT_TIMESTAMP
+      AND NOT EXISTS (
+        SELECT 1 FROM play p2
+        WHERE p2.show = p.show
+        AND p2.date > p.date
+      )
       ORDER BY p.date ASC
     """
       .map(ShowMeta.apply)
