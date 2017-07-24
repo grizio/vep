@@ -41,7 +41,7 @@ export default class ShowPage extends StoreListenerComponent<ShowPageProps, Show
   render(props: ShowPageProps, state: ShowPageState) {
     if (this.mounted) {
       return (
-        <Page title={state.company ? state.company.name : ""} role="admin">
+        <Page title={state.show ? state.show.title : ""} role="admin">
           <Loading loading={state.loading} message={messages.production.company.show.page.loading}>
             {!state.loading && this.renderShow(state)}
             {!state.loading && this.renderPlays(state)}
