@@ -34,6 +34,10 @@ export function append<A>(array: Array<A>, element: A): Array<A> {
   return newArray
 }
 
+export function appendAll<A>(array: Array<A>, elements: Array<A>): Array<A> {
+  return ([] as Array<A>).concat(array, elements)
+}
+
 export function replace<A>(array: Array<A>, index: number, element: A): Array<A> {
   const newArray = ([] as Array<A>).concat(array)
   newArray[index] = element
@@ -99,4 +103,12 @@ export function take<A>(array: Array<A>, count: number): Array<A> {
   } else {
     return []
   }
+}
+
+export function contains<A>(array: Array<A>, value: A): boolean {
+  return !containsNot(array, value)
+}
+
+export function containsNot<A>(array: Array<A>, value: A): boolean {
+  return array.indexOf(value) === -1
 }

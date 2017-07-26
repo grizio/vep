@@ -57,8 +57,7 @@
         color: $color-success-reverse;
 
         &:hover {
-          background-color: $color-secondary-reverse;
-          color: $color-success;
+          background-color: lighten($color-success, 10%);
         }
       }
 

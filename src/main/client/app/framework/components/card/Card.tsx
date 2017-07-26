@@ -16,6 +16,7 @@ interface CardContentProps {
 
 interface CardActionProps {
   href?: string
+  target?: "_blank" | "blank" | "_self" | "self" | "_parent" | "parent" | "_top" | "top"
   className?: string
   action?: Function0<void>
   children?: Array<preact.VNode>
@@ -46,11 +47,11 @@ export function CardContent(props: CardContentProps) {
 export function CardAction(props: CardActionProps) {
   if (props.action) {
     return (
-      <ActionButton message={props.children.toString()} action={props.action} className={props.className} />
+      <ActionButton message={props.children.toString()} action={props.action} className={props.className}  />
     )
   } else {
     return (
-      <ActionButton message={props.children.toString()} href={props.href} className={props.className} />
+      <ActionButton message={props.children.toString()} href={props.href} target={props.target} className={props.className} />
     )
   }
 }

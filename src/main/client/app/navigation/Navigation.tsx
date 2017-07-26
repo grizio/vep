@@ -124,7 +124,10 @@ function renderNextPlays(state: NavigationState) {
     return (
       <MenuGroup name="Les prochaines séances" href="/plays" regex="/play(s|/.*)">
         {arrays.take(state.plays, 5).map(play =>
-          <MenuItem name={`${shortDateFormat(play.date)} • ${play.show}`} href={`#`}/>
+          <MenuItem
+            name={`${shortDateFormat(play.date)} • ${play.show}`}
+            href={`/production/companies/${play.company}/shows/${play.showId}/plays/page/${play.id}`}
+          />
         )}
       </MenuGroup>
     )

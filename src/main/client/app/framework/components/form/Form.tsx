@@ -9,8 +9,8 @@ interface FormEvent {
 interface FormProps {
   submit: string
   onSubmit: FormEvent
-  cancel: string
-  onCancel: FormEvent | string
+  cancel?: string
+  onCancel?: FormEvent | string
   errors?: Array<string>
   closeErrors: FormEvent
 }
@@ -72,19 +72,21 @@ function renderSubmitButton(props: FormProps) {
 }
 
 function renderCancelButton(props: FormProps) {
-  if (typeof props.onCancel == "string") {
-    return (
-      <SecondaryButton
-        href={props.onCancel}
-        message={props.cancel}
-      />
-    )
-  } else {
-    return (
-      <FlatSecondaryButton
-        message={props.cancel}
-        action={props.onCancel}
-      />
-    )
+  if (props.cancel) {
+    if (typeof props.onCancel == "string") {
+      return (
+        <SecondaryButton
+          href={props.onCancel}
+          message={props.cancel}
+        />
+      )
+    } else {
+      return (
+        <FlatSecondaryButton
+          message={props.cancel}
+          action={props.onCancel}
+        />
+      )
+    }
   }
 }

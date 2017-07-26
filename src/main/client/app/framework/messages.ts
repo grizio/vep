@@ -9,6 +9,7 @@ const messages = {
     invalidCanonical: "Le format d'url est invalide (caractères autorisés: lettres minuscules, chiffres et -)",
     notPositive: "Veuillez indiquer un nombre entier positif",
     notFuture: "Veuillez indiquer une date dans le futur",
+    loading: "Veuillez patienter pendant le chargement des données",
     contact: {
       differentEmail: "Les adresses e-mail sont différentes"
     }
@@ -50,6 +51,11 @@ const messages = {
             reservationEndDateAfterDate: "Veuillez indiquer une date de fin de réservation antérieure à la date de la séance"
           }
         }
+      }
+    },
+    reservation: {
+      form: {
+        noSeats: "Veuillez sélectionner au moins une place"
       }
     }
   },
