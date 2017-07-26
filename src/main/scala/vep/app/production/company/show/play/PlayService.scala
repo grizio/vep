@@ -7,7 +7,7 @@ import vep.Configuration
 import vep.app.production.company.show.Show
 import vep.app.production.theater.TheaterService
 import vep.framework.database.DatabaseContainer
-import vep.framework.validation.{Valid, Validation}
+import vep.framework.validation.{Invalid, Valid, Validation}
 
 class PlayService(
   val configuration: Configuration,
@@ -39,6 +39,16 @@ class PlayService(
       .apply()
   }
 
+  def find(id: String): Option[Play] = withQueryConnection { implicit session =>
+    sql"""
+      SELECT * FROM play
+      WHERE id = ${id}
+    """
+      .map(Play.apply)
+      .single()
+      .apply()
+  }
+
   def findFromShow(show: Show, id: String): Option[PlayView] = withQueryConnection { implicit session =>
     findPlayFromShow(show, id)
       .map(play => play.copy(prices = findPricesByPlay(play)))
@@ -50,6 +60,16 @@ class PlayService(
       SELECT * FROM play
       WHERE id = ${id}
       AND   show = ${show.id}
+    """
+      .map(Play.apply)
+      .single()
+      .apply()
+  }
+
+  private def findPlay(id: String)(implicit session: DBSession): Option[Play] = {
+    sql"""
+      SELECT * FROM play
+      WHERE id = ${id}
     """
       .map(Play.apply)
       .single()
@@ -76,6 +96,7 @@ class PlayService(
   def create(play: Play, show: Show): Validation[Play] = withCommandTransaction { implicit session =>
     insertPlay(play, show)
     play.prices.foreach(insertPrice(_, play))
+    duplicateTheaterForPlay(play.id, play.theater)
     Valid(play)
   }
 
@@ -97,11 +118,53 @@ class PlayService(
       .apply()
   }
 
+  private def duplicateTheaterForPlay(playId: String, theaterId: String)(implicit session: DBSession): Unit = {
+    sql"""
+      INSERT INTO play_theater_seat(play_id, c, x, y, w, h, t)
+      SELECT ${playId}, c, x, y, w, h, t
+      FROM theater_seat
+      WHERE theater_id = ${theaterId}
+    """
+      .execute()
+      .apply()
+  }
+
   def update(play: Play): Validation[Play] = withCommandTransaction { implicit session =>
-    updatePlay(play)
-    removePricesFromPlay(play.id)
-    play.prices.foreach(insertPrice(_, play))
-    Valid(play)
+    val savedPlay = findPlay(play.id)
+    lazy val theaterIsUpdated = savedPlay.exists(_.theater != play.theater)
+    lazy val existingReservation = savedPlay.exists(p => existsReservedSeatsFromPlay(p.id))
+    if (theaterIsUpdated && existingReservation) {
+      Invalid(PlayMessages.existingReservation)
+    } else {
+      updatePlay(play)
+      removePricesFromPlay(play.id)
+      play.prices.foreach(insertPrice(_, play))
+      if (theaterIsUpdated) {
+        deleteTheaterFromPlay(play.id)
+        duplicateTheaterForPlay(play.id, play.theater)
+      }
+      Valid(play)
+    }
+  }
+
+  private def existsReservedSeatsFromPlay(playId: String)(implicit session: DBSession): Boolean = {
+    sql"""
+      SELECT COUNT(*) as c FROM reservation_seat
+      WHERE play_id = ${playId}
+    """
+      .map(_.long("c"))
+      .single()
+      .apply()
+      .exists(_ > 1)
+  }
+
+  private def deleteTheaterFromPlay(playId: String)(implicit session: DBSession): Unit = {
+    sql"""
+      DELETE FROM play_theater_seat
+      WHERE play_id = ${playId}
+    """
+      .execute()
+      .apply()
   }
 
   private def updatePlay(play: Play)(implicit session: DBSession): Unit = {

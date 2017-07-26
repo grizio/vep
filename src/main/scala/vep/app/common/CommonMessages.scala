@@ -12,4 +12,6 @@ object CommonMessages {
   val isNotFuture = "Veuillez indiquer une date postérieure à la date du jour"
   val isBefore = "La date fournie n'est pas antérieure à la date de référence"
   val isAfter = "La date fournie n'est pas postérieure la date de référence"
+  def duplicatedElement[A](value: A) = s"${value.toString} existe deux fois"
+  def forbiddenElement[A](value: A) = s"${value.toString} n'est pas autorisé"
 }
