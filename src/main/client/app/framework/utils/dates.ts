@@ -141,6 +141,26 @@ export function localIsoFormatToDate(text: string): Date {
   }
 }
 
+export function now() {
+  return toUTC(new Date());
+}
+
+export function toUTC(date: Date) {
+  return new Date(Date.UTC(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    date.getHours(),
+    date.getMinutes(),
+    date.getSeconds(),
+    date.getMilliseconds()
+  ))
+}
+
 export function isAfterNow(date: Date): boolean {
-  return date.getTime() > (new Date()).getTime()
+  return date.getTime() > now().getTime()
+}
+
+export function isBeforeNow(date: Date): boolean {
+  return date.getTime() < now().getTime()
 }

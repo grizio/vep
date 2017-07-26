@@ -1,6 +1,10 @@
 @import "../settings";
 
 .plan {
+  &.disabled .seat {
+    pointer-events: none;
+  }
+
   .canvas {
     position: relative;
     margin: auto;

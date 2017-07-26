@@ -11,6 +11,7 @@ import {Seat} from "../../theater/theaterModel";
 import Input from "../../../framework/components/form/Input";
 import {ReservationCreation} from "./reservationModel";
 import Panel from "../../../framework/components/Panel";
+import {isBeforeNow} from "../../../framework/utils/dates";
 
 export interface ReservationFormProps {
   company: Company
@@ -31,7 +32,11 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
 
   render(props: ReservationFormProps, state: ReservationFormState) {
     if (this.mounted && state.reservedSeats) {
-      return this.renderForm(props, state)
+      if (this.isReservationClosed(props)) {
+        return this.renderClosedReservation(props, state)
+      } else {
+        return this.renderForm(props, state)
+      }
     } else {
       return null
     }
@@ -73,12 +78,12 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
     const minY = arrays.min(seats.map(_ => _.y))
     const maxY = arrays.max(seats.map(_ => _.y + _.h))
     return (
-      <div class="plan">
+      <div class={classnames("plan", {"disabled": this.isReservationClosed(props)})}>
         <div class="canvas" style={{
           width: `${maxX + minX}px`,
           height: `${maxY + minY}px`
         }}>
-          {seats.map((seat, index) => this.renderSeat(state, seat, index))}
+          {seats.map((seat, index) => this.renderSeat(props, state, seat, index))}
         </div>
         {
           (state.seats.errors && state.seats.errors.length) ? (
@@ -91,11 +96,14 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
     )
   }
 
-  renderSeat(state: ReservationFormState, seat: Seat, index: number) {
+  renderSeat(props: ReservationFormProps, state: ReservationFormState, seat: Seat, index: number) {
     const classNames = classnames("seat", seat.t, {
       taken: arrays.contains(state.reservedSeats, seat.c),
       selected: arrays.contains(state.seats.value, seat.c)
     })
+    const action = this.isReservationClosed(props)
+      ? () => {}
+      : () => actions.toggleSeat(seat.c);
     return (
       <div key={index.toString()}
            class={classNames}
@@ -105,7 +113,7 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
              width: `${seat.w}px`,
              height: `${seat.h}px`
            }}
-           onClick={() => actions.toggleSeat(seat.c)}
+           onClick={action}
       >
         {seat.c}
       </div>
@@ -169,6 +177,28 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
         />
       </div>
     )
+  }
+
+  renderClosedReservation(props: ReservationFormProps, state: ReservationFormState) {
+    return (
+      <div>
+        <Panel type="info">
+          <p>
+            Les réservations sont closes.
+          </p>
+          <p>
+            Cependant, s'il reste des places, n'hésitez pas à vous présenter à la caisse où vous pourrez en acheter.
+            Préférez vous présenter un quart d'heure voire une demi-heure en avance
+            afin de vous garantir au mieux l'obtention des places.
+          </p>
+        </Panel>
+        {this.renderPlan(props, state)}
+      </div>
+    )
+  }
+
+  isReservationClosed(props: ReservationFormProps) {
+    return isBeforeNow(props.play.reservationEndDate)
   }
 
   onSubmit = () => {

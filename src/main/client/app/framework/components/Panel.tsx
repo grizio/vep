@@ -1,6 +1,6 @@
 import preact from "preact"
 
-export type PanelType = "success" | "error"
+export type PanelType = "success" | "error" | "info"
 
 interface CloseEvent {
   (): void

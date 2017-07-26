@@ -2,6 +2,7 @@
 
 .panel {
   border-radius: 2px;
+  margin: 15px;
   padding: 5px;
   display: flex;
   flex-direction: row;
@@ -43,6 +44,15 @@
 
     .panel-close span:hover {
       background-color: $color-error-hover;
+    }
+  }
+
+  &.info {
+    background-color: $color-info;
+    color: $color-info-reverse;
+
+    .panel-close span:hover {
+      background-color: $color-info-hover;
     }
   }
 }

@@ -15,9 +15,10 @@ class ReservationVerifications(
       commonVerifications.verifyNonEmpty(reservationCreation.firstName),
       commonVerifications.verifyNonEmpty(reservationCreation.lastName),
       commonVerifications.verifyNonEmpty(reservationCreation.email),
-      verifySeats(reservationCreation.seats, play)
+      verifySeats(reservationCreation.seats, play),
+      verifyReservationsNotClosed(play)
     ) map {
-      case firstName ~ lastName ~ email ~ seats => Reservation(
+      case firstName ~ lastName ~ email ~ seats ~ _ => Reservation(
         UUID.randomUUID().toString,
         firstName, lastName, email, reservationCreation.city, reservationCreation.comment, seats
       )
@@ -30,5 +31,10 @@ class ReservationVerifications(
       commonVerifications.verifyAllUnique(seats),
       commonVerifications.verifyContainsNoForbiddenElements(seats, reservationService.findReservedSeats(play.id))
     ) map { _ => seats }
+  }
+
+  private def verifyReservationsNotClosed(play: Play): Validation[Unit] = {
+    Valid()
+      .filter(_ => play.reservationEndDate.isAfterNow, ReservationMessages.closedReservation)
   }
 }
