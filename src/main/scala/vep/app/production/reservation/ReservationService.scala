@@ -23,6 +23,33 @@ class ReservationService(
       .apply()
   }
 
+  def findByPlay(playId: String): Seq[Reservation] = withQueryConnection { implicit session =>
+    findReservationFromPlay(playId)
+      .map(reservation => reservation.copy(seats = findSeatsByReservation(reservation)))
+  }
+
+  private def findReservationFromPlay(playId: String)(implicit session: DBSession): Seq[Reservation] = {
+    sql"""
+      SELECT *
+      FROM reservation
+      WHERE EXISTS(SELECT 1 FROM reservation_seat WHERE play_id = ${playId})
+    """
+      .map(Reservation.apply)
+      .list()
+      .apply()
+  }
+
+  private def findSeatsByReservation(reservation: Reservation)(implicit session: DBSession): Seq[String] = {
+    sql"""
+      SELECT play_c
+      FROM reservation_seat
+      WHERE reservation_id = ${reservation.id}
+    """
+      .map(_.string("play_c"))
+      .list()
+      .apply()
+  }
+
   def create(reservation: Reservation, playId: String): Validation[Reservation] = withCommandTransaction { implicit session =>
     insertReservation(reservation)
     reservation.seats.foreach(insertReservationSeat(_, reservation, playId))

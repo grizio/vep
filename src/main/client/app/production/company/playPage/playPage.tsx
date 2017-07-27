@@ -9,6 +9,7 @@ import {Card, CardAction, CardContent} from "../../../framework/components/card/
 import {capitalizeFirstLetter} from "../../../framework/utils/strings";
 import {Link} from "preact-router/src";
 import ReservationForm from "../../reservation/reservationForm/reservationForm";
+import ReservationList from "../../reservation/reservationList/reservationList";
 
 export interface PlayPageProps {
   path: string
@@ -43,6 +44,9 @@ export default class PlayPage extends AsyncPage<PlayPageProps, PlayPageState> {
         <ReservationForm
           company={state.company}
           show={state.show}
+          play={state.play}
+        />
+        <ReservationList
           play={state.play}
         />
       </div>

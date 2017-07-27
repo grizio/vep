@@ -20,8 +20,8 @@ object Reservation {
   def apply(resultSet: WrappedResultSet): Reservation = {
     new Reservation(
       id = resultSet.string("id"),
-      firstName = resultSet.string("firstName"),
-      lastName = resultSet.string("lastName"),
+      firstName = resultSet.string("first_name"),
+      lastName = resultSet.string("last_name"),
       email = resultSet.string("email"),
       city = resultSet.stringOpt("city"),
       comment = resultSet.stringOpt("comment"),

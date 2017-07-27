@@ -16,7 +16,7 @@ class ReservationRouter(
   val executionContext: ExecutionContext
 ) extends RouterComponent {
   lazy val route: Route = {
-    findReservedSeats ~ create
+    findReservedSeats ~ create ~ findByplay
   }
 
   def findReservedSeats: Route = publicGet("production" / "reservations" / Segment / "reservedSeats") { (playId) =>
@@ -32,6 +32,12 @@ class ReservationRouter(
           Ok(reservation)
         }
       }
+    }
+  }
+
+  def findByplay: Route = adminGet("production" / "reservations" / Segment).apply { (playId, _) =>
+    found(playService.find(playId)) { play =>
+      Ok(reservationService.findByPlay(play.id))
     }
   }
 }

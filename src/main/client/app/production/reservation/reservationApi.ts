@@ -1,10 +1,17 @@
 import {request} from "../../framework/utils/http";
-import {ReservationCreation} from "./reservationForm/reservationModel";
+import {Reservation, ReservationCreation} from "./reservationModel";
 
 export function findReservedSeats(play: string): Promise<Array<string>> {
   return request({
     method: "GET",
     url: `production/reservations/${play}/reservedSeats`
+  })
+}
+
+export function findReservations(play: string): Promise<Array<Reservation>> {
+  return request({
+    method: "GET",
+    url: `production/reservations/${play}`
   })
 }
 

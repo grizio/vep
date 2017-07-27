@@ -9,7 +9,7 @@ import {createReservation, findReservedSeats} from "../reservationApi";
 import Form from "../../../framework/components/form/Form";
 import {Seat} from "../../theater/theaterModel";
 import Input from "../../../framework/components/form/Input";
-import {ReservationCreation} from "./reservationModel";
+import {ReservationCreation} from "../reservationModel";
 import Panel from "../../../framework/components/Panel";
 import {isBeforeNow} from "../../../framework/utils/dates";
 
