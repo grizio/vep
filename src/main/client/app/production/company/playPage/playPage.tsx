@@ -41,11 +41,15 @@ export default class PlayPage extends AsyncPage<PlayPageProps, PlayPageState> {
     return (
       <div>
         {this.renderInformation(state)}
+
+        <h2>Réservez vos places</h2>
         <ReservationForm
           company={state.company}
           show={state.show}
           play={state.play}
         />
+
+        <h2>Liste des réservations</h2>
         <ReservationList
           play={state.play}
         />

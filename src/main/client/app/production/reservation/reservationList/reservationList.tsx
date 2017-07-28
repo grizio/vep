@@ -36,7 +36,6 @@ class ReservationListComponent extends StoreListenerComponent<ReservationListPro
   renderReservations(state: ReservationListState) {
     return (
       <div>
-        <h2>Réservations</h2>
         <CardCollection columns={4}>
           {state.reservations.map(reservation => this.renderReservation(reservation))}
         </CardCollection>

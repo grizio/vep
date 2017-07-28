@@ -115,8 +115,12 @@ export default class ShowPage extends StoreListenerComponent<ShowPageProps, Show
                   )}
                 </ul>
               </CardContent>
-              <CardAction
-                href={`/production/companies/${state.company.id}/shows/${state.show.id}/plays/update/${play.id}`}>Éditer</CardAction>
+              <CardAction href={`/production/companies/${state.company.id}/shows/${state.show.id}/plays/page/${play.id}`}>
+                Réserver
+              </CardAction>
+              <CardAction href={`/production/companies/${state.company.id}/shows/${state.show.id}/plays/update/${play.id}`}>
+                Éditer
+              </CardAction>
               <CardAction className="delete" action={() => this.deletePlay(play)}>Supprimer</CardAction>
             </Card>
           ))}
