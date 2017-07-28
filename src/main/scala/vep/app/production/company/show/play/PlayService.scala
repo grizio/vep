@@ -4,8 +4,9 @@ import java.util.UUID
 
 import scalikejdbc._
 import vep.Configuration
+import vep.app.production.company.Company
 import vep.app.production.company.show.Show
-import vep.app.production.theater.TheaterService
+import vep.app.production.theater.{Theater, TheaterService}
 import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Invalid, Valid, Validation}
 
@@ -90,6 +91,54 @@ class PlayService(
     """
       .map(PlayMeta.apply)
       .list()
+      .apply()
+  }
+
+  def findWithDependencies(id: String): Option[PlayWithDependencies] = withQueryConnection { implicit session =>
+    findPlay(id).flatMap { play =>
+      findShowByPlay(play).flatMap { show =>
+        findCompanyByShow(show).flatMap { company =>
+          findTheaterByPlay(play).map { theater =>
+            PlayWithDependencies(play, show, company, theater)
+          }
+        }
+      }
+    }
+  }
+
+  private def findShowByPlay(play: Play)(implicit session: DBSession): Option[Show] = {
+    sql"""
+      SELECT * FROM show s
+      WHERE EXISTS(
+        SELECT 1 FROM play p
+        WHERE p.id = ${play.id} AND p.show = s.id
+      )
+    """
+      .map(Show.apply)
+      .single()
+      .apply()
+  }
+
+  private def findCompanyByShow(show: Show)(implicit session: DBSession): Option[Company] = {
+    sql"""
+      SELECT * FROM company c
+      WHERE EXISTS(
+        SELECT 1 FROM show s
+        WHERE s.id = ${show.id} AND s.company = c.id
+      )
+    """
+      .map(Company.apply)
+      .single()
+      .apply()
+  }
+
+  private def findTheaterByPlay(play: Play)(implicit session: DBSession): Option[Theater] = {
+    sql"""
+      SELECT * FROM theater t
+      WHERE id = ${play.theater}
+    """
+      .map(Theater.apply)
+      .single()
       .apply()
   }
 

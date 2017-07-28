@@ -4,6 +4,7 @@ import vep.Configuration
 import vep.app.common.verifications.CommonVerifications
 import vep.app.production.company.show.play.PlayService
 import vep.app.user.UserService
+import vep.framework.mailer.Mailer
 
 import scala.concurrent.ExecutionContext
 
@@ -13,6 +14,7 @@ trait ReservationIntegrationModule {
   def commonVerifications: CommonVerifications
   def executionContext: ExecutionContext
   def playService: PlayService
+  def mailer: Mailer
 
   lazy val reservationVerifications = new ReservationVerifications(
     commonVerifications,
@@ -21,9 +23,14 @@ trait ReservationIntegrationModule {
   lazy val reservationService = new ReservationService(
     configuration
   )
+  lazy val reservationMailer = new ReservationMailer(
+    mailer,
+    configuration
+  )
   lazy val reservationRouter = new ReservationRouter(
     reservationVerifications,
     reservationService,
+    reservationMailer,
     playService,
     userService,
     executionContext

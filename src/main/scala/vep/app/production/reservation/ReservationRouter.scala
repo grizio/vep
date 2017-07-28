@@ -11,6 +11,7 @@ import scala.concurrent.ExecutionContext
 class ReservationRouter(
   reservationVerifications: ReservationVerifications,
   reservationService: ReservationService,
+  reservationMailer: ReservationMailer,
   playService: PlayService,
   val userService: UserService,
   val executionContext: ExecutionContext
@@ -29,6 +30,9 @@ class ReservationRouter(
     found(playService.find(playId)) { play =>
       verifying(reservationVerifications.verifyCreation(reservationCreation, play)) { reservation =>
         verifying(reservationService.create(reservation, playId)) { reservation =>
+          playService.findWithDependencies(playId).foreach { playWithDependencies =>
+            reservationMailer.send(reservation, playWithDependencies)
+          }
           Ok(reservation)
         }
       }

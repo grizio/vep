@@ -3,6 +3,8 @@ package vep.app.production.company.show.play
 import org.joda.time.DateTime
 import scalikejdbc.WrappedResultSet
 import spray.json.RootJsonFormat
+import vep.app.production.company.Company
+import vep.app.production.company.show.Show
 import vep.app.production.theater.Theater
 import vep.framework.utils.JsonProtocol
 
@@ -104,3 +106,10 @@ object PlayMeta {
 
   implicit val playMetaFormat: RootJsonFormat[PlayMeta] = jsonFormat5(PlayMeta.apply)
 }
+
+case class PlayWithDependencies(
+  play: Play,
+  show: Show,
+  company: Company,
+  theater: Theater
+)
