@@ -2,8 +2,9 @@ package vep.app.production.reservation
 
 import scalikejdbc._
 import vep.Configuration
+import vep.app.production.company.show.play.Play
 import vep.framework.database.DatabaseContainer
-import vep.framework.validation.{Invalid, Valid, Validation}
+import vep.framework.validation.{Valid, Validation}
 
 class ReservationService(
   val configuration: Configuration
@@ -23,7 +24,7 @@ class ReservationService(
       .apply()
   }
 
-  def findByPlay(playId: String): Seq[Reservation] = withQueryConnection { implicit session =>
+  def findAllByPlay(playId: String): Seq[Reservation] = withQueryConnection { implicit session =>
     findReservationFromPlay(playId)
       .map(reservation => reservation.copy(seats = findSeatsByReservation(reservation)))
   }
@@ -31,8 +32,12 @@ class ReservationService(
   private def findReservationFromPlay(playId: String)(implicit session: DBSession): Seq[Reservation] = {
     sql"""
       SELECT *
-      FROM reservation
-      WHERE EXISTS(SELECT 1 FROM reservation_seat WHERE play_id = ${playId})
+      FROM reservation r
+      WHERE EXISTS(
+        SELECT 1 FROM reservation_seat rs
+        WHERE rs.reservation_id = r.id
+        AND play_id = ${playId}
+      )
     """
       .map(Reservation.apply)
       .list()
@@ -47,6 +52,27 @@ class ReservationService(
     """
       .map(_.string("play_c"))
       .list()
+      .apply()
+  }
+
+  def findByPlay(reservationId: String, play: Play): Option[Reservation] = withQueryConnection { implicit session =>
+    findReservationByPlay(reservationId, play.id)
+      .map(reservation => reservation.copy(seats = findSeatsByReservation(reservation)))
+  }
+
+  private def findReservationByPlay(reservationId: String, playId: String)(implicit session: DBSession): Option[Reservation] = {
+    sql"""
+      SELECT *
+      FROM reservation r
+      WHERE id = ${reservationId}
+      AND EXISTS(
+        SELECT 1 FROM reservation_seat rs
+        WHERE rs.reservation_id = r.id
+        AND play_id = ${playId}
+      )
+    """
+      .map(Reservation.apply)
+      .single()
       .apply()
   }
 
@@ -76,6 +102,32 @@ class ReservationService(
     sql"""
       INSERT INTO reservation_seat(reservation_id, play_id, play_c)
       VALUES (${reservation.id}, ${playId}, ${seat})
+    """
+      .execute()
+      .apply()
+  }
+
+  def delete(playId: String, reservationId: String): Validation[Unit] = withCommandTransaction { implicit session =>
+    if (findReservationByPlay(reservationId, playId).isDefined) {
+      deleteSeatsByReservation(reservationId)
+      deleteReservation(reservationId)
+    }
+    Valid()
+  }
+
+  private def deleteSeatsByReservation(reservationId: String)(implicit session: DBSession): Unit = {
+    sql"""
+      DELETE FROM reservation_seat
+      WHERE reservation_id = ${reservationId}
+    """
+      .execute()
+      .apply()
+  }
+
+  private def deleteReservation(reservationId: String)(implicit session: DBSession): Unit = {
+    sql"""
+      DELETE FROM reservation
+      WHERE id = ${reservationId}
     """
       .execute()
       .apply()

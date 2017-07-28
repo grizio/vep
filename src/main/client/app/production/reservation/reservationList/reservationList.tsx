@@ -2,12 +2,14 @@ import preact from "preact"
 import {ReservationListState, reservationListStore} from "./reservationListStore";
 import * as actions from "./reservationListActions"
 import StoreListenerComponent from "../../../framework/utils/dom";
-import {findReservations} from "../reservationApi";
+import {deleteReservation} from "../reservationApi";
 import {Reservation} from "../reservationModel";
 import {Play} from "../../company/companyModel";
 import CardCollection from "../../../framework/components/card/CardCollection";
 import {Card, CardAction, CardContent} from "../../../framework/components/card/Card";
 import {OnGranted} from "../../../framework/components/Security";
+import {reservationDeleted} from "../reservationActions";
+import Panel from "../../../framework/components/Panel";
 
 export interface ReservationListProps {
   play: Play
@@ -20,8 +22,7 @@ class ReservationListComponent extends StoreListenerComponent<ReservationListPro
 
   componentDidMount() {
     super.componentDidMount()
-    findReservations(this.props.play.id)
-      .then(reservations => actions.initialize({reservations}))
+    actions.initialize(this.props.play.id)
   }
 
   render(props: ReservationListProps, state: ReservationListState) {
@@ -37,8 +38,9 @@ class ReservationListComponent extends StoreListenerComponent<ReservationListPro
       <div>
         <h2>Réservations</h2>
         <CardCollection columns={4}>
-          {state.reservations.map(this.renderReservation)}
+          {state.reservations.map(reservation => this.renderReservation(reservation))}
         </CardCollection>
+        {state.reservations.length === 0 ? this.renderNone() : null}
       </div>
     )
   }
@@ -51,9 +53,23 @@ class ReservationListComponent extends StoreListenerComponent<ReservationListPro
           {reservation.city ? <p>{reservation.city}</p> : null}
           {reservation.comment ? <p>{reservation.comment}</p> : null}
         </CardContent>
-        <CardAction href={`mailto:${reservation.email}`}>Contacter par email</CardAction>
+        <CardAction href={`mailto:${reservation.email}`}>📧</CardAction>
+        <CardAction action={() => this.deleteReservation(reservation)}>Supprimer</CardAction>
       </Card>
     )
+  }
+
+  renderNone() {
+    return (
+      <Panel type="info">
+        <p>Aucune réservation pour le moment.</p>
+      </Panel>
+    )
+  }
+
+  deleteReservation(reservation: Reservation) {
+    deleteReservation(this.props.play.id, reservation)
+      .then(_ => reservationDeleted())
   }
 }
 

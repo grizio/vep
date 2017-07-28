@@ -5,13 +5,14 @@ import classnames from "classnames"
 import {Company, Play, Show} from "../../company/companyModel";
 import StoreListenerComponent from "../../../framework/utils/dom";
 import * as arrays from "../../../framework/utils/arrays";
-import {createReservation, findReservedSeats} from "../reservationApi";
+import {createReservation} from "../reservationApi";
 import Form from "../../../framework/components/form/Form";
 import {Seat} from "../../theater/theaterModel";
 import Input from "../../../framework/components/form/Input";
 import {ReservationCreation} from "../reservationModel";
 import Panel from "../../../framework/components/Panel";
 import {isBeforeNow} from "../../../framework/utils/dates";
+import {reservationDone} from "../reservationActions";
 
 export interface ReservationFormProps {
   company: Company
@@ -26,8 +27,7 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
 
   componentDidMount() {
     super.componentDidMount()
-    findReservedSeats(this.props.play.id)
-      .then(reservedSeats => actions.initialize({reservedSeats}))
+    actions.initialize(this.props.play.id)
   }
 
   render(props: ReservationFormProps, state: ReservationFormState) {
@@ -211,7 +211,10 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
       seats: this.state.seats.value
     }
     createReservation(this.props.play.id, normalizedReseration)
-      .then(actions.success)
+      .then(_ => {
+        actions.success()
+        reservationDone()
+      })
       .catch(actions.updateErrors)
   }
 }

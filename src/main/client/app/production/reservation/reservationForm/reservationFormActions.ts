@@ -1,6 +1,8 @@
 import { Action } from 'fluxx'
 
-export const initialize = Action<{reservedSeats: Array<string>}>("initialize")
+export const initialize = Action<string>("initialize")
+
+export const reloadReservedSeats = Action<Array<string>>("initialize")
 
 export const updateFirstName = Action<string>("updateFirstName")
 

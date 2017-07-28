@@ -22,3 +22,10 @@ export function createReservation(play: string, reservation: ReservationCreation
     entity: reservation
   })
 }
+
+export function deleteReservation(play: string, reservation: Reservation) {
+  return request({
+    method: "DELETE",
+    url: `production/reservations/${play}/${reservation.id}`
+  })
+}

@@ -8,9 +8,12 @@ import {copy} from "../../../framework/utils/object";
 import * as arrays from "../../../framework/utils/arrays";
 import {validateEmail, validateNonBlank} from "../../../common/commonValidations";
 import messages from "../../../framework/messages";
+import {reservationDeleted, reservationDone} from "../reservationActions";
+import {findReservedSeats} from "../reservationApi";
 
 export interface ReservationFormState {
   loading: boolean
+  play: string
   reservedSeats: Array<string>
   firstName: FieldValidation<string>
   lastName: FieldValidation<string>
@@ -24,6 +27,7 @@ export interface ReservationFormState {
 
 const initialState: ReservationFormState = {
   loading: true,
+  play: null,
   reservedSeats: null,
   firstName: defaultFieldValidation(""),
   lastName: defaultFieldValidation(""),
@@ -34,9 +38,14 @@ const initialState: ReservationFormState = {
 }
 
 export const reservationFormStore = () => LocalStore(initialState, on => {
-  on(actions.initialize, (state, {reservedSeats}) => {
-    return copy(state, {reservedSeats})
+  on(actions.initialize, (state, playId) => {
+    reloadReservedSeats(playId)
+    return copy(state, {play: playId})
   })
+
+  on(actions.reloadReservedSeats, (state, reservedSeats) =>
+    copy(state, {reservedSeats})
+  )
 
   on(actions.updateFirstName, (state, value) => {
     return copy(state, {
@@ -105,9 +114,24 @@ export const reservationFormStore = () => LocalStore(initialState, on => {
   on(actions.closeSuccess, (state) => {
     return copy(state, {success: false})
   })
+
+  on(reservationDeleted, (state) => {
+    reloadReservedSeats(state.play)
+    return state
+  })
+
+  on(reservationDone, (state) => {
+    reloadReservedSeats(state.play)
+    return state
+  })
 })
 
 function verifySeats(seats: Array<string>): Validation<Array<string>> {
   return Valid(seats)
     .filter(_ => _.length > 0, messages.production.reservation.form.noSeats)
+}
+
+function reloadReservedSeats(playId: string) {
+  findReservedSeats(playId)
+    .then(reservedSeats => actions.reloadReservedSeats(reservedSeats))
 }
