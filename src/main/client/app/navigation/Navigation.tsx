@@ -91,7 +91,7 @@ function renderNav(state: NavigationState) {
       {
         isLoggedIn(state) &&
         <MenuGroup name={`Mon espace (${state.session.user.email})`} href="/personal/login" regex="/personal(/.*)?">
-          <MenuItem name="Ma fiche" href="/personal/my-card" />
+          <MenuItem name="Mon profil" href="/personal/profile" />
           <MenuItem name="(Ré)inscription aux activités" href="/personal/register" />
           <MenuItem name="Déconnexion" action={logout} />
         </MenuGroup>

@@ -10,6 +10,7 @@ interface InputProps {
   placeholder?: string
   required?: boolean
   disabled?: boolean
+  pattern?: string
   onUpdate(value: string): void
   fieldValidation: FieldValidation<string>
 }
@@ -73,6 +74,7 @@ function renderInput(props: InputProps) {
       placeholder={props.placeholder || props.label}
       required={props.required}
       disabled={props.disabled}
+      pattern={props.pattern}
       onInput={e => props.onUpdate((e.target as HTMLInputElement).value)}
       value={props.fieldValidation ? props.fieldValidation.value || "" : ""}
       class={className}
