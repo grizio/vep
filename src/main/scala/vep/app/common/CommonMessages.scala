@@ -14,4 +14,5 @@ object CommonMessages {
   val isAfter = "La date fournie n'est pas postérieure la date de référence"
   def duplicatedElement[A](value: A) = s"${value.toString} existe deux fois"
   def forbiddenElement[A](value: A) = s"${value.toString} n'est pas autorisé"
+  val invalidCanonical = "Le format d'url est invalide (caractères autorisés: lettres minuscules, chiffres et -)"
 }

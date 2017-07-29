@@ -22,4 +22,9 @@ trait StringVerifications {
     Valid(value.trim)
       .filter(_.nonEmpty, CommonMessages.errorIsBlank)
   }
+
+  def verifyCanonical(value: String): Validation[String] = {
+    Valid(value)
+      .filter(_.matches("^[a-zA-Z0-9-]+$"), CommonMessages.invalidCanonical)
+  }
 }
