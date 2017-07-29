@@ -60,20 +60,20 @@ export function deletePlay(company: string, show: string, play: Play) {
   })
 }
 
-function jsonToPlay(play: Play): Play {
+export function jsonToPlay(play: Play): Play {
   return copy(play, {
     date: localIsoFormatToDate(play.date as any),
     reservationEndDate: localIsoFormatToDate(play.reservationEndDate as any)
   })
 }
 
-function jsonToPlayMeta(play: PlayMeta): PlayMeta {
+export function jsonToPlayMeta(play: PlayMeta): PlayMeta {
   return copy(play, {
     date: localIsoFormatToDate(play.date as any)
   })
 }
 
-function jsonToPlayWithDependencies(play: PlayWithDependencies): PlayWithDependencies {
+export function jsonToPlayWithDependencies(play: PlayWithDependencies): PlayWithDependencies {
   return copy(play, {
     play: jsonToPlay(play.play)
   })

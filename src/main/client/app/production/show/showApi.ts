@@ -1,5 +1,7 @@
 import {request} from "../../framework/utils/http";
-import {Show, ShowCreation, ShowMeta} from "./showModel";
+import {Show, ShowCreation, ShowMeta, ShowWithDependencies} from "./showModel";
+import {copy} from "../../framework/utils/object";
+import {jsonToPlay} from "../play/playApi";
 
 export function findShowsByCompany(company: string): Promise<Array<Show>> {
   return request({
@@ -20,6 +22,15 @@ export function findNextShows(): Promise<Array<ShowMeta>> {
     method: "GET",
     url: `production/shows/next`
   })
+}
+
+export function findShowsWithDependencies(): Promise<Array<ShowWithDependencies>> {
+  return request<Array<ShowWithDependencies>>({
+    method: "GET",
+    url: `production/shows/full`
+  }).then(_ => _.map(show => copy(show, {
+    plays: show.plays.map(jsonToPlay)
+  })))
 }
 
 export function createShow(company: string, show: ShowCreation) {

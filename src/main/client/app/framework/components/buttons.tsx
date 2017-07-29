@@ -1,7 +1,10 @@
 import preact from "preact"
+import * as preactRouter from "preact-router/src"
 import {forceStartWith} from "../utils/strings"
 import {Function0} from "../lib";
 import classnames from "classnames";
+
+const PreactLink = preactRouter.Link
 
 export interface ButtonComponentProps {
   type?: "submit" | "reset"
@@ -96,12 +99,12 @@ function Button(props: InternalButtonComponentProps) {
 
 function Link(props: InternalLinkComponentProps) {
   return (
-    <a
+    <PreactLink
       href={props.href}
       target={props.target ? forceStartWith(props.target, "_") : null}
       class={`button ${props.class}`}
       disabled={props.disabled}
-    >{props.message}</a>
+    >{props.message}</PreactLink>
   )
 }
 

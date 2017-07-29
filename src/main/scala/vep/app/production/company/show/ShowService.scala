@@ -3,11 +3,13 @@ package vep.app.production.company.show
 import scalikejdbc._
 import vep.Configuration
 import vep.app.production.company.Company
+import vep.app.production.company.show.play.PlayService
 import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Valid, Validation}
 
 class ShowService(
-  val configuration: Configuration
+  val configuration: Configuration,
+  playService: PlayService
 ) extends DatabaseContainer {
   def findByCompany(company: Company): Seq[Show] = withQueryConnection { implicit session =>
     findShowsByCompany(company)
@@ -56,6 +58,40 @@ class ShowService(
     """
       .map(ShowMeta.apply)
       .list()
+      .apply()
+  }
+
+  def findAllWithDependencies(): Seq[ShowWithDependencies] = withQueryConnection { implicit session =>
+    findAllShows().flatMap { show =>
+      findCompanyByShow(show).map { company =>
+        ShowWithDependencies(
+          show = show,
+          company = company,
+          plays = playService.findAllFromShow(show)
+        )
+      }
+    }
+  }
+
+  private def findAllShows()(implicit session: DBSession): Seq[Show] = {
+    sql"""
+      SELECT * FROM show
+    """
+      .map(Show.apply)
+      .list()
+      .apply()
+  }
+
+  private def findCompanyByShow(show: Show)(implicit session: DBSession): Option[Company] = {
+    sql"""
+      SELECT * FROM company c
+      WHERE EXISTS (
+        SELECT 1 FROM show s
+        WHERE s.company = c.id
+      )
+    """
+      .map(Company.apply)
+      .single()
       .apply()
   }
 

@@ -2,6 +2,8 @@ package vep.app.production.company.show
 
 import scalikejdbc.WrappedResultSet
 import spray.json.RootJsonFormat
+import vep.app.production.company.Company
+import vep.app.production.company.show.play.{Play, PlayView}
 import vep.framework.utils.JsonProtocol
 
 case class Show(
@@ -59,4 +61,16 @@ object ShowMeta {
   }
 
   implicit val showMetaFormat: RootJsonFormat[ShowMeta] = jsonFormat3(ShowMeta.apply)
+}
+
+case class ShowWithDependencies(
+  show: Show,
+  company: Company,
+  plays: Seq[PlayView]
+)
+
+object ShowWithDependencies {
+  import JsonProtocol._
+
+  implicit val showWithDependenciesFormat: RootJsonFormat[ShowWithDependencies] = jsonFormat3(ShowWithDependencies.apply)
 }

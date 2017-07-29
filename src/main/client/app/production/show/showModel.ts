@@ -1,3 +1,6 @@
+import {Company} from "../company/companyModel";
+import {Play} from "../play/playModel";
+
 export interface Show {
   id: string
   title: string
@@ -17,4 +20,10 @@ export interface ShowMeta {
   id: string
   title: string
   company: string
+}
+
+export interface ShowWithDependencies {
+  show: Show
+  company: Company
+  plays: Array<Play>
 }

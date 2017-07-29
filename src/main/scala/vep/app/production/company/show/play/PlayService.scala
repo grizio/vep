@@ -77,6 +77,23 @@ class PlayService(
       .apply()
   }
 
+  def findAllFromShow(show: Show): Seq[PlayView] = withQueryConnection { implicit session =>
+    findAllPlaysFromShow(show)
+      .map(play => play.copy(prices = findPricesByPlay(play)))
+      .flatMap(play => theaterService.find(play.theater).map(PlayView(play, _)))
+  }
+
+  private def findAllPlaysFromShow(show: Show)(implicit session: DBSession): Seq[Play] = {
+    sql"""
+      SELECT * FROM play
+      WHERE show = ${show.id}
+    """
+      .map(Play.apply)
+      .list()
+      .apply()
+  }
+
+
   def findNext(): Seq[PlayMeta] = withQueryConnection { implicit session =>
     findNextPlaysMeta()
   }
