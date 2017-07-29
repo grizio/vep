@@ -1,7 +1,7 @@
 import {request} from "../../framework/utils/http";
 import {copy} from "../../framework/utils/object";
 import {localIsoFormat, localIsoFormatToDate} from "../../framework/utils/dates";
-import {Play, PlayCreation, PlayMeta, PlayUpdate} from "./playModel";
+import {Play, PlayCreation, PlayMeta, PlayUpdate, PlayWithDependencies} from "./playModel";
 
 export function findPlaysByShow(company: string, show: string): Promise<Array<Play>> {
   return request<Array<Play>>({
@@ -22,6 +22,13 @@ export function findNextPlays(): Promise<Array<PlayMeta>> {
     method: "GET",
     url: `production/plays/next`
   }).then(plays => plays.map(jsonToPlayMeta))
+}
+
+export function findNextPlaysWithDependencies(): Promise<Array<PlayWithDependencies>> {
+  return request<Array<PlayWithDependencies>>({
+    method: "GET",
+    url: `production/plays/nextFull`
+  }).then(plays => plays.map(jsonToPlayWithDependencies))
 }
 
 export function createPlay(company: string, show: string, play: PlayCreation) {
@@ -63,5 +70,11 @@ function jsonToPlay(play: Play): Play {
 function jsonToPlayMeta(play: PlayMeta): PlayMeta {
   return copy(play, {
     date: localIsoFormatToDate(play.date as any)
+  })
+}
+
+function jsonToPlayWithDependencies(play: PlayWithDependencies): PlayWithDependencies {
+  return copy(play, {
+    play: jsonToPlay(play.play)
   })
 }

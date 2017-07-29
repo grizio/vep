@@ -109,7 +109,7 @@ function renderNav(state: NavigationState) {
 function renderNextShows(state: NavigationState) {
   if (state.shows && state.shows.length) {
     return (
-      <MenuGroup name="Les prochaines pièces" href="/shows" regex="/show(s|/.*)">
+      <MenuGroup name="Les prochaines pièces" href="/production/shows" regex="/production/show(s|/.*)">
         {arrays.take(state.shows, 5).map(show =>
           <MenuItem name={show.title} href={`/production/companies/${show.company}/shows/page/${show.id}`}/>
         )}
@@ -123,7 +123,7 @@ function renderNextShows(state: NavigationState) {
 function renderNextPlays(state: NavigationState) {
   if (state.plays && state.plays.length) {
     return (
-      <MenuGroup name="Les prochaines séances" href="/plays" regex="/play(s|/.*)">
+      <MenuGroup name="Les prochaines séances" href="/production/plays" regex="/production/play(s|/.*)">
         {arrays.take(state.plays, 5).map(play =>
           <MenuItem
             name={`${shortDateFormat(play.date)} • ${play.show}`}

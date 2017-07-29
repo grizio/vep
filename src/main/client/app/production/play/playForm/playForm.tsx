@@ -57,7 +57,7 @@ export default class PlayForm extends StoreListenerComponent<PlayFormProps, Play
     if (this.mounted) {
       return (
         <Page title={props.id ? "Modifier une séance" : "Créer de nouvelles séances"} role="admin">
-          <Loading loading={state.step === "loading"} message={messages.production.company.show.form.loading}>
+          <Loading loading={state.step === "loading"} message={messages.production.play.form.loading}>
             {state.step === "form" && this.renderEdition(props, state)}
             {state.step === "success" && this.renderSuccess(props, state)}
           </Loading>

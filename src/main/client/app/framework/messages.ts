@@ -38,19 +38,23 @@ const messages = {
       },
       form: {
         loading: "Veuillez patienter pendant que les comédiens finissent leur café."
+      }
+    },
+    show: {
+      list: {
+        loading: "Veuillez patienter pendant que nous cherchons toutes les pièces."
       },
-      show: {
-        page: {
-          loading: "Veuillez patienter pendant que montons la pièce."
-        },
-        form: {
-          loading: "Veuillez patienter pendant que nous terminons notre scène."
-        },
-        play: {
-          form: {
-            reservationEndDateAfterDate: "Veuillez indiquer une date de fin de réservation antérieure à la date de la séance"
-          }
-        }
+      page: {
+        loading: "Veuillez patienter pendant que montons la pièce."
+      },
+      form: {
+        loading: "Veuillez patienter pendant que nous terminons notre scène."
+      }
+    },
+    play: {
+      form: {
+        loading: "Veuillez patienter pendant que nous levons la séance.",
+        reservationEndDateAfterDate: "Veuillez indiquer une date de fin de réservation antérieure à la date de la séance"
       }
     },
     reservation: {

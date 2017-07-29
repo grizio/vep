@@ -78,10 +78,10 @@ class PlayService(
   }
 
   def findNext(): Seq[PlayMeta] = withQueryConnection { implicit session =>
-    findNextPlays()
+    findNextPlaysMeta()
   }
 
-  private def findNextPlays()(implicit session: DBSession): Seq[PlayMeta] = {
+  private def findNextPlaysMeta()(implicit session: DBSession): Seq[PlayMeta] = {
     sql"""
       SELECT p.id, p.date, s.title, s.id as showId, c.id as companyId FROM play p
       JOIN show s ON s.id = p.show
@@ -94,13 +94,35 @@ class PlayService(
       .apply()
   }
 
+  def findNextFull(): Seq[PlayWithDependencies] = withQueryConnection { implicit session =>
+    findNextPlay()
+      .map(play => play.copy(prices = findPricesByPlay(play)))
+      .map(includeDependencies)
+      .flatten
+  }
+
+  def findNextPlay()(implicit session: DBSession): Seq[Play] = {
+    sql"""
+      SELECT p.* FROM play p
+      JOIN show s ON s.id = p.show
+      JOIN company c ON c.id = s.company
+      WHERE date > CURRENT_TIMESTAMP
+      ORDER BY date ASC
+    """
+      .map(Play.apply)
+      .list()
+      .apply()
+  }
+
   def findWithDependencies(id: String): Option[PlayWithDependencies] = withQueryConnection { implicit session =>
-    findPlay(id).flatMap { play =>
-      findShowByPlay(play).flatMap { show =>
-        findCompanyByShow(show).flatMap { company =>
-          findTheaterByPlay(play).map { theater =>
-            PlayWithDependencies(play, show, company, theater)
-          }
+    findPlay(id).flatMap(includeDependencies)
+  }
+
+  private def includeDependencies(play: Play)(implicit session: DBSession): Option[PlayWithDependencies] = {
+    findShowByPlay(play).flatMap { show =>
+      findCompanyByShow(show).flatMap { company =>
+        findTheaterByPlay(play).map { theater =>
+          PlayWithDependencies(play, show, company, theater)
         }
       }
     }

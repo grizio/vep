@@ -113,3 +113,10 @@ case class PlayWithDependencies(
   company: Company,
   theater: Theater
 )
+
+object PlayWithDependencies {
+  import JsonProtocol._
+
+  implicit val playWithDependenciesFormat: RootJsonFormat[PlayWithDependencies] = jsonFormat4(PlayWithDependencies.apply)
+
+}

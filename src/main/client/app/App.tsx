@@ -15,6 +15,7 @@ import ShowPage from "./production/show/showPage/showPage";
 import {ShowCreation, ShowUpdate} from "./production/show/showForm/index";
 import {PlayCreation, PlayUpdate} from "./production/play/playForm/index";
 import PlayPage from "./production/play/playPage/playPage";
+import PlayList from "./production/play/playList/playList";
 
 interface AppState {
   url: string
@@ -52,6 +53,7 @@ export default class App extends preact.Component<any, AppState> {
             <ShowCreation path="/production/companies/:company/shows/create" />
             <ShowUpdate path="/production/companies/:company/shows/update/:id" />
 
+            <PlayList path="/production/plays" />
             <PlayCreation path="/production/companies/:company/shows/:show/plays/create" />
             <PlayUpdate path="/production/companies/:company/shows/:show/plays/update/:id" />
             <PlayPage path="/production/companies/:company/shows/:show/plays/page/:id" />

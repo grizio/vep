@@ -1,4 +1,6 @@
 import {Theater} from "../theater/theaterModel";
+import {Show} from "../show/showModel";
+import {Company} from "../company/companyModel";
 
 export interface Play {
   id: string
@@ -35,4 +37,11 @@ export interface PlayMeta {
   show: string
   showId: string
   company: string
+}
+
+export interface PlayWithDependencies {
+  play: Play
+  show: Show
+  company: Company
+  theater: Theater
 }

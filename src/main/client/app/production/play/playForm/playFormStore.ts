@@ -156,7 +156,7 @@ export const playFormStore = () => LocalStore(initialState, on => {
 function validateReservationEndDate(reservationEndDate: Date, date: Date) {
   return validateNotNull(reservationEndDate)
     .flatMap(validateFuture)
-    .filter(reservationEndDate => reservationEndDate < date, messages.production.company.show.play.form.reservationEndDateAfterDate)
+    .filter(reservationEndDate => reservationEndDate < date, messages.production.play.form.reservationEndDateAfterDate)
 }
 
 function updateDates(state: PlayFormState, dates: Array<DateValidation>) {

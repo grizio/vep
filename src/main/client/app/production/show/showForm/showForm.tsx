@@ -44,7 +44,7 @@ export default class ShowForm extends StoreListenerComponent<ShowFormProps, Show
     if (this.mounted) {
       return (
         <Page title={props.id ? "Modifier une pièce" : "Créer une nouvelle pièce"} role="admin">
-          <Loading loading={state.step === "loading"} message={messages.production.company.show.form.loading}>
+          <Loading loading={state.step === "loading"} message={messages.production.show.form.loading}>
             { state.step === "form" &&  this.renderEdition(props, state) }
             { state.step === "success" && this.renderSuccess(props, state) }
           </Loading>
