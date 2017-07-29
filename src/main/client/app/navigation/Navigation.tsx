@@ -9,6 +9,7 @@ import {shortDateFormat} from "../framework/utils/dates";
 import * as arrays from "../framework/utils/arrays";
 import {findNextShows} from "../production/show/showApi";
 import {findNextPlays} from "../production/play/playApi";
+import {findAllPages} from "../common/pages/pageApi";
 
 interface MenuGroupProps {
   name: string
@@ -33,8 +34,9 @@ export default class Navigation extends StoreListenerComponent<any, NavigationSt
     super.componentDidMount()
     Promise.all([
       findNextShows(),
-      findNextPlays()
-    ]).then(([shows, plays]) => actions.initialize({shows, plays}))
+      findNextPlays(),
+      findAllPages()
+    ]).then(([shows, plays, pages]) => actions.initialize({shows, plays, pages}))
   }
 
   render(props: any, state: NavigationState) {
@@ -64,15 +66,7 @@ function renderNav(state: NavigationState) {
       <MenuGroup name="Accueil" href="/" />
       {renderNextShows(state)}
       {renderNextPlays(state)}
-      <MenuGroup name="L'association" href="/page/l'association">
-        <MenuItem name="Le bureau" href="/page/bureau" />
-        <MenuItem name="Historique" href="/page/historique" />
-        <MenuItem name="Scéne et Loire" href="/page/scene-et-loire" />
-        <MenuItem name="La compagnie du coin" href="/page/la-compagnie-du-coin" />
-        <MenuItem name="Ateliers théâtre" href="/page/les-ateliers" />
-        <MenuItem name="Ateliers chant" href="/page/atelier-chant" />
-        {isGranted(state, "admin") && <MenuItem name="Nouvelle page" href="/cms/page/create" />}
-      </MenuGroup>
+      {renderPages(state)}
       {
         isGranted(state, "admin") &&
         <MenuGroup name="Les théâtres" href="/production/theaters" regex="/production/theaters(/.*)?">
@@ -135,6 +129,26 @@ function renderNextPlays(state: NavigationState) {
     )
   } else {
     return <MenuGroup name="Les prochaines séances" href="/plays" regex="/play(s|/.*)"/>
+  }
+}
+
+function renderPages(state: NavigationState) {
+  if (state.pages && state.pages.length) {
+    const filteredPages = state.pages.filter(_ => _.order != 0)
+    const sortedPages = arrays.sort(filteredPages, (page1, page2) => page1.order - page2.order)
+    return (
+      <MenuGroup name="L'association" href="/page/association" regex="/page(s|/.*)">
+        {sortedPages.map(page =>
+          <MenuItem
+            name={page.title}
+            href={`/page/${page.canonical}`}
+          />
+        )}
+        {isGranted(state, "admin") && <MenuItem name="Nouvelle page" href="/cms/page/create" />}
+      </MenuGroup>
+    )
+  } else {
+    return <MenuGroup name="L'association" href="/page/association" regex="/page(s|/.*)"/>
   }
 }
 

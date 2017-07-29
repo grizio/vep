@@ -8,6 +8,19 @@ import vep.framework.validation.{Valid, Validation}
 class PageService(
   val configuration: Configuration
 ) extends DatabaseContainer {
+  def findAll(): Seq[Page] = withQueryConnection { implicit session =>
+    findAllPages()
+  }
+
+  private def findAllPages()(implicit session: DBSession): Seq[Page] = {
+    sql"""
+      SELECT * FROM page
+    """
+      .map(Page.apply)
+      .list()
+      .apply()
+  }
+
   def find(canonical: String): Option[Page] = withQueryConnection { implicit session =>
     findPage(canonical)
   }

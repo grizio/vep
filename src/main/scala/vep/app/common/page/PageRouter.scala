@@ -14,7 +14,11 @@ class PageRouter(
   val executionContext: ExecutionContext
 ) extends RouterComponent {
   lazy val route: Route = {
-    create
+    findAll ~ create
+  }
+
+  def findAll: Route = publicGet("pages") {
+    Ok(pageService.findAll())
   }
 
   def create: Route = adminPost("pages" / Segment, as[Page]).apply { (canonical, page, _) =>
