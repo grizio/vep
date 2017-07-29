@@ -71,6 +71,7 @@ function renderNav(state: NavigationState) {
         <MenuItem name="La compagnie du coin" href="/page/la-compagnie-du-coin" />
         <MenuItem name="Ateliers théâtre" href="/page/les-ateliers" />
         <MenuItem name="Ateliers chant" href="/page/atelier-chant" />
+        {isGranted(state, "admin") && <MenuItem name="Nouvelle page" href="/cms/page/create" />}
       </MenuGroup>
       {
         isGranted(state, "admin") &&

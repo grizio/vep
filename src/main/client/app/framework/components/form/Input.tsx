@@ -41,6 +41,7 @@ export default function Input(props: InputProps) {
 }
 
 export function InputNumber(props: InputNumberProps) {
+  const value = props.fieldValidation.value;
   return (
     <Input
       id={props.id}
@@ -52,7 +53,7 @@ export function InputNumber(props: InputNumberProps) {
       disabled={props.disabled}
       onUpdate={props.onUpdate ? (n) => props.onUpdate(parseInt(n, 10)) : null}
       fieldValidation={{
-        value: props.fieldValidation.value.toString(),
+        value: value ? value.toString() : null,
         errors: props.fieldValidation.errors,
         changed: props.fieldValidation.changed
       }}

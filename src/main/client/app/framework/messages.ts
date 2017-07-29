@@ -12,6 +12,11 @@ const messages = {
     loading: "Veuillez patienter pendant le chargement des données",
     contact: {
       differentEmail: "Les adresses e-mail sont différentes"
+    },
+    page: {
+      form: {
+        loading: "Veuillez patienter pendant nous nous mettons à la page"
+      }
     }
   },
   user: {

@@ -17,6 +17,7 @@ import {PlayCreation, PlayUpdate} from "./production/play/playForm/index";
 import PlayPage from "./production/play/playPage/playPage";
 import PlayList from "./production/play/playList/playList";
 import ShowList from "./production/show/showList/showList";
+import {PageCreation} from "./common/pages/pageForm/index";
 
 interface AppState {
   url: string
@@ -37,6 +38,8 @@ export default class App extends preact.Component<any, AppState> {
           <Router onChange={this.handleRoute}>
             <Home path="/"/>
             <Contact path="/contact"/>
+
+            <PageCreation path="/cms/page/create"/>
 
             <Register path="/personal/register" />
             <Login path="/personal/login" />

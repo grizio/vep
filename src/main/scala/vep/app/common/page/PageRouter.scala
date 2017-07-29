@@ -17,7 +17,7 @@ class PageRouter(
     create
   }
 
-  def create: Route = adminPost("page" / Segment, as[Page]).apply { (canonical, page, _) =>
+  def create: Route = adminPost("pages" / Segment, as[Page]).apply { (canonical, page, _) =>
     verifying(pageVerifications.verify(page, canonical)) { validPage =>
       verifying(pageService.create(validPage)) { savedPage =>
         Ok(savedPage)
