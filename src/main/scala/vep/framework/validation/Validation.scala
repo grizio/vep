@@ -41,6 +41,7 @@ object Validation {
   def all[A, B, C, D](v1: V[A], v2: V[B], v3: V[C], v4: V[D]): V[A ~ B ~ C ~ D] = v1 ~ v2 ~ v3 ~ v4
   def all[A, B, C, D, E](v1: V[A], v2: V[B], v3: V[C], v4: V[D], v5: V[E]): V[A ~ B ~ C ~ D ~ E] = v1 ~ v2 ~ v3 ~ v4 ~ v5
   def all[A, B, C, D, E, F](v1: V[A], v2: V[B], v3: V[C], v4: V[D], v5: V[E], v6: V[F]): V[A ~ B ~ C ~ D ~ E ~ F] = v1 ~ v2 ~ v3 ~ v4 ~ v5 ~ v6
+  def all[A, B, C, D, E, F, G](v1: V[A], v2: V[B], v3: V[C], v4: V[D], v5: V[E], v6: V[F], v7: V[G]): V[A ~ B ~ C ~ D ~ E ~ F ~ G] = v1 ~ v2 ~ v3 ~ v4 ~ v5 ~ v6 ~ v7
 
   def sequence[A](validations: Seq[Validation[A]]): Validation[Seq[A]] = {
     if (validations.forall(_.isValid)) {
