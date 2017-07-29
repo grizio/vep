@@ -2,7 +2,7 @@ import preact from "preact"
 import {AsyncPage} from "../../../framework/components/Page"
 import {RichContent} from "../../../framework/components/RichContent";
 import * as actions from "./playPageActions";
-import {longDateTimeFormat} from "../../../framework/utils/dates";
+import {isAfterNow, longDateTimeFormat} from "../../../framework/utils/dates";
 import {PlayPageState, playPageStore} from "./playPageStore";
 import {Card, CardAction, CardContent} from "../../../framework/components/card/Card";
 import {capitalizeFirstLetter} from "../../../framework/utils/strings";
@@ -83,13 +83,14 @@ export default class PlayPage extends AsyncPage<PlayPageProps, PlayPageState> {
   }
 
   renderOtherPlays(state: PlayPageState) {
-    if (state.otherPlays.length) {
+    const otherPlays = state.otherPlays.filter(_ => isAfterNow(_.date))
+    if (otherPlays.length) {
       return (
         <div>
           <h3>Autres séances</h3>
 
           <ul>
-            {state.otherPlays.map(play =>
+            {otherPlays.map(play =>
               <li>
                 <Link href={`/production/companies/${state.company.id}/shows/${state.show.id}/plays/page/${play.id}`}>
                   {capitalizeFirstLetter(longDateTimeFormat(play.date))}
