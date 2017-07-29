@@ -11,8 +11,10 @@ import messages from "../../../framework/messages";
 import StoreListenerComponent from "../../../framework/utils/dom"
 import {ShowFormState, showFormStore} from "./showFormStore";
 import * as actions from "./showFormActions";
-import {createShow, findCompany, findShow, updateShow} from "../companyApi";
-import {Company, Show, ShowCreation} from "../companyModel";
+import {findCompany} from "../../company/companyApi";
+import {createShow, findShow, updateShow} from "../showApi";
+import {Company} from "../../company/companyModel";
+import {Show, ShowCreation} from "../showModel";
 
 export interface ShowFormProps {
   company: string

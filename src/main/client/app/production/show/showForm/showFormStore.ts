@@ -3,7 +3,7 @@ import * as actions from "./showFormActions"
 import {defaultFieldValidation, FieldValidation, updateFieldValidation} from "../../../framework/utils/Validation"
 import {validateNonBlank} from "../../../common/commonValidations"
 import {copy} from "../../../framework/utils/object";
-import {Company} from "../companyModel";
+import {Company} from "../../company/companyModel";
 
 export interface ShowFormState {
   step: "loading" | "form" | "success"

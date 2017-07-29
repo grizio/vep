@@ -7,10 +7,12 @@ import {Card, CardAction, CardContent} from "../../../framework/components/card/
 import Loading from "../../../framework/components/Loading";
 import messages from "../../../framework/messages";
 import {CompanyPageState, companyPageStore} from "./companyPageStore";
-import {deleteShow, findCompany, findShowsByCompany} from "../companyApi";
+import {findCompany} from "../companyApi";
 import * as actions from "./companyPageActions";
-import {Company, Show} from "../companyModel";
+import {Company} from "../companyModel";
 import {PrimaryButton} from "../../../framework/components/buttons";
+import {deleteShow, findShowsByCompany} from "../../show/showApi";
+import {Show} from "../../show/showModel";
 
 export interface CompanyPageProps {
   path: string

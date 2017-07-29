@@ -1,7 +1,6 @@
 import preact from "preact"
 import {AsyncPage} from "../../../framework/components/Page"
 import {RichContent} from "../../../framework/components/RichContent";
-import {findCompany, findPlay, findPlaysByShow, findShow} from "../companyApi";
 import * as actions from "./playPageActions";
 import {longDateTimeFormat} from "../../../framework/utils/dates";
 import {PlayPageState, playPageStore} from "./playPageStore";
@@ -10,6 +9,9 @@ import {capitalizeFirstLetter} from "../../../framework/utils/strings";
 import {Link} from "preact-router/src";
 import ReservationForm from "../../reservation/reservationForm/reservationForm";
 import ReservationList from "../../reservation/reservationList/reservationList";
+import {findPlay, findPlaysByShow} from "../playApi";
+import {findShow} from "../../show/showApi";
+import {findCompany} from "../../company/companyApi";
 
 export interface PlayPageProps {
   path: string

@@ -4,10 +4,11 @@ import classnames from "classnames"
 import StoreListenerComponent from "../framework/utils/dom"
 import {logout} from "../framework/session/sessionActions"
 import {NavigationState, navigationStore} from "./NavigationStore"
-import {findNextPlays, findNextShows} from "../production/company/companyApi"
 import * as actions from "./NavigationActions"
 import {shortDateFormat} from "../framework/utils/dates";
 import * as arrays from "../framework/utils/arrays";
+import {findNextShows} from "../production/show/showApi";
+import {findNextPlays} from "../production/play/playApi";
 
 interface MenuGroupProps {
   name: string

@@ -9,10 +9,11 @@ import {
   validateNotNull, validatePositiveNumber
 } from "../../../common/commonValidations"
 import {copy} from "../../../framework/utils/object";
-import {Company, Show} from "../companyModel";
 import {Theater} from "../../theater/theaterModel";
 import messages from "../../../framework/messages";
 import * as arrays from "../../../framework/utils/arrays";
+import {Company} from "../../company/companyModel";
+import {Show} from "../../show/showModel";
 
 export interface PlayFormState {
   step: "loading" | "form" | "success"

@@ -1,7 +1,8 @@
 import {LocalStore} from "fluxx"
 import * as actions from "./companyPageActions"
 import {copy} from "../../../framework/utils/object";
-import {Company, Show} from "../companyModel";
+import {Company} from "../companyModel";
+import {Show} from "../../show/showModel";
 
 export interface CompanyPageState {
   loading: boolean

@@ -7,11 +7,15 @@ import {Card, CardAction, CardContent} from "../../../framework/components/card/
 import Loading from "../../../framework/components/Loading";
 import messages from "../../../framework/messages";
 import {ShowPageState, showPageStore} from "./showPageStore";
-import {deletePlay, findCompany, findPlaysByShow, findShow} from "../companyApi";
 import * as actions from "./showPageActions";
-import {Company, Play, Show} from "../companyModel";
 import {PrimaryButton} from "../../../framework/components/buttons";
 import {isAfterNow, longDateTimeFormat} from "../../../framework/utils/dates";
+import {findCompany} from "../../company/companyApi";
+import {findShow} from "../showApi";
+import {deletePlay, findPlaysByShow} from "../../play/playApi";
+import {Show} from "../showModel";
+import {Company} from "../../company/companyModel";
+import {Play} from "../../play/playModel";
 
 export interface ShowPageProps {
   path: string

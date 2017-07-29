@@ -10,11 +10,11 @@ import TheaterList from "./production/theater/theaterList/theaterList";
 import {TheaterCreation, TheaterUpdate} from "./production/theater/theaterForm/index";
 import {CompanyCreation, CompanyUpdate} from "./production/company/companyForm/index";
 import CompanyList from "./production/company/companyList/companyList";
-import {ShowCreation, ShowUpdate} from "./production/company/showForm/index";
 import CompanyPage from "./production/company/companyPage/companyPage";
-import {PlayCreation, PlayUpdate} from "./production/company/playForm/index";
-import ShowPage from "./production/company/showPage/showPage";
-import PlayPage from "./production/company/playPage/playPage";
+import ShowPage from "./production/show/showPage/showPage";
+import {ShowCreation, ShowUpdate} from "./production/show/showForm/index";
+import {PlayCreation, PlayUpdate} from "./production/play/playForm/index";
+import PlayPage from "./production/play/playPage/playPage";
 
 interface AppState {
   url: string

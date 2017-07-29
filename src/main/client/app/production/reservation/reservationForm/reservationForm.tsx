@@ -2,7 +2,7 @@ import preact from "preact"
 import {ReservationFormState, reservationFormStore} from "./reservationFormStore";
 import * as actions from "./reservationFormActions"
 import classnames from "classnames"
-import {Company, Play, Show} from "../../company/companyModel";
+import {Company} from "../../company/companyModel";
 import StoreListenerComponent from "../../../framework/utils/dom";
 import * as arrays from "../../../framework/utils/arrays";
 import {createReservation} from "../reservationApi";
@@ -13,6 +13,8 @@ import {ReservationCreation} from "../reservationModel";
 import Panel from "../../../framework/components/Panel";
 import {isBeforeNow} from "../../../framework/utils/dates";
 import {reservationDone} from "../reservationActions";
+import {Show} from "../../show/showModel";
+import {Play} from "../../play/playModel";
 
 export interface ReservationFormProps {
   company: Company

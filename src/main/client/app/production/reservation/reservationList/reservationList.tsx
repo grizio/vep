@@ -4,12 +4,12 @@ import * as actions from "./reservationListActions"
 import StoreListenerComponent from "../../../framework/utils/dom";
 import {deleteReservation} from "../reservationApi";
 import {Reservation} from "../reservationModel";
-import {Play} from "../../company/companyModel";
 import CardCollection from "../../../framework/components/card/CardCollection";
 import {Card, CardAction, CardContent} from "../../../framework/components/card/Card";
 import {OnGranted} from "../../../framework/components/Security";
 import {reservationDeleted} from "../reservationActions";
 import Panel from "../../../framework/components/Panel";
+import {Play} from "../../play/playModel";
 
 export interface ReservationListProps {
   play: Play

@@ -1,8 +1,9 @@
 import {LocalStore} from "fluxx"
 import * as actions from "./NavigationActions"
-import {PlayMeta, ShowMeta} from "../production/company/companyModel";
 import {copy} from "../framework/utils/object";
 import {SessionState, sessionStore} from "../framework/session/sessionStore";
+import {PlayMeta} from "../production/play/playModel";
+import {ShowMeta} from "../production/show/showModel";
 
 export interface NavigationState {
   shows: Array<ShowMeta>
