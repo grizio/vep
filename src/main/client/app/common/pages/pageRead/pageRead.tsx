@@ -4,6 +4,9 @@ import {RichContent} from "../../../framework/components/RichContent";
 import {PageReadState, pageReadStore} from "./pageReadStore";
 import {findPage} from "../pageApi";
 import * as actions from "./pageReadActions"
+import {OnGranted} from "../../../framework/components/Security";
+import {PrimaryButton} from "../../../framework/components/buttons";
+import {Function1} from "../../../framework/lib";
 
 export interface PageReadProps {
   path: string
@@ -30,7 +33,23 @@ export default class PageRead extends AsyncPage<PageReadProps, PageReadState> {
 
   renderPage(props: PageReadProps, state: PageReadState) {
     return (
-      <RichContent content={state.page.content}/>
+      <div>
+        <RichContent content={state.page.content}/>
+        <UpdatePageButton canonical={state.page.canonical} />
+      </div>
     )
   }
 }
+
+interface UpdatePageButtonProps {
+  canonical: string
+}
+
+const UpdatePageButton: Function1<UpdatePageButtonProps, JSX.Element> = OnGranted((props: UpdatePageButtonProps) => {
+  return (
+    <PrimaryButton
+      href={`/cms/page/update/${props.canonical}`}
+      message="Modifier"
+    />
+  )
+}, "admin")

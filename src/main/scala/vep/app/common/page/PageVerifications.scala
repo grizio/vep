@@ -17,6 +17,15 @@ class PageVerifications(
       ) map { _ => page }
   }
 
+  def verifyUpdate(page: Page, canonical: String): Validation[Page] = {
+    (
+      commonVerifications.verifyEquals(page.canonical, canonical)
+        ~ commonVerifications.verifyCanonical(page.canonical)
+        ~ commonVerifications.verifyNonBlank(page.title)
+        ~ commonVerifications.verifyNonBlank(page.content)
+      ) map { _ => page }
+  }
+
   private def verifyNotDuplicatedCanonical(canonical: String): Validation[String] = {
     pageService.find(canonical) match {
       case Some(_) => Invalid(PageMessages.duplicatedCanonical)

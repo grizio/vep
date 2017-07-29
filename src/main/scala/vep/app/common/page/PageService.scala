@@ -48,4 +48,21 @@ class PageService(
       .execute()
       .apply()
   }
+
+  def update(page: Page): Validation[Page] = withCommandTransaction { implicit session =>
+    updatePage(page)
+    Valid(page)
+  }
+
+  private def updatePage(page: Page)(implicit session: DBSession): Unit = {
+    sql"""
+      UPDATE page
+      SET title = ${page.title},
+          navigationorder = ${page.order},
+          content = ${page.content}
+      WHERE canonical = ${page.canonical}
+    """
+      .execute()
+      .apply()
+  }
 }

@@ -24,5 +24,9 @@ export function createPage(page: PageInformation) {
 }
 
 export function updatePage(page: PageInformation) {
-  return Promise.reject(null)
+  return request({
+    method: "PUT",
+    url: `pages/${page.canonical}`,
+    entity: page
+  })
 }

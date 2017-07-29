@@ -17,7 +17,7 @@ import {PlayCreation, PlayUpdate} from "./production/play/playForm/index";
 import PlayPage from "./production/play/playPage/playPage";
 import PlayList from "./production/play/playList/playList";
 import ShowList from "./production/show/showList/showList";
-import {PageCreation} from "./common/pages/pageForm/index";
+import {PageCreation, PageUpdate} from "./common/pages/pageForm/index";
 import PageRead from "./common/pages/pageRead/pageRead";
 
 interface AppState {
@@ -40,8 +40,9 @@ export default class App extends preact.Component<any, AppState> {
             <Home path="/"/>
             <Contact path="/contact"/>
 
-            <PageCreation path="/cms/page/create"/>
             <PageRead path="/page/:canonical"/>
+            <PageCreation path="/cms/page/create"/>
+            <PageUpdate path="/cms/page/update/:canonical"/>
 
             <Register path="/personal/register" />
             <Login path="/personal/login" />

@@ -14,7 +14,7 @@ class PageRouter(
   val executionContext: ExecutionContext
 ) extends RouterComponent {
   lazy val route: Route = {
-    findAll ~ find ~ create
+    findAll ~ find ~ create ~ update
   }
 
   def findAll: Route = publicGet("pages") {
@@ -29,6 +29,16 @@ class PageRouter(
     verifying(pageVerifications.verify(page, canonical)) { validPage =>
       verifying(pageService.create(validPage)) { savedPage =>
         Ok(savedPage)
+      }
+    }
+  }
+
+  def update: Route = adminPut("pages" / Segment, as[Page]).apply { (canonical, page, _) =>
+    found(pageService.find(canonical)) { _ =>
+      verifying(pageVerifications.verifyUpdate(page, canonical)) { validPage =>
+        verifying(pageService.update(validPage)) { savedPage =>
+          Ok(savedPage)
+        }
       }
     }
   }

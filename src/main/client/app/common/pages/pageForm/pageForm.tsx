@@ -10,7 +10,7 @@ import messages from "../../../framework/messages";
 import {PageFormState, pageFormStore} from "./pageFormStore";
 import * as actions from "./pageFormActions"
 import {PageInformation} from "../pageModel";
-import {createPage, updatePage} from "../pageApi";
+import {createPage, findPage, updatePage} from "../pageApi";
 
 export interface PageFormProps {
   canonical?: string
@@ -23,7 +23,11 @@ export default class PageForm extends StoreListenerComponent<PageFormProps, Page
 
   componentDidMount() {
     super.componentDidMount()
-    actions.initializeEmpty()
+    if (this.props.canonical) {
+      findPage(this.props.canonical).then(actions.initialize)
+    } else {
+      actions.initializeEmpty()
+    }
   }
 
   render(props: PageFormProps, state: PageFormState) {
@@ -59,6 +63,7 @@ export default class PageForm extends StoreListenerComponent<PageFormProps, Page
           type="text"
           placeholder="Uniquement des chiffres, lettres et le symbol « - »"
           required
+          disabled={!!props.canonical}
           onUpdate={actions.updateCanonical}
           fieldValidation={state.canonical}
         />
@@ -104,7 +109,7 @@ export default class PageForm extends StoreListenerComponent<PageFormProps, Page
           {props.canonical ? "La page a bien été modifiée." : "La page a bien été créée."}
         </p>
         <p>
-          <PrimaryButton message="Revenir à la page" href={`/page/${state.canonical}`} />
+          <PrimaryButton message="Revenir à la page" href={`/page/${state.canonical.value}`} />
         </p>
       </Panel>
     )

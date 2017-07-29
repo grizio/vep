@@ -24,6 +24,16 @@ const initialState: PageFormState = {
 }
 
 export const pageFormStore = () => LocalStore(initialState, on => {
+  on(actions.initialize, (state, page) => {
+    return copy(state, {
+      step: "form",
+      canonical: defaultFieldValidation(page.canonical),
+      title: defaultFieldValidation(page.title),
+      order: defaultFieldValidation(page.order),
+      content: defaultFieldValidation(page.content)
+    })
+  })
+
   on(actions.initializeEmpty, (state) => {
     return copy(state, {step: "form"})
   })
