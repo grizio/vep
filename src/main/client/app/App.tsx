@@ -18,6 +18,7 @@ import PlayPage from "./production/play/playPage/playPage";
 import PlayList from "./production/play/playList/playList";
 import ShowList from "./production/show/showList/showList";
 import {PageCreation} from "./common/pages/pageForm/index";
+import PageRead from "./common/pages/pageRead/pageRead";
 
 interface AppState {
   url: string
@@ -40,6 +41,7 @@ export default class App extends preact.Component<any, AppState> {
             <Contact path="/contact"/>
 
             <PageCreation path="/cms/page/create"/>
+            <PageRead path="/page/:canonical"/>
 
             <Register path="/personal/register" />
             <Login path="/personal/login" />

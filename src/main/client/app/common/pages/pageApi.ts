@@ -8,6 +8,13 @@ export function findAllPages(): Promise<Array<PageInformation>> {
   })
 }
 
+export function findPage(canonical: string): Promise<PageInformation> {
+  return request({
+    method: "GET",
+    url: `pages/${canonical}`
+  })
+}
+
 export function createPage(page: PageInformation) {
   return request({
     method: "POST",
