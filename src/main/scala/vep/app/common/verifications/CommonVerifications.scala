@@ -8,7 +8,8 @@ class CommonVerifications
     with NumberVerifications
     with PasswordVerification
     with SeqVerifications
-    with StringVerifications {
+    with StringVerifications
+    with PeriodVerifications {
   def verifyEquals[A](value: A, expected: A): Validation[A] = {
     Valid(value)
       .filter(_ == expected, CommonMessages.isDifferent(value, expected))

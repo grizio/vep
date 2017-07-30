@@ -15,4 +15,5 @@ object CommonMessages {
   def duplicatedElement[A](value: A) = s"${value.toString} existe deux fois"
   def forbiddenElement[A](value: A) = s"${value.toString} n'est pas autorisé"
   val invalidCanonical = "Le format d'url est invalide (caractères autorisés: lettres minuscules, chiffres et -)"
+  val periodNotIncluded = "La période n'est pas inclue dans la période de référence"
 }
