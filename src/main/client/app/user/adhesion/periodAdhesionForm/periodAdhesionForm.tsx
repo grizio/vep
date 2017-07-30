@@ -14,10 +14,11 @@ import {PeriodValidation, periodValidationToPeriod} from "../../../common/types/
 import {Action} from "fluxx";
 import {FieldValidation} from "../../../framework/utils/Validation";
 import PanelError from "../../../framework/components/form/PanelError";
-import {PeriodAdhesionCreation} from "../adhesionModel";
-import {createPeriodAdhesion} from "../adhesionApi";
+import {PeriodAdhesion, PeriodAdhesionCreation} from "../adhesionModel";
+import {createPeriodAdhesion, findPeriodAdhesion, updatePeriodAdhesion} from "../adhesionApi";
 
 export interface PeriodAdhesionFormProps {
+  id?: string
 }
 
 interface PeriodConfiguration {
@@ -37,18 +38,23 @@ export default class PeriodAdhesionForm extends StoreListenerComponent<PeriodAdh
 
   componentDidMount() {
     super.componentDidMount()
-    actions.initializeEmpty()
+    if (this.props.id) {
+      findPeriodAdhesion(this.props.id).then(actions.initialize)
+    } else {
+      actions.initializeEmpty()
+    }
   }
 
   render(props: PeriodAdhesionFormProps, state: PeriodAdhesionFormState) {
     if (this.mounted) {
       return (
-        <Page title="Créer une nouvelle période d'adhésion" role="admin">
+        <Page title={props.id ? "Modifier la période d'adhésion" : "Créer une nouvelle période d'adhésion"}
+              role="admin">
           <Loading loading={state.step === "loading"} message={messages.user.adhesion.formPeriod.loading}>
             {
               state.step === "form"
                 ? this.renderForm(props, state)
-                : this.renderSuccess()
+                : this.renderSuccess(props)
             }
           </Loading>
         </Page>
@@ -61,14 +67,14 @@ export default class PeriodAdhesionForm extends StoreListenerComponent<PeriodAdh
   renderForm(props: PeriodAdhesionFormProps, state: PeriodAdhesionFormState) {
     return (
       <Form
-        submit="Créer la période"
+        submit={props.id ? "Modifier la période" : "Créer la période"}
         onSubmit={this.onSubmit}
         errors={state.errors}
         closeErrors={actions.closeErrors}
       >
         {this.renderPeriod(state)}
         {this.renderRegistrationPeriod(state)}
-        {this.renderActivities(state)}
+        {this.renderActivities(props, state)}
       </Form>
     )
   }
@@ -127,10 +133,20 @@ export default class PeriodAdhesionForm extends StoreListenerComponent<PeriodAdh
     )
   }
 
-  renderActivities(state: PeriodAdhesionFormState) {
+  renderActivities(props: PeriodAdhesionFormProps, state: PeriodAdhesionFormState) {
     return (
       <div>
         <h2>Activités de la période</h2>
+
+        {
+          !!props.id &&
+          <Panel type="info">
+            <p>
+              Modifier la liste des activités ne modifiera pas les demandes adhésions, ni les adhésions validées.
+              Cela permet uniquement d'ajuster la liste des activités proposées pour les demandes suivantes.
+            </p>
+          </Panel>
+        }
 
         <PanelError fieldValidation={state.activities}/>
 
@@ -163,26 +179,30 @@ export default class PeriodAdhesionForm extends StoreListenerComponent<PeriodAdh
     )
   }
 
-  renderSuccess() {
+  renderSuccess(props: PeriodAdhesionFormProps) {
     return (
       <Panel type="success">
         <p>
-          La période a bien été créée.
+          {props.id ? "La période a bien été modifiée" : "La période a bien été créée."}
         </p>
         <p>
-          <PrimaryButton message="Revenir à la page d'accueil" href="/"/>
+          <PrimaryButton message="Revenir à la liste" href="/adhesions"/>
         </p>
       </Panel>
     )
   }
 
   onSubmit = () => {
-    const normalizedPeriodAdhesion: PeriodAdhesionCreation = {
+    const normalizedPeriodAdhesion: PeriodAdhesionCreation | PeriodAdhesion = {
+      id: this.props.id,
       period: periodValidationToPeriod(this.state.period.value),
       registrationPeriod: periodValidationToPeriod(this.state.registrationPeriod.value),
       activities: this.state.activities.value.map(_ => _.value)
     }
-    createPeriodAdhesion(normalizedPeriodAdhesion)
+    const action = this.props.id
+      ? updatePeriodAdhesion(normalizedPeriodAdhesion)
+      : createPeriodAdhesion(normalizedPeriodAdhesion)
+    action
       .then(() => actions.success())
       .catch(errors => actions.updateErrors(errors))
   }

@@ -21,6 +21,20 @@ class AdhesionService(
       .apply()
   }
 
+  def findPeriod(id: String): Option[PeriodAdhesion] = withQueryConnection { implicit session =>
+    findPeriodAdhesion(id)
+  }
+
+  private def findPeriodAdhesion(id: String)(implicit session: DBSession): Option[PeriodAdhesion] = {
+    sql"""
+      SELECT * FROM period_adhesion
+      WHERE id = ${id}
+    """
+      .map(PeriodAdhesion.apply)
+      .single()
+      .apply()
+  }
+
   def createPeriod(periodAdhesion: PeriodAdhesion): Validation[PeriodAdhesion] = withCommandTransaction { implicit session =>
     createPeriodAdhesion(periodAdhesion)
     Valid(periodAdhesion)
@@ -38,6 +52,26 @@ class AdhesionService(
         ${periodAdhesion.registrationPeriod.end},
         ${activities}
       )
+    """
+      .execute()
+      .apply()
+  }
+
+  def updatePeriod(periodAdhesion: PeriodAdhesion): Validation[PeriodAdhesion] = withCommandTransaction { implicit session =>
+    updatePeriodAdhesion(periodAdhesion)
+    Valid(periodAdhesion)
+  }
+
+  private def updatePeriodAdhesion(periodAdhesion: PeriodAdhesion)(implicit session: DBSession): Unit = {
+    val activities = PeriodAdhesion.activitiesFormat.write(periodAdhesion.activities).compactPrint
+    sql"""
+      UPDATE period_adhesion
+      SET startPeriod = ${periodAdhesion.period.start},
+          endPeriod = ${periodAdhesion.period.end},
+          startRegistration = ${periodAdhesion.registrationPeriod.start},
+          endRegistration = ${periodAdhesion.registrationPeriod.end},
+          activities = ${activities}
+      WHERE id = ${periodAdhesion.id}
     """
       .execute()
       .apply()

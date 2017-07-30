@@ -20,7 +20,7 @@ import ShowList from "./production/show/showList/showList";
 import {PageCreation, PageUpdate} from "./common/pages/pageForm/index";
 import PageRead from "./common/pages/pageRead/pageRead";
 import ProfileForm from "./user/profile/profileForm/profileForm";
-import {PeriodAdhesionCreation} from "./user/adhesion/periodAdhesionForm/index";
+import {PeriodAdhesionCreation, PeriodAdhesionUpdate} from "./user/adhesion/periodAdhesionForm/index";
 import PeriodAdhesionList from "./user/adhesion/periodAdhesionList/periodAdhesionList";
 
 interface AppState {
@@ -73,6 +73,7 @@ export default class App extends preact.Component<any, AppState> {
 
             <PeriodAdhesionList path="/adhesions" />
             <PeriodAdhesionCreation path="/adhesions/create" />
+            <PeriodAdhesionUpdate path="/adhesions/update/:id" />
           </Router>
         </div>
       </div>

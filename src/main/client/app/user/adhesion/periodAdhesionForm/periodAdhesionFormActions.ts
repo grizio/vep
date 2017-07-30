@@ -1,6 +1,9 @@
 import { Action } from 'fluxx'
+import {PeriodAdhesion} from "../adhesionModel";
 
 export const initializeEmpty = Action("initializeEmpty")
+
+export const initialize = Action<PeriodAdhesion>("initialize")
 
 export const updateStart = Action<Date>("updateStart")
 

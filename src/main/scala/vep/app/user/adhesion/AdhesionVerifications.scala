@@ -23,4 +23,13 @@ class AdhesionVerifications(
         )
     }
   }
+
+  def verifyPeriodUpdate(periodAdhesion: PeriodAdhesion, periodId: String): Validation[PeriodAdhesion] = {
+    Validation.all(
+      commonVerification.verifyEquals(periodAdhesion.id, periodId),
+      commonVerification.verifyPeriod(periodAdhesion.period),
+      commonVerification.verifyPeriod(periodAdhesion.registrationPeriod),
+      commonVerification.verifyNonEmptySeq(periodAdhesion.activities)
+    ) map { _ => periodAdhesion }
+  }
 }

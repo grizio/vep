@@ -5,7 +5,10 @@ import {
 } from "../../../framework/utils/Validation"
 import {copy} from "../../../framework/utils/object";
 import * as arrays from "../../../framework/utils/arrays";
-import {PeriodValidation, updatePeriodValidationEnd, updatePeriodValidationStart} from "../../../common/types/Period";
+import {
+  periodToPeriodValidation, PeriodValidation, updatePeriodValidationEnd,
+  updatePeriodValidationStart
+} from "../../../common/types/Period";
 import {validateNonBlank, validateNonEmptyArray} from "../../../common/commonValidations";
 
 export interface PeriodAdhesionFormState {
@@ -26,6 +29,15 @@ const initialState: PeriodAdhesionFormState = {
 export const periodAdhesionFormStore = () => LocalStore(initialState, on => {
   on(actions.initializeEmpty, (state) => {
     return copy(state, {step: "form"})
+  })
+
+  on(actions.initialize, (state, periodAdhesion) => {
+    return copy(state, {
+      step: "form",
+      period: defaultFieldValidation(periodToPeriodValidation(periodAdhesion.period)),
+      registrationPeriod: defaultFieldValidation(periodToPeriodValidation(periodAdhesion.registrationPeriod)),
+      activities: defaultFieldValidation(periodAdhesion.activities.map(defaultFieldValidation)),
+    })
   })
 
   on(actions.updateStart, (state, value) => {

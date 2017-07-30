@@ -1,6 +1,6 @@
 import preact from "preact"
 import {AsyncPage} from "../../../framework/components/Page"
-import {Card, CardContent} from "../../../framework/components/card/Card";
+import {Card, CardAction, CardContent} from "../../../framework/components/card/Card";
 import CardCollection from "../../../framework/components/card/CardCollection";
 import * as actions from "./periodAdhesionListActions";
 import {PeriodAdhesionListState, periodAdhesionListStore} from "./periodAdhesionListStore";
@@ -60,6 +60,7 @@ export default class PeriodAdhesionList extends AsyncPage<PeriodAdhesionListProp
             {periodAdhesion.activities.map(activity => <li>{activity}</li>)}
           </ul>
         </CardContent>
+        <CardAction href={`/adhesions/update/${periodAdhesion.id}`}>Éditer</CardAction>
       </Card>
     )
   }
