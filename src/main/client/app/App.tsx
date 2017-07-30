@@ -20,6 +20,7 @@ import ShowList from "./production/show/showList/showList";
 import {PageCreation, PageUpdate} from "./common/pages/pageForm/index";
 import PageRead from "./common/pages/pageRead/pageRead";
 import ProfileForm from "./user/profile/profileForm/profileForm";
+import {PeriodAdhesionCreation} from "./user/adhesion/periodAdhesionForm/index";
 
 interface AppState {
   url: string
@@ -68,6 +69,8 @@ export default class App extends preact.Component<any, AppState> {
             <PlayCreation path="/production/companies/:company/shows/:show/plays/create" />
             <PlayUpdate path="/production/companies/:company/shows/:show/plays/update/:id" />
             <PlayPage path="/production/companies/:company/shows/:show/plays/page/:id" />
+
+            <PeriodAdhesionCreation path="/adhesions/create" />
           </Router>
         </div>
       </div>

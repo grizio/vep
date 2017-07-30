@@ -10,6 +10,7 @@ const messages = {
     notPositive: "Veuillez indiquer un nombre entier positif",
     notFuture: "Veuillez indiquer une date dans le futur",
     loading: "Veuillez patienter pendant le chargement des données",
+    invalidPeriod: "La date de fin est avant la date de début",
     contact: {
       differentEmail: "Les adresses e-mail sont différentes"
     },
@@ -23,6 +24,11 @@ const messages = {
     differentPassword: "Les mots de passe sont différents",
     activation: {
       done: "Votre compte a bien été activé. Vous pouvez dès à présent vous connecter."
+    },
+    adhesion: {
+      formPeriod: {
+        loading: "Veuillez patienter pendant que nous nous y retrouvons dans les dates."
+      }
     }
   },
   production: {

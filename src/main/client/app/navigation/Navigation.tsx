@@ -96,6 +96,7 @@ function renderNav(state: NavigationState) {
           <MenuItem name="Déconnexion" action={logout} />
         </MenuGroup>
       }
+      {renderAdhesions(state)}
       <MenuGroup name="Nous contacter" href="/contact" />
     </nav>
   )
@@ -149,6 +150,18 @@ function renderPages(state: NavigationState) {
     )
   } else {
     return <MenuGroup name="L'association" href="/page/association" regex="/page(s|/.*)"/>
+  }
+}
+
+function renderAdhesions(state: NavigationState) {
+  if (isGranted(state, "admin")) {
+    return (
+      <MenuGroup name="Adhésions" href="/adhesions" regex="/adhesion(/.*)?">
+        <MenuItem name="Créer une nouvelle période" href="/adhesions/create" />
+      </MenuGroup>
+    )
+  } else {
+    return null
   }
 }
 
