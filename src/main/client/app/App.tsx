@@ -22,6 +22,7 @@ import PageRead from "./common/pages/pageRead/pageRead";
 import ProfileForm from "./user/profile/profileForm/profileForm";
 import {PeriodAdhesionCreation, PeriodAdhesionUpdate} from "./user/adhesion/periodAdhesionForm/index";
 import PeriodAdhesionList from "./user/adhesion/periodAdhesionList/periodAdhesionList";
+import RequestAdhesionForm from "./user/adhesion/requestAdhesion/requestAdhesionForm";
 
 interface AppState {
   url: string
@@ -51,6 +52,7 @@ export default class App extends preact.Component<any, AppState> {
             <Login path="/personal/login" />
 
             <ProfileForm path="/personal/profile" />
+            <RequestAdhesionForm path="/personal/adhesions/register" />
 
             <TheaterList path="/production/theaters" />
             <TheaterCreation path="/production/theaters/create" />

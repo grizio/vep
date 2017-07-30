@@ -28,4 +28,15 @@ trait SeqVerifications {
       case None => Valid(value)
     }
   }
+
+  def verifyExistsIn[A](value: A, acceptedElements: Seq[A]): Validation[A] = {
+    verifyExistsIn(value, acceptedElements, CommonMessages.unknownElement)
+  }
+  def verifyExistsIn[A](value: A, acceptedElements: Seq[A], errorMessage: A => String): Validation[A] = {
+    if (acceptedElements.contains(value)) {
+      Valid(value)
+    } else {
+      Invalid(errorMessage(value))
+    }
+  }
 }

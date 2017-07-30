@@ -1,7 +1,8 @@
 import {request} from "../../framework/utils/http";
-import {PeriodAdhesion, PeriodAdhesionCreation} from "./adhesionModel";
+import {PeriodAdhesion, PeriodAdhesionCreation, RequestAdhesion} from "./adhesionModel";
 import {copy} from "../../framework/utils/object";
 import {jsonToPeriod, periodToJson} from "../../common/types/Period";
+import {localDateTimeIsoFormat} from "../../framework/utils/dates";
 
 export function findAllPeriodAdhesion(): Promise<Array<PeriodAdhesion>> {
   return request<Array<PeriodAdhesion>>({
@@ -17,6 +18,13 @@ export function findPeriodAdhesion(id: string): Promise<PeriodAdhesion> {
   }).then(jsonToPeriodAdhesion)
 }
 
+export function findOpenedRegistrationPeriods(): Promise<Array<PeriodAdhesion>> {
+  return request<Array<PeriodAdhesion>>({
+    method: "GET",
+    url: `user/adhesions/opened`
+  }).then(_ => _.map(jsonToPeriodAdhesion))
+}
+
 export function createPeriodAdhesion(periodAdhesion: PeriodAdhesionCreation) {
   return request({
     method: "POST",
@@ -30,6 +38,14 @@ export function updatePeriodAdhesion(periodAdhesion: PeriodAdhesion) {
     method: "PUT",
     url: `user/adhesions/${periodAdhesion.id}`,
     entity: periodAdhesionToJson(periodAdhesion)
+  })
+}
+
+export function requestAdhesion(adhesion: RequestAdhesion) {
+  return request({
+    method: "POST",
+    url: `user/adhesions/${adhesion.period}/requests`,
+    entity: requestAdhesionToJson(adhesion)
   })
 }
 
@@ -51,5 +67,13 @@ function jsonToPeriodAdhesion(periodAdhesion: PeriodAdhesion): PeriodAdhesion {
   return copy(periodAdhesion, {
     period: jsonToPeriod(periodAdhesion.period),
     registrationPeriod: jsonToPeriod(periodAdhesion.registrationPeriod)
+  })
+}
+
+function requestAdhesionToJson(adhesion: RequestAdhesion): RequestAdhesion {
+  return copy(adhesion, {
+    members: adhesion.members.map(member => copy(member, {
+      birthday: localDateTimeIsoFormat(member.birthday)
+    } as any))
   })
 }

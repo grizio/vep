@@ -4,6 +4,7 @@ import scalikejdbc._
 import vep.Configuration
 import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Valid, Validation}
+import java.util.UUID
 
 class AdhesionService(
   val configuration: Configuration
@@ -32,6 +33,20 @@ class AdhesionService(
     """
       .map(PeriodAdhesion.apply)
       .single()
+      .apply()
+  }
+
+  def findOpenedPeriods(): Seq[PeriodAdhesion] = withQueryConnection { implicit session =>
+    findOpenedPeriodsAdhesion()
+  }
+
+  private def findOpenedPeriodsAdhesion()(implicit session: DBSession): Seq[PeriodAdhesion] = {
+    sql"""
+      SELECT * FROM period_adhesion
+      WHERE current_timestamp BETWEEN startRegistration and endRegistration
+    """
+      .map(PeriodAdhesion.apply)
+      .list()
       .apply()
   }
 
@@ -72,6 +87,31 @@ class AdhesionService(
           endRegistration = ${periodAdhesion.registrationPeriod.end},
           activities = ${activities}
       WHERE id = ${periodAdhesion.id}
+    """
+      .execute()
+      .apply()
+  }
+
+  def createAdhesion(adhesion: Adhesion, period: PeriodAdhesion): Validation[Adhesion] = withCommandTransaction { implicit session =>
+    insertAdhesion(adhesion, period)
+    adhesion.members.foreach(insertAdhesionMember(_, adhesion))
+    Valid(adhesion)
+  }
+
+  private def insertAdhesion(adhesion: Adhesion, period: PeriodAdhesion)(implicit session: DBSession): Unit = {
+    sql"""
+      INSERT INTO adhesion(id, period, user_id, accepted)
+      VALUES (${adhesion.id}, ${period.id}, ${adhesion.user}, ${adhesion.accepted})
+    """
+      .execute()
+      .apply()
+  }
+
+  private def insertAdhesionMember(member: AdhesionMember, adhesion: Adhesion)(implicit session: DBSession): Unit = {
+    val id = UUID.randomUUID().toString
+    sql"""
+      INSERT INTO adhesion_member(id, adhesion, first_name, last_name, birthday, activity)
+      VALUES (${id}, ${adhesion.id}, ${member.firstName}, ${member.lastName}, ${member.birthday}, ${member.activity})
     """
       .execute()
       .apply()

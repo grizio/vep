@@ -12,3 +12,21 @@ export interface PeriodAdhesionCreation {
   registrationPeriod: Period
   activities: Array<string>
 }
+
+export interface Adhesion {
+  id: string
+  period: string
+  members: Array<AdhesionMember>
+}
+
+export interface AdhesionMember {
+  firstName: string
+  lastName: string
+  birthday: Date
+  activity: string
+}
+
+export interface RequestAdhesion {
+  period: string
+  members: Array<AdhesionMember>
+}

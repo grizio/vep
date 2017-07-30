@@ -1,5 +1,6 @@
 package vep.app.user.adhesion
 
+import org.joda.time.DateTime
 import scalikejdbc.WrappedResultSet
 import spray.json.{JsonFormat, JsonParser, RootJsonFormat}
 import vep.app.common.types.Period
@@ -44,4 +45,41 @@ object PeriodAdhesionCreation {
   import JsonProtocol._
 
   implicit val periodAdhesionCreationFormat: RootJsonFormat[PeriodAdhesionCreation] = jsonFormat3(PeriodAdhesionCreation.apply)
+}
+
+case class Adhesion(
+  id: String,
+  user: String,
+  accepted: Boolean,
+  members: Seq[AdhesionMember]
+)
+
+object Adhesion {
+  import JsonProtocol._
+
+  implicit val adhesionFormat: RootJsonFormat[Adhesion] = jsonFormat4(Adhesion.apply)
+}
+
+case class AdhesionMember(
+  firstName: String,
+  lastName: String,
+  birthday: DateTime,
+  activity: String
+)
+
+object AdhesionMember {
+  import JsonProtocol._
+
+  implicit val adhesionMemberFormat: RootJsonFormat[AdhesionMember] = jsonFormat4(AdhesionMember.apply)
+}
+
+case class RequestAdhesion(
+  period: String,
+  members: Seq[AdhesionMember]
+)
+
+object RequestAdhesion {
+  import JsonProtocol._
+
+  implicit val requestAdhesionFormat: RootJsonFormat[RequestAdhesion] = jsonFormat2(RequestAdhesion.apply)
 }

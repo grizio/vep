@@ -10,4 +10,6 @@ object UserMessages {
   val unknown = "L'utilisateur n'existe pas"
 
   val invalidActivationKey = "La clef d'activation est invalide"
+
+  val closedPeriod = "La période est fermée aux inscriptions"
 }

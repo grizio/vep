@@ -10,6 +10,11 @@ trait DateVerifications {
       .filter(_.isAfterNow, message)
   }
 
+  def verifyIsBeforeNow(date: DateTime, message: String = CommonMessages.isNotPassed): Validation[DateTime] = {
+    Valid(date)
+      .filter(_.isBeforeNow, message)
+  }
+
   def verifyIsBefore(date: DateTime, referenceDate: DateTime, message: String = CommonMessages.isAfter): Validation[DateTime] = {
     Valid(date)
       .filter(_.isBefore(referenceDate), message)

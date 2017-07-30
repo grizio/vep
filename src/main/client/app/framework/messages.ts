@@ -9,6 +9,7 @@ const messages = {
     invalidCanonical: "Le format d'url est invalide (caractères autorisés: lettres minuscules, chiffres et -)",
     notPositive: "Veuillez indiquer un nombre entier positif",
     notFuture: "Veuillez indiquer une date dans le futur",
+    notPassed: "Veuillez indiquer une date dans le passé",
     loading: "Veuillez patienter pendant le chargement des données",
     invalidPeriod: "La date de fin est avant la date de début",
     contact: {
@@ -28,6 +29,9 @@ const messages = {
     adhesion: {
       formPeriod: {
         loading: "Veuillez patienter pendant que nous nous y retrouvons dans les dates."
+      },
+      formRequest: {
+        loading: "Veuillez patienter pendant que nous vous récupérons le formulaire."
       }
     }
   },

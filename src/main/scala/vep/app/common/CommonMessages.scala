@@ -10,10 +10,13 @@ object CommonMessages {
   def isDifferent[A](value: A, expected: A) = s"${value} est différent de ${expected}"
   def notFound = "L'élément n'a pas été trouvé"
   val isNotFuture = "Veuillez indiquer une date postérieure à la date du jour"
+  val isNotPassed = "Veuillez indiquer une date antérieure à la date du jour"
   val isBefore = "La date fournie n'est pas antérieure à la date de référence"
   val isAfter = "La date fournie n'est pas postérieure la date de référence"
   def duplicatedElement[A](value: A) = s"${value.toString} existe deux fois"
   def forbiddenElement[A](value: A) = s"${value.toString} n'est pas autorisé"
+  def unknownElement[A](value: A) = s"${value.toString} est inconnu"
   val invalidCanonical = "Le format d'url est invalide (caractères autorisés: lettres minuscules, chiffres et -)"
   val periodNotIncluded = "La période n'est pas inclue dans la période de référence"
+  val dateNotIncluded = "La date n'est pas inclue dans la période de référence"
 }

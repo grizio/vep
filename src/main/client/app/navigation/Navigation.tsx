@@ -88,14 +88,7 @@ function renderNav(state: NavigationState) {
           <MenuItem name="S'inscrire" href="/personal/register" />
         </MenuGroup>
       }
-      {
-        isLoggedIn(state) &&
-        <MenuGroup name={`Mon espace (${state.session.user.email})`} href="/personal/login" regex="/personal(/.*)?">
-          <MenuItem name="Mon profil" href="/personal/profile" />
-          <MenuItem name="(Ré)inscription aux activités" href="/personal/register" />
-          <MenuItem name="Déconnexion" action={logout} />
-        </MenuGroup>
-      }
+      {renderMySpace(state)}
       {renderAdhesions(state)}
       <MenuGroup name="Nous contacter" href="/contact" />
     </nav>
@@ -150,6 +143,20 @@ function renderPages(state: NavigationState) {
     )
   } else {
     return <MenuGroup name="L'association" href="/page/association" regex="/page(s|/.*)"/>
+  }
+}
+
+function renderMySpace(state: NavigationState) {
+  if (isLoggedIn(state)) {
+    return (
+      <MenuGroup name={`Mon espace (${state.session.user.email})`} href="/personal/login" regex="/personal(/.*)?">
+        <MenuItem name="Mon profil" href="/personal/profile"/>
+        <MenuItem name="(Ré)inscription aux activités" href="/personal/adhesions/register"/>
+        <MenuItem name="Déconnexion" action={logout}/>
+      </MenuGroup>
+    )
+  } else {
+    return null
   }
 }
 

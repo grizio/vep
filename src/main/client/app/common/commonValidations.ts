@@ -78,6 +78,11 @@ export function validateFuture(value: Date): Validation<Date> {
     .filter(value => !value || value.getTime() > (new Date()).getTime(), messages.common.notFuture)
 }
 
+export function validatePassed(value: Date): Validation<Date> {
+  return Valid(value)
+    .filter(value => !value || value.getTime() < (new Date()).getTime(), messages.common.notFuture)
+}
+
 export function validateCanonical(value: string): Validation<string> {
   return Valid(value)
     .filter(value => /^[a-zA-Z0-9-]+$/.test(value), messages.common.invalidCanonical)

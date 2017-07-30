@@ -14,15 +14,23 @@ class AdhesionRouter(
   val executionContext: ExecutionContext
 ) extends RouterComponent {
   lazy val route: Route = {
-    findAllPeriods ~ findPeriod ~ createPeriod ~ updatePeriod
+    findAllPeriods ~ findOpenedRegistrationPeriods ~ findPeriod ~
+      createPeriod ~ updatePeriod ~
+      requestAdhesion
   }
 
   def findAllPeriods: Route = adminGet("user" / "adhesions") { _ =>
     Ok(adhesionService.findAllPeriods())
   }
 
+  def findOpenedRegistrationPeriods: Route = adminGet("user" / "adhesions" / "opened").apply { (_) =>
+    Ok(adhesionService.findOpenedPeriods())
+  }
+
   def findPeriod: Route = adminGet("user" / "adhesions" / Segment).apply { (periodId, _) =>
-    Ok(adhesionService.findPeriod(periodId))
+    found(adhesionService.findPeriod(periodId)) { period =>
+      Ok(period)
+    }
   }
 
   def createPeriod: Route = adminPost("user" / "adhesions", as[PeriodAdhesionCreation]) { (periodAdhesion, _) =>
@@ -38,6 +46,16 @@ class AdhesionRouter(
       verifying(adhesionVerifications.verifyPeriodUpdate(periodAdhesion, periodId)) { validPeriodAdhesion =>
         verifying(adhesionService.updatePeriod(validPeriodAdhesion)) { savedPeriod =>
           Ok(savedPeriod)
+        }
+      }
+    }
+  }
+
+  def requestAdhesion: Route = userPost("user" / "adhesions" / Segment / "requests", as[RequestAdhesion]).apply { (periodId, adhesion, user) =>
+    found(adhesionService.findPeriod(periodId)) { period =>
+      verifying(adhesionVerifications.verifyRequestAdhesion(adhesion, period, user)) { validRequestAdhesion =>
+        verifying(adhesionService.createAdhesion(validRequestAdhesion, period)) { savedAdhesion =>
+          Ok(savedAdhesion)
         }
       }
     }
