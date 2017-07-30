@@ -1,6 +1,6 @@
 import {request} from "../../framework/utils/http";
 import {copy} from "../../framework/utils/object";
-import {localIsoFormat, localIsoFormatToDate} from "../../framework/utils/dates";
+import {localDateTimeIsoFormat, localIsoFormatToDate} from "../../framework/utils/dates";
 import {Play, PlayCreation, PlayMeta, PlayUpdate, PlayWithDependencies} from "./playModel";
 
 export function findPlaysByShow(company: string, show: string): Promise<Array<Play>> {
@@ -36,8 +36,8 @@ export function createPlay(company: string, show: string, play: PlayCreation) {
     method: "POST",
     url: `production/companies/${company}/shows/${show}/plays`,
     entity: copy(play, {
-      date: localIsoFormat(play.date),
-      reservationEndDate: localIsoFormat(play.reservationEndDate)
+      date: localDateTimeIsoFormat(play.date),
+      reservationEndDate: localDateTimeIsoFormat(play.reservationEndDate)
     } as any)
   })
 }
@@ -47,8 +47,8 @@ export function updatePlay(company: string, show: string, play: PlayUpdate) {
     method: "PUT",
     url: `production/companies/${company}/shows/${show}/plays/${play.id}`,
     entity: copy(play, {
-      date: localIsoFormat(play.date),
-      reservationEndDate: localIsoFormat(play.reservationEndDate)
+      date: localDateTimeIsoFormat(play.date),
+      reservationEndDate: localDateTimeIsoFormat(play.reservationEndDate)
     } as any)
   })
 }

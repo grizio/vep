@@ -2,7 +2,8 @@ import preact from "preact"
 import {FieldValidation} from "../../utils/Validation"
 import * as compatibility from "../../utils/compatibility";
 import {
-  localIsoFormat, localIsoFormatToDate,
+  localDateIsoFormat,
+  localDateTimeIsoFormat, localIsoFormatToDate,
   shortDateFormat, shortDateFormatToDate, shortDateTimeFormat,
   shortDateTimeFormatToDate, timeFormat, timeFormatToDate
 } from "../../utils/dates";
@@ -63,7 +64,7 @@ export function InputDate(props: InputDateProps) {
       fieldValidation={props.fieldValidation}
       onUpdate={props.onUpdate}
       normalizeToDate={(text) => compatibility.acceptInputDate ? localIsoFormatToDate(text) : shortDateFormatToDate(text)}
-      normalizeFromDate={(date) => compatibility.acceptInputDate ? localIsoFormat(date) : shortDateFormat(date)}
+      normalizeFromDate={(date) => compatibility.acceptInputDate ? localDateIsoFormat(date) : shortDateFormat(date)}
     />
   )
 }
@@ -81,7 +82,7 @@ export function InputDateTime(props: InputDateTimeProps) {
       fieldValidation={props.fieldValidation}
       onUpdate={props.onUpdate}
       normalizeToDate={(text) => compatibility.acceptInputDateTimeLocal ? localIsoFormatToDate(text) : shortDateTimeFormatToDate(text)}
-      normalizeFromDate={(date) => compatibility.acceptInputDateTimeLocal ? localIsoFormat(date) : shortDateTimeFormat(date)}
+      normalizeFromDate={(date) => compatibility.acceptInputDateTimeLocal ? localDateTimeIsoFormat(date) : shortDateTimeFormat(date)}
     />
   )
 }
@@ -99,7 +100,7 @@ export function InputTime(props: InputTimeProps) {
       fieldValidation={props.fieldValidation}
       onUpdate={props.onUpdate}
       normalizeToDate={(text) => compatibility.acceptInputTime ? localIsoFormatToDate(text) : timeFormatToDate(text)}
-      normalizeFromDate={(date) => compatibility.acceptInputTime ? localIsoFormat(date) : timeFormat(date)}
+      normalizeFromDate={(date) => compatibility.acceptInputTime ? localDateTimeIsoFormat(date) : timeFormat(date)}
     />
   )
 }

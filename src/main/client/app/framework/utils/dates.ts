@@ -83,7 +83,23 @@ export function timeFormat(date: Date): string {
   }
 }
 
-export function localIsoFormat(date: Date): string {
+export function localDateIsoFormat(date: Date): string {
+  if (date) {
+    // date.toISOString return yyyy-MM-ddTHH:ii:ss.SSSZ
+    // We do not want the .SSSZ part
+    const isoDate = date.toISOString()
+    const indexOfDot = isoDate.indexOf("T")
+    if (indexOfDot >= 0) {
+      return isoDate.substr(0, indexOfDot)
+    } else {
+      return isoDate
+    }
+  } else {
+    return null
+  }
+}
+
+export function localDateTimeIsoFormat(date: Date): string {
   if (date) {
     // date.toISOString return yyyy-MM-ddTHH:ii:ss.SSSZ
     // We do not want the .SSSZ part
@@ -135,7 +151,12 @@ export function timeFormatToDate(text: string): Date {
 
 export function localIsoFormatToDate(text: string): Date {
   if (text) {
-    return new Date(`${text}Z`)
+    const containsTime = text.indexOf(":") >= 0
+    if (containsTime) {
+      return new Date(`${text}Z`)
+    } else {
+      return new Date(text)
+    }
   } else {
     return null
   }
@@ -155,6 +176,26 @@ export function toUTC(date: Date) {
     date.getSeconds(),
     date.getMilliseconds()
   ))
+}
+
+export function equals(date: Date, reference: Date): boolean {
+  return date.getTime() === reference.getTime()
+}
+
+export function isAfter(date: Date, reference: Date): boolean {
+  return date.getTime() > reference.getTime()
+}
+
+export function isBefore(date: Date, reference: Date): boolean {
+  return date.getTime() < reference.getTime()
+}
+
+export function isAfterOrEquals(date: Date, reference: Date): boolean {
+  return date.getTime() >= reference.getTime()
+}
+
+export function isBeforeOrEquals(date: Date, reference: Date): boolean {
+  return date.getTime() <= reference.getTime()
 }
 
 export function isAfterNow(date: Date): boolean {
