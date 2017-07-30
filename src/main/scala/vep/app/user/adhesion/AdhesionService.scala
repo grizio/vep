@@ -8,6 +8,19 @@ import vep.framework.validation.{Valid, Validation}
 class AdhesionService(
   val configuration: Configuration
 ) extends DatabaseContainer {
+  def findAllPeriods(): Seq[PeriodAdhesion] = withQueryConnection { implicit session =>
+    findAllPeriodsAdhesion()
+  }
+
+  private def findAllPeriodsAdhesion()(implicit session: DBSession): Seq[PeriodAdhesion] = {
+    sql"""
+      SELECT * FROM period_adhesion
+    """
+      .map(PeriodAdhesion.apply)
+      .list()
+      .apply()
+  }
+
   def createPeriod(periodAdhesion: PeriodAdhesion): Validation[PeriodAdhesion] = withCommandTransaction { implicit session =>
     createPeriodAdhesion(periodAdhesion)
     Valid(periodAdhesion)

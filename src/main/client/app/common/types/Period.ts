@@ -2,7 +2,10 @@ import {
   defaultFieldValidation, FieldValidation, Invalid, updateFieldValidation, updateUnchangedFieldValidation, Valid,
   Validation
 } from "../../framework/utils/Validation";
-import {isBeforeOrEquals, localDateTimeIsoFormat, localIsoFormatToDate} from "../../framework/utils/dates";
+import {
+  isAfterNow, isBeforeNow, isBeforeOrEquals, localDateTimeIsoFormat,
+  localIsoFormatToDate, shortDateFormat
+} from "../../framework/utils/dates";
 import messages from "../../framework/messages";
 import {copy} from "../../framework/utils/object";
 
@@ -69,4 +72,20 @@ export function jsonToPeriod(period: Period): Period {
     start: localIsoFormatToDate(period.start as any),
     end: localIsoFormatToDate(period.end as any)
   } as any)
+}
+
+export function isPassed(period: Period): boolean {
+  return isBeforeNow(period.end)
+}
+
+export function isCurrent(period: Period): boolean {
+  return isAfterNow(period.start) && isBeforeNow(period.end)
+}
+
+export function isFuture(period: Period): boolean {
+  return isAfterNow(period.start)
+}
+
+export function shortPeriodFormat(period: Period): string {
+  return `Du ${shortDateFormat(period.start)} au ${shortDateFormat(period.end)}`
 }

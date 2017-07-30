@@ -21,6 +21,7 @@ import {PageCreation, PageUpdate} from "./common/pages/pageForm/index";
 import PageRead from "./common/pages/pageRead/pageRead";
 import ProfileForm from "./user/profile/profileForm/profileForm";
 import {PeriodAdhesionCreation} from "./user/adhesion/periodAdhesionForm/index";
+import PeriodAdhesionList from "./user/adhesion/periodAdhesionList/periodAdhesionList";
 
 interface AppState {
   url: string
@@ -70,6 +71,7 @@ export default class App extends preact.Component<any, AppState> {
             <PlayUpdate path="/production/companies/:company/shows/:show/plays/update/:id" />
             <PlayPage path="/production/companies/:company/shows/:show/plays/page/:id" />
 
+            <PeriodAdhesionList path="/adhesions" />
             <PeriodAdhesionCreation path="/adhesions/create" />
           </Router>
         </div>

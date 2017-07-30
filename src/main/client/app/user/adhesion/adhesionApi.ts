@@ -1,7 +1,14 @@
 import {request} from "../../framework/utils/http";
-import {PeriodAdhesionCreation} from "./adhesionModel";
+import {PeriodAdhesion, PeriodAdhesionCreation} from "./adhesionModel";
 import {copy} from "../../framework/utils/object";
-import {periodToJson} from "../../common/types/Period";
+import {jsonToPeriod, periodToJson} from "../../common/types/Period";
+
+export function findAllPeriodAdhesion(): Promise<Array<PeriodAdhesion>> {
+  return request<Array<PeriodAdhesion>>({
+    method: "GET",
+    url: "user/adhesions"
+  }).then(_ => _.map(jsonToPeriodAdhesion))
+}
 
 export function createPeriodAdhesion(periodAdhesion: PeriodAdhesionCreation) {
   return request({
@@ -15,5 +22,12 @@ function periodAdhesionCreationToJson(periodAdhesion: PeriodAdhesionCreation): P
   return copy(periodAdhesion, {
     period: periodToJson(periodAdhesion.period),
     registrationPeriod: periodToJson(periodAdhesion.registrationPeriod)
+  })
+}
+
+function jsonToPeriodAdhesion(periodAdhesion: PeriodAdhesion): PeriodAdhesion {
+  return copy(periodAdhesion, {
+    period: jsonToPeriod(periodAdhesion.period),
+    registrationPeriod: jsonToPeriod(periodAdhesion.registrationPeriod)
   })
 }
