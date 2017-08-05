@@ -4,7 +4,7 @@ import org.joda.time.DateTime
 import scalikejdbc.WrappedResultSet
 import spray.json.{JsonFormat, JsonParser, RootJsonFormat}
 import vep.app.common.types.Period
-import vep.app.user.User
+import vep.app.user.{User, UserView}
 import vep.framework.utils.JsonProtocol
 
 case class PeriodAdhesion(
@@ -115,7 +115,7 @@ object AdhesionEntry {
 case class AdhesionView(
   id: String,
   period: PeriodAdhesion,
-  user: User,
+  user: UserView,
   accepted: Boolean,
   members: Seq[AdhesionMember]
 )

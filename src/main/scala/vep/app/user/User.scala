@@ -101,3 +101,23 @@ object Phone {
   implicit val phoneFormat: JsonFormat[Phone] = jsonFormat2(Phone.apply)
   implicit val phoneSeqFormat: JsonFormat[Seq[Phone]] = seqFormat(phoneFormat)
 }
+
+case class UserView(
+  id: String,
+  email: String,
+  firstName: String,
+  lastName: String
+)
+
+object UserView {
+  import JsonProtocol._
+
+  def apply(rs: WrappedResultSet): UserView = new UserView(
+    id = rs.stringOpt("id").getOrElse(""),
+    email = rs.stringOpt("email").getOrElse(""),
+    firstName = rs.stringOpt("first_name").getOrElse(""),
+    lastName = rs.stringOpt("last_name").getOrElse("")
+  )
+
+  implicit val userViewFormat: JsonFormat[UserView] = jsonFormat4(UserView.apply)
+}

@@ -53,6 +53,21 @@ class AdhesionService(
       .apply()
   }
 
+  def findByPeriod(periodId: String): Seq[AdhesionView] = withQueryConnection { implicit session =>
+    findAdhesionByPeriod(periodId)
+      .flatMap(adhesionEntryToAdhesionView(_))
+  }
+
+  private def findAdhesionByPeriod(periodId: String)(implicit session: DBSession): Seq[AdhesionEntry] = {
+    sql"""
+      SELECT * FROM adhesion
+      WHERE period = ${periodId}
+    """
+      .map(AdhesionEntry.apply)
+      .list()
+      .apply()
+  }
+
   def findByUser(user: User): Seq[AdhesionView] = withQueryConnection { implicit session =>
     findAdhesionEntriesByUser(user)
       .flatMap(adhesionEntryToAdhesionView(_))
@@ -70,7 +85,7 @@ class AdhesionService(
 
   private def adhesionEntryToAdhesionView(adhesionEntry: AdhesionEntry)(implicit session: DBSession): Option[AdhesionView] = {
     findPeriod(adhesionEntry.period).flatMap { period =>
-      userService.find(adhesionEntry.user).map { user =>
+      userService.findView(adhesionEntry.user).map { user =>
         AdhesionView(
           id = adhesionEntry.id,
           period = period,

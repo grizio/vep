@@ -14,7 +14,7 @@ class AdhesionRouter(
   val executionContext: ExecutionContext
 ) extends RouterComponent {
   lazy val route: Route = {
-    findAllPeriods ~ findOpenedRegistrationPeriods ~ findMine ~ findPeriod ~
+    findAllPeriods ~ findOpenedRegistrationPeriods ~ findMine ~ findPeriod ~ findAdhesionByPeriod ~
       createPeriod ~ updatePeriod ~
       requestAdhesion
   }
@@ -35,6 +35,10 @@ class AdhesionRouter(
     found(adhesionService.findPeriod(periodId)) { period =>
       Ok(period)
     }
+  }
+
+  def findAdhesionByPeriod: Route = adminGet("user" / "adhesions" / Segment / "adhesions").apply { (periodId, _) =>
+    Ok(adhesionService.findByPeriod(periodId))
   }
 
   def createPeriod: Route = adminPost("user" / "adhesions", as[PeriodAdhesionCreation]) { (periodAdhesion, _) =>

@@ -24,4 +24,13 @@ class UserService(
       .headOption()
       .apply()
   }
+
+  def findView(id: String): Option[UserView] = withQueryConnection { implicit session =>
+    sql"""
+      SELECT * FROM users WHERE id = $id
+    """
+      .map(UserView.apply)
+      .headOption()
+      .apply()
+  }
 }

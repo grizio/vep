@@ -24,6 +24,7 @@ import {PeriodAdhesionCreation, PeriodAdhesionUpdate} from "./user/adhesion/peri
 import PeriodAdhesionList from "./user/adhesion/periodAdhesionList/periodAdhesionList";
 import RequestAdhesionForm from "./user/adhesion/requestAdhesion/requestAdhesionForm";
 import ProfilePage from "./user/profile/profilePage/profilePage";
+import AdhesionList from "./user/adhesion/adhesionList/adhesionList";
 
 interface AppState {
   url: string
@@ -78,6 +79,8 @@ export default class App extends preact.Component<any, AppState> {
             <PeriodAdhesionList path="/adhesions" />
             <PeriodAdhesionCreation path="/adhesions/create" />
             <PeriodAdhesionUpdate path="/adhesions/update/:id" />
+
+            <AdhesionList path="/adhesions/list/:period" />
           </Router>
         </div>
       </div>

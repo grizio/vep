@@ -25,6 +25,13 @@ export function findOpenedRegistrationPeriods(): Promise<Array<PeriodAdhesion>> 
   }).then(_ => _.map(jsonToPeriodAdhesion))
 }
 
+export function findAdhesionsByPeriod(periodId: string): Promise<Array<Adhesion>> {
+  return request<Array<Adhesion>>({
+    method: "GET",
+    url: `user/adhesions/${periodId}/adhesions`
+  }).then(_ => _.map(jsonToAdhesion))
+}
+
 export function getAdhesionsFromCurrentProfile(): Promise<Array<Adhesion>> {
   return request<Array<Adhesion>>({
     method: "GET",

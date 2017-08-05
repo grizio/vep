@@ -61,6 +61,7 @@ export default class PeriodAdhesionList extends AsyncPage<PeriodAdhesionListProp
           </ul>
         </CardContent>
         <CardAction href={`/adhesions/update/${periodAdhesion.id}`}>Éditer</CardAction>
+        <CardAction href={`/adhesions/list/${periodAdhesion.id}`}>Liste des adhésions</CardAction>
       </Card>
     )
   }
