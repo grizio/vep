@@ -98,14 +98,25 @@ function Button(props: InternalButtonComponentProps) {
 }
 
 function Link(props: InternalLinkComponentProps) {
-  return (
-    <PreactLink
-      href={props.href}
-      target={props.target ? forceStartWith(props.target, "_") : null}
-      class={`button ${props.class}`}
-      disabled={props.disabled}
-    >{props.message}</PreactLink>
-  )
+  if (props.href.startsWith("http")) {
+    return (
+      <a
+        href={props.href}
+        target={props.target ? forceStartWith(props.target, "_") : null}
+        class={`button ${props.class}`}
+        disabled={props.disabled}
+      >{props.message}</a>
+    )
+  } else {
+    return (
+      <PreactLink
+        href={props.href}
+        target={props.target ? forceStartWith(props.target, "_") : null}
+        class={`button ${props.class}`}
+        disabled={props.disabled}
+      >{props.message}</PreactLink>
+    )
+  }
 }
 
 const noAction = () => {}
