@@ -6,8 +6,11 @@ import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Valid, Validation}
 import java.util.UUID
 
+import vep.app.user.{User, UserService}
+
 class AdhesionService(
-  val configuration: Configuration
+  val configuration: Configuration,
+  userService: UserService
 ) extends DatabaseContainer {
   def findAllPeriods(): Seq[PeriodAdhesion] = withQueryConnection { implicit session =>
     findAllPeriodsAdhesion()
@@ -46,6 +49,45 @@ class AdhesionService(
       WHERE current_timestamp BETWEEN startRegistration and endRegistration
     """
       .map(PeriodAdhesion.apply)
+      .list()
+      .apply()
+  }
+
+  def findByUser(user: User): Seq[AdhesionView] = withQueryConnection { implicit session =>
+    findAdhesionEntriesByUser(user)
+      .flatMap(adhesionEntryToAdhesionView(_))
+  }
+
+  private def findAdhesionEntriesByUser(user: User)(implicit session: DBSession): Seq[AdhesionEntry] = {
+    sql"""
+      SELECT * FROM adhesion
+      WHERE user_id = ${user.id}
+    """
+      .map(AdhesionEntry.apply)
+      .list()
+      .apply()
+  }
+
+  private def adhesionEntryToAdhesionView(adhesionEntry: AdhesionEntry)(implicit session: DBSession): Option[AdhesionView] = {
+    findPeriod(adhesionEntry.period).flatMap { period =>
+      userService.find(adhesionEntry.user).map { user =>
+        AdhesionView(
+          id = adhesionEntry.id,
+          period = period,
+          user = user,
+          accepted = adhesionEntry.accepted,
+          members = findMembersByAdhesion(adhesionEntry.id)
+        )
+      }
+    }
+  }
+
+  private def findMembersByAdhesion(adhesionId: String)(implicit session: DBSession): Seq[AdhesionMember] = {
+    sql"""
+      SELECT * FROM adhesion_member
+      WHERE adhesion = ${adhesionId}
+    """
+      .map(AdhesionMember.apply)
       .list()
       .apply()
   }

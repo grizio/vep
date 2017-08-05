@@ -4,6 +4,7 @@ import org.joda.time.DateTime
 import scalikejdbc.WrappedResultSet
 import spray.json.{JsonFormat, JsonParser, RootJsonFormat}
 import vep.app.common.types.Period
+import vep.app.user.User
 import vep.framework.utils.JsonProtocol
 
 case class PeriodAdhesion(
@@ -70,6 +71,15 @@ case class AdhesionMember(
 object AdhesionMember {
   import JsonProtocol._
 
+  def apply(resultSet: WrappedResultSet): AdhesionMember = {
+    new AdhesionMember(
+      firstName = resultSet.string("first_name"),
+      lastName = resultSet.string("last_name"),
+      birthday = resultSet.jodaDateTime("birthday"),
+      activity = resultSet.string("activity")
+    )
+  }
+
   implicit val adhesionMemberFormat: RootJsonFormat[AdhesionMember] = jsonFormat4(AdhesionMember.apply)
 }
 
@@ -82,4 +92,36 @@ object RequestAdhesion {
   import JsonProtocol._
 
   implicit val requestAdhesionFormat: RootJsonFormat[RequestAdhesion] = jsonFormat2(RequestAdhesion.apply)
+}
+
+case class AdhesionEntry(
+  id: String,
+  period: String,
+  user: String,
+  accepted: Boolean
+)
+
+object AdhesionEntry {
+  def apply(resultSet: WrappedResultSet): AdhesionEntry = {
+    new AdhesionEntry(
+      id = resultSet.string("id"),
+      user = resultSet.string("user_id"),
+      period = resultSet.string("period"),
+      accepted = resultSet.boolean("accepted")
+    )
+  }
+}
+
+case class AdhesionView(
+  id: String,
+  period: PeriodAdhesion,
+  user: User,
+  accepted: Boolean,
+  members: Seq[AdhesionMember]
+)
+
+object AdhesionView {
+  import JsonProtocol._
+
+  implicit val adhesionViewFormat: RootJsonFormat[AdhesionView] = jsonFormat5(AdhesionView.apply)
 }

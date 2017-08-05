@@ -1,7 +1,7 @@
 import {request} from "../../framework/utils/http";
 import {Profile} from "./profileModel";
 
-export function getCurrentProfile() {
+export function getCurrentProfile(): Promise<Profile> {
   return request({
     method: "GET",
     url: "user/profile"

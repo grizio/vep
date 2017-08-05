@@ -149,7 +149,7 @@ function renderPages(state: NavigationState) {
 function renderMySpace(state: NavigationState) {
   if (isLoggedIn(state)) {
     return (
-      <MenuGroup name={`Mon espace (${state.session.user.email})`} href="/personal/login" regex="/personal(/.*)?">
+      <MenuGroup name={`Mon espace (${state.session.user.email})`} href="/personal/profile" regex="/personal(/.*)?">
         <MenuItem name="Mon profil" href="/personal/profile"/>
         <MenuItem name="(Ré)inscription aux activités" href="/personal/adhesions/register"/>
         <MenuItem name="Déconnexion" action={logout}/>

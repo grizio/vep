@@ -15,4 +15,13 @@ class UserService(
       .headOption()
       .apply()
   }
+
+  def find(id: String): Option[User] = withQueryConnection { implicit session =>
+    sql"""
+      SELECT * FROM users WHERE id = $id
+    """
+      .map(User.apply)
+      .headOption()
+      .apply()
+  }
 }

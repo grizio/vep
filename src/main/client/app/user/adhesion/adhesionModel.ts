@@ -15,7 +15,8 @@ export interface PeriodAdhesionCreation {
 
 export interface Adhesion {
   id: string
-  period: string
+  period: PeriodAdhesion
+  accepted: boolean
   members: Array<AdhesionMember>
 }
 
