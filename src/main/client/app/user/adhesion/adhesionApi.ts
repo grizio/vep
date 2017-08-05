@@ -66,7 +66,15 @@ export function requestAdhesion(adhesion: RequestAdhesion) {
 export function acceptAdhesion(adhesion: Adhesion) {
   return request({
     method: "POST",
-    url: `user/adhesions/${adhesion.period.id}/requests/${adhesion.id}`
+    url: `user/adhesions/${adhesion.period.id}/requests/${adhesion.id}/accept`
+  })
+}
+
+export function refuseAdhesion(adhesion: Adhesion, reason: string) {
+  return request({
+    method: "POST",
+    url: `user/adhesions/${adhesion.period.id}/requests/${adhesion.id}/refuse`,
+    entity: reason
   })
 }
 

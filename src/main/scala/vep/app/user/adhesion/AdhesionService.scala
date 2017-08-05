@@ -204,4 +204,28 @@ class AdhesionService(
       .execute()
       .apply()
   }
+
+  def removeAdhesion(id: String): Validation[Unit] = withCommandTransaction { implicit session =>
+    deleteMembersFromAdhesion(id)
+    deleteAdhesion(id)
+    Valid()
+  }
+
+  private def deleteAdhesion(id: String)(implicit session: DBSession) = {
+    sql"""
+      DELETE FROM adhesion
+      WHERE id = ${id}
+    """
+      .execute()
+      .apply()
+  }
+
+  private def deleteMembersFromAdhesion(id: String)(implicit session: DBSession) = {
+    sql"""
+      DELETE FROM adhesion_member
+      WHERE adhesion = ${id}
+    """
+      .execute()
+      .apply()
+  }
 }

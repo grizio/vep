@@ -10,13 +10,14 @@ import scala.concurrent.ExecutionContext
 class AdhesionRouter(
   adhesionVerifications: AdhesionVerifications,
   adhesionService: AdhesionService,
+  adhesionMailer: AdhesionMailer,
   val userService: UserService,
   val executionContext: ExecutionContext
 ) extends RouterComponent {
   lazy val route: Route = {
     findAllPeriods ~ findOpenedRegistrationPeriods ~ findMine ~ findPeriod ~ findAdhesionByPeriod ~
       createPeriod ~ updatePeriod ~
-      requestAdhesion ~ acceptRequestAdhesion
+      requestAdhesion ~ acceptRequestAdhesion ~ refuseRequestAdhesion
   }
 
   def findAllPeriods: Route = adminGet("user" / "adhesions") { _ =>
@@ -69,10 +70,21 @@ class AdhesionRouter(
     }
   }
 
-  def acceptRequestAdhesion: Route = flatAdminPost("user" / "adhesions" / Segment / "requests" / Segment) { (periodId, adhesionId, _) =>
+  def acceptRequestAdhesion: Route = flatAdminPost("user" / "adhesions" / Segment / "requests" / Segment / "accept") { (periodId, adhesionId, _) =>
     found(adhesionService.findPeriod(periodId)) { period =>
       found(adhesionService.findAdhesionByPeriod(period, adhesionId)) { adhesion =>
         verifying(adhesionService.acceptAdhesion(adhesion.id)) { _ =>
+          Ok("")
+        }
+      }
+    }
+  }
+
+  def refuseRequestAdhesion: Route = adminPost("user" / "adhesions" / Segment / "requests" / Segment / "refuse", as[String]).apply { (periodId, adhesionId, reason, _) =>
+    found(adhesionService.findPeriod(periodId)) { period =>
+      found(adhesionService.findAdhesionByPeriod(period, adhesionId)) { adhesion =>
+        verifying(adhesionService.removeAdhesion(adhesion.id)) { _ =>
+          adhesionMailer.sendRefused(adhesion, reason)
           Ok("")
         }
       }

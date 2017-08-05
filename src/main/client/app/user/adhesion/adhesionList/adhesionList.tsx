@@ -3,11 +3,12 @@ import {AsyncPage} from "../../../framework/components/Page"
 import {Card, CardAction, CardContent} from "../../../framework/components/card/Card";
 import CardCollection from "../../../framework/components/card/CardCollection";
 import * as actions from "./adhesionListActions";
-import {acceptAdhesion, findAdhesionsByPeriod, findPeriodAdhesion} from "../adhesionApi";
+import {acceptAdhesion, findAdhesionsByPeriod, findPeriodAdhesion, refuseAdhesion} from "../adhesionApi";
 import {Adhesion} from "../adhesionModel";
 import {shortPeriodFormat} from "../../../common/types/Period";
 import {AdhesionListState, adhesionListStore} from "./adhesionListStore";
 import {shortDateFormat} from "../../../framework/utils/dates";
+import popinQuestion from "../../../framework/components/popin/PopinQuestion";
 
 export interface AdhesionListProps {
   path: string
@@ -67,12 +68,22 @@ export default class AdhesionList extends AsyncPage<AdhesionListProps, AdhesionL
           </ul>
         </CardContent>
         <CardAction action={() => this.acceptAdhesion(adhesion)}>Accepter</CardAction>
+        <CardAction className="delete" action={() => this.refuseAdhesion(adhesion)}>Refuser</CardAction>
       </Card>
     )
   }
 
   acceptAdhesion(adhesion: Adhesion) {
     acceptAdhesion(adhesion)
+      .then(() => this.initialize(this.props))
+  }
+
+  refuseAdhesion(adhesion: Adhesion) {
+    popinQuestion(
+      "Voulez-vous vraiment refuser la demande d'adhésion ?",
+      "Veuillez indiquer la raison pour laquelle vous refusez la demande, elle sera envoyée avec le mail de refus."
+    )
+      .then(reason => refuseAdhesion(adhesion, reason))
       .then(() => this.initialize(this.props))
   }
 }

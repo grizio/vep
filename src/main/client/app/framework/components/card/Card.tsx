@@ -7,6 +7,7 @@ interface CardProps {
   title?: string
   image?: string
   href?: string
+  className?: string
   children?: Array<preact.VNode>
 }
 
@@ -24,7 +25,7 @@ interface CardActionProps {
 
 export function Card(props: CardProps) {
   return (
-    <div class="card">
+    <div class={`card ${props.className || ""}`}>
       {renderImage(props)}
       {
         props.href

@@ -84,7 +84,7 @@
     padding: 15px;
     text-transform: uppercase;
 
-    &:not(.delete) {
+    &:not(.delete):not(.primary) {
       color: $color-action;
 
       &:hover {
