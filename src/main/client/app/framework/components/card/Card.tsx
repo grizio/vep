@@ -89,11 +89,15 @@ function renderTitle(props: CardProps) {
 }
 
 function renderContent(props: CardProps) {
-  return props.children.find(_ => _.nodeName === (CardContent as any))
+  return props.children
+    .filter(_ => !!_)
+    .find(_ => _.nodeName === (CardContent as any))
 }
 
 function renderActions(props: CardProps) {
-  const actionVNodes = props.children.filter(_ => _.nodeName === (CardAction as any))
+  const actionVNodes = props.children
+    .filter(_ => !!_)
+    .filter(_ => _.nodeName === (CardAction as any))
   if (actionVNodes && actionVNodes.length > 0) {
     return (
       <div class="card-actions">
