@@ -22,7 +22,7 @@ class CompanyRouter(
     Ok(companyService.findAll())
   }
 
-  def find: Route = adminGet("production" / "companies" / Segment).apply { (companyId, _) =>
+  def find: Route = publicGet("production" / "companies" / Segment) { companyId =>
     found(companyService.find(companyId), CompanyMessage.unknownCompany) { company =>
       Ok(company)
     }

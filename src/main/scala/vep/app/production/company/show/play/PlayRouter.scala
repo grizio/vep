@@ -21,7 +21,7 @@ class PlayRouter(
     findAll ~ find ~ findNext ~ findNextFull ~ create ~ update ~ delete
   }
 
-  def findAll: Route = adminGet("production" / "companies" / Segment / "shows" / Segment / "plays").apply { (companyId, showId, _) =>
+  def findAll: Route = publicGet("production" / "companies" / Segment / "shows" / Segment / "plays") { (companyId, showId) =>
     found(companyService.find(companyId)) { company =>
       found(showService.findFromCompany(company, showId)) { show =>
         Ok(playService.findByShow(show))
@@ -29,7 +29,7 @@ class PlayRouter(
     }
   }
 
-  def find: Route = adminGet("production" / "companies" / Segment / "shows" / Segment / "plays" / Segment).apply { (companyId, showId, playId, _) =>
+  def find: Route = publicGet("production" / "companies" / Segment / "shows" / Segment / "plays" / Segment) { (companyId, showId, playId) =>
     found(companyService.find(companyId)) { company =>
       found(showService.findFromCompany(company, showId)) { show =>
         found(playService.findFromShow(show, playId)) { play =>

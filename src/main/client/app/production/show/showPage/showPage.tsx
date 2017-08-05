@@ -1,11 +1,8 @@
 import preact from "preact"
-import Page from "../../../framework/components/Page"
-import StoreListenerComponent from "../../../framework/utils/dom"
+import {AsyncPage} from "../../../framework/components/Page"
 import CardCollection from "../../../framework/components/card/CardCollection";
 import {RichContent} from "../../../framework/components/RichContent";
 import {Card, CardAction, CardContent} from "../../../framework/components/card/Card";
-import Loading from "../../../framework/components/Loading";
-import messages from "../../../framework/messages";
 import {ShowPageState, showPageStore} from "./showPageStore";
 import * as actions from "./showPageActions";
 import {PrimaryButton} from "../../../framework/components/buttons";
@@ -23,9 +20,9 @@ export interface ShowPageProps {
   id?: string
 }
 
-export default class ShowPage extends StoreListenerComponent<ShowPageProps, ShowPageState> {
+export default class ShowPage extends AsyncPage<ShowPageProps, ShowPageState> {
   constructor() {
-    super(showPageStore())
+    super(showPageStore)
   }
 
   componentDidMount() {
@@ -34,7 +31,7 @@ export default class ShowPage extends StoreListenerComponent<ShowPageProps, Show
   }
 
   initialize() {
-    Promise.all([
+    return Promise.all([
       findCompany(this.props.company),
       findShow(this.props.company, this.props.id),
       findPlaysByShow(this.props.company, this.props.id)
@@ -42,19 +39,17 @@ export default class ShowPage extends StoreListenerComponent<ShowPageProps, Show
       .then(([company, show, plays]) => actions.initialize({company, show, plays}))
   }
 
-  render(props: ShowPageProps, state: ShowPageState) {
-    if (this.mounted) {
-      return (
-        <Page title={state.show ? state.show.title : ""} role="admin">
-          <Loading loading={state.loading} message={messages.production.show.page.loading}>
-            {!state.loading && this.renderShow(state)}
-            {!state.loading && this.renderPlays(state)}
-          </Loading>
-        </Page>
-      )
-    } else {
-      return null
-    }
+  getTitle(props: ShowPageProps, state: ShowPageState) {
+    return state.show ? state.show.title : ""
+  }
+
+  renderPage(props: ShowPageProps, state: ShowPageState) {
+    return (
+      <div>
+        {this.renderShow(state)}
+        {this.renderPlays(state)}
+      </div>
+    )
   }
 
   renderShow(state: ShowPageState) {
@@ -122,10 +117,17 @@ export default class ShowPage extends StoreListenerComponent<ShowPageProps, Show
               <CardAction href={`/production/companies/${state.company.id}/shows/${state.show.id}/plays/page/${play.id}`}>
                 Réserver
               </CardAction>
-              <CardAction href={`/production/companies/${state.company.id}/shows/${state.show.id}/plays/update/${play.id}`}>
-                Éditer
-              </CardAction>
-              <CardAction className="delete" action={() => this.deletePlay(play)}>Supprimer</CardAction>
+              {
+                this.isAdmin(state) &&
+                <CardAction
+                  href={`/production/companies/${state.company.id}/shows/${state.show.id}/plays/update/${play.id}`}>
+                  Éditer
+                </CardAction>
+              }
+              {
+                this.isAdmin(state) &&
+                <CardAction className="delete" action={() => this.deletePlay(play)}>Supprimer</CardAction>
+              }
             </Card>
           ))}
         </CardCollection>
@@ -141,5 +143,9 @@ export default class ShowPage extends StoreListenerComponent<ShowPageProps, Show
 
   deletePlay(play: Play) {
     deletePlay(this.state.company.id, this.state.show.id, play).then(() => this.initialize())
+  }
+
+  isAdmin(state: ShowPageState) {
+    return state.session.user && state.session.user.role === "admin"
   }
 }

@@ -51,7 +51,6 @@ export default class PlayPage extends AsyncPage<PlayPageProps, PlayPageState> {
           play={state.play}
         />
 
-        <h2>Liste des réservations</h2>
         <ReservationList
           play={state.play}
         />

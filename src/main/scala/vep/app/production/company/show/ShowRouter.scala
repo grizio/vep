@@ -25,7 +25,7 @@ class ShowRouter(
     }
   }
 
-  def find: Route = adminGet("production" / "companies" / Segment / "shows" / Segment).apply { (companyId, showId, _) =>
+  def find: Route = publicGet("production" / "companies" / Segment / "shows" / Segment) { (companyId, showId) =>
     found(companyService.find(companyId)) { company =>
       found(showService.findFromCompany(company, showId)) { show =>
         Ok(show)
