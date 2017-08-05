@@ -54,11 +54,11 @@ class AdhesionService(
   }
 
   def findByPeriod(periodId: String): Seq[AdhesionView] = withQueryConnection { implicit session =>
-    findAdhesionByPeriod(periodId)
+    findAdhesionsByPeriod(periodId)
       .flatMap(adhesionEntryToAdhesionView(_))
   }
 
-  private def findAdhesionByPeriod(periodId: String)(implicit session: DBSession): Seq[AdhesionEntry] = {
+  private def findAdhesionsByPeriod(periodId: String)(implicit session: DBSession): Seq[AdhesionEntry] = {
     sql"""
       SELECT * FROM adhesion
       WHERE period = ${periodId}
@@ -80,6 +80,22 @@ class AdhesionService(
     """
       .map(AdhesionEntry.apply)
       .list()
+      .apply()
+  }
+
+  def findAdhesionByPeriod(period: PeriodAdhesion, id: String): Option[AdhesionView] = withQueryConnection { implicit session =>
+    findAdhesionEntryByPeriod(period, id)
+      .flatMap(adhesionEntryToAdhesionView)
+  }
+
+  private def findAdhesionEntryByPeriod(period: PeriodAdhesion, id: String)(implicit session: DBSession): Option[AdhesionEntry] = {
+    sql"""
+      SELECT * FROM adhesion
+      WHERE period = ${period.id}
+      AND   id = ${id}
+    """
+      .map(AdhesionEntry.apply)
+      .single()
       .apply()
   }
 
@@ -169,6 +185,21 @@ class AdhesionService(
     sql"""
       INSERT INTO adhesion_member(id, adhesion, first_name, last_name, birthday, activity)
       VALUES (${id}, ${adhesion.id}, ${member.firstName}, ${member.lastName}, ${member.birthday}, ${member.activity})
+    """
+      .execute()
+      .apply()
+  }
+
+  def acceptAdhesion(id: String): Validation[Unit] = withCommandTransaction { implicit session =>
+    updateAdhesionToAccepted(id)
+    Valid()
+  }
+
+  private def updateAdhesionToAccepted(id: String)(implicit session: DBSession) = {
+    sql"""
+      UPDATE adhesion
+      SET accepted = TRUE
+      WHERE id = ${id}
     """
       .execute()
       .apply()

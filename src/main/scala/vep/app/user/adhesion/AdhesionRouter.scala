@@ -16,7 +16,7 @@ class AdhesionRouter(
   lazy val route: Route = {
     findAllPeriods ~ findOpenedRegistrationPeriods ~ findMine ~ findPeriod ~ findAdhesionByPeriod ~
       createPeriod ~ updatePeriod ~
-      requestAdhesion
+      requestAdhesion ~ acceptRequestAdhesion
   }
 
   def findAllPeriods: Route = adminGet("user" / "adhesions") { _ =>
@@ -64,6 +64,16 @@ class AdhesionRouter(
       verifying(adhesionVerifications.verifyRequestAdhesion(adhesion, period, user)) { validRequestAdhesion =>
         verifying(adhesionService.createAdhesion(validRequestAdhesion, period)) { savedAdhesion =>
           Ok(savedAdhesion)
+        }
+      }
+    }
+  }
+
+  def acceptRequestAdhesion: Route = flatAdminPost("user" / "adhesions" / Segment / "requests" / Segment) { (periodId, adhesionId, _) =>
+    found(adhesionService.findPeriod(periodId)) { period =>
+      found(adhesionService.findAdhesionByPeriod(period, adhesionId)) { adhesion =>
+        verifying(adhesionService.acceptAdhesion(adhesion.id)) { _ =>
+          Ok("")
         }
       }
     }

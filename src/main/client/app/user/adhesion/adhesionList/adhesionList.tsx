@@ -1,9 +1,9 @@
 import preact from "preact"
 import {AsyncPage} from "../../../framework/components/Page"
-import {Card, CardContent} from "../../../framework/components/card/Card";
+import {Card, CardAction, CardContent} from "../../../framework/components/card/Card";
 import CardCollection from "../../../framework/components/card/CardCollection";
 import * as actions from "./adhesionListActions";
-import {findAdhesionsByPeriod, findPeriodAdhesion} from "../adhesionApi";
+import {acceptAdhesion, findAdhesionsByPeriod, findPeriodAdhesion} from "../adhesionApi";
 import {Adhesion} from "../adhesionModel";
 import {shortPeriodFormat} from "../../../common/types/Period";
 import {AdhesionListState, adhesionListStore} from "./adhesionListStore";
@@ -45,7 +45,7 @@ export default class AdhesionList extends AsyncPage<AdhesionListProps, AdhesionL
         <div>
           <h2>{title}</h2>
           <CardCollection columns={2}>
-            {adhesions.map(this.renderAdhesion)}
+            {adhesions.map(adhesion => this.renderAdhesion(adhesion))}
           </CardCollection>
         </div>
       )
@@ -66,7 +66,13 @@ export default class AdhesionList extends AsyncPage<AdhesionListProps, AdhesionL
             ))}
           </ul>
         </CardContent>
+        <CardAction action={() => this.acceptAdhesion(adhesion)}>Accepter</CardAction>
       </Card>
     )
+  }
+
+  acceptAdhesion(adhesion: Adhesion) {
+    acceptAdhesion(adhesion)
+      .then(() => this.initialize(this.props))
   }
 }

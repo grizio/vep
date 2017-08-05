@@ -63,6 +63,13 @@ export function requestAdhesion(adhesion: RequestAdhesion) {
   })
 }
 
+export function acceptAdhesion(adhesion: Adhesion) {
+  return request({
+    method: "POST",
+    url: `user/adhesions/${adhesion.period.id}/requests/${adhesion.id}`
+  })
+}
+
 function periodAdhesionCreationToJson(periodAdhesion: PeriodAdhesionCreation): PeriodAdhesionCreation {
   return copy(periodAdhesion, {
     period: periodToJson(periodAdhesion.period),
