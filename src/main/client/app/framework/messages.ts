@@ -19,6 +19,11 @@ const messages = {
       form: {
         loading: "Veuillez patienter pendant nous nous mettons à la page"
       }
+    },
+    blog: {
+      form: {
+        loading: "Veuillez patienter pendant nous rédigeons l'article"
+      }
     }
   },
   user: {

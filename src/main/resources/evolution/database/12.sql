@@ -1,0 +1,7 @@
+CREATE TABLE blog (
+  id      VARCHAR(255) NOT NULL,
+  title   VARCHAR(255) NOT NULL,
+  date    TIMESTAMP    NOT NULL,
+  content VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id)
+);

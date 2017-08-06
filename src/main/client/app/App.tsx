@@ -26,6 +26,7 @@ import RequestAdhesionForm from "./user/adhesion/requestAdhesion/requestAdhesion
 import ProfilePage from "./user/profile/profilePage/profilePage";
 import AdhesionList from "./user/adhesion/adhesionList/adhesionList";
 import ResetPassword from "./user/session/resetPassword/resetPassword";
+import {BlogCreation, BlogUpdate} from "./common/blog/blogForm/index";
 
 interface AppState {
   url: string
@@ -50,6 +51,9 @@ export default class App extends preact.Component<any, AppState> {
             <PageRead path="/page/:canonical"/>
             <PageCreation path="/cms/page/create"/>
             <PageUpdate path="/cms/page/update/:canonical"/>
+
+            <BlogCreation path="/blog/create"/>
+            <BlogUpdate path="/blog/update/:id"/>
 
             <Register path="/personal/register" />
             <Login path="/personal/login" />
