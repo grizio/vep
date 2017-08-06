@@ -131,7 +131,10 @@ export default class ShowPage extends AsyncPage<ShowPageProps, ShowPageState> {
             </Card>
           ))}
         </CardCollection>
-        <PrimaryButton message="Ajouter des séances" href={`/production/companies/${state.company.id}/shows/${state.show.id}/plays/create`}/>
+        {
+          this.isAdmin(state) &&
+          <PrimaryButton message="Ajouter des séances" href={`/production/companies/${state.company.id}/shows/${state.show.id}/plays/create`}/>
+        }
       </section>
     )
   }
