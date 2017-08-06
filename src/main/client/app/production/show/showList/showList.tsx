@@ -5,7 +5,7 @@ import CardCollection from "../../../framework/components/card/CardCollection";
 import {ShowListState, showListStore} from "./showListStore";
 import {ShowWithDependencies} from "../showModel";
 import {Card, CardAction, CardContent} from "../../../framework/components/card/Card";
-import {longDateTimeFormat} from "../../../framework/utils/dates";
+import {isAfterNow, longDateTimeFormat} from "../../../framework/utils/dates";
 import {RichContent} from "../../../framework/components/RichContent";
 import messages from "../../../framework/messages";
 import {findShowsWithDependencies} from "../showApi";
@@ -77,7 +77,7 @@ export default class ShowList extends AsyncPage<ShowListProps, ShowListState> {
     if (show.plays && show.plays.length) {
       return (
         <ul>
-          {show.plays.map(play =>
+          {show.plays.filter(_ => isAfterNow(_.date)).map(play =>
             <li>
               <Link href={`/production/companies/${show.company.id}/shows/${show.show.id}/plays/page/${play.id}`}>
                 {longDateTimeFormat(play.date)}, {play.theater.name}
