@@ -2,6 +2,9 @@ import {GlobalStore} from "fluxx"
 import * as actions from "./sessionActions"
 
 const sessionStorageKey = "session"
+const sessionUrl = location.host.includes("localhost")
+  ? "http://localhost:9000/api/user/session"
+  : "/api/user/session";
 
 export interface SessionState {
   http?: SessionHttpState
@@ -56,7 +59,7 @@ if (sessionStore.state.http) {
 function getMetaSession(http: SessionHttpState) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
-    xhr.open("GET", "http://localhost:9000/api/user/session", true)
+    xhr.open("GET", sessionUrl, true)
     xhr.setRequestHeader("Content-Type", "application/json")
     xhr.setRequestHeader("Authorization", `Basic ${btoa(`${http.email}:${http.token}`)}`)
 
