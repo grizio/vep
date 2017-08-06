@@ -78,6 +78,30 @@ class DatabaseEvolution(val configuration: Configuration) extends DatabaseContai
   }
 
   private def saveFinalVersion(version: Long): Unit = withCommandTransaction { implicit session =>
+    val existingVersion = sql"""
+      SELECT * FROM configurations
+      WHERE key = $configurationKey
+    """
+      .map(_.any("value"))
+      .single()
+      .apply()
+    existingVersion match {
+      case Some(_) =>
+        sql"""
+          UPDATE configurations
+          SET value = $version
+          WHERE key = $configurationKey;
+        """
+          .executeUpdate()
+          .apply()
+      case None =>
+        sql"""
+          INSERT INTO configurations(key, value) VALUES ($configurationKey, $version)
+        """
+          .executeUpdate()
+          .apply()
+    }
+
     sql"""
       INSERT INTO configurations AS c (key, value) VALUES ($configurationKey, $version)
       ON CONFLICT (key) DO UPDATE
