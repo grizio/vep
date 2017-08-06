@@ -7,7 +7,7 @@
   background-color: #fff;
 
   .sitename {
-    a {
+    a, a:hover {
       text-decoration: none;
       color: $color-normal;
       font-size: 25px;
