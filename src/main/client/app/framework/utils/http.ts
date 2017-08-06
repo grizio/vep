@@ -64,7 +64,11 @@ export function request<T>(parameters: RequestParameters): Promise<T> {
 }
 
 function realUrl(url: string): string {
-  return `http://localhost:9000/api${forceStartWith(url, "/")}`
+  if (location.host.includes("localhost")) {
+    return `http://localhost:9000/api${forceStartWith(url, "/")}`
+  } else {
+    return `/api${forceStartWith(url, "/")}`
+  }
 }
 
 function sessionToken(): string {

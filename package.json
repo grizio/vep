@@ -5,7 +5,7 @@
   "scripts": {
     "test": "eslint src && preact test",
     "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-    "build": "preact build --src src/main/client --dest src/main/resources/front --clean",
+    "build": "preact build --src src/main/client --dest src/main/resources/front --clean --no-prerender",
     "serve": "preact build --src src/main/client --dest src/main/resources/front --clean && preact serve",
     "dev": "preact watch --src src/main/client"
   },
