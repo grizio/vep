@@ -2,6 +2,7 @@
 /notes
 /target
 /project/target
+/project/project/target
 /src/main/resources/local.conf
 /src/main/client/node_modules
 /node_modules

@@ -21,12 +21,16 @@ See https://www.clever-cloud.com/doc/clever-cloud-overview/add-application/
 ### Build
 
 ```bash
-$ sbt prod
-$ sbt universal:packageBin
+$ npm i
+$ npm run build
+# Change build.sbt to update version
+$ git add *
+$ git commit -m "v<version>"
+$ git push
 ```
 
 ### Send to Clever Cloud
 
 ```bash
-$ git push clever vep2017:master
+$ git push clever v2017:master
 ```
