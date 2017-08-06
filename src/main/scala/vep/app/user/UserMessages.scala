@@ -12,4 +12,6 @@ object UserMessages {
   val invalidActivationKey = "La clef d'activation est invalide"
 
   val closedPeriod = "La période est fermée aux inscriptions"
+
+  val invalidResetPasswordKey = "La clef de réinitialisation du mot de passe est invalide"
 }

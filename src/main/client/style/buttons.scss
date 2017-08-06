@@ -43,6 +43,10 @@
     &.flat {
       background-color: transparent;
       color: $color-secondary;
+
+      &:hover:not([disabled]) {
+        color: $color-secondary-hover;
+      }
     }
     &:not(.flat) {
       background-color: $color-secondary;
@@ -102,7 +106,7 @@
   }
 }
 
-a {
+a:not(.button) {
   color: $color-primary;
   text-decoration: none;
 

@@ -1,5 +1,5 @@
 import preact from "preact"
-import {FlatSecondaryButton, SecondaryButton, PrimaryButton} from "../buttons"
+import {FlatSecondaryButton, SecondaryButton, PrimaryButton, FlatPrimaryButton} from "../buttons"
 import Panel from "../Panel"
 
 interface FormEvent {
@@ -13,13 +13,14 @@ interface FormProps {
   onCancel?: FormEvent | string
   errors?: Array<string>
   closeErrors: FormEvent
+  children?: Array<Element>
 }
 
 export default function Form(props: FormProps) {
   return (
     <form onSubmit={onSubmit(props.onSubmit)}>
       {renderErrors(props.errors, props.closeErrors)}
-      {props["children"]}
+      {props.children.filter(_ => !isFormActionButton(_))}
       {renderRequiredInformation()}
       {renderButtons(props)}
     </form>
@@ -58,6 +59,7 @@ function renderButtons(props: FormProps) {
     <div class="actions">
       {renderSubmitButton(props)}
       {renderCancelButton(props)}
+      {props.children.filter(isFormActionButton)}
     </div>
   )
 }
@@ -89,4 +91,16 @@ function renderCancelButton(props: FormProps) {
       )
     }
   }
+}
+
+function isFormActionButton(element: Element) {
+  const acceptedNodeNames = [
+    PrimaryButton,
+    SecondaryButton,
+    FlatPrimaryButton,
+    FlatSecondaryButton
+  ]
+  return element &&
+    acceptedNodeNames.find(_ => element.nodeName === (_ as any)) &&
+    element.attributes["className"] && element.attributes["className"].includes("form-action")
 }

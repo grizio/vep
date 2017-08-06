@@ -3,7 +3,9 @@ import {Function0, Function1} from "../../lib";
 import {Card, CardAction, CardContent} from "../card/Card";
 import Input from "../form/Input";
 
-export default function popinQuestion(title: string, message: string): Promise<string> {
+type PopinQuestionType = "text" | "textarea"
+
+export default function popinQuestion(title: string, message: string, type: PopinQuestionType = "textarea"): Promise<string> {
   return new Promise((resolve, reject) => {
     const wrapper = document.createElement("div")
     document.body.appendChild(wrapper)
@@ -22,6 +24,7 @@ export default function popinQuestion(title: string, message: string): Promise<s
       <PopinQuestion
         title={title}
         message={message}
+        type={type}
         onConfirm={onConfirm}
         onCancel={onCancel}
       />,
@@ -33,6 +36,7 @@ export default function popinQuestion(title: string, message: string): Promise<s
 interface PopinQuestionProps {
   title: string
   message: string
+  type: PopinQuestionType
   onConfirm: Function1<string, void>
   onCancel: Function0<void>
 }
@@ -52,7 +56,7 @@ class PopinQuestion extends preact.Component<PopinQuestionProps, PopinQuestionSt
                 id="popin-question-answer"
                 label={props.message}
                 name="popin-question-answer"
-                type="textarea"
+                type={props.type}
                 placeholder=" "
                 onUpdate={(value) => this.updateAnswer(value)}
                 fieldValidation={{

@@ -24,4 +24,12 @@ object StringUtils {
   def containsNumber(value: String): Boolean = value.exists(char => char.isDigit)
 
   def containsSpecialCharacter(value: String): Boolean = value.exists(char => !char.isLetterOrDigit)
+
+  def withoutQuote(value: String): String = {
+    if (value.startsWith("\"") && value.endsWith("\"")) {
+      value.substring(1, value.length - 1)
+    } else {
+      value
+    }
+  }
 }

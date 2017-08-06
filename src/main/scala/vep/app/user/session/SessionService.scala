@@ -51,4 +51,46 @@ class SessionService(
         .apply()
     }
   }
+
+  def createResetPasswordKey(email: String): Validation[String] = withCommandTransaction { implicit session =>
+    userService.findByEmail(email).map { _ =>
+      val resetPasswordKey = StringUtils.randomString()
+      val cryptedPasswordKey = BCrypt.hashpw(resetPasswordKey, BCrypt.gensalt())
+      updateResetPasswordKey(email, cryptedPasswordKey)
+      Valid(resetPasswordKey)
+    }.getOrElse(Invalid(UserMessages.unknown))
+  }
+
+  private def updateResetPasswordKey(email: String, resetPasswordKey: String)(implicit session: DBSession): Unit = {
+    sql"""
+      UPDATE users
+      SET resetpasswordkey = ${resetPasswordKey}
+      WHERE email = ${email}
+    """
+      .execute()
+      .apply()
+  }
+
+  def resetPassword(resetPassword: ResetPassword): Validation[Unit] = withCommandTransaction { implicit session =>
+    userService.findByEmail(resetPassword.email).map { user =>
+      if (BCrypt.checkpw(resetPassword.token, user.resetPasswordKey.getOrElse(""))) {
+        val cryptedPassword = BCrypt.hashpw(resetPassword.password, BCrypt.gensalt())
+        updatePassword(resetPassword.email, cryptedPassword)
+        Valid()
+      } else {
+        Invalid(UserMessages.invalidResetPasswordKey)
+      }
+    }.getOrElse(Invalid(UserMessages.unknown))
+  }
+
+  private def updatePassword(email: String, password: String)(implicit session: DBSession): Unit = {
+    sql"""
+      UPDATE users
+      SET resetpasswordkey = null,
+          password = ${password}
+      WHERE email = ${email}
+    """
+      .execute()
+      .apply()
+  }
 }

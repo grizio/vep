@@ -12,13 +12,23 @@
   align-items: center;
   justify-content: center;
 
-  .popin-question {
+  .popin-question, .popin-message {
     .card-actions {
       padding: 15px 30px 30px;
     }
 
     .card-text {
       padding: 30px 30px 15px;
+    }
+  }
+
+  .popin-message {
+    &.success {
+      color: $color-success
+    }
+
+    &.error {
+      color: $color-error
     }
   }
 }

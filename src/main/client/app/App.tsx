@@ -25,6 +25,7 @@ import PeriodAdhesionList from "./user/adhesion/periodAdhesionList/periodAdhesio
 import RequestAdhesionForm from "./user/adhesion/requestAdhesion/requestAdhesionForm";
 import ProfilePage from "./user/profile/profilePage/profilePage";
 import AdhesionList from "./user/adhesion/adhesionList/adhesionList";
+import ResetPassword from "./user/session/resetPassword/resetPassword";
 
 interface AppState {
   url: string
@@ -52,6 +53,7 @@ export default class App extends preact.Component<any, AppState> {
 
             <Register path="/personal/register" />
             <Login path="/personal/login" />
+            <ResetPassword path="/personal/password/reset" />
 
             <ProfilePage path="/personal/profile" />
             <ProfileForm path="/personal/profile/update" />

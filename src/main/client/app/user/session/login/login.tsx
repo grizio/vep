@@ -5,9 +5,12 @@ import Page from "../../../framework/components/Page"
 import Form from "../../../framework/components/form/Form"
 import Input from "../../../framework/components/form/Input"
 import Panel from "../../../framework/components/Panel"
-import {login} from "../sessionApi";
+import {login, requestResetPassword} from "../sessionApi";
 import StoreListenerComponent from "../../../framework/utils/dom"
 import * as sessionActions from "../../../framework/session/sessionActions"
+import {FlatSecondaryButton} from "../../../framework/components/buttons";
+import popinQuestion from "../../../framework/components/popin/PopinQuestion";
+import popinMessage from "../../../framework/components/popin/PopinMessage";
 
 export interface LoginProps {
   path: string
@@ -65,6 +68,12 @@ export default class Login extends StoreListenerComponent<LoginProps, LoginState
           onUpdate={updatePassword}
           fieldValidation={state.password}
         />
+
+        <FlatSecondaryButton
+          className="form-action"
+          message="Réinitialiser mon mot de passe"
+          action={this.resetPassword}
+        />
       </Form>
     )
   }
@@ -91,5 +100,16 @@ export default class Login extends StoreListenerComponent<LoginProps, LoginState
       }))
       .then(() => success())
       .catch(errors => updateErrors(errors))
+  }
+
+  resetPassword = () => {
+    popinQuestion(
+      "Récupérer mon mot de passe",
+      "Afin de recevoir le lien de récupération de votre mot de passe, veuillez indiquer votre adresse e-mail",
+      "text"
+    )
+      .then(email => requestResetPassword(email))
+      .then(_ => popinMessage("Message envoyé", "Un message vous a été envoyé à l'adresse e-mail que vous nous avez fournie. Il peut mettre quelques minutes à arriver.", "success"))
+      .catch(errors => popinMessage("Message non envoyé", errors.join("\n"), "error"))
   }
 }

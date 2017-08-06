@@ -25,3 +25,15 @@ object UserLogin {
 
   implicit val userLoginFormat: RootJsonFormat[UserLogin] = jsonFormat2(UserLogin.apply)
 }
+
+case class ResetPassword(
+  email: String,
+  token: String,
+  password: String
+)
+
+object ResetPassword {
+  import JsonProtocol._
+
+  implicit val resetPasswordFormat: RootJsonFormat[ResetPassword] = jsonFormat3(ResetPassword.apply)
+}
