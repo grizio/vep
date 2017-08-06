@@ -1,17 +1,19 @@
 package vep.evolution.database
 
-import java.io.File
-import java.nio.file.Files
+import java.io.{File, InputStream}
+import java.util.Scanner
 
 import com.typesafe.scalalogging.Logger
 import scalikejdbc._
 import vep.Configuration
 import vep.framework.database.DatabaseContainer
-import vep.framework.utils.{CollectionUtils, NumberUtils}
 
-case class EvolutionFile(version: Long, file: File)
+import scala.collection.mutable.ListBuffer
+
+case class EvolutionScript(version: Long, script: String)
 
 class DatabaseEvolution(val configuration: Configuration) extends DatabaseContainer {
+  private val classLoader = classOf[DatabaseEvolution].getClassLoader
   private val logger = Logger(getClass)
   val configurationKey = "version"
 
@@ -24,7 +26,7 @@ class DatabaseEvolution(val configuration: Configuration) extends DatabaseContai
   private def fetchCurrentVersion(): Long = withQueryConnection { implicit session =>
     try {
       val maxVersion =
-        sql"SELECT value FROM configurations WHERE key = $configurationKey"
+        sql"SELECT value FROM configurations WHERE key = ${configurationKey}"
           .map(resultSet => resultSet.long("value"))
           .single()
           .apply()
@@ -36,78 +38,72 @@ class DatabaseEvolution(val configuration: Configuration) extends DatabaseContai
 
   private def runEvolutions(currentVersion: Long): Long = withCommandTransaction { implicit session =>
     logger.info(s"Running evolutions after version ${currentVersion}")
-    val directory = new File(getClass.getResource("/evolution/database").getPath)
-    if (directory.exists()) {
-      val files = getEvolutionsToRun(directory, currentVersion)
-      if (files.nonEmpty) {
-        files.foreach(evolutionFile => runEvolution(evolutionFile.file))
-        files.maxBy(_.version).version
-      } else {
-        logger.info("No evolution to run")
-        currentVersion
-      }
+    val scripts = getEvolutionsToRun(currentVersion)
+    if (scripts.nonEmpty) {
+      scripts.foreach(runEvolution)
+      scripts.maxBy(_.version).version
     } else {
-      logger.warn("Resource directory evolution/database not found")
+      logger.info("No evolution to run")
       currentVersion
     }
   }
 
-  private def getEvolutionsToRun(directory: File, currentVersion: Long): Seq[EvolutionFile] = {
-    def nameWithoutExtension(file: File): String = file.getName.substring(0, file.getName.length - ".sql".length)
-
-    val files = CollectionUtils.scalaSeq(directory.listFiles())
-      .filter(_.getName.endsWith(".sql"))
-      .flatMap { file =>
-        NumberUtils.toLongOpt(nameWithoutExtension(file)) match {
-          case Some(version) =>
-            Some(EvolutionFile(version, file))
-          case None =>
-            logger.warn(s"File ${file.getName} is not a valid name. It will be ignored")
-            None
-        }
+  private def getEvolutionsToRun(currentVersion: Long): Seq[EvolutionScript] = {
+    val evolutions = ListBuffer[EvolutionScript]()
+    var version = currentVersion
+    var inputStream: InputStream = null
+    do {
+      version += 1
+      inputStream = classLoader.getResourceAsStream(s"evolution/database/${version}.sql")
+      if (inputStream != null) {
+        val scanner = new Scanner(inputStream).useDelimiter("\\A")
+        val content = if (scanner.hasNext) scanner.next else ""
+        evolutions.append(EvolutionScript(version, content))
       }
-      .filter(_.version > currentVersion)
-    files.sortBy(_.version)
+    } while (inputStream != null)
+    evolutions
   }
 
-  private def runEvolution(file: File)(implicit session: DBSession): Unit = {
-    logger.info(s"Running evolution ${file.getName}")
-    SQL(CollectionUtils.scalaSeq(Files.readAllLines(file.toPath)).mkString("\n"))
+  private def runEvolution(evolutionScript: EvolutionScript)(implicit session: DBSession): Unit = {
+    logger.info(s"Running evolution ${evolutionScript.version}")
+    SQL(evolutionScript.script)
       .executeUpdate()
       .apply()
   }
 
   private def saveFinalVersion(version: Long): Unit = withCommandTransaction { implicit session =>
-    val existingVersion = sql"""
+    if (containsConfigurationEvolution) {
+      updateConfigurationValue(version)
+    } else {
+      insertConfigurationValue(version)
+    }
+  }
+
+  private def containsConfigurationEvolution(implicit session: DBSession): Boolean = {
+    sql"""
       SELECT * FROM configurations
-      WHERE key = $configurationKey
+      WHERE key = ${configurationKey}
     """
       .map(_.any("value"))
       .single()
       .apply()
-    existingVersion match {
-      case Some(_) =>
-        sql"""
-          UPDATE configurations
-          SET value = $version
-          WHERE key = $configurationKey;
-        """
-          .executeUpdate()
-          .apply()
-      case None =>
-        sql"""
-          INSERT INTO configurations(key, value) VALUES ($configurationKey, $version)
-        """
-          .executeUpdate()
-          .apply()
-    }
+      .nonEmpty
+  }
 
+  private def updateConfigurationValue(version: Long)(implicit session: DBSession) = {
     sql"""
-      INSERT INTO configurations AS c (key, value) VALUES ($configurationKey, $version)
-      ON CONFLICT (key) DO UPDATE
-      SET value = $version
-      WHERE c.key = $configurationKey
-    """
+        UPDATE configurations
+        SET value = ${version}
+        WHERE key = ${configurationKey}
+      """
+      .executeUpdate()
+      .apply()
+  }
+
+  private def insertConfigurationValue(version: Long)(implicit session: DBSession) = {
+    sql"""
+        INSERT INTO configurations(key, value) VALUES (${configurationKey}, ${version})
+      """
       .executeUpdate()
       .apply()
   }
