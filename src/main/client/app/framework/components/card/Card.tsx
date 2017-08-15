@@ -2,6 +2,7 @@ import preact from "preact";
 import {Function0} from "../../lib";
 import {ActionButton} from "../buttons";
 import {Link} from "preact-router/src";
+import {OnGranted} from "../Security";
 
 interface CardProps {
   title?: string
@@ -57,6 +58,11 @@ export function CardAction(props: CardActionProps) {
   }
 }
 
+export const AdminCardAction = OnGranted<CardActionProps>(
+  (props: CardActionProps) => <CardAction {...props} />,
+  "admin"
+)
+
 function renderImage(props: CardProps) {
   if (props.image) {
     return (
@@ -97,7 +103,7 @@ function renderContent(props: CardProps) {
 function renderActions(props: CardProps) {
   const actionVNodes = props.children
     .filter(_ => !!_)
-    .filter(_ => _.nodeName === (CardAction as any))
+    .filter(_ => _.nodeName === (CardAction as any) || _.nodeName === (AdminCardAction as any))
   if (actionVNodes && actionVNodes.length > 0) {
     return (
       <div class="card-actions">

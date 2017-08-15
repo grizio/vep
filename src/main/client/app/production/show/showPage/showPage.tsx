@@ -2,10 +2,10 @@ import preact from "preact"
 import {AsyncPage} from "../../../framework/components/Page"
 import CardCollection from "../../../framework/components/card/CardCollection";
 import {RichContent} from "../../../framework/components/RichContent";
-import {Card, CardAction, CardContent} from "../../../framework/components/card/Card";
+import {AdminCardAction, Card, CardAction, CardContent} from "../../../framework/components/card/Card";
 import {ShowPageState, showPageStore} from "./showPageStore";
 import * as actions from "./showPageActions";
-import {PrimaryButton} from "../../../framework/components/buttons";
+import {SecondaryButton} from "../../../framework/components/buttons";
 import {isAfterNow, longDateTimeFormat} from "../../../framework/utils/dates";
 import {findCompany} from "../../company/companyApi";
 import {findShow} from "../showApi";
@@ -13,6 +13,7 @@ import {deletePlay, findPlaysByShow} from "../../play/playApi";
 import {Show} from "../showModel";
 import {Company} from "../../company/companyModel";
 import {Play} from "../../play/playModel";
+import {OnGranted} from "../../../framework/components/Security";
 
 export interface ShowPageProps {
   path: string
@@ -59,6 +60,7 @@ export default class ShowPage extends AsyncPage<ShowPageProps, ShowPageState> {
         <div class="row">
           <div class="col-4">
             {this.renderShowContent(state.show)}
+            <UpdateShowButton companyId={state.company.id} showId={state.show.id} />
           </div>
           <div class="col-1">
             {this.renderShowCard(state.show)}
@@ -117,24 +119,15 @@ export default class ShowPage extends AsyncPage<ShowPageProps, ShowPageState> {
               <CardAction href={`/production/companies/${state.company.id}/shows/${state.show.id}/plays/page/${play.id}`}>
                 Réserver
               </CardAction>
-              {
-                this.isAdmin(state) &&
-                <CardAction
-                  href={`/production/companies/${state.company.id}/shows/${state.show.id}/plays/update/${play.id}`}>
-                  Éditer
-                </CardAction>
-              }
-              {
-                this.isAdmin(state) &&
-                <CardAction className="delete" action={() => this.deletePlay(play)}>Supprimer</CardAction>
-              }
+              <AdminCardAction
+                href={`/production/companies/${state.company.id}/shows/${state.show.id}/plays/update/${play.id}`}>
+                Éditer
+              </AdminCardAction>
+              <AdminCardAction className="delete" action={() => this.deletePlay(play)}>Supprimer</AdminCardAction>
             </Card>
           ))}
         </CardCollection>
-        {
-          this.isAdmin(state) &&
-          <PrimaryButton message="Ajouter des séances" href={`/production/companies/${state.company.id}/shows/${state.show.id}/plays/create`}/>
-        }
+        <CreatePlayButton companyId={state.company.id} showId={state.show.id} />
       </section>
     )
   }
@@ -147,8 +140,26 @@ export default class ShowPage extends AsyncPage<ShowPageProps, ShowPageState> {
   deletePlay(play: Play) {
     deletePlay(this.state.company.id, this.state.show.id, play).then(() => this.initialize())
   }
-
-  isAdmin(state: ShowPageState) {
-    return state.session.user && state.session.user.role === "admin"
-  }
 }
+
+interface CreatePlayButtonProps {
+  companyId: string
+  showId: string
+}
+
+const CreatePlayButton = OnGranted<CreatePlayButtonProps>((props: CreatePlayButtonProps) => {
+  return (
+    <SecondaryButton message="Ajouter une séance" href={`/production/companies/${props.companyId}/shows/${props.showId}/plays/create`}/>
+  )
+}, "admin")
+
+interface UpdateShowButtonProps {
+  companyId: string
+  showId: string
+}
+
+const UpdateShowButton = OnGranted<UpdateShowButtonProps>((props: UpdateShowButtonProps) => {
+  return (
+    <SecondaryButton message="Modifier" href={`/production/companies/${props.companyId}/shows/update/${props.showId}`}/>
+  )
+}, "admin")
