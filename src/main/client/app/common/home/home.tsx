@@ -30,7 +30,7 @@ export default class Home extends AsyncPage<HomeProps, HomeState> {
 
 
   getTitle(props: HomeProps, state: HomeState): string {
-    return "Voir & Entendre";
+    return "Voir & Entendre • La Possonnière";
   }
 
 

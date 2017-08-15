@@ -90,7 +90,7 @@ export default class Register extends StoreListenerComponent<RegisterProps, Regi
           Vous devriez recevoir un mail à l'adresse que vous avez indiquée ({state.email.value}) d'ici quelques minutes.
           Ce mail contient un lien permettant de valider l'inscription.
           Veuillez accéder à ce lien avant de vous connecter.
-          Une fois l'inscription validée, vous pourrez vous connecter au site avec le mot de passe fourni.
+          Une fois l'inscription validée, vous pourrez vous connecter au site avec votre mot de passe.
         </p>
         <p>
           Si vous ne recevez pas le mail d'ici quelques minutes, veuillez <Link href="/contact">nous contacter</Link>.
