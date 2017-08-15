@@ -30,8 +30,8 @@ export default class CompanyList extends StoreListenerComponent<CompanyListProps
       return (
         <Page title="Liste des troupes" role="admin">
           <Loading loading={!state.vepCompanies} message={messages.production.company.list.loading}>
-            {state.vepCompanies && state.vepCompanies.length && this.renderCards(state.vepCompanies, "Troupes de Voir & Entendre")}
-            {state.notVepCompanies && state.notVepCompanies.length && this.renderCards(state.notVepCompanies, "Troupes externes")}
+            {!!(state.vepCompanies && state.vepCompanies.length) && this.renderCards(state.vepCompanies, "Troupes de Voir & Entendre")}
+            {!!(state.notVepCompanies && state.notVepCompanies.length) && this.renderCards(state.notVepCompanies, "Troupes externes")}
           </Loading>
         </Page>
       )
