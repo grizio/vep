@@ -3,7 +3,6 @@ package vep.app.user.session
 import org.joda.time.DateTime
 import org.mindrot.jbcrypt.BCrypt
 import scalikejdbc._
-import vep.Configuration
 import vep.app.user.{Authentication, User, UserMessages, UserService}
 import vep.framework.database.DatabaseContainer
 import vep.framework.utils.StringUtils
@@ -11,7 +10,6 @@ import vep.framework.validation.{Invalid, Valid, Validation}
 
 class SessionService(
   userService: UserService,
-  val configuration: Configuration
 ) extends DatabaseContainer {
   def login(userLogin: UserLogin): Validation[Authentication] = withCommandTransaction { implicit session =>
     userService.findByEmail(userLogin.email) match {

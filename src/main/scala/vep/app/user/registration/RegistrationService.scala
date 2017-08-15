@@ -2,14 +2,12 @@ package vep.app.user.registration
 
 import org.mindrot.jbcrypt.BCrypt
 import scalikejdbc._
-import vep.Configuration
 import vep.app.user.{Authentication, User, UserMessages, UserService}
 import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Invalid, Valid, Validation}
 
 class RegistrationService(
-  userService: UserService,
-  val configuration: Configuration
+  userService: UserService
 ) extends DatabaseContainer {
   def create(user: User): Validation[User] = withCommandTransaction { implicit session =>
     userService.findByEmail(user.email) match {

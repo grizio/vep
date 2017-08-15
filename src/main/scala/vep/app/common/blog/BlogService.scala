@@ -1,12 +1,10 @@
 package vep.app.common.blog
 
 import scalikejdbc._
-import vep.Configuration
 import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Valid, Validation}
 
 class BlogService(
-  val configuration: Configuration
 ) extends DatabaseContainer {
   def findLast(): Seq[Blog] = withQueryConnection { implicit session =>
     findLastBlog()

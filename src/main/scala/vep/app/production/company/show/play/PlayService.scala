@@ -3,7 +3,6 @@ package vep.app.production.company.show.play
 import java.util.UUID
 
 import scalikejdbc._
-import vep.Configuration
 import vep.app.production.company.Company
 import vep.app.production.company.show.Show
 import vep.app.production.theater.{Theater, TheaterService}
@@ -11,7 +10,6 @@ import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Invalid, Valid, Validation}
 
 class PlayService(
-  val configuration: Configuration,
   theaterService: TheaterService
 ) extends DatabaseContainer {
   def findByShow(show: Show): Seq[PlayView] = withQueryConnection { implicit session =>

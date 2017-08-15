@@ -1,18 +1,8 @@
 package vep.framework.database
 
-import scalikejdbc.{ConnectionPool, DB, DBSession}
-import vep.Configuration
+import scalikejdbc.{DB, DBSession}
 
 trait DatabaseContainer {
-  def configuration: Configuration
-
-  Class.forName("org.postgresql.Driver")
-  ConnectionPool.singleton(
-    s"jdbc:postgresql://${configuration.database.host}:${configuration.database.port}/${configuration.database.name}",
-    configuration.database.username,
-    configuration.database.password
-  )
-
   def withQueryConnection[A](block: DBSession => A): A = {
     DB.readOnly(block)
   }

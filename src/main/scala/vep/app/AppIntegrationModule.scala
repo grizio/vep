@@ -5,6 +5,7 @@ import akka.http.scaladsl.server.Directives._
 import vep.app.common.CommonIntegrationModule
 import vep.app.production.ProductionIntegrationModule
 import vep.app.user.UserIntegrationModule
+import vep.framework.database.DatabaseConnection
 import vep.{Configuration, Environment}
 import vep.framework.mailer.{ConsoleMailer, DefaultMailer, Mailer}
 import vep.framework.router.CorsHelper
@@ -15,7 +16,8 @@ trait AppIntegrationModule
   extends UserIntegrationModule
     with CommonIntegrationModule
     with ProductionIntegrationModule
-    with AppRouter {
+    with AppRouter
+    with DatabaseConnection {
   def executionContext: ExecutionContext
 
   lazy val configuration = new Configuration()

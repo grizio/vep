@@ -1,14 +1,10 @@
 package vep.app.production.company
 
 import scalikejdbc._
-import vep.Configuration
-import vep.app.production.theater.{Seat, Theater}
 import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Valid, Validation}
 
-class CompanyService(
-  val configuration: Configuration
-) extends DatabaseContainer {
+class CompanyService() extends DatabaseContainer {
   def findAll(): Seq[Company] = withQueryConnection { implicit session =>
     findAllCompanies()
   }

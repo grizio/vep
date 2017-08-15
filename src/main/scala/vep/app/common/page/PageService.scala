@@ -1,12 +1,10 @@
 package vep.app.common.page
 
 import scalikejdbc._
-import vep.Configuration
 import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Valid, Validation}
 
 class PageService(
-  val configuration: Configuration
 ) extends DatabaseContainer {
   def findAll(): Seq[Page] = withQueryConnection { implicit session =>
     findAllPages()

@@ -1,14 +1,11 @@
 package vep.app.user.profile
 
 import scalikejdbc._
-import vep.Configuration
 import vep.app.user._
 import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Valid, Validation}
 
-class ProfileService(
-  val configuration: Configuration
-) extends DatabaseContainer {
+class ProfileService() extends DatabaseContainer {
   def findByUser(user: User): Profile = withQueryConnection { implicit session =>
     findProfileByUser(user)
   }

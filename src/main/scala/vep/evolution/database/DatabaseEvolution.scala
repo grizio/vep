@@ -1,18 +1,17 @@
 package vep.evolution.database
 
-import java.io.{File, InputStream}
+import java.io.InputStream
 import java.util.Scanner
 
 import com.typesafe.scalalogging.Logger
 import scalikejdbc._
-import vep.Configuration
 import vep.framework.database.DatabaseContainer
 
 import scala.collection.mutable.ListBuffer
 
 case class EvolutionScript(version: Long, script: String)
 
-class DatabaseEvolution(val configuration: Configuration) extends DatabaseContainer {
+class DatabaseEvolution() extends DatabaseContainer {
   private val classLoader = classOf[DatabaseEvolution].getClassLoader
   private val logger = Logger(getClass)
   val configurationKey = "version"

@@ -16,8 +16,7 @@ trait SessionIntegrationModule {
   def executionContext: ExecutionContext
 
   lazy val sessionService = new SessionService(
-    userService,
-    configuration
+    userService
   )
   lazy val sessionRouter = new SessionRouter(
     sessionService,

@@ -1,13 +1,11 @@
 package vep.app.production.reservation
 
 import scalikejdbc._
-import vep.Configuration
 import vep.app.production.company.show.play.Play
 import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Valid, Validation}
 
 class ReservationService(
-  val configuration: Configuration
 ) extends DatabaseContainer {
   def findReservedSeats(playId: String): Seq[String] = withQueryConnection { implicit session =>
     findReservedSeatsFromPlay(playId)

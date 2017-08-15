@@ -1,13 +1,10 @@
 package vep.app.production.theater
 
 import scalikejdbc._
-import vep.Configuration
 import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Valid, Validation}
 
-class TheaterService(
-  val configuration: Configuration
-) extends DatabaseContainer {
+class TheaterService() extends DatabaseContainer {
   def findAll(): Seq[Theater] = withQueryConnection { implicit session =>
     findAllTheaters()
       .map(theater => theater.copy(seats = findSeatsByTheater(theater.id)))

@@ -1,7 +1,6 @@
 package vep.app.user.adhesion
 
 import scalikejdbc._
-import vep.Configuration
 import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Valid, Validation}
 import java.util.UUID
@@ -9,7 +8,6 @@ import java.util.UUID
 import vep.app.user.{User, UserService}
 
 class AdhesionService(
-  val configuration: Configuration,
   userService: UserService
 ) extends DatabaseContainer {
   def findAllPeriods(): Seq[PeriodAdhesion] = withQueryConnection { implicit session =>

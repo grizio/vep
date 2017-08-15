@@ -22,8 +22,7 @@ trait RegistrationIntegrationModule {
     commonVerifications
   )
   lazy val registrationService = new RegistrationService(
-    userService,
-    configuration
+    userService
   )
   lazy val registrationRouter = new RegistrationRouter(
     registrationVerifications,

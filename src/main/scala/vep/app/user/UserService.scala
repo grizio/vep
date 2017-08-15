@@ -1,12 +1,9 @@
 package vep.app.user
 
 import scalikejdbc._
-import vep.Configuration
 import vep.framework.database.DatabaseContainer
 
-class UserService(
-  val configuration: Configuration
-) extends DatabaseContainer {
+class UserService() extends DatabaseContainer {
   def findByEmail(email: String): Option[User] = withQueryConnection { implicit session =>
     sql"""
       SELECT * FROM users WHERE email = $email

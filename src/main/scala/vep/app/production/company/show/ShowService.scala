@@ -1,14 +1,12 @@
 package vep.app.production.company.show
 
 import scalikejdbc._
-import vep.Configuration
 import vep.app.production.company.Company
 import vep.app.production.company.show.play.PlayService
 import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Valid, Validation}
 
 class ShowService(
-  val configuration: Configuration,
   playService: PlayService
 ) extends DatabaseContainer {
   def findByCompany(company: Company): Seq[Show] = withQueryConnection { implicit session =>

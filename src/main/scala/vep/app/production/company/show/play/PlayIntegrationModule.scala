@@ -1,6 +1,5 @@
 package vep.app.production.company.show.play
 
-import vep.Configuration
 import vep.app.common.verifications.CommonVerifications
 import vep.app.production.company.CompanyService
 import vep.app.production.company.show.ShowService
@@ -10,7 +9,6 @@ import vep.app.user.UserService
 import scala.concurrent.ExecutionContext
 
 trait PlayIntegrationModule {
-  def configuration: Configuration
   def userService: UserService
   def commonVerifications: CommonVerifications
   def executionContext: ExecutionContext
@@ -23,7 +21,6 @@ trait PlayIntegrationModule {
     theaterService
   )
   lazy val playService = new PlayService(
-    configuration,
     theaterService
   )
   lazy val playRouter = new PlayRouter(

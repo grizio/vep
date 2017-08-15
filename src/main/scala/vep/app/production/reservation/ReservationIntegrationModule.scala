@@ -20,9 +20,7 @@ trait ReservationIntegrationModule {
     commonVerifications,
     reservationService
   )
-  lazy val reservationService = new ReservationService(
-    configuration
-  )
+  lazy val reservationService = new ReservationService()
   lazy val reservationMailer = new ReservationMailer(
     mailer,
     configuration

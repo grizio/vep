@@ -18,7 +18,6 @@ trait AdhesionIntegrationModule {
     commonVerifications
   )
   lazy val adhesionService = new AdhesionService(
-    configuration,
     userService
   )
   lazy val adhesionRouter = new AdhesionRouter(

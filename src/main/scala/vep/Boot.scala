@@ -16,7 +16,7 @@ object Boot extends App with AppIntegrationModule {
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
 
-  new DatabaseEvolution(configuration).setup()
+  new DatabaseEvolution().setup()
 
   val bindingFuture = Http().bindAndHandle(route, configuration.server.host, configuration.server.port)
 
