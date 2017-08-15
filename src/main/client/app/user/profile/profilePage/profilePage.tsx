@@ -35,7 +35,7 @@ export default class ProfilePage extends AsyncPage<ProfilePageProps, ProfilePage
   }
 
   getTitle(props: ProfilePageProps, state: ProfilePageState): string {
-    return "Votre profile";
+    return "Votre profil";
   }
 
   renderPage(props: ProfilePageProps, state: ProfilePageState): preact.VNode {
