@@ -11,6 +11,7 @@ import {BlogFormState, blogFormStore} from "./blogFormStore";
 import {createBlog, findBlog, updateBlog} from "../blogApi";
 import * as actions from "./blogFormActions"
 import {BlogCreation, BlogUpdate} from "../blogModel";
+import RichInput from "../../../framework/components/form/RichInput";
 
 export interface BlogFormProps {
   id?: string
@@ -67,11 +68,10 @@ export default class BlogForm extends StoreListenerComponent<BlogFormProps, Blog
           fieldValidation={state.title}
         />
 
-        <Input
+        <RichInput
           id="content"
           label="Contenu de la page"
           name="content"
-          type="textarea"
           placeholder="Contenu de la page, tel que vous souhaitez l'afficher"
           required
           onUpdate={actions.updateContent}

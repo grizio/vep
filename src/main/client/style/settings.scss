@@ -44,3 +44,8 @@ $default-transition-duration: 200ms;
 $default-transition: all ease-in-out $default-transition-duration;;
 
 $form-transition: $default-transition;
+
+$color-title: $color-primary;
+$color-paragraph: $color-normal;
+$color-ul: $color-secondary;
+$color-blockquote: $color-info;

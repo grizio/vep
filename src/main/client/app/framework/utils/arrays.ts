@@ -112,3 +112,11 @@ export function contains<A>(array: Array<A>, value: A): boolean {
 export function containsNot<A>(array: Array<A>, value: A): boolean {
   return array.indexOf(value) === -1
 }
+
+export function concat<A>(...arrays: Array<Array<A>>): Array<A> {
+  return [].concat.apply([], arrays)
+}
+
+export function flatMap<A, B>(input: Array<A>, map: (element: A) => Array<B>): Array<B> {
+  return [].concat.apply([], input.map(map))
+}

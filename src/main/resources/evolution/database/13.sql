@@ -1,0 +1,1 @@
+ALTER TABLE blog ALTER COLUMN content TYPE TEXT;

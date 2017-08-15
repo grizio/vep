@@ -230,4 +230,117 @@ form {
       margin-right: 15px;
     }
   }
+
+  .rich-input {
+    label {
+      transition: $form-transition;
+      &:not(.focused) {
+        &.success {
+          color: $color-success;
+        }
+        &.error {
+          color: $color-error;
+        }
+      }
+    }
+    .error-message {
+      transition: $form-transition;
+      color: transparent;
+      &:not(.focused) {
+        &.error {
+          color: $color-error;
+        }
+      }
+    }
+
+    .rich-input-content, textarea {
+      font-size: 16px;
+      line-height: 20px;
+      font-family: monospace;
+    }
+
+    .input {
+      position: relative;
+      max-width: 700px;
+      overflow-x: auto;
+      overflow-y: hidden;
+
+      .textarea-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        textarea {
+          width: 100%;
+          height: 100%;
+          border: 0;
+          border-bottom: 1px solid transparent;
+          padding: 0;
+          margin: 0;
+          background-color: transparent;
+          color: transparent;
+          caret-color: $color-primary;
+          overflow: hidden;
+          transition: $form-transition;
+          resize: none;
+
+          &:focus {
+            outline: none;
+          }
+
+          &:not(:focus) {
+            &.success {
+              border-bottom: 1px solid $color-success;
+            }
+            &.error {
+              border-bottom: 1px solid $color-error;
+              box-shadow: 0 1px 0 0 $color-error;
+            }
+          }
+        }
+      }
+    }
+
+    .rich-input-content {
+      margin: 0;
+      padding: 0;
+      white-space: pre-line;
+      overflow-wrap: break-word;
+
+      p {
+        margin: 0;
+        padding: 0;
+        text-align: left;
+
+        &:empty {
+          height: 20px;
+          line-height: 20px;
+        }
+
+        &.h2, &.h3, &.h4, &.h5 {
+          color: $color-title;
+          font-weight: bold;
+        }
+
+        &.p {
+          color: $color-paragraph;
+        }
+
+        &.ul {
+          color: $color-ul;
+        }
+
+        &.blockquote {
+          color: $color-blockquote;
+        }
+      }
+    }
+
+    .output {
+      border-left: 1px solid $color-secondary;
+      padding-left: 10px;
+    }
+  }
 }
