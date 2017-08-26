@@ -5,7 +5,7 @@ import java.util.UUID
 import scalikejdbc._
 import vep.app.production.company.Company
 import vep.app.production.company.show.Show
-import vep.app.production.theater.{Theater, TheaterService}
+import vep.app.production.theater.{Seat, Theater, TheaterService}
 import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Invalid, Valid, Validation}
 
@@ -38,6 +38,16 @@ class PlayService(
       .apply()
   }
 
+  private def findSeatsByPlay(play: Play)(implicit session: DBSession): Seq[Seat] = {
+    sql"""
+      SELECT * FROM play_theater_seat
+      WHERE play_id = ${play.id}
+    """
+      .map(Seat.apply)
+      .list()
+      .apply()
+  }
+
   def find(id: String): Option[Play] = withQueryConnection { implicit session =>
     sql"""
       SELECT * FROM play
@@ -51,7 +61,11 @@ class PlayService(
   def findFromShow(show: Show, id: String): Option[PlayView] = withQueryConnection { implicit session =>
     findPlayFromShow(show, id)
       .map(play => play.copy(prices = findPricesByPlay(play)))
-      .flatMap(play => theaterService.find(play.theater).map(PlayView(play, _)))
+      .flatMap { play =>
+        theaterService.find(play.theater)
+          .map(theater => theater.copy(seats = findSeatsByPlay(play)))
+          .map(PlayView(play, _))
+      }
   }
 
   private def findPlayFromShow(show: Show, id: String)(implicit session: DBSession): Option[Play] = {
