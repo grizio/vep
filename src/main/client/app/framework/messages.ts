@@ -80,6 +80,12 @@ const messages = {
     reservation: {
       form: {
         noSeats: "Veuillez sélectionner au moins une place"
+      },
+      list: {
+        deletion: {
+          title: "Supprimer la réservation ?",
+          message: "Voulez-vous vraiment supprimer cette réservation ? Il ne sera pas possible de revenir en arrière."
+        }
       }
     }
   },

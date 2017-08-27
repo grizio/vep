@@ -107,7 +107,8 @@ export const reservationFormStore = () => LocalStore(initialState, on => {
     return copy(initialState, {
       loading: false,
       reservedSeats: arrays.appendAll(state.reservedSeats, state.seats.value),
-      success: true
+      success: true,
+      play: state.play
     })
   })
 

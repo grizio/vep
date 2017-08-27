@@ -10,6 +10,8 @@ import {OnGranted} from "../../../framework/components/Security";
 import {reservationDeleted} from "../reservationActions";
 import Panel from "../../../framework/components/Panel";
 import {Play} from "../../play/playModel";
+import messages from "../../../framework/messages";
+import popinConfirm from "../../../framework/components/popin/PopinConfirm";
 
 export interface ReservationListProps {
   play: Play
@@ -68,7 +70,9 @@ class ReservationListComponent extends StoreListenerComponent<ReservationListPro
   }
 
   deleteReservation(reservation: Reservation) {
-    deleteReservation(this.props.play.id, reservation)
+    const deletion = messages.production.reservation.list.deletion;
+    popinConfirm(deletion.title, deletion.message)
+      .then( _ => deleteReservation(this.props.play.id, reservation))
       .then(_ => reservationDeleted())
   }
 }
