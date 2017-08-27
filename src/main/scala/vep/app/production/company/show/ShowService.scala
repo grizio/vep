@@ -86,6 +86,7 @@ class ShowService(
       WHERE EXISTS (
         SELECT 1 FROM show s
         WHERE s.company = c.id
+        AND s.id = ${show.id}
       )
     """
       .map(Company.apply)
