@@ -12,6 +12,7 @@ import {Company, CompanyCreation} from "../companyModel";
 import Loading from "../../../framework/components/Loading";
 import messages from "../../../framework/messages";
 import Switch from "../../../framework/components/form/Switch";
+import RichInput from "../../../framework/components/form/RichInput";
 
 export interface CompanyFormProps {
   id?: string
@@ -91,11 +92,10 @@ export default class CompanyForm extends StoreListenerComponent<CompanyFormProps
           fieldValidation={state.isVep}
         />
 
-        <Input
+        <RichInput
           id="content"
           label="Description"
           name="content"
-          type="textarea"
           placeholder="Description de la troupe, informations complémentaires"
           required
           onUpdate={actions.updateContent}

@@ -11,6 +11,7 @@ import {PageFormState, pageFormStore} from "./pageFormStore";
 import * as actions from "./pageFormActions"
 import {PageInformation} from "../pageModel";
 import {createPage, findPage, updatePage} from "../pageApi";
+import RichInput from "../../../framework/components/form/RichInput";
 
 export interface PageFormProps {
   canonical?: string
@@ -88,11 +89,10 @@ export default class PageForm extends StoreListenerComponent<PageFormProps, Page
           fieldValidation={state.order}
         />
 
-        <Input
+        <RichInput
           id="content"
           label="Contenu de la page"
           name="content"
-          type="textarea"
           placeholder="Contenu de la page, tel que vous souhaitez l'afficher"
           required
           onUpdate={actions.updateContent}

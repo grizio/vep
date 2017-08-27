@@ -12,6 +12,7 @@ import {PrimaryButton} from "../../../framework/components/buttons";
 import {Theater, TheaterCreation} from "../theaterModel";
 import Loading from "../../../framework/components/Loading";
 import messages from "../../../framework/messages";
+import RichInput from "../../../framework/components/form/RichInput";
 
 export interface TheaterFormProps {
   id?: string
@@ -81,11 +82,10 @@ export default class TheaterForm extends StoreListenerComponent<TheaterFormProps
           fieldValidation={state.address}
         />
 
-        <Input
+        <RichInput
           id="content"
           label="Description"
           name="content"
-          type="textarea"
           placeholder="Description du théâtre, informations complémentaires"
           required
           onUpdate={actions.updateContent}

@@ -15,6 +15,7 @@ import {findCompany} from "../../company/companyApi";
 import {createShow, findShow, updateShow} from "../showApi";
 import {Company} from "../../company/companyModel";
 import {Show, ShowCreation} from "../showModel";
+import RichInput from "../../../framework/components/form/RichInput";
 
 export interface ShowFormProps {
   company: string
@@ -122,11 +123,10 @@ export default class ShowForm extends StoreListenerComponent<ShowFormProps, Show
           fieldValidation={state.director}
         />
 
-        <Input
+        <RichInput
           id="content"
           label="Description"
           name="content"
-          type="textarea"
           placeholder="Description de la pièce, informations complémentaires"
           required
           onUpdate={actions.updateContent}
