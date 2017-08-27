@@ -4,12 +4,12 @@ import Panel, {PanelType} from "../../framework/components/Panel"
 import messages from "../../framework/messages"
 import {HomeState, homeStore} from "./homeStore";
 import * as actions from "./homeActions"
-import {longDateTimeFormat} from "../../framework/utils/dates";
 import {RichContent} from "../../framework/components/RichContent";
 import {OnGranted} from "../../framework/components/Security";
-import {PrimaryButton, SecondaryButton} from "../../framework/components/buttons";
-import {findLastBlog} from "../blog/blogApi";
-import {Blog} from "../blog/blogModel";
+import {PrimaryButton} from "../../framework/components/buttons";
+import {findPage} from "../pages/pageApi";
+import {Function1} from "../../framework/lib";
+import {PageInformation} from "../pages/pageModel";
 
 interface HomeProps {
   path: string
@@ -22,29 +22,22 @@ export default class Home extends AsyncPage<HomeProps, HomeState> {
     super(homeStore)
   }
 
-
   initialize(props: HomeProps): Promise<any> {
-    return findLastBlog()
+    return findPage("home")
       .then(actions.initialize);
   }
 
-
   getTitle(props: HomeProps, state: HomeState): string {
-    return "Voir & Entendre • La Possonnière";
+    return state.page ? state.page.title : "Voir & Entendre • La Possonnière";
   }
-
 
   renderPage(props: HomeProps, state: HomeState): preact.VNode {
     return (
       <div>
         {this.renderMessage(props)}
-        {state.blogs.map((blog, index) => (
-          <div>
-            {this.renderBlog(blog)}
-            {index < state.blogs.length - 1 && <hr/>}
-          </div>
-        ))}
-        <CreateBlogButton/>
+        {
+          !!state.page && this.renderContent(state.page)
+        }
       </div>
     )
   }
@@ -63,35 +56,25 @@ export default class Home extends AsyncPage<HomeProps, HomeState> {
     }
   }
 
-  renderBlog = (blog: Blog) => {
+  renderContent = (page: PageInformation) => {
     return (
-      <section>
-        <h2>{blog.title}</h2>
-        <h5>
-          <time dateTime={blog.date.toISOString()}>{longDateTimeFormat(blog.date)}</time>
-        </h5>
-        <RichContent content={blog.content}/>
-        <UpdateBlogButton id={blog.id} />
-      </section>
+      <div>
+        <RichContent content={page.content}/>
+        <UpdatePageButton canonical={page.canonical}/>
+      </div>
     )
   }
 }
 
-const CreateBlogButton = OnGranted(() => {
-  return (
-    <div>
-      <hr/>
-      <PrimaryButton message="Nouveau blog" href="/blog/create"/>
-    </div>
-  )
-}, "admin")
-
-interface UpdateBlogButtonProps {
-  id: string
+interface UpdatePageButtonProps {
+  canonical: string
 }
 
-const UpdateBlogButton = OnGranted<UpdateBlogButtonProps>((props: UpdateBlogButtonProps) => {
+const UpdatePageButton: Function1<UpdatePageButtonProps, JSX.Element> = OnGranted((props: UpdatePageButtonProps) => {
   return (
-    <SecondaryButton message="Modifier" href={`/blog/update/${props.id}`}/>
+    <PrimaryButton
+      href={`/cms/page/update/${props.canonical}`}
+      message="Modifier"
+    />
   )
 }, "admin")

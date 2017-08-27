@@ -1,18 +1,18 @@
 import {LocalStore} from "fluxx"
 import * as actions from "./homeActions"
 import {copy} from "../../framework/utils/object";
-import {Blog} from "../blog/blogModel";
+import {PageInformation} from "../pages/pageModel";
 
 export interface HomeState {
-  blogs: Array<Blog>
+  page: PageInformation
 }
 
 const initialState: HomeState = {
-  blogs: null
+  page: null
 }
 
 export const homeStore = () => LocalStore(initialState, on => {
-  on(actions.initialize, (state, blogs) => {
-    return copy(state, {blogs})
+  on(actions.initialize, (state, page) => {
+    return copy(state, {page})
   })
 })

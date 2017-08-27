@@ -1,4 +1,4 @@
 import { Action } from 'fluxx'
-import {Blog} from "../blog/blogModel";
+import {PageInformation} from "../pages/pageModel";
 
-export const initialize = Action<Array<Blog>>("initialize")
+export const initialize = Action<PageInformation>("initialize")
