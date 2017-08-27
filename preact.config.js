@@ -22,5 +22,5 @@ export default function (config, env, helpers) {
       }
     ]
   })
-  config.output.filename = "[name].[chunkhash:5].js"
+  if (env && env.production) config.output.filename = "[name].[chunkhash:5].js"
 }
