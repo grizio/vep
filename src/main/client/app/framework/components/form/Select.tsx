@@ -53,11 +53,12 @@ function renderSelect(props: SelectProps, className: string) {
 }
 
 function renderPlaceholder(props: SelectProps) {
+  const isNullOrUndefined = props.fieldValidation.value === null || props.fieldValidation.value === undefined
   if (props.placeholder) {
     if (props.required) {
-      return <option value={null} disabled selected hidden class="option-placeholder">{props.placeholder}</option>
+      return <option value={null} disabled selected={isNullOrUndefined} hidden class="option-placeholder">{props.placeholder}</option>
     } else {
-      return <option value={null} selected class="option-placeholder">{props.placeholder}</option>
+      return <option value={null} selected={isNullOrUndefined} class="option-placeholder">{props.placeholder}</option>
     }
   } else {
     return null
