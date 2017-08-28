@@ -165,14 +165,14 @@ function formatInline(content: string): Array<preact.VNode | Element | string> {
       const customUrlResult = customUrl.exec(content)
       return arrays.concat(
         formatInline(customUrlResult[1]),
-        [<Link href={customUrlResult[3]}>{customUrlResult[2]}</Link>],
+        [createLink(customUrlResult[3], customUrlResult[2])],
         formatInline(customUrlResult[4])
       )
     } else if (url.test(content)) {
       const urlResult = url.exec(content)
       return arrays.concat(
         formatInline(urlResult[1]),
-        [<Link href={urlResult[2]}>{urlResult[2]}</Link>],
+        [createLink(urlResult[2], urlResult[2])],
         formatInline(urlResult[5])
       )
     } else {
@@ -180,5 +180,29 @@ function formatInline(content: string): Array<preact.VNode | Element | string> {
     }
   } else {
     return [""]
+  }
+}
+
+function createLink(href: string, content: string): preact.VNode {
+  if (href.startsWith('https://')) {
+    return createLink(href.substr(8), content)
+  } else if (href.startsWith("http://")) {
+    return createLink(href.substr(7), content)
+  } else if (href.startsWith("//")) {
+    return createLink(href.substr(2), content)
+  } else if (href.startsWith("/")) {
+    return <Link href={href}>{content}</Link>
+  } else {
+    const indexOfSlash = href.indexOf("/");
+    if (indexOfSlash >= 0) {
+      const host = href.substr(0, indexOfSlash)
+      if (host === location.host) {
+        return <Link href={`/${href.substr(indexOfSlash + 1)}`}>{content}</Link>
+      } else {
+        return <a href={`//${href}`} target="_blank">{content}</a>
+      }
+    } else {
+      return <a href={`//${href}`} target="_blank">{content}</a>
+    }
   }
 }
