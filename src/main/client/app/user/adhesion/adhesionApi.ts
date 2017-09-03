@@ -78,6 +78,20 @@ export function refuseAdhesion(adhesion: Adhesion, reason: string) {
   })
 }
 
+export function downloadAdhesions(period: string) {
+  return request({
+    method: "GET",
+    url: `user/adhesions/${period}/adhesions`,
+    headers: [["Accept", "text/csv"]]
+  }).then((content: string) => {
+    const a = document.createElement("a")
+    a.setAttribute("target", "_blank")
+    a.setAttribute("download", "adhesions.csv")
+    a.setAttribute("href", `data:text/csv;base64,${btoa(content)}`)
+    a.click()
+  })
+}
+
 function periodAdhesionCreationToJson(periodAdhesion: PeriodAdhesionCreation): PeriodAdhesionCreation {
   return copy(periodAdhesion, {
     period: periodToJson(periodAdhesion.period),

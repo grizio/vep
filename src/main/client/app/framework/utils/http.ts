@@ -8,7 +8,8 @@ type Method = "GET" | "POST" | "PUT" | "DELETE"
 interface RequestParameters {
   method: Method
   url: string
-  entity?: any
+  entity?: any,
+  headers?: Array<[string, string]>
 }
 
 export function request<T>(parameters: RequestParameters): Promise<T> {
@@ -20,6 +21,9 @@ export function request<T>(parameters: RequestParameters): Promise<T> {
     xhr.setRequestHeader("Content-Type", "application/json")
     if (session) {
       xhr.setRequestHeader("Authorization", `Basic ${session}`)
+    }
+    if (parameters.headers) {
+      parameters.headers.forEach(header => xhr.setRequestHeader(header[0], header[1]))
     }
 
     xhr.onreadystatechange = () => {

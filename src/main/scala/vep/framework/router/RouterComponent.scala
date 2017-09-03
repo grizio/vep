@@ -2,11 +2,12 @@ package vep.framework.router
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model._
-import akka.http.scaladsl.model.headers.{BasicHttpCredentials, HttpChallenge}
-import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.model.headers.{BasicHttpCredentials, HttpChallenge, `Content-Type`}
+import akka.http.scaladsl.server.Directives.{entity, _}
 import akka.http.scaladsl.server._
 import akka.http.scaladsl.server.directives.AuthenticationDirective
 import akka.http.scaladsl.unmarshalling.FromRequestUnmarshaller
+import akka.util.ByteString
 import org.mindrot.jbcrypt.BCrypt
 import spray.json.{JsString, JsValue, JsonWriter}
 import vep.app.common.CommonMessages
@@ -265,8 +266,14 @@ class Response private(statusCode: StatusCode) {
     entity: A,
     headers: immutable.Seq[HttpHeader] = Nil,
     protocol: HttpProtocol = HttpProtocols.`HTTP/1.1`
-  )(implicit jsonWriter: JsonWriter[A]): HttpResponse =
-    HttpResponse(statusCode, headers, HttpEntity(ContentTypes.`application/json`, jsonWriter.write(entity).compactPrint), protocol)
+  )(implicit jsonWriter: JsonWriter[A]): HttpResponse = {
+    headers.find(_.is("content-type")) match {
+      case Some(contentType: `Content-Type`) =>
+        HttpResponse(statusCode, headers, HttpEntity(contentType.contentType, ByteString(entity.toString)), protocol)
+      case _ =>
+        HttpResponse(statusCode, headers, HttpEntity(ContentTypes.`application/json`, jsonWriter.write(entity).compactPrint), protocol)
+    }
+  }
 
   def apply(): HttpResponse = HttpResponse(statusCode)
 }

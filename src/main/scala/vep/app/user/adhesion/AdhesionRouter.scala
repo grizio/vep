@@ -1,10 +1,15 @@
 package vep.app.user.adhesion
 
+import akka.http.scaladsl.model.{ContentTypes, MediaTypes}
+import akka.http.scaladsl.model.headers.{Accept, ContentDispositionTypes, `Content-Disposition`, `Content-Type`}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server.directives.HeaderDirectives.optionalHeaderValueByType
 import vep.app.user.UserService
 import vep.framework.router.RouterComponent
+import vep.framework.utils.CsvUtils
 
+import scala.collection.immutable
 import scala.concurrent.ExecutionContext
 
 class AdhesionRouter(
@@ -39,7 +44,16 @@ class AdhesionRouter(
   }
 
   def findAdhesionByPeriod: Route = adminGet("user" / "adhesions" / Segment / "adhesions").apply { (periodId, _) =>
-    Ok(adhesionService.findByPeriod(periodId))
+    val adhesions = adhesionService.findByPeriod(periodId)
+    optionalHeaderValueByType[Accept]() {
+      case Some(Accept(mediaTypes)) if mediaTypes.exists(_.value == MediaTypes.`text/csv`.value) =>
+        Ok(
+          entity = CsvUtils.write(AdhesionView.toCsv(adhesions))  ,
+          headers = immutable.Seq(`Content-Type`(ContentTypes.`text/csv(UTF-8)`))
+        )
+      case _ =>
+        Ok(adhesions)
+    }
   }
 
   def createPeriod: Route = adminPost("user" / "adhesions", as[PeriodAdhesionCreation]) { (periodAdhesion, _) =>

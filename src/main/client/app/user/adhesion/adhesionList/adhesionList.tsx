@@ -3,12 +3,16 @@ import {AsyncPage} from "../../../framework/components/Page"
 import {Card, CardAction, CardContent} from "../../../framework/components/card/Card";
 import CardCollection from "../../../framework/components/card/CardCollection";
 import * as actions from "./adhesionListActions";
-import {acceptAdhesion, findAdhesionsByPeriod, findPeriodAdhesion, refuseAdhesion} from "../adhesionApi";
+import {
+  acceptAdhesion, downloadAdhesions, findAdhesionsByPeriod, findPeriodAdhesion,
+  refuseAdhesion
+} from "../adhesionApi";
 import {Adhesion} from "../adhesionModel";
 import {shortPeriodFormat} from "../../../common/types/Period";
 import {AdhesionListState, adhesionListStore} from "./adhesionListStore";
 import {shortDateFormat} from "../../../framework/utils/dates";
 import popinQuestion from "../../../framework/components/popin/PopinQuestion";
+import {PrimaryButton} from "../../../framework/components/buttons";
 
 export interface AdhesionListProps {
   path: string
@@ -34,6 +38,7 @@ export default class AdhesionList extends AsyncPage<AdhesionListProps, AdhesionL
   renderPage(props: AdhesionListProps, state: AdhesionListState) {
     return (
       <div>
+        <PrimaryButton message="Tout télécharger en CSV" action={() => this.downloadCSV(props)} />
         {this.renderAdhesions(state.notAcceptedAdhesions, "En attente de validation")}
         {this.renderAdhesions(state.acceptedAdhesions, "Validées")}
       </div>
@@ -85,5 +90,9 @@ export default class AdhesionList extends AsyncPage<AdhesionListProps, AdhesionL
     )
       .then(reason => refuseAdhesion(adhesion, reason))
       .then(() => this.initialize(this.props))
+  }
+
+  downloadCSV(props: AdhesionListProps) {
+    downloadAdhesions(props.period)
   }
 }

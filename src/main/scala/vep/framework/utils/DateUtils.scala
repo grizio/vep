@@ -7,9 +7,14 @@ import java.util.Locale
 
 object DateUtils {
   private val locale = new Locale("fr", "FR")
-  private val formatter: DateTimeFormatter = DateTimeFormat.forPattern("EEEE dd MMMM yyyy 'à' HH:mm").withLocale(locale)
+  private val longFormatter: DateTimeFormatter = DateTimeFormat.forPattern("EEEE dd MMMM yyyy 'à' HH:mm").withLocale(locale)
+  private val shortFormatter: DateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy").withLocale(locale)
 
   def longDate(date: DateTime): String = {
-    formatter.print(date)
+    longFormatter.print(date)
+  }
+
+  def shortDate(date: DateTime): String = {
+    shortFormatter.print(date)
   }
 }
