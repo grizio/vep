@@ -79,7 +79,7 @@ export function isPassed(period: Period): boolean {
 }
 
 export function isCurrent(period: Period): boolean {
-  return isAfterNow(period.start) && isBeforeNow(period.end)
+  return isBeforeNow(period.start) && isAfterNow(period.end)
 }
 
 export function isFuture(period: Period): boolean {
