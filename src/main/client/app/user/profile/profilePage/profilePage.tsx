@@ -3,8 +3,8 @@ import {AsyncPage} from "../../../framework/components/Page"
 import {Card, CardAction, CardContent} from "../../../framework/components/card/Card";
 import * as actions from "./profilePageActions";
 import {ProfilePageState, profilePageStore} from "./profilePageStore";
-import {getCurrentProfile} from "../profileApi";
-import {getAdhesionsFromCurrentProfile} from "../../adhesion/adhesionApi";
+import {getCurrentProfile, getSpecificProfile} from "../profileApi";
+import {getAdhesionsFromCurrentProfile, getAdhesionsFromSpecificProfile} from "../../adhesion/adhesionApi";
 import {Profile} from "../profileModel";
 import {Adhesion} from "../../adhesion/adhesionModel";
 import CardCollection from "../../../framework/components/card/CardCollection";
@@ -21,34 +21,41 @@ export default class ProfilePage extends AsyncPage<ProfilePageProps, ProfilePage
     super(profilePageStore)
   }
 
-  componentDidMount() {
-    super.componentDidMount()
-    this.initialize()
-  }
-
-  initialize() {
-    return Promise.all([
-      getCurrentProfile(),
-      getAdhesionsFromCurrentProfile()
-    ])
-      .then(([profile, adhesions]) => actions.initialize({profile, adhesions}))
+  initialize(props: ProfilePageProps) {
+    if (props.id) {
+      return Promise.all([
+        getSpecificProfile(props.id),
+        getAdhesionsFromSpecificProfile(props.id)
+      ])
+        .then(([profile, adhesions]) => actions.initialize({profile, adhesions}))
+    } else {
+      return Promise.all([
+        getCurrentProfile(),
+        getAdhesionsFromCurrentProfile()
+      ])
+        .then(([profile, adhesions]) => actions.initialize({profile, adhesions}))
+    }
   }
 
   getTitle(props: ProfilePageProps, state: ProfilePageState): string {
-    return "Votre profil";
+    if (props.id) {
+      return "Profil de l'utilisateur"
+    } else {
+      return "Votre profil"
+    }
   }
 
   renderPage(props: ProfilePageProps, state: ProfilePageState): preact.VNode {
     return <div>
-      {this.renderGeneralInformation(state.profile)}
-      {this.renderAdhesions(state)}
+      {this.renderGeneralInformation(props, state.profile)}
+      {this.renderAdhesions(props, state)}
     </div>;
   }
 
-  renderGeneralInformation(profile: Profile) {
+  renderGeneralInformation(props: ProfilePageProps, profile: Profile) {
     return (
       <div>
-        <h2>Vos informations</h2>
+        <h2>{props.id ? "Informations de l'utilisateur" : "Vos informations"}</h2>
         <Card title={`${profile.email}`}>
           <CardContent>
             <p>
@@ -64,17 +71,23 @@ export default class ProfilePage extends AsyncPage<ProfilePageProps, ProfilePage
               ))}
             </ul>
           </CardContent>
-          <CardAction href="/personal/profile/update">Modifier</CardAction>
+          {props.id || <CardAction href="/personal/profile/update">Modifier</CardAction>}
         </Card>
       </div>
     )
   }
 
-  renderAdhesions(state: ProfilePageState) {
+  renderAdhesions(props: ProfilePageProps, state: ProfilePageState) {
     return (
       <div>
-        {this.renderAdhesionsCollection(state.notAcceptedAdhesions, "Vos demandes d'adhésion en cours")}
-        {this.renderAdhesionsCollection(state.acceptedAdhesions, "Vos adhésions")}
+        {this.renderAdhesionsCollection(
+          state.notAcceptedAdhesions,
+          props.id ? "Ses demandes d'adhésion en cours" : "Vos demandes d'adhésion en cours"
+        )}
+        {this.renderAdhesionsCollection(
+          state.acceptedAdhesions,
+          props.id ? "Ses adhésions" : "Vos adhésions"
+        )}
       </div>
     )
   }

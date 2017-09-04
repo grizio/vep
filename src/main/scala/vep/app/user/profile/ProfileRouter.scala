@@ -14,11 +14,15 @@ class ProfileRouter(
   val executionContext: ExecutionContext
 ) extends RouterComponent {
   lazy val route: Route = {
-    currentProfile ~ update
+    specificProfile ~ currentProfile ~ update
+  }
+
+  def specificProfile: Route = adminGet("user" / "profile" / Segment).apply { (id, user) =>
+    Ok(profileService.findByUser(id))
   }
 
   def currentProfile: Route = userGet("user" / "profile") { user =>
-    Ok(profileService.findByUser(user))
+    Ok(profileService.findByUser(user.id))
   }
 
   def update: Route = userPut("user" / "profile", as[Profile]) { (profile, user) =>

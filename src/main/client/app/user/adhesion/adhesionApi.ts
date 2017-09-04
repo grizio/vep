@@ -39,6 +39,13 @@ export function getAdhesionsFromCurrentProfile(): Promise<Array<Adhesion>> {
   }).then(_ => _.map(jsonToAdhesion))
 }
 
+export function getAdhesionsFromSpecificProfile(id: string): Promise<Array<Adhesion>> {
+  return request<Array<Adhesion>>({
+    method: "GET",
+    url: `user/adhesions/user/${id}`
+  }).then(_ => _.map(jsonToAdhesion))
+}
+
 export function createPeriodAdhesion(periodAdhesion: PeriodAdhesionCreation) {
   return request({
     method: "POST",

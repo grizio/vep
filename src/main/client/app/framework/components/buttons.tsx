@@ -98,7 +98,7 @@ function Button(props: InternalButtonComponentProps) {
 }
 
 function Link(props: InternalLinkComponentProps) {
-  if (props.href.startsWith("http")) {
+  if (props.href.startsWith("http") || props.target && props.target !== "self" && props.target !== "_self") {
     return (
       <a
         href={props.href}

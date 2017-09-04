@@ -6,14 +6,14 @@ import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Valid, Validation}
 
 class ProfileService() extends DatabaseContainer {
-  def findByUser(user: User): Profile = withQueryConnection { implicit session =>
-    findProfileByUser(user)
+  def findByUser(userId: String): Profile = withQueryConnection { implicit session =>
+    findProfileByUser(userId)
   }
 
-  private def findProfileByUser(user: User)(implicit session: DBSession) = {
+  private def findProfileByUser(userId: String)(implicit session: DBSession) = {
     sql"""
       SELECT * FROM users
-      WHERE id = ${user.id}
+      WHERE id = ${userId}
     """
       .map(Profile.apply)
       .single()

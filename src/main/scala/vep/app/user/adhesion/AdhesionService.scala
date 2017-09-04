@@ -66,15 +66,15 @@ class AdhesionService(
       .apply()
   }
 
-  def findByUser(user: User): Seq[AdhesionView] = withQueryConnection { implicit session =>
-    findAdhesionEntriesByUser(user)
+  def findByUser(userId: String): Seq[AdhesionView] = withQueryConnection { implicit session =>
+    findAdhesionEntriesByUser(userId)
       .flatMap(adhesionEntryToAdhesionView(_))
   }
 
-  private def findAdhesionEntriesByUser(user: User)(implicit session: DBSession): Seq[AdhesionEntry] = {
+  private def findAdhesionEntriesByUser(userId: String)(implicit session: DBSession): Seq[AdhesionEntry] = {
     sql"""
       SELECT * FROM adhesion
-      WHERE user_id = ${user.id}
+      WHERE user_id = ${userId}
     """
       .map(AdhesionEntry.apply)
       .list()

@@ -56,6 +56,7 @@ export default class App extends preact.Component<any, AppState> {
             <ResetPassword path="/personal/password/reset" />
 
             <ProfilePage path="/personal/profile" />
+            <ProfilePage path="/personal/profile/:id" />
             <ProfileForm path="/personal/profile/update" />
             <RequestAdhesionForm path="/personal/adhesions/register" />
 

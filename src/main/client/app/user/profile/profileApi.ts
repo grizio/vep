@@ -8,6 +8,13 @@ export function getCurrentProfile(): Promise<Profile> {
   })
 }
 
+export function getSpecificProfile(id: string): Promise<Profile> {
+  return request({
+    method: "GET",
+    url: `user/profile/${id}`
+  })
+}
+
 export function updateProfile(profile: Profile) {
   return request({
     method: "PUT",
