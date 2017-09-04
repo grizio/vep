@@ -19,7 +19,7 @@ class ShowRouter(
     findAll ~ find ~ findNext ~ findAllWithDependencies ~ create ~ update ~ delete
   }
 
-  def findAll: Route = adminGet("production" / "companies" / Segment / "shows").apply { (companyId, _) =>
+  def findAll: Route = publicGet("production" / "companies" / Segment / "shows") { companyId =>
     found(companyService.find(companyId)) { company =>
       Ok(showService.findByCompany(company))
     }

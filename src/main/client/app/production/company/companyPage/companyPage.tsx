@@ -40,7 +40,7 @@ export default class CompanyPage extends StoreListenerComponent<CompanyPageProps
   render(props: CompanyPageProps, state: CompanyPageState) {
     if (this.mounted) {
       return (
-        <Page title={state.company ? state.company.name : ""} role="admin">
+        <Page title={state.company ? state.company.name : ""}>
           <Loading loading={state.loading} message={messages.production.company.page.loading}>
             {!state.loading && this.renderCompany(state.company)}
             {!state.loading && this.renderShows(state.shows, state.company)}
