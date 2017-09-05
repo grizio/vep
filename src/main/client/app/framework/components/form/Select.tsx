@@ -1,5 +1,6 @@
 import preact from "preact"
 import {FieldValidation} from "../../utils/Validation"
+import {containsNot} from "../../utils/arrays";
 
 interface SelectProps {
   id: string
@@ -53,15 +54,26 @@ function renderSelect(props: SelectProps, className: string) {
 }
 
 function renderPlaceholder(props: SelectProps) {
-  const isNullOrUndefined = props.fieldValidation.value === null || props.fieldValidation.value === undefined
+  const isValid = checkValue(props)
   if (props.placeholder) {
     if (props.required) {
-      return <option value={null} disabled selected={isNullOrUndefined} hidden class="option-placeholder">{props.placeholder}</option>
+      return <option value={null} disabled selected={isValid} hidden class="option-placeholder">{props.placeholder}</option>
     } else {
-      return <option value={null} selected={isNullOrUndefined} class="option-placeholder">{props.placeholder}</option>
+      return <option value={null} selected={isValid} class="option-placeholder">{props.placeholder}</option>
     }
   } else {
     return null
+  }
+}
+
+function checkValue(props: SelectProps) {
+  const isNullOrUndefined = props.fieldValidation.value === null || props.fieldValidation.value === undefined
+  if (isNullOrUndefined) {
+    return false
+  } else {
+    const value = props.fieldValidation.value
+    const options = props.options.map(_ => _.value)
+    return containsNot(options, value)
   }
 }
 
