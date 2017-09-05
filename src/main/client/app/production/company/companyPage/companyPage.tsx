@@ -3,14 +3,14 @@ import Page from "../../../framework/components/Page"
 import StoreListenerComponent from "../../../framework/utils/dom"
 import CardCollection from "../../../framework/components/card/CardCollection";
 import {RichContent} from "../../../framework/components/RichContent";
-import {Card, CardAction, CardContent} from "../../../framework/components/card/Card";
+import {AdminCardAction, Card, CardContent} from "../../../framework/components/card/Card";
 import Loading from "../../../framework/components/Loading";
 import messages from "../../../framework/messages";
 import {CompanyPageState, companyPageStore} from "./companyPageStore";
 import {findCompany} from "../companyApi";
 import * as actions from "./companyPageActions";
 import {Company} from "../companyModel";
-import {PrimaryButton} from "../../../framework/components/buttons";
+import {AdminPrimaryButton} from "../../../framework/components/buttons";
 import {deleteShow, findShowsByCompany} from "../../show/showApi";
 import {Show} from "../../show/showModel";
 
@@ -59,6 +59,7 @@ export default class CompanyPage extends StoreListenerComponent<CompanyPageProps
         <div class="row">
           <div class="col-4">
             <RichContent content={company.content}/>
+            <AdminPrimaryButton href={`/production/companies/update/${company.id}`} message="Modifier" />
           </div>
           <div class="col-1">
             <Card title={company.name}>
@@ -84,14 +85,13 @@ export default class CompanyPage extends StoreListenerComponent<CompanyPageProps
                 <p>Écrit par <strong>{show.author}</strong> et mis en scène par <strong>{show.director}</strong></p>
                 <RichContent content={show.content} limit={100}/>
               </CardContent>
-              <CardAction href={`/production/companies/${company.id}/shows/${show.id}/plays/create`}>+ séance</CardAction>
-              <CardAction
-                href={`/production/companies/${company.id}/shows/update/${show.id}`}>Éditer</CardAction>
-              <CardAction className="delete" action={() => this.deleteShow(show)}>Supprimer</CardAction>
+              <AdminCardAction href={`/production/companies/${company.id}/shows/${show.id}/plays/create`}>+ séance</AdminCardAction>
+              <AdminCardAction href={`/production/companies/${company.id}/shows/update/${show.id}`}>Éditer</AdminCardAction>
+              <AdminCardAction className="delete" action={() => this.deleteShow(show)}>Supprimer</AdminCardAction>
             </Card>
           ))}
         </CardCollection>
-        <PrimaryButton message="Ajouter une pièce" href={`/production/companies/${company.id}/shows/create`}/>
+        <AdminPrimaryButton message="Ajouter une pièce" href={`/production/companies/${company.id}/shows/create`}/>
       </section>
     )
   }

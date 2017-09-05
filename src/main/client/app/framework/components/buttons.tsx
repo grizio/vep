@@ -3,6 +3,7 @@ import * as preactRouter from "preact-router/src"
 import {forceStartWith} from "../utils/strings"
 import {Function0} from "../lib";
 import classnames from "classnames";
+import {OnGranted} from "./Security";
 
 const PreactLink = preactRouter.Link
 
@@ -35,6 +36,11 @@ type ButtonProps = ButtonComponentProps | LinkComponentProps
 export function PrimaryButton(props: ButtonProps) {
   return renderButtonOrLink(props, "primary")
 }
+
+export const AdminPrimaryButton = OnGranted<ButtonProps>(
+  (props: ButtonProps) => <PrimaryButton {...props} />,
+  "admin"
+)
 
 export function SecondaryButton(props: ButtonProps) {
   return renderButtonOrLink(props, "secondary")
