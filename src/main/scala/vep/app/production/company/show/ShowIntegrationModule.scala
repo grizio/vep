@@ -2,6 +2,7 @@ package vep.app.production.company.show
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import vep.Configuration
 import vep.app.common.verifications.CommonVerifications
 import vep.app.production.company.CompanyService
 import vep.app.production.company.show.play.{PlayIntegrationModule, PlayService}
@@ -16,6 +17,7 @@ trait ShowIntegrationModule
   def executionContext: ExecutionContext
   def companyService: CompanyService
   def playService: PlayService
+  def configuration: Configuration
 
   lazy val showVerifications = new ShowVerifications(
     commonVerifications
@@ -27,6 +29,7 @@ trait ShowIntegrationModule
     showVerifications,
     showService,
     companyService,
+    configuration,
     userService,
     executionContext
   )

@@ -6,7 +6,8 @@ case class ServerConfiguration(
   protocol: String,
   host: String,
   port: Int,
-  public: String
+  public: String,
+  mail: String
 )
 
 case class DatabaseConfiguration(
@@ -46,7 +47,8 @@ class Configuration {
     protocol = config.getString("vep.server.protocol"),
     host = config.getString("vep.server.host"),
     port = config.getInt("vep.server.port"),
-    public = config.getString("vep.server.public")
+    public = config.getString("vep.server.public"),
+    mail = config.getString("vep.server.mail")
   )
 
   lazy val database = DatabaseConfiguration(

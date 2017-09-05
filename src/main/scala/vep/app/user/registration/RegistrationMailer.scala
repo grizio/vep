@@ -17,8 +17,8 @@ class RegistrationMailer(
   }
 
   private def content(user: User): String = {
-    val activationUrl = s"${configuration.server.public}/api/user/activation/${user.email}/${user.activationKey.getOrElse("")}"
-    val contactUrl = s"${configuration.server.public}/contact"
+    val activationUrl = s"${configuration.server.mail}/api/user/activation/${user.email}/${user.activationKey.getOrElse("")}"
+    val contactUrl = s"${configuration.server.mail}/contact"
     s"""
        |<p>
        |  Bonjour,

@@ -5,6 +5,7 @@ import akka.http.scaladsl.model.headers.{Accept, ContentDispositionTypes, `Conte
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.HeaderDirectives.optionalHeaderValueByType
+import vep.Configuration
 import vep.app.user.UserService
 import vep.framework.router.RouterComponent
 import vep.framework.utils.CsvUtils
@@ -16,6 +17,7 @@ class AdhesionRouter(
   adhesionVerifications: AdhesionVerifications,
   adhesionService: AdhesionService,
   adhesionMailer: AdhesionMailer,
+  val configuration: Configuration,
   val userService: UserService,
   val executionContext: ExecutionContext
 ) extends RouterComponent {

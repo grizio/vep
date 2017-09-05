@@ -2,6 +2,7 @@ package vep.app.production.company
 
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
+import vep.Configuration
 import vep.app.common.verifications.CommonVerifications
 import vep.app.production.company.show.ShowIntegrationModule
 import vep.app.user.UserService
@@ -13,6 +14,7 @@ trait CompanyIntegrationModule
   def userService: UserService
   def commonVerifications: CommonVerifications
   def executionContext: ExecutionContext
+  def configuration: Configuration
 
   lazy val companyVerifications = new CompanyVerifications(
     commonVerifications
@@ -21,6 +23,7 @@ trait CompanyIntegrationModule
   lazy val companyRouter = new CompanyRouter(
     companyVerifications,
     companyService,
+    configuration,
     userService,
     executionContext
   )

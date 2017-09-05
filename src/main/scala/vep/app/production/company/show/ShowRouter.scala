@@ -2,6 +2,7 @@ package vep.app.production.company.show
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import vep.Configuration
 import vep.app.production.company.CompanyService
 import vep.app.user.UserService
 import vep.framework.router.RouterComponent
@@ -12,6 +13,7 @@ class ShowRouter(
   showVerifications: ShowVerifications,
   showService: ShowService,
   companyService: CompanyService,
+  val configuration: Configuration,
   val userService: UserService,
   val executionContext: ExecutionContext
 ) extends RouterComponent {

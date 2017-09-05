@@ -24,6 +24,7 @@ trait AdhesionIntegrationModule {
     adhesionVerifications,
     adhesionService,
     adhesionMailer,
+    configuration,
     userService,
     executionContext
   )

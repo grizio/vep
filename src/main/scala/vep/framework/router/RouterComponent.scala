@@ -2,7 +2,7 @@ package vep.framework.router
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model._
-import akka.http.scaladsl.model.headers.{BasicHttpCredentials, HttpChallenge, `Content-Type`}
+import akka.http.scaladsl.model.headers.{BasicHttpCredentials, HttpChallenge, Location, `Content-Type`}
 import akka.http.scaladsl.server.Directives.{entity, _}
 import akka.http.scaladsl.server._
 import akka.http.scaladsl.server.directives.AuthenticationDirective
@@ -10,6 +10,7 @@ import akka.http.scaladsl.unmarshalling.FromRequestUnmarshaller
 import akka.util.ByteString
 import org.mindrot.jbcrypt.BCrypt
 import spray.json.{JsString, JsValue, JsonWriter}
+import vep.Configuration
 import vep.app.common.CommonMessages
 import vep.app.user.{User, UserRole, UserService}
 import vep.framework.utils.JsonProtocol
@@ -22,6 +23,8 @@ trait RouterComponent extends JsonProtocol with SprayJsonSupport {
   def route: Route
 
   def userService: UserService
+
+  def configuration: Configuration
 
   implicit def executionContext: ExecutionContext
 
@@ -205,6 +208,15 @@ trait RouterComponent extends JsonProtocol with SprayJsonSupport {
       case Some(value) => innerRoute(value)
       case None => ctx => ctx.complete(NotFound(Invalid(error)))
     }
+  }
+
+  protected def redirect(buildUri: Uri => Uri): HttpResponse = {
+    TemporaryRedirect(
+      entity = "",
+      headers = Seq(Location(
+        buildUri(Uri(configuration.server.public))
+      )).to[immutable.Seq]
+    )
   }
 
   protected implicit val jsValueWriter: JsonWriter[JsValue] = identity[JsValue]

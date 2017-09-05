@@ -2,6 +2,7 @@ package vep.app.production.reservation
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import vep.Configuration
 import vep.app.production.company.show.play.PlayService
 import vep.app.user.UserService
 import vep.framework.router.RouterComponent
@@ -13,6 +14,7 @@ class ReservationRouter(
   reservationService: ReservationService,
   reservationMailer: ReservationMailer,
   playService: PlayService,
+  val configuration: Configuration,
   val userService: UserService,
   val executionContext: ExecutionContext
 ) extends RouterComponent {

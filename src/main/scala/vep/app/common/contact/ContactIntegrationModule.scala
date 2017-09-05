@@ -28,6 +28,7 @@ trait ContactIntegrationModule {
   lazy val contactRouter = new ContactRouter(
     contactVerifications,
     contactMailer,
+    configuration,
     userService,
     executionContext
   )

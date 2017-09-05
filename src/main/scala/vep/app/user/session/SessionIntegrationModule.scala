@@ -21,6 +21,7 @@ trait SessionIntegrationModule {
   lazy val sessionRouter = new SessionRouter(
     sessionService,
     sessionMailer,
+    configuration,
     userService,
     executionContext
   )

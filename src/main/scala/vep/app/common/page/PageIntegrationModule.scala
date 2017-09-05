@@ -1,5 +1,6 @@
 package vep.app.common.page
 
+import vep.Configuration
 import vep.app.common.verifications.CommonVerifications
 import vep.app.user.UserService
 
@@ -9,6 +10,7 @@ trait PageIntegrationModule {
   def userService: UserService
   def commonVerifications: CommonVerifications
   def executionContext: ExecutionContext
+  def configuration: Configuration
 
   lazy val pageServices = new PageService()
   lazy val pageVerifications = new PageVerifications(
@@ -18,6 +20,7 @@ trait PageIntegrationModule {
   lazy val pageRouter = new PageRouter(
     pageVerifications,
     pageServices,
+    configuration,
     userService,
     executionContext
   )

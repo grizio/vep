@@ -28,6 +28,7 @@ trait RegistrationIntegrationModule {
     registrationVerifications,
     registrationService,
     registrationMailer,
+    configuration,
     userService,
     executionContext
   )

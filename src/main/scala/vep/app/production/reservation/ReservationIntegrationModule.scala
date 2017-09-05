@@ -30,6 +30,7 @@ trait ReservationIntegrationModule {
     reservationService,
     reservationMailer,
     playService,
+    configuration,
     userService,
     executionContext
   )

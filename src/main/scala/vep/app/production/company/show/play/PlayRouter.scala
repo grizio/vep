@@ -2,6 +2,7 @@ package vep.app.production.company.show.play
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import vep.Configuration
 import vep.app.production.company.CompanyService
 import vep.app.production.company.show.ShowService
 import vep.app.user.UserService
@@ -14,6 +15,7 @@ class PlayRouter(
   playService: PlayService,
   companyService: CompanyService,
   showService: ShowService,
+  val configuration: Configuration,
   val userService: UserService,
   val executionContext: ExecutionContext
 ) extends RouterComponent {

@@ -1,5 +1,6 @@
 package vep.app.user.profile
 
+import vep.Configuration
 import vep.app.common.verifications.CommonVerifications
 import vep.app.user.UserService
 import vep.framework.mailer.Mailer
@@ -11,6 +12,7 @@ trait ProfileIntegrationModule {
   def userService: UserService
   def commonVerifications: CommonVerifications
   def executionContext: ExecutionContext
+  def configuration: Configuration
 
   lazy val profileVerifications = new ProfileVerifications(
     commonVerifications
@@ -19,6 +21,7 @@ trait ProfileIntegrationModule {
   lazy val profileRouter = new ProfileRouter(
     profileVerifications,
     profileService,
+    configuration,
     userService,
     executionContext
   )
