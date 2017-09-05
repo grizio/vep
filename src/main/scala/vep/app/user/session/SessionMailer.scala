@@ -16,8 +16,8 @@ class SessionMailer(
   }
 
   private def contentResetToken(email: String, token: String): String = {
-    val resetUrl = s"${configuration.baseUrl}/personal/password/reset?email=${email}&token=${token}"
-    val contactUrl = s"${configuration.baseUrl}/contact"
+    val resetUrl = s"${configuration.server.public}/personal/password/reset?email=${email}&token=${token}"
+    val contactUrl = s"${configuration.server.public}/contact"
     s"""
        |<p>
        |  Bonjour,

@@ -5,7 +5,8 @@ import com.typesafe.config.ConfigFactory
 case class ServerConfiguration(
   protocol: String,
   host: String,
-  port: Int
+  port: Int,
+  public: String
 )
 
 case class DatabaseConfiguration(
@@ -44,7 +45,8 @@ class Configuration {
   lazy val server = ServerConfiguration(
     protocol = config.getString("vep.server.protocol"),
     host = config.getString("vep.server.host"),
-    port = config.getInt("vep.server.port")
+    port = config.getInt("vep.server.port"),
+    public = config.getString("vep.server.public")
   )
 
   lazy val database = DatabaseConfiguration(
@@ -65,12 +67,4 @@ class Configuration {
     password = config.getString("vep.email.password"),
     replyTo = config.getString("vep.email.replyTo")
   )
-
-  lazy val baseUrl: String = {
-    val port = environment match {
-      case Environment.dev => ":" + server.port
-      case _ => ""
-    }
-    s"${server.protocol}://${server.host}${port}"
-  }
 }
