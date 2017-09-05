@@ -29,7 +29,7 @@ class AdhesionRouter(
     Ok(adhesionService.findAllPeriods())
   }
 
-  def findOpenedRegistrationPeriods: Route = adminGet("user" / "adhesions" / "opened").apply { (_) =>
+  def findOpenedRegistrationPeriods: Route = userGet("user" / "adhesions" / "opened").apply { (_) =>
     Ok(adhesionService.findOpenedPeriods())
   }
 

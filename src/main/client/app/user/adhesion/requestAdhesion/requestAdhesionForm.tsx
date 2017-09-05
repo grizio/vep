@@ -35,8 +35,7 @@ export default class RequestAdhesionForm extends StoreListenerComponent<RequestA
   render(props: RequestAdhesionFormProps, state: RequestAdhesionFormState) {
     if (this.mounted) {
       return (
-        <Page title={"(Ré)inscription aux activités"}
-              role="admin">
+        <Page title={"(Ré)inscription aux activités"} role="user">
           <Loading loading={state.step === "loading"} message={messages.user.adhesion.formRequest.loading}>
             {
               state.step === "form"
