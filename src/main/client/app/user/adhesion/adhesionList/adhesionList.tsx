@@ -74,7 +74,7 @@ export default class AdhesionList extends AsyncPage<AdhesionListProps, AdhesionL
         </CardContent>
         <CardAction action={() => this.acceptAdhesion(adhesion)}>Accepter</CardAction>
         <CardAction className="delete" action={() => this.refuseAdhesion(adhesion)}>Refuser</CardAction>
-        <CardAction href={`/personal/profile/${adhesion.user.id}`} target="blank">Profile</CardAction>
+        <CardAction href={`/personal/profile/read/${adhesion.user.id}`} target="blank">Profile</CardAction>
       </Card>
     )
   }
