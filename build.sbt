@@ -1,6 +1,6 @@
 name := "vep"
 
-version := "1.1.18"
+version := "1.1.19"
 
 scalaVersion := "2.12.2"
 
