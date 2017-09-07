@@ -66,19 +66,22 @@ export default class RequestAdhesionForm extends StoreListenerComponent<RequestA
 
   renderPeriod(state: RequestAdhesionFormState) {
     return (
-      <Select
-        id="period"
-        label="Année"
-        name="period"
-        placeholder="Veuillez choisir"
-        required
-        options={state.acceptedPeriods.map(period => ({
-          label: shortPeriodFormat(period.period),
-          value: period.id
-        }))}
-        fieldValidation={state.period}
-        onUpdate={actions.updatePeriod}
-      />
+      <div>
+        <h2>Sélectionner l'année concernée</h2>
+        <Select
+          id="period"
+          label="Année"
+          name="period"
+          placeholder="Veuillez choisir"
+          required
+          options={state.acceptedPeriods.map(period => ({
+            label: shortPeriodFormat(period.period),
+            value: period.id
+          }))}
+          fieldValidation={state.period}
+          onUpdate={actions.updatePeriod}
+        />
+      </div>
     )
   }
 
