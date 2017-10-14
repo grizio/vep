@@ -39,7 +39,7 @@ export default class App extends preact.Component<any, AppState> {
   render() {
     return (
       <div id="app" class="row no-separator">
-        <div class="col col-fix-450">
+        <div class="col col-fix-300">
           <Navigation />
         </div>
         <div class="col-fill">

@@ -42,14 +42,14 @@ export default class PlayPage extends AsyncPage<PlayPageProps, PlayPageState> {
   renderPage(props: PlayPageProps, state: PlayPageState) {
     return (
       <div>
-        {this.renderInformation(state)}
-
         <h2>Réservez vos places</h2>
         <ReservationForm
           company={state.company}
           show={state.show}
           play={state.play}
         />
+
+        {this.renderInformation(state)}
 
         <ReservationList
           play={state.play}
@@ -61,7 +61,7 @@ export default class PlayPage extends AsyncPage<PlayPageProps, PlayPageState> {
   renderInformation(state: PlayPageState) {
     return (
       <section>
-        <h2>{capitalizeFirstLetter(longDateTimeFormat(state.play.date))} &bull; {state.show.title}</h2>
+        <h2>{state.show.title}</h2>
         <div class="row">
           <div class="col-2">
             {this.renderShowInformation(state)}
