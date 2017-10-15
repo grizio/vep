@@ -26,16 +26,11 @@ export default class ShowPage extends AsyncPage<ShowPageProps, ShowPageState> {
     super(showPageStore)
   }
 
-  componentDidMount() {
-    super.componentDidMount()
-    this.initialize()
-  }
-
-  initialize() {
+  initialize(props: ShowPageProps) {
     return Promise.all([
-      findCompany(this.props.company),
-      findShow(this.props.company, this.props.id),
-      findPlaysByShow(this.props.company, this.props.id)
+      findCompany(props.company),
+      findShow(props.company, props.id),
+      findPlaysByShow(props.company, props.id)
     ])
       .then(([company, show, plays]) => actions.initialize({company, show, plays}))
   }
@@ -58,11 +53,11 @@ export default class ShowPage extends AsyncPage<ShowPageProps, ShowPageState> {
       <section>
         <h2>Présentation de {state.show.title}</h2>
         <div class="row">
-          <div class="col-4">
+          <div class="col-fill">
             {this.renderShowContent(state.show)}
             <UpdateShowButton companyId={state.company.id} showId={state.show.id} />
           </div>
-          <div class="col-1">
+          <div class="col-fix-350">
             {this.renderShowCard(state.show)}
             {this.renderCompanyCard(state.company)}
           </div>
@@ -138,7 +133,7 @@ export default class ShowPage extends AsyncPage<ShowPageProps, ShowPageState> {
   }
 
   deletePlay(play: Play) {
-    deletePlay(this.state.company.id, this.state.show.id, play).then(() => this.initialize())
+    deletePlay(this.state.company.id, this.state.show.id, play).then(() => this.initialize(this.props))
   }
 }
 

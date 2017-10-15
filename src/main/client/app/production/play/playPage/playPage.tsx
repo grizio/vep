@@ -63,11 +63,11 @@ export default class PlayPage extends AsyncPage<PlayPageProps, PlayPageState> {
       <section>
         <h2>{state.show.title}</h2>
         <div class="row">
-          <div class="col-2">
+          <div class="col-fill">
             {this.renderShowInformation(state)}
             {this.renderOtherPlays(state)}
           </div>
-          <div class="col-2">
+          <div class="col-fix-350">
             {this.renderTheaterInformation(state)}
           </div>
         </div>
