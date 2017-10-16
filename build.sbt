@@ -16,6 +16,7 @@ libraryDependencies += "org.postgresql" % "postgresql" % "9.4.1212"
 libraryDependencies += "org.scalikejdbc" %% "scalikejdbc" % "2.5.0"
 libraryDependencies += "org.apache.commons" % "commons-email" % "1.4"
 libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.3.5"
+libraryDependencies += "org.scala-lang.modules" % "scala-xml_2.12" % "1.0.6"
 
 lazy val installClient = TaskKey[Unit]("installClient", "Install all elements for client part")
 lazy val buildClient = TaskKey[Unit]("buildClient", "Build client part")

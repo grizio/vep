@@ -32,4 +32,12 @@ object StringUtils {
       value
     }
   }
+
+  def forceStartingWith(string: String, prefix: String): String = {
+    if (string.startsWith(prefix)) {
+      string
+    } else {
+     prefix + string
+    }
+  }
 }

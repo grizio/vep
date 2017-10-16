@@ -6,7 +6,7 @@ import akka.http.scaladsl.server._
 class ClientRouter {
   private val classLoader = classOf[ClientRouter].getClassLoader
 
-  def route: Route = {
+  def route: Route = encodeResponse {
     index ~ assets ~ fallbackIndex
   }
 

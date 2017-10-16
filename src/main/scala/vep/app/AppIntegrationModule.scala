@@ -4,6 +4,7 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
 import vep.app.common.CommonIntegrationModule
 import vep.app.production.ProductionIntegrationModule
+import vep.app.seo.SeoIntegrationModule
 import vep.app.user.UserIntegrationModule
 import vep.framework.database.DatabaseConnection
 import vep.{Configuration, Environment}
@@ -16,6 +17,7 @@ trait AppIntegrationModule
   extends UserIntegrationModule
     with CommonIntegrationModule
     with ProductionIntegrationModule
+    with SeoIntegrationModule
     with AppRouter
     with DatabaseConnection {
   def executionContext: ExecutionContext
@@ -30,7 +32,7 @@ trait AppIntegrationModule
 trait AppRouter {
   self: AppIntegrationModule =>
 
-  lazy val route: Route = apiRoute ~ clientRouter.route
+  lazy val route: Route = apiRoute ~ seoRoute ~ clientRouter.route
 
   lazy val apiRoute: Route = {
     val route = pathPrefix("api") {
