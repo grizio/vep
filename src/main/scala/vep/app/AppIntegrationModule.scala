@@ -32,7 +32,9 @@ trait AppIntegrationModule
 trait AppRouter {
   self: AppIntegrationModule =>
 
-  lazy val route: Route = apiRoute ~ seoRoute ~ clientRouter.route
+  lazy val route: Route = encodeResponse {
+    apiRoute ~ seoRoute ~ clientRouter.route
+  }
 
   lazy val apiRoute: Route = {
     val route = pathPrefix("api") {
