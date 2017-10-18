@@ -40,4 +40,8 @@ object StringUtils {
      prefix + string
     }
   }
+
+  def capitalizeFirstLetter(string: String): String = {
+    string.charAt(0).toUpper + string.drop(1)
+  }
 }

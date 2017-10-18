@@ -68,6 +68,10 @@ class PlayService(
       }
   }
 
+  def findFromShowWithDependencies(show: Show, id: String): Option[PlayWithDependencies] = withQueryConnection { implicit session =>
+    findWithDependencies(id).filter(_.show.id == show.id)
+  }
+
   private def findPlayFromShow(show: Show, id: String)(implicit session: DBSession): Option[Play] = {
     sql"""
       SELECT * FROM play

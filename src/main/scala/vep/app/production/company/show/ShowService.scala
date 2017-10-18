@@ -27,6 +27,17 @@ class ShowService(
     findShowFromCompany(company, id)
   }
 
+  def findFromCompanyWithDependencies(company: Company, id: String): Option[ShowWithDependencies] = withQueryConnection { implicit session =>
+    findShowFromCompany(company, id)
+      .map { show =>
+        ShowWithDependencies(
+          show = show,
+          company = company,
+          plays = playService.findAllFromShow(show)
+        )
+      }
+  }
+
   private def findShowFromCompany(company: Company, id: String)(implicit session: DBSession): Option[Show] = {
     sql"""
       SELECT * FROM show
