@@ -19,10 +19,10 @@ import scala.collection.immutable
 import scala.concurrent.ExecutionContext
 
 class ViewsRouter(
-  companyService: CompanyService,
-  showService: ShowService,
-  playService: PlayService,
-  pageService: PageService,
+  val companyService: CompanyService,
+  val showService: ShowService,
+  val playService: PlayService,
+  val pageService: PageService,
   val seo: SeoCommon,
   val configuration: Configuration,
   val userService: UserService,

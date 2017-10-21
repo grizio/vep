@@ -6,7 +6,7 @@ import vep.app.seo.SeoCommon
 
 import scala.xml.{Node, NodeSeq, Utility}
 
-trait Render {
+trait Render extends NavigationRender {
   def seo: SeoCommon
 
   def render(title: String)(content: => NodeSeq): String = {
@@ -31,8 +31,11 @@ trait Render {
     }
   }
 
-  def renderBody(content: => NodeSeq): Node = {
+  private def renderBody(content: => NodeSeq): Node = {
     <div id="app" class="row no-separator">
+      <div class="col col-fix-300">
+        {renderNavigation()}
+      </div>
       <div class="col-fill">
         <div class="page">
           {content}

@@ -135,6 +135,12 @@ object RichContent {
   }
 
   def createLink(href: String, content: String): Node = {
-    <a href={s"//${href}"} target="_blank">{content}</a>
+    if (href.startsWith("http://") || href.startsWith("https://")) {
+      <a href={href} target="_blank">{content}</a>
+    } else if (href.startsWith("/")) {
+      <a href={href}>{content}</a>
+    } else {
+      <a href={s"//${href}"} target="_blank">{content}</a>
+    }
   }
 }
