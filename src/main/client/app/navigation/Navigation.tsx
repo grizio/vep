@@ -91,6 +91,7 @@ function renderNav(state: NavigationState) {
       {renderMySpace(state)}
       {renderAdhesions(state)}
       <MenuGroup name="Nous contacter" href="/contact" />
+      <MenuGroup name="Carte du site" href="/sitemap" />
     </nav>
   )
 }

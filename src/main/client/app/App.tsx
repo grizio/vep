@@ -26,6 +26,7 @@ import RequestAdhesionForm from "./user/adhesion/requestAdhesion/requestAdhesion
 import ProfilePage from "./user/profile/profilePage/profilePage";
 import AdhesionList from "./user/adhesion/adhesionList/adhesionList";
 import ResetPassword from "./user/session/resetPassword/resetPassword";
+import Sitemap from "./common/sitemap/sitemap";
 
 interface AppState {
   url: string
@@ -46,6 +47,7 @@ export default class App extends preact.Component<any, AppState> {
           <Router onChange={this.handleRoute}>
             <Home path="/"/>
             <Contact path="/contact"/>
+            <Sitemap path="/sitemap"/>
 
             <PageRead path="/page/:canonical"/>
             <PageCreation path="/cms/page/create"/>
