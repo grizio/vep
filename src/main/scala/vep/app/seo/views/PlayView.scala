@@ -6,8 +6,8 @@ import vep.framework.utils.{DateUtils, StringUtils}
 import scala.xml.{Node, NodeSeq}
 
 object PlayView extends View {
-  def view(play: PlayWithDependencies, playsOfShow: Seq[PlayView]): String = render {
-    <header>{s"${StringUtils.capitalizeFirstLetter(DateUtils.longDate(play.play.date))} • ${play.show.title}"}</header>
+  def view(play: PlayWithDependencies, playsOfShow: Seq[PlayView]): String = render(title(play)) {
+    <header>{title(play)}</header>
     <section>
       <div class="">
         <div>
@@ -17,6 +17,10 @@ object PlayView extends View {
         </div>
       </div>
     </section>
+  }
+
+  def title(play: PlayWithDependencies): String = {
+    s"${StringUtils.capitalizeFirstLetter(DateUtils.longDate(play.play.date))} • ${play.show.title}"
   }
 
   def renderInformation(play: PlayWithDependencies, playsOfShow: Seq[PlayView]): Node = {

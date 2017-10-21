@@ -5,10 +5,12 @@ import java.util.Scanner
 import scala.xml.{Node, NodeSeq, Utility}
 
 trait View {
-  def render(content: => NodeSeq): String = {
+  def render(title: String)(content: => NodeSeq): String = {
     val html = Utility.trim(renderBody(content)).buildString(stripComments = true)
     val index = readIndex
-    index.replace("<body>", s"<body>${html}")
+    index
+      .replaceAll("<title>(.*)</title>", s"<title>${title}</title>")
+      .replace("<body>", s"<body>${html}")
   }
 
   private def readIndex: String = {

@@ -7,7 +7,7 @@ import vep.framework.utils.DateUtils
 import scala.xml.NodeSeq
 
 object ShowView extends View {
-  def view(show: ShowWithDependencies): String = render {
+  def view(show: ShowWithDependencies): String = render(show.show.title) {
     <header>{show.show.title}</header>
     <section>
       <div class="">
