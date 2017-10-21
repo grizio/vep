@@ -1,10 +1,14 @@
-package vep.app.seo.views
+package vep.app.seo.views.render
 
 import java.util.Scanner
 
+import vep.app.seo.SeoCommon
+
 import scala.xml.{Node, NodeSeq, Utility}
 
-trait View {
+trait Render {
+  def seo: SeoCommon
+
   def render(title: String)(content: => NodeSeq): String = {
     val html = Utility.trim(renderBody(content)).buildString(stripComments = true)
     val index = readIndex

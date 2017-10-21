@@ -15,5 +15,7 @@ trait SeoIntegrationModule
 
   def userService: UserService
 
+  lazy val seoCommon: SeoCommon = new SeoCommon(configuration)
+
   lazy val seoRoute: Route = sitemapRouter.route ~ viewRouter.route
 }

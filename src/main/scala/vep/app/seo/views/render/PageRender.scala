@@ -1,9 +1,9 @@
-package vep.app.seo.views
+package vep.app.seo.views.render
 
 import vep.app.common.page.Page
 
-object PageView extends View {
-  def view(page: Page): String = render(page.title) {
+trait PageRender extends Render {
+  def renderPage(page: Page): String = render(page.title) {
     <header>{page.title}</header>
     <section>
       <div class="">

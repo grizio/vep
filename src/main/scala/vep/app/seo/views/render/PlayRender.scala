@@ -1,13 +1,13 @@
-package vep.app.seo.views
+package vep.app.seo.views.render
 
 import vep.app.production.company.show.play.{PlayView, PlayWithDependencies}
 import vep.framework.utils.{DateUtils, StringUtils}
 
 import scala.xml.{Node, NodeSeq}
 
-object PlayView extends View {
-  def view(play: PlayWithDependencies, playsOfShow: Seq[PlayView]): String = render(title(play)) {
-    <header>{title(play)}</header>
+trait PlayRender extends Render {
+  def renderPlay(play: PlayWithDependencies, playsOfShow: Seq[PlayView]): String = render(seo.playTitle(play)) {
+    <header>{seo.playTitle(play)}</header>
     <section>
       <div class="">
         <div>
@@ -19,11 +19,7 @@ object PlayView extends View {
     </section>
   }
 
-  def title(play: PlayWithDependencies): String = {
-    s"${StringUtils.capitalizeFirstLetter(DateUtils.longDate(play.play.date))} • ${play.show.title}"
-  }
-
-  def renderInformation(play: PlayWithDependencies, playsOfShow: Seq[PlayView]): Node = {
+  private def renderInformation(play: PlayWithDependencies, playsOfShow: Seq[PlayView]): Node = {
     <section>
         <h2>{play.show.title}</h2>
         <div class="row">
@@ -35,11 +31,11 @@ object PlayView extends View {
       </section>
   }
 
-  def renderShowInformation(play: PlayWithDependencies): NodeSeq = {
+  private def renderShowInformation(play: PlayWithDependencies): NodeSeq = {
     RichContent.format(play.show.content)
   }
 
-  def renderOtherPlays(play: PlayWithDependencies, playsOfShow: Seq[PlayView]): Node = {
+  private def renderOtherPlays(play: PlayWithDependencies, playsOfShow: Seq[PlayView]): Node = {
     val otherPlays = playsOfShow.filter(_.id != play.play.id).filter(_.date.isAfterNow)
     if (otherPlays.nonEmpty) {
       <div>

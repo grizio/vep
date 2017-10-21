@@ -6,9 +6,9 @@ import akka.http.scaladsl.server.Route
 import vep.Configuration
 import vep.app.common.page.PageService
 import vep.app.production.company.show.{ShowService, ShowWithDependencies}
+import vep.app.seo.SeoCommon
 import vep.app.user.UserService
 import vep.framework.router.RouterComponent
-import vep.framework.utils.StringUtils
 
 import scala.collection.immutable
 import scala.concurrent.ExecutionContext
@@ -17,6 +17,7 @@ import scala.xml.{Elem, Utility}
 class SitemapRouter(
   showService: ShowService,
   pageService: PageService,
+  seoCommon: SeoCommon,
   val configuration: Configuration,
   val userService: UserService,
   val executionContext: ExecutionContext
@@ -41,7 +42,7 @@ class SitemapRouter(
   }
 
   private def homepage = SitemapUrl(
-    url = url("/"),
+    url = seoCommon.homeUrl,
     changeFrequency = Some(ChangeFrequency.weekly),
     priority = Some(1)
   )
@@ -60,11 +61,11 @@ class SitemapRouter(
       else baseSitemapPastShow // No difference in strategy for past shows and no shows
 
     val showSitemap = baseSitemap.copy(
-      url = url(s"/production/companies/${show.company.id}/shows/page/${show.show.id}")
+      url = seoCommon.showUrl(show)
     )
     val playsSitemap = show.plays.filter(_.date.isAfterNow).map { play =>
       baseSitemap.copy(
-        url = url(s"/production/companies/${show.company.id}/shows/${show.show.id}/plays/page/${play.id}"),
+        url = seoCommon.playUrl(show, play),
         priority = baseSitemap.priority.map(_ - 0.1)
       )
     }
@@ -94,14 +95,10 @@ class SitemapRouter(
       .filter(_.canonical != "homepage")
       .map { page =>
         SitemapUrl(
-          url = url(s"/page/${page.canonical}"),
+          url = seoCommon.pageUrl(page),
           changeFrequency = Some(ChangeFrequency.monthly),
           priority = Some(0.4)
         )
       }
-  }
-
-  private def url(path: String): String = {
-    s"${configuration.server.public}${StringUtils.forceStartingWith(path, "/")}"
   }
 }

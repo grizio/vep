@@ -1,7 +1,7 @@
 package vep.app.seo.views
 
-import akka.http.scaladsl.model.{ContentTypes, HttpResponse}
 import akka.http.scaladsl.model.headers.`Content-Type`
+import akka.http.scaladsl.model.{ContentTypes, HttpResponse}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.PathMatchers.Segment
 import akka.http.scaladsl.server.Route
@@ -10,6 +10,8 @@ import vep.app.common.page.PageService
 import vep.app.production.company.CompanyService
 import vep.app.production.company.show.ShowService
 import vep.app.production.company.show.play.PlayService
+import vep.app.seo.SeoCommon
+import vep.app.seo.views.render.{PageRender, PlayRender, ShowRender, SitemapRender}
 import vep.app.user.UserService
 import vep.framework.router.RouterComponent
 
@@ -21,18 +23,23 @@ class ViewsRouter(
   showService: ShowService,
   playService: PlayService,
   pageService: PageService,
+  val seo: SeoCommon,
   val configuration: Configuration,
   val userService: UserService,
   val executionContext: ExecutionContext
-) extends RouterComponent {
+) extends RouterComponent
+  with PageRender
+  with PlayRender
+  with ShowRender
+  with SitemapRender {
   lazy val route: Route = {
-    home ~ page ~ show ~ play
+    home ~ page ~ show ~ play ~ sitemap
   }
 
   def home: Route = pathEndOrSingleSlash {
     optionalHeaderValueByName("User-Agent") { userAgent =>
       found(pageService.find("home")) { page =>
-        OkView(PageView.view(page), userAgent)
+        OkView(renderPage(page), userAgent)
       }
     }
   }
@@ -40,7 +47,7 @@ class ViewsRouter(
   def page: Route = publicGet("page" / Segment) { canonical =>
     optionalHeaderValueByName("User-Agent") { userAgent =>
       found(pageService.find(canonical)) { page =>
-        OkView(PageView.view(page), userAgent)
+        OkView(renderPage(page), userAgent)
       }
     }
   }
@@ -49,7 +56,7 @@ class ViewsRouter(
     optionalHeaderValueByName("User-Agent") { userAgent =>
       found(companyService.find(companyId)) { company =>
         found(showService.findFromCompanyWithDependencies(company, showId)) { show =>
-          OkView(ShowView.view(show), userAgent)
+          OkView(renderShow(show), userAgent)
         }
       }
     }
@@ -60,10 +67,19 @@ class ViewsRouter(
       found(companyService.find(companyId)) { company =>
         found(showService.findFromCompany(company, showId)) { show =>
           found(playService.findFromShowWithDependencies(show, playId)) { play =>
-            OkView(PlayView.view(play, playService.findAllFromShow(show)), userAgent)
+            OkView(renderPlay(play, playService.findAllFromShow(show)), userAgent)
           }
         }
       }
+    }
+  }
+
+  // Not sitemaps, kept for search engines
+  def sitemap: Route = publicGet("sitemap") {
+    optionalHeaderValueByName("User-Agent") { userAgent =>
+      val pages = pageService.findAll()
+      val shows = showService.findAllWithDependencies()
+      OkView(renderSitemap(pages, shows), userAgent)
     }
   }
 

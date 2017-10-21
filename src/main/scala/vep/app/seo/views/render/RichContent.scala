@@ -1,4 +1,4 @@
-package vep.app.seo.views
+package vep.app.seo.views.render
 
 import scala.collection.mutable.ListBuffer
 import scala.xml.{Node, NodeSeq, Text}

@@ -1,4 +1,4 @@
-package vep.app.seo.views
+package vep.app.seo.views.render
 
 import vep.app.production.company.show.ShowWithDependencies
 import vep.app.production.company.show.play.PlayView
@@ -6,14 +6,14 @@ import vep.framework.utils.DateUtils
 
 import scala.xml.NodeSeq
 
-object ShowView extends View {
-  def view(show: ShowWithDependencies): String = render(show.show.title) {
+trait ShowRender extends Render {
+  def renderShow(show: ShowWithDependencies): String = render(show.show.title) {
     <header>{show.show.title}</header>
     <section>
       <div class="">
         <div>
            <div>
-            {renderShow(show)}
+            {renderShowPart(show)}
             {renderPlays(show)}
           </div>
         </div>
@@ -21,7 +21,7 @@ object ShowView extends View {
     </section>
   }
 
-  def renderShow(show: ShowWithDependencies): NodeSeq = {
+  private def renderShowPart(show: ShowWithDependencies): NodeSeq = {
     <section>
       <h2>Présentation de {show.show.title}</h2>
       <div class="row">
@@ -32,11 +32,11 @@ object ShowView extends View {
     </section>
   }
 
-  def renderShowContent(show: ShowWithDependencies): NodeSeq = {
+  private def renderShowContent(show: ShowWithDependencies): NodeSeq = {
     RichContent.format(show.show.content)
   }
 
-  def renderPlays(show: ShowWithDependencies): NodeSeq = {
+  private def renderPlays(show: ShowWithDependencies): NodeSeq = {
     <section>
       <h2>Prochaines séances pour {show.show.title}</h2>
       { Cards.renderCardCollection(
@@ -61,7 +61,7 @@ object ShowView extends View {
     </section>
   }
 
-  def getFuturePlays(show: ShowWithDependencies): Seq[PlayView] = {
+  private def getFuturePlays(show: ShowWithDependencies): Seq[PlayView] = {
     show.plays.filter(play => play.date.isAfterNow)
   }
 }
