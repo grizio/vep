@@ -130,4 +130,13 @@ class ReservationService(
       .execute()
       .apply()
   }
+
+  def deleteFromPlay(playId: String): Validation[Unit] = withCommandTransaction { implicit session =>
+    findReservationFromPlay(playId)
+      .foreach { reservation =>
+        deleteSeatsByReservation(reservation.id)
+        deleteReservation(reservation.id)
+      }
+    Valid()
+  }
 }

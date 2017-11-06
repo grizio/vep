@@ -5,12 +5,14 @@ import java.util.UUID
 import scalikejdbc._
 import vep.app.production.company.Company
 import vep.app.production.company.show.Show
+import vep.app.production.reservation.ReservationService
 import vep.app.production.theater.{Seat, Theater, TheaterService}
 import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Invalid, Valid, Validation}
 
 class PlayService(
-  theaterService: TheaterService
+  theaterService: TheaterService,
+  reservationService: ReservationService
 ) extends DatabaseContainer {
   def findByShow(show: Show): Seq[PlayView] = withQueryConnection { implicit session =>
     findPlaysByShow(show)
@@ -293,9 +295,20 @@ class PlayService(
   }
 
   def delete(companyId: String, showId: String, playId: String): Validation[Unit] = withCommandTransaction { implicit session =>
+    reservationService.deleteFromPlay(playId)
+    deletePlaySeats(playId)
     removePricesFromPlay(playId)
     deletePlay(companyId, showId, playId)
     Valid()
+  }
+
+  private def deletePlaySeats(playId: String)(implicit session: DBSession): Unit = {
+    sql"""
+      DELETE FROM play_theater_seat
+      WHERE play_id = ${playId}
+    """
+      .execute()
+      .apply()
   }
 
   private def deletePlay(companyId: String, showId: String, playId: String)(implicit session: DBSession): Unit = {

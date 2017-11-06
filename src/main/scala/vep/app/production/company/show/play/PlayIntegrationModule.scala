@@ -4,6 +4,7 @@ import vep.Configuration
 import vep.app.common.verifications.CommonVerifications
 import vep.app.production.company.CompanyService
 import vep.app.production.company.show.ShowService
+import vep.app.production.reservation.ReservationService
 import vep.app.production.theater.TheaterService
 import vep.app.user.UserService
 
@@ -16,6 +17,7 @@ trait PlayIntegrationModule {
   def companyService: CompanyService
   def showService: ShowService
   def theaterService: TheaterService
+  def reservationService: ReservationService
   def configuration: Configuration
 
   lazy val playVerifications = new PlayVerifications(
@@ -23,7 +25,8 @@ trait PlayIntegrationModule {
     theaterService
   )
   lazy val playService = new PlayService(
-    theaterService
+    theaterService,
+    reservationService
   )
   lazy val playRouter = new PlayRouter(
     playVerifications,
