@@ -65,7 +65,13 @@ const messages = {
         loading: "Veuillez patienter pendant que nous cherchons toutes les pièces."
       },
       page: {
-        loading: "Veuillez patienter pendant que montons la pièce."
+        loading: "Veuillez patienter pendant que montons la pièce.",
+        plays: {
+          deletion: {
+            title: "Supprimer la séance ?",
+            message: "Voulez-vous vraiment supprimer cette séance ? Toutes les réservations seront également supprimées. Il ne sera pas possible de revenir en arrière."
+          }
+        }
       },
       form: {
         loading: "Veuillez patienter pendant que nous terminons notre scène."

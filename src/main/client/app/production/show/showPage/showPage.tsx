@@ -14,6 +14,8 @@ import {Show} from "../showModel";
 import {Company} from "../../company/companyModel";
 import {Play} from "../../play/playModel";
 import {OnGranted} from "../../../framework/components/Security";
+import messages from "../../../framework/messages";
+import popinConfirm from "../../../framework/components/popin/PopinConfirm";
 
 export interface ShowPageProps {
   path: string
@@ -133,7 +135,10 @@ export default class ShowPage extends AsyncPage<ShowPageProps, ShowPageState> {
   }
 
   deletePlay(play: Play) {
-    deletePlay(this.state.company.id, this.state.show.id, play).then(() => this.initialize(this.props))
+    const deletion = messages.production.show.page.plays.deletion;
+    popinConfirm(deletion.title, deletion.message)
+      .then( _ => deletePlay(this.state.company.id, this.state.show.id, play))
+      .then(_ => this.initialize(this.props))
   }
 }
 
