@@ -1,6 +1,7 @@
 import { Action } from 'fluxx'
+import {Play} from "../../play/playModel";
 
-export const initialize = Action<string>("initialize")
+export const initialize = Action<Play>("initialize")
 
 export const reloadReservedSeats = Action<Array<string>>("initialize")
 
@@ -13,6 +14,8 @@ export const updateEmail = Action<string>("updateEmail")
 export const updateCity = Action<string>("updateCity")
 
 export const updateComment = Action<string>("updateComment")
+
+export const updatePrice = Action<{price: string, value: number}>("updateComment")
 
 export const toggleSeat = Action<string>("toggleSeat")
 

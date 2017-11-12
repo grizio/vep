@@ -24,7 +24,10 @@ class ReservationService(
 
   def findAllByPlay(playId: String): Seq[Reservation] = withQueryConnection { implicit session =>
     findReservationFromPlay(playId)
-      .map(reservation => reservation.copy(seats = findSeatsByReservation(reservation)))
+      .map(reservation => reservation.copy(
+        seats = findSeatsByReservation(reservation),
+        prices = findPricesByReservation(reservation)
+      ))
   }
 
   private def findReservationFromPlay(playId: String)(implicit session: DBSession): Seq[Reservation] = {
@@ -53,9 +56,23 @@ class ReservationService(
       .apply()
   }
 
+  private def findPricesByReservation(reservation: Reservation)(implicit session: DBSession): Seq[ReservationPrice] = {
+    sql"""
+      SELECT *
+      FROM reservation_price
+      WHERE reservation_id = ${reservation.id}
+    """
+      .map(ReservationPrice.apply)
+      .list()
+      .apply()
+  }
+
   def findByPlay(reservationId: String, play: Play): Option[Reservation] = withQueryConnection { implicit session =>
     findReservationByPlay(reservationId, play.id)
-      .map(reservation => reservation.copy(seats = findSeatsByReservation(reservation)))
+      .map(reservation => reservation.copy(
+        seats = findSeatsByReservation(reservation),
+        prices = findPricesByReservation(reservation)
+      ))
   }
 
   private def findReservationByPlay(reservationId: String, playId: String)(implicit session: DBSession): Option[Reservation] = {
@@ -77,6 +94,7 @@ class ReservationService(
   def create(reservation: Reservation, playId: String): Validation[Reservation] = withCommandTransaction { implicit session =>
     insertReservation(reservation)
     reservation.seats.foreach(insertReservationSeat(_, reservation, playId))
+    reservation.prices.foreach(insertReservationPrice(_, reservation))
     Valid(reservation)
   }
 
@@ -105,9 +123,19 @@ class ReservationService(
       .apply()
   }
 
+  private def insertReservationPrice(price: ReservationPrice, reservation: Reservation)(implicit session: DBSession): Unit = {
+    sql"""
+      INSERT INTO reservation_price(reservation_id, price, seatsCount)
+      VALUES (${reservation.id}, ${price.price}, ${price.count})
+    """
+      .execute()
+      .apply()
+  }
+
   def delete(playId: String, reservationId: String): Validation[Unit] = withCommandTransaction { implicit session =>
     if (findReservationByPlay(reservationId, playId).isDefined) {
       deleteSeatsByReservation(reservationId)
+      deletePricesByReservation(reservationId)
       deleteReservation(reservationId)
     }
     Valid()
@@ -116,6 +144,15 @@ class ReservationService(
   private def deleteSeatsByReservation(reservationId: String)(implicit session: DBSession): Unit = {
     sql"""
       DELETE FROM reservation_seat
+      WHERE reservation_id = ${reservationId}
+    """
+      .execute()
+      .apply()
+  }
+
+  private def deletePricesByReservation(reservationId: String)(implicit session: DBSession): Unit = {
+    sql"""
+      DELETE FROM reservation_price
       WHERE reservation_id = ${reservationId}
     """
       .execute()

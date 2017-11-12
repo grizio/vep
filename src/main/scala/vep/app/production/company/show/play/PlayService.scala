@@ -51,13 +51,10 @@ class PlayService(
   }
 
   def find(id: String): Option[Play] = withQueryConnection { implicit session =>
-    sql"""
-      SELECT * FROM play
-      WHERE id = ${id}
-    """
-      .map(Play.apply)
-      .single()
-      .apply()
+    findPlay(id)
+      .map(play => play.copy(
+        prices = findPricesByPlay(play)
+      ))
   }
 
   def findFromShow(show: Show, id: String): Option[PlayView] = withQueryConnection { implicit session =>

@@ -11,7 +11,8 @@ case class Reservation(
   email: String,
   city: Option[String],
   comment: Option[String],
-  seats: Seq[String]
+  seats: Seq[String],
+  prices: Seq[ReservationPrice]
 )
 
 object Reservation {
@@ -25,11 +26,30 @@ object Reservation {
       email = resultSet.string("email"),
       city = resultSet.stringOpt("city"),
       comment = resultSet.stringOpt("comment"),
-      seats = Seq.empty
+      seats = Seq.empty,
+      prices = Seq.empty
     )
   }
 
-  implicit val reservationFormat: RootJsonFormat[Reservation] = jsonFormat7(Reservation.apply)
+  implicit val reservationFormat: RootJsonFormat[Reservation] = jsonFormat8(Reservation.apply)
+}
+
+case class ReservationPrice(
+  price: String,
+  count: Int
+)
+
+object ReservationPrice {
+  import JsonProtocol._
+
+  def apply(resultSet: WrappedResultSet): ReservationPrice = {
+    new ReservationPrice(
+      price = resultSet.string("price"),
+      count = resultSet.int("seatsCount")
+    )
+  }
+
+  implicit val reservationPriceFormat: RootJsonFormat[ReservationPrice] = jsonFormat2(ReservationPrice.apply)
 }
 
 case class ReservationCreation(
@@ -38,11 +58,12 @@ case class ReservationCreation(
   email: String,
   city: Option[String],
   comment: Option[String],
-  seats: Seq[String]
+  seats: Seq[String],
+  prices: Seq[ReservationPrice]
 )
 
 object ReservationCreation {
   import JsonProtocol._
 
-  implicit val reservationCreationFormat: RootJsonFormat[ReservationCreation] = jsonFormat6(ReservationCreation.apply)
+  implicit val reservationCreationFormat: RootJsonFormat[ReservationCreation] = jsonFormat7(ReservationCreation.apply)
 }

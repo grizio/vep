@@ -6,6 +6,12 @@ export interface Reservation {
   city: string
   comment: string
   seats: Array<string>
+  prices: Array<ReservationPrice>
+}
+
+export interface ReservationPrice {
+  price: string
+  count: number
 }
 
 export interface ReservationCreation {
@@ -15,4 +21,5 @@ export interface ReservationCreation {
   city: string
   comment: string
   seats: Array<string>
+  prices: Array<ReservationPrice>
 }

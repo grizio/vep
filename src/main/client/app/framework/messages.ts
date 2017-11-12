@@ -85,7 +85,8 @@ const messages = {
     },
     reservation: {
       form: {
-        noSeats: "Veuillez sélectionner au moins une place"
+        noSeats: "Veuillez sélectionner au moins une place",
+        invalidPriceRepartition: "Veillez a bien répartir l'ensemble de vos places dans les différents tarifs."
       },
       list: {
         deletion: {

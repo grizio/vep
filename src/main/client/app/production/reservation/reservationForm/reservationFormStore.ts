@@ -1,8 +1,11 @@
 import {LocalStore} from "fluxx"
 import * as actions from "./reservationFormActions"
 import {
-  defaultFieldValidation, FieldValidation, updateFieldValidation,
-  Valid, Validation
+  defaultFieldValidation,
+  FieldValidation,
+  updateFieldValidation,
+  Valid,
+  Validation
 } from "../../../framework/utils/Validation";
 import {copy} from "../../../framework/utils/object";
 import * as arrays from "../../../framework/utils/arrays";
@@ -10,6 +13,7 @@ import {validateEmail, validateNonBlank} from "../../../common/commonValidations
 import messages from "../../../framework/messages";
 import {reservationDeleted, reservationDone} from "../reservationActions";
 import {findReservedSeats} from "../reservationApi";
+import {PlayPrice} from "../../play/playModel";
 
 export interface ReservationFormState {
   loading: boolean
@@ -21,8 +25,14 @@ export interface ReservationFormState {
   city: FieldValidation<string>
   comment: FieldValidation<string>
   seats: FieldValidation<Array<string>>
+  prices: FieldValidation<Array<ReservationPriceValidation>>
   errors?: Array<string>
   success?: boolean
+}
+
+export interface ReservationPriceValidation {
+  price: PlayPrice
+  count: FieldValidation<number>
 }
 
 const initialState: ReservationFormState = {
@@ -34,13 +44,17 @@ const initialState: ReservationFormState = {
   email: defaultFieldValidation(""),
   city: defaultFieldValidation(""),
   comment: defaultFieldValidation(""),
-  seats: defaultFieldValidation([])
+  seats: defaultFieldValidation([]),
+  prices: defaultFieldValidation([])
 }
 
 export const reservationFormStore = () => LocalStore(initialState, on => {
-  on(actions.initialize, (state, playId) => {
-    reloadReservedSeats(playId)
-    return copy(state, {play: playId})
+  on(actions.initialize, (state, play) => {
+    reloadReservedSeats(play.id)
+    return copy(state, {
+      play: play.id,
+      prices: defaultFieldValidation(play.prices.map(_ => ({price: _, count: defaultFieldValidation(0)})))
+    })
   })
 
   on(actions.reloadReservedSeats, (state, reservedSeats) =>
@@ -74,6 +88,21 @@ export const reservationFormStore = () => LocalStore(initialState, on => {
   on(actions.updateComment, (state, value) => {
     return copy(state, {
       comment: updateFieldValidation(state.comment, value, Valid(value))
+    })
+  })
+
+  on(actions.updatePrice, (state, {price, value}) => {
+    const newPrices = state.prices.value.map(statePrice => {
+      if (statePrice.price.name === price) {
+        return copy(statePrice, {
+          count: updateFieldValidation(statePrice.count, value, Valid(value))
+        })
+      } else {
+        return statePrice
+      }
+    })
+    return copy(state, {
+      prices: updateFieldValidation(state.prices, newPrices, verifyPriceRepartition(newPrices, state.seats.value))
     })
   })
 
@@ -135,4 +164,12 @@ function verifySeats(seats: Array<string>): Validation<Array<string>> {
 function reloadReservedSeats(playId: string) {
   findReservedSeats(playId)
     .then(reservedSeats => actions.reloadReservedSeats(reservedSeats))
+}
+
+function verifyPriceRepartition(prices: Array<ReservationPriceValidation>, seats: Array<string>): Validation<Array<ReservationPriceValidation>> {
+  return Valid(prices)
+    .filter(
+      _ => _.map(_ => _.count.value).reduce((x, y) => x + y) === seats.length,
+      messages.production.reservation.form.invalidPriceRepartition
+    )
 }

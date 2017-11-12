@@ -11,6 +11,8 @@ interface InputProps {
   required?: boolean
   disabled?: boolean
   pattern?: string
+  min?: number
+  max?: number
   onUpdate(value: string): void
   fieldValidation: FieldValidation<string>
 }
@@ -22,6 +24,8 @@ interface InputNumberProps {
   placeholder?: string
   required?: boolean
   disabled?: boolean
+  min?: number
+  max?: number
   onUpdate(value: number): void
   fieldValidation: FieldValidation<number>
 }
@@ -52,6 +56,8 @@ export function InputNumber(props: InputNumberProps) {
       placeholder={props.placeholder}
       required={props.required}
       disabled={props.disabled}
+      min={props.min}
+      max={props.max}
       onUpdate={props.onUpdate ? (n) => props.onUpdate(parseInt(n, 10)) : null}
       fieldValidation={{
         value: value ? value.toString() : null,
@@ -75,6 +81,8 @@ function renderInput(props: InputProps) {
       required={props.required}
       disabled={props.disabled}
       pattern={props.pattern}
+      min={props.min}
+      max={props.max}
       onInput={e => props.onUpdate((e.target as HTMLInputElement).value)}
       value={props.fieldValidation ? props.fieldValidation.value || "" : ""}
       class={className}
@@ -118,7 +126,7 @@ class Textarea extends preact.Component<InputProps, null> {
 function renderError(fieldValidation: FieldValidation<string>) {
   if (errorIsShown(fieldValidation)) {
     return fieldValidation.errors.map((error, i) =>
-      <span class="error-message" key={i.toString()}>{fieldValidation.errors}</span>
+      <span class="error-message" key={i.toString()}>{error}</span>
     )
   } else {
     // Force the component having an height by not being empty.

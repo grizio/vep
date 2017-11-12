@@ -16,11 +16,12 @@ class ReservationVerifications(
       commonVerifications.verifyNonEmpty(reservationCreation.lastName),
       commonVerifications.verifyNonEmpty(reservationCreation.email),
       verifySeats(reservationCreation.seats, play),
+      verifyPrices(reservationCreation, play),
       verifyReservationsNotClosed(play)
     ) map {
-      case firstName ~ lastName ~ email ~ seats ~ _ => Reservation(
+      case firstName ~ lastName ~ email ~ seats ~ prices ~ _ => Reservation(
         UUID.randomUUID().toString,
-        firstName, lastName, email, reservationCreation.city, reservationCreation.comment, seats
+        firstName, lastName, email, reservationCreation.city, reservationCreation.comment, seats, prices
       )
     }
   }
@@ -36,5 +37,11 @@ class ReservationVerifications(
   private def verifyReservationsNotClosed(play: Play): Validation[Unit] = {
     Valid()
       .filter(_ => play.reservationEndDate.isAfterNow, ReservationMessages.closedReservation)
+  }
+
+  private def verifyPrices(creation: ReservationCreation, play: Play): Validation[Seq[ReservationPrice]] = {
+    Valid(creation.prices)
+      .filter(_.forall(price => play.prices.exists(_.name == price.price)), ReservationMessages.unknownPrice)
+      .filter(_.map(_.count).sum == creation.seats.length, ReservationMessages.notSameNumberOfPrices)
   }
 }

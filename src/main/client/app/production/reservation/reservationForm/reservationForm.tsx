@@ -8,13 +8,14 @@ import * as arrays from "../../../framework/utils/arrays";
 import {createReservation} from "../reservationApi";
 import Form from "../../../framework/components/form/Form";
 import {Seat} from "../../theater/theaterModel";
-import Input from "../../../framework/components/form/Input";
+import Input, {InputNumber} from "../../../framework/components/form/Input";
 import {ReservationCreation} from "../reservationModel";
 import Panel from "../../../framework/components/Panel";
 import {isBeforeNow} from "../../../framework/utils/dates";
 import {reservationDone} from "../reservationActions";
 import {Show} from "../../show/showModel";
 import {Play} from "../../play/playModel";
+import PanelError from "../../../framework/components/form/PanelError";
 
 export interface ReservationFormProps {
   company: Company
@@ -29,7 +30,7 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
 
   componentDidMount() {
     super.componentDidMount()
-    actions.initialize(this.props.play.id)
+    actions.initialize(this.props.play)
   }
 
   render(props: ReservationFormProps, state: ReservationFormState) {
@@ -50,6 +51,7 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
         submit={"Réserver"}
         onSubmit={this.onSubmit}
         errors={state.errors}
+        showErrorBottom
         closeErrors={actions.closeErrors}
       >
         {
@@ -68,6 +70,7 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
             {this.renderPersonalInformation(state)}
           </div>
         </div>
+        {this.renderPrices(props, state)}
       </Form>
     )
   }
@@ -103,7 +106,7 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
       taken: arrays.contains(state.reservedSeats, seat.c),
       selected: arrays.contains(state.seats.value, seat.c)
     })
-    const action = this.isReservationClosed(props)
+    const action = this.isReservationClosed(props) || seat.t === "stage"
       ? () => {}
       : () => actions.toggleSeat(seat.c);
     return (
@@ -181,6 +184,31 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
     )
   }
 
+  renderPrices(props: ReservationFormProps, state: ReservationFormState) {
+    return (
+      <div>
+        <h2>Répartition par tarif</h2>
+        <div class="row">
+          {state.prices.value.map(price => (
+            <div class="col-1">
+              <InputNumber
+                id="comment"
+                label={price.price.name}
+                name="comment"
+                min={0}
+                max={state.seats.value.length}
+                placeholder={price.price.condition}
+                onUpdate={count => actions.updatePrice({price: price.price.name, value: count})}
+                fieldValidation={price.count}
+              />
+            </div>
+          ))}
+        </div>
+        <PanelError fieldValidation={state.prices} />
+      </div>
+    )
+  }
+
   renderClosedReservation(props: ReservationFormProps, state: ReservationFormState) {
     return (
       <div>
@@ -204,15 +232,16 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
   }
 
   onSubmit = () => {
-    const normalizedReseration: ReservationCreation = {
+    const normalizedReservation: ReservationCreation = {
       firstName: this.state.firstName.value,
       lastName: this.state.lastName.value,
       email: this.state.email.value,
       city: this.state.city.value,
       comment: this.state.comment.value,
-      seats: this.state.seats.value
+      seats: this.state.seats.value,
+      prices: this.state.prices.value.map(_ => ({price: _.price.name, count: _.count.value}))
     }
-    createReservation(this.props.play.id, normalizedReseration)
+    createReservation(this.props.play.id, normalizedReservation)
       .then(_ => {
         actions.success()
         reservationDone()

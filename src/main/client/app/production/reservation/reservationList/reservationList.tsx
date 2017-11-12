@@ -53,8 +53,13 @@ class ReservationListComponent extends StoreListenerComponent<ReservationListPro
         <CardContent>
           <p>{reservation.seats.join(", ")}</p>
           {reservation.city ? <p>{reservation.city}</p> : null}
-          {reservation.comment ? <p>{reservation.comment}</p> : null}
           <p>{reservation.email}</p>
+          {
+            reservation.prices.map(price => (
+              <p>{price.price}: {price.count}</p>
+            ))
+          }
+          {reservation.comment ? <p>{reservation.comment}</p> : null}
         </CardContent>
         <CardAction href={`mailto:${reservation.email}`}>📧</CardAction>
         <CardAction action={() => this.deleteReservation(reservation)}>Supprimer</CardAction>

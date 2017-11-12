@@ -12,6 +12,7 @@ interface FormProps {
   cancel?: string
   onCancel?: FormEvent | string
   errors?: Array<string>
+  showErrorBottom?: boolean
   closeErrors: FormEvent
   children?: Array<Element>
 }
@@ -19,9 +20,10 @@ interface FormProps {
 export default function Form(props: FormProps) {
   return (
     <form onSubmit={onSubmit(props.onSubmit)}>
-      {renderErrors(props.errors, props.closeErrors)}
+      {props.showErrorBottom || renderErrors(props.errors, props.closeErrors)}
       {props.children.filter(_ => !isFormActionButton(_))}
       {renderRequiredInformation()}
+      {props.showErrorBottom && renderErrors(props.errors, props.closeErrors)}
       {renderButtons(props)}
     </form>
   )
