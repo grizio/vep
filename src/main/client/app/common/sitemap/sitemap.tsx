@@ -59,7 +59,7 @@ export default class Sitemap extends AsyncPage<SitemapProps, SitemapState> {
 
   renderShow(show: ShowWithDependencies) {
     const showLink = [
-      `/production/companies/${show.company}/shows/page/${show.show.id}`,
+      `/production/companies/${show.company.id}/shows/page/${show.show.id}`,
       show.show.title
     ]
     const playLinks = show.plays.map(play =>
