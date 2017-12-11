@@ -1,14 +1,16 @@
 package vep.app.production.company.show
 
 import scalikejdbc._
-import vep.app.production.company.Company
 import vep.app.production.company.show.play.PlayService
+import vep.app.production.company.{Company, CompanyService}
 import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Valid, Validation}
 
 class ShowService(
   playService: PlayService
 ) extends DatabaseContainer {
+  import ShowService._
+
   def findByCompany(company: Company): Seq[Show] = withQueryConnection { implicit session =>
     findShowsByCompany(company)
   }
@@ -18,7 +20,7 @@ class ShowService(
       SELECT * FROM show
       WHERE company = ${company.id}
     """
-      .map(Show.apply)
+      .map(toShow)
       .list()
       .apply()
   }
@@ -33,7 +35,7 @@ class ShowService(
         ShowWithDependencies(
           show = show,
           company = company,
-          plays = playService.findAllFromShow(show)
+          plays = playService.findAllFromShow(show).toList
         )
       }
   }
@@ -44,7 +46,7 @@ class ShowService(
       WHERE id = ${id}
       AND   company = ${company.id}
     """
-      .map(Show.apply)
+      .map(toShow)
       .single()
       .apply()
   }
@@ -65,7 +67,7 @@ class ShowService(
       )
       ORDER BY p.date ASC
     """
-      .map(ShowMeta.apply)
+      .map(toShowMeta)
       .list()
       .apply()
   }
@@ -76,7 +78,7 @@ class ShowService(
         ShowWithDependencies(
           show = show,
           company = company,
-          plays = playService.findAllFromShow(show)
+          plays = playService.findAllFromShow(show).toList
         )
       }
     }
@@ -86,7 +88,7 @@ class ShowService(
     sql"""
       SELECT * FROM show
     """
-      .map(Show.apply)
+      .map(toShow)
       .list()
       .apply()
   }
@@ -100,7 +102,7 @@ class ShowService(
         AND s.id = ${show.id}
       )
     """
-      .map(Company.apply)
+      .map(CompanyService.toCompany)
       .single()
       .apply()
   }
@@ -149,5 +151,25 @@ class ShowService(
     """
       .execute()
       .apply()
+  }
+}
+
+object ShowService {
+  def toShow(resultSet: WrappedResultSet): Show = {
+    new Show(
+      id = resultSet.string("id"),
+      title = resultSet.string("title"),
+      author = resultSet.string("author"),
+      director = resultSet.string("director"),
+      content = resultSet.string("content"),
+    )
+  }
+
+  def toShowMeta(resultSet: WrappedResultSet): ShowMeta = {
+    new ShowMeta(
+      id = resultSet.string("id"),
+      title = resultSet.string("title"),
+      company = resultSet.string("company")
+    )
   }
 }

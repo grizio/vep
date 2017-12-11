@@ -1,0 +1,26 @@
+package vep.app.user
+
+import vep.app.common.verifications.RequiredString
+import vep.app.common.verifications.Email
+import vep.app.common.verifications.Password
+import vep.app.common.verifications.NonEmptyList
+
+type UserRegistration {
+  email: Email
+  password: Password
+}
+
+type Profile {
+  email: Email
+  firstName: RequiredString
+  lastName: RequiredString
+  address: RequiredString
+  zipCode: RequiredString
+  city: RequiredString
+  phones: NonEmptyList[Phone]
+}
+
+type Phone {
+  name: RequiredString
+  number: RequiredString
+}

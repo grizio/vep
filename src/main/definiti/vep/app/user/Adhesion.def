@@ -1,0 +1,30 @@
+package vep.app.user
+
+import vep.app.common.verifications.NonEmptyList
+import vep.app.common.verifications.RequiredString
+import vep.app.common.types.Period
+
+type PeriodAdhesion {
+  id: RequiredString
+  period: Period
+  registrationPeriod: Period
+  activities: NonEmptyList[RequiredString]
+}
+
+type PeriodAdhesionCreation {
+  period: Period
+  registrationPeriod: Period
+  activities: NonEmptyList[RequiredString]
+}
+
+type RequestAdhesion {
+  period: RequiredString
+  members: NonEmptyList[AdhesionMember]
+}
+
+type AdhesionMember {
+  firstName: RequiredString
+  lastName: RequiredString
+  birthday: Date
+  activity: RequiredString
+}

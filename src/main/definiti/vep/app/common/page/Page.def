@@ -1,0 +1,11 @@
+package vep.app.common.page
+
+import vep.app.common.verifications.RequiredString
+import vep.app.common.verifications.Canonical
+
+type Page {
+  canonical: Canonical
+  title: RequiredString
+  order: Number
+  content: RequiredString
+}

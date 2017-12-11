@@ -17,7 +17,7 @@ class TheaterVerifications(
     ) map {
       case name ~ address ~ content ~ seats => Theater(
         UUID.randomUUID().toString,
-        name, address, content, seats
+        name, address, content, seats.toList
       )
     }
   }

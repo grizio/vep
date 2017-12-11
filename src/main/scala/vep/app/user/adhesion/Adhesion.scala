@@ -1,10 +1,11 @@
 package vep.app.user.adhesion
 
-import org.joda.time.DateTime
+import java.time.LocalDateTime
+
 import scalikejdbc.WrappedResultSet
 import spray.json.{JsonFormat, JsonParser, RootJsonFormat}
 import vep.app.common.types.Period
-import vep.app.user.{User, UserView}
+import vep.app.user.UserView
 import vep.framework.utils.{DateUtils, JsonProtocol}
 
 case class PeriodAdhesion(
@@ -21,12 +22,12 @@ object PeriodAdhesion {
     new PeriodAdhesion(
       id = resultSet.string("id"),
       period = Period(
-        start = resultSet.jodaDateTime("startPeriod"),
-        end = resultSet.jodaDateTime("endPeriod")
+        start = DateUtils.fromDateTime(resultSet.jodaDateTime("startPeriod")),
+        end = DateUtils.fromDateTime(resultSet.jodaDateTime("endPeriod"))
       ),
       registrationPeriod = Period(
-        start = resultSet.jodaDateTime("startRegistration"),
-        end = resultSet.jodaDateTime("endRegistration")
+        start = DateUtils.fromDateTime(resultSet.jodaDateTime("startRegistration")),
+        end = DateUtils.fromDateTime(resultSet.jodaDateTime("endRegistration"))
       ),
       activities = activitiesFormat.read(JsonParser(resultSet.string("activities")))
     )
@@ -64,18 +65,18 @@ object Adhesion {
 case class AdhesionMember(
   firstName: String,
   lastName: String,
-  birthday: DateTime,
+  birthday: LocalDateTime,
   activity: String
 )
 
 object AdhesionMember {
-  import JsonProtocol._
+  import definiti.native.JsonSpraySupport._
 
   def apply(resultSet: WrappedResultSet): AdhesionMember = {
     new AdhesionMember(
       firstName = resultSet.string("first_name"),
       lastName = resultSet.string("last_name"),
-      birthday = resultSet.jodaDateTime("birthday"),
+      birthday = DateUtils.fromDateTime(resultSet.jodaDateTime("birthday")),
       activity = resultSet.string("activity")
     )
   }

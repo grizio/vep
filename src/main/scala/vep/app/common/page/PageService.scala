@@ -6,6 +6,8 @@ import vep.framework.validation.{Valid, Validation}
 
 class PageService(
 ) extends DatabaseContainer {
+  import PageService._
+
   def findAll(): Seq[Page] = withQueryConnection { implicit session =>
     findAllPages()
   }
@@ -14,7 +16,7 @@ class PageService(
     sql"""
       SELECT * FROM page
     """
-      .map(Page.apply)
+      .map(toPage)
       .list()
       .apply()
   }
@@ -28,7 +30,7 @@ class PageService(
       SELECT * FROM page
       WHERE canonical = ${canonical}
     """
-      .map(Page.apply)
+      .map(toPage)
       .single()
       .apply()
   }
@@ -62,5 +64,16 @@ class PageService(
     """
       .execute()
       .apply()
+  }
+}
+
+object PageService {
+  def toPage(resultSet: WrappedResultSet): Page = {
+    new Page(
+      canonical = resultSet.string("canonical"),
+      title = resultSet.string("title"),
+      order = resultSet.int("navigationOrder"),
+      content = resultSet.string("content"),
+    )
   }
 }

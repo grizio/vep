@@ -1,0 +1,18 @@
+package vep.app.production.company.show
+
+import vep.app.common.verifications.RequiredString
+
+type Show {
+  id: RequiredString
+  title: RequiredString
+  author: RequiredString
+  director: RequiredString
+  content: RequiredString
+}
+
+type ShowCreation {
+  title: RequiredString
+  author: RequiredString
+  director: RequiredString
+  content: RequiredString
+}

@@ -5,6 +5,8 @@ import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Valid, Validation}
 
 class CompanyService() extends DatabaseContainer {
+  import CompanyService._
+
   def findAll(): Seq[Company] = withQueryConnection { implicit session =>
     findAllCompanies()
   }
@@ -13,7 +15,7 @@ class CompanyService() extends DatabaseContainer {
     sql"""
       SELECT * FROM company
     """
-      .map(Company.apply)
+      .map(toCompany)
       .list()
       .apply()
   }
@@ -27,7 +29,7 @@ class CompanyService() extends DatabaseContainer {
       SELECT * FROM company
       WHERE id = ${id}
     """
-      .map(Company.apply)
+      .map(toCompany)
       .single()
       .apply()
   }
@@ -75,5 +77,17 @@ class CompanyService() extends DatabaseContainer {
     """
       .execute()
       .apply()
+  }
+}
+
+object CompanyService {
+  def toCompany(resultSet: WrappedResultSet): Company = {
+    new Company(
+      id = resultSet.string("id"),
+      name = resultSet.string("name"),
+      address = resultSet.string("address"),
+      isVep = resultSet.boolean("isVep"),
+      content = resultSet.string("content"),
+    )
   }
 }

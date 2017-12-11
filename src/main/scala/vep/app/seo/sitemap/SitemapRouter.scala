@@ -9,6 +9,7 @@ import vep.app.production.company.show.{ShowService, ShowWithDependencies}
 import vep.app.seo.SeoCommon
 import vep.app.user.UserService
 import vep.framework.router.RouterComponent
+import vep.framework.utils.DateUtils
 
 import scala.collection.immutable
 import scala.concurrent.ExecutionContext
@@ -53,8 +54,8 @@ class SitemapRouter(
   }
 
   private def sitemapShow(show: ShowWithDependencies): Seq[SitemapUrl] = {
-    val hasPastPlays = show.plays.exists(_.date.isBeforeNow)
-    val hasFuturePlays = show.plays.exists(_.date.isAfterNow)
+    val hasPastPlays = show.plays.exists(play => DateUtils.isBeforeNow(play.date))
+    val hasFuturePlays = show.plays.exists(play => DateUtils.isAfterNow(play.date))
     val baseSitemap =
       if (hasPastPlays && hasFuturePlays) baseSitemapCurrentShow
       else if (hasFuturePlays) baseSitemapFutureShow
@@ -63,7 +64,7 @@ class SitemapRouter(
     val showSitemap = baseSitemap.copy(
       url = seoCommon.showUrl(show)
     )
-    val playsSitemap = show.plays.filter(_.date.isAfterNow).map { play =>
+    val playsSitemap = show.plays.filter(play => DateUtils.isAfterNow(play.date)).map { play =>
       baseSitemap.copy(
         url = seoCommon.playUrl(show, play),
         priority = baseSitemap.priority.map(_ - 0.1)

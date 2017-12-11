@@ -1,0 +1,41 @@
+package vep.app.production.company.show.play
+
+import vep.app.common.verifications.RequiredString
+import vep.app.common.verifications.NonEmptyList
+import vep.app.common.verifications.PositiveNumber
+import vep.app.common.verifications.dateIsBefore
+
+type Play {
+  id: RequiredString
+  theater: RequiredString
+  date: Date
+  reservationEndDate: Date
+  prices: NonEmptyList[PlayPrice]
+
+  verify {
+    "La date de fin de réservation doit être avant la date de la séance"
+    (play) => {
+      dateIsBefore(play.reservationEndDate, play.date)
+    }
+  }
+}
+
+type PlayPrice {
+  name: RequiredString
+  value: PositiveNumber
+  condition: Option[String]
+}
+
+type PlayCreation {
+  theater: RequiredString
+  date: Date
+  reservationEndDate: Date
+  prices: NonEmptyList[PlayPrice]
+
+  verify {
+    "La date de fin de réservation doit être avant la date de la séance"
+    (play) => {
+      dateIsBefore(play.reservationEndDate, play.date)
+    }
+  }
+}

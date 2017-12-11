@@ -1,0 +1,33 @@
+package vep.app.common.verifications
+
+type NonEmptyList[A] = List[A] verifying ListIsNonEmpty
+verification ListIsNonEmpty {
+  "Veuillez indiquer au moins un élément"
+  [A](list: List[A]) => {
+    list.nonEmpty()
+  }
+}
+
+type ListOfUniques[A] = List[A] verifying ListHasUniqueElements
+verification ListHasUniqueElements {
+  "Tous les éléments de la liste doivent être uniques"
+  [A](list: List[A]) => {
+    list.forAll((element: A) => {
+      list.count((innerElement: A) => {
+        innerElement == element
+      }) == 1
+    })
+  }
+}
+
+def listContainsNoForbiddenElement[A](list: List[A], forbiddenElements: List[A]): Boolean => {
+  forbiddenElements.forNone((forbiddenElement: A) => {
+    list.contains(forbiddenElement)
+  })
+}
+
+def listContainsOnlyAcceptedElements[A](list: List[A], acceptedElements: List[A]): Boolean => {
+  list.forAll((element: A) => {
+    acceptedElements.contains(element)
+  })
+}

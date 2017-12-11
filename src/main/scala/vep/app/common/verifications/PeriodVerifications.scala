@@ -25,8 +25,8 @@ trait PeriodVerifications {
   }
 
   def verifyDateIncluded(date: DateTime, reference: Period): Validation[DateTime] = {
-    val isAfterOrEqualsStart = date.isAfter(reference.start) || date.isEqual(reference.start)
-    val isBeforeOrEqualsEnd = date.isBefore(reference.end) || date.isEqual(reference.end)
+    val isAfterOrEqualsStart = date.isAfter(new DateTime(reference.start)) || date.isEqual(new DateTime(reference.start))
+    val isBeforeOrEqualsEnd = date.isBefore(new DateTime(reference.end)) || date.isEqual(new DateTime(reference.end))
     if (isAfterOrEqualsStart && isBeforeOrEqualsEnd) {
       Valid(date)
     } else {

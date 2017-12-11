@@ -1,0 +1,9 @@
+package vep.app.common.verifications
+
+type PositiveNumber = Number verifying IsPositive
+verification IsPositive {
+  "Veuillez indiquer un nom strictement positif"
+  (number: Number) => {
+    number > 0
+  }
+}

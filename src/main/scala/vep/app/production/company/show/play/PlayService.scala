@@ -3,20 +3,23 @@ package vep.app.production.company.show.play
 import java.util.UUID
 
 import scalikejdbc._
-import vep.app.production.company.Company
-import vep.app.production.company.show.Show
+import vep.app.production.company.show.{Show, ShowService}
+import vep.app.production.company.{Company, CompanyService}
 import vep.app.production.reservation.ReservationService
 import vep.app.production.theater.{Seat, Theater, TheaterService}
 import vep.framework.database.DatabaseContainer
+import vep.framework.utils.DateUtils
 import vep.framework.validation.{Invalid, Valid, Validation}
 
 class PlayService(
   theaterService: TheaterService,
   reservationService: ReservationService
 ) extends DatabaseContainer {
+  import PlayService._
+
   def findByShow(show: Show): Seq[PlayView] = withQueryConnection { implicit session =>
     findPlaysByShow(show)
-      .map(play => play.copy(prices = findPricesByPlay(play)))
+      .map(play => play.copy(prices = findPricesByPlay(play).toList))
       .flatMap(play => theaterService.find(play.theater).map(PlayView(play, _)))
   }
 
@@ -25,7 +28,7 @@ class PlayService(
       SELECT * FROM play
       WHERE show = ${show.id}
     """
-      .map(Play.apply)
+      .map(toPlay)
       .list()
       .apply()
   }
@@ -35,7 +38,7 @@ class PlayService(
       SELECT * FROM play_price
       WHERE play = ${play.id}
     """
-      .map(PlayPrice.apply)
+      .map(toPlayPrice)
       .list()
       .apply()
   }
@@ -45,7 +48,7 @@ class PlayService(
       SELECT * FROM play_theater_seat
       WHERE play_id = ${play.id}
     """
-      .map(Seat.apply)
+      .map(TheaterService.toSeat)
       .list()
       .apply()
   }
@@ -53,16 +56,16 @@ class PlayService(
   def find(id: String): Option[Play] = withQueryConnection { implicit session =>
     findPlay(id)
       .map(play => play.copy(
-        prices = findPricesByPlay(play)
+        prices = findPricesByPlay(play).toList
       ))
   }
 
   def findFromShow(show: Show, id: String): Option[PlayView] = withQueryConnection { implicit session =>
     findPlayFromShow(show, id)
-      .map(play => play.copy(prices = findPricesByPlay(play)))
+      .map(play => play.copy(prices = findPricesByPlay(play).toList))
       .flatMap { play =>
         theaterService.find(play.theater)
-          .map(theater => theater.copy(seats = findSeatsByPlay(play)))
+          .map(theater => theater.copy(seats = findSeatsByPlay(play).toList))
           .map(PlayView(play, _))
       }
   }
@@ -77,7 +80,7 @@ class PlayService(
       WHERE id = ${id}
       AND   show = ${show.id}
     """
-      .map(Play.apply)
+      .map(toPlay)
       .single()
       .apply()
   }
@@ -87,14 +90,14 @@ class PlayService(
       SELECT * FROM play
       WHERE id = ${id}
     """
-      .map(Play.apply)
+      .map(toPlay)
       .single()
       .apply()
   }
 
   def findAllFromShow(show: Show): Seq[PlayView] = withQueryConnection { implicit session =>
     findAllPlaysFromShow(show)
-      .map(play => play.copy(prices = findPricesByPlay(play)))
+      .map(play => play.copy(prices = findPricesByPlay(play).toList))
       .flatMap(play => theaterService.find(play.theater).map(PlayView(play, _)))
   }
 
@@ -103,7 +106,7 @@ class PlayService(
       SELECT * FROM play
       WHERE show = ${show.id}
     """
-      .map(Play.apply)
+      .map(toPlay)
       .list()
       .apply()
   }
@@ -121,14 +124,14 @@ class PlayService(
       WHERE date > CURRENT_TIMESTAMP
       ORDER BY date ASC
     """
-      .map(PlayMeta.apply)
+      .map(toPlayMeta)
       .list()
       .apply()
   }
 
   def findNextFull(): Seq[PlayWithDependencies] = withQueryConnection { implicit session =>
     findNextPlay()
-      .map(play => play.copy(prices = findPricesByPlay(play)))
+      .map(play => play.copy(prices = findPricesByPlay(play).toList))
       .map(includeDependencies)
       .flatten
   }
@@ -141,7 +144,7 @@ class PlayService(
       WHERE date > CURRENT_TIMESTAMP
       ORDER BY date ASC
     """
-      .map(Play.apply)
+      .map(toPlay)
       .list()
       .apply()
   }
@@ -168,7 +171,7 @@ class PlayService(
         WHERE p.id = ${play.id} AND p.show = s.id
       )
     """
-      .map(Show.apply)
+      .map(ShowService.toShow)
       .single()
       .apply()
   }
@@ -181,7 +184,7 @@ class PlayService(
         WHERE s.id = ${show.id} AND s.company = c.id
       )
     """
-      .map(Company.apply)
+      .map(CompanyService.toCompany)
       .single()
       .apply()
   }
@@ -191,7 +194,7 @@ class PlayService(
       SELECT * FROM theater t
       WHERE id = ${play.theater}
     """
-      .map(Theater.apply)
+      .map(TheaterService.toTheater)
       .single()
       .apply()
   }
@@ -317,5 +320,35 @@ class PlayService(
     """
       .execute()
       .apply()
+  }
+}
+
+object PlayService {
+  def toPlay(resultSet: WrappedResultSet): Play = {
+    new Play(
+      id = resultSet.string("id"),
+      theater = resultSet.string("theater"),
+      date = DateUtils.fromDateTime(resultSet.jodaDateTime("date")),
+      reservationEndDate = DateUtils.fromDateTime(resultSet.jodaDateTime("reservationEndDate")),
+      prices = List.empty
+    )
+  }
+
+  def toPlayPrice(resultSet: WrappedResultSet): PlayPrice = {
+    new PlayPrice(
+      name = resultSet.string("name"),
+      value = resultSet.bigDecimal("value"),
+      condition = resultSet.stringOpt("condition")
+    )
+  }
+
+  def toPlayMeta(resultSet: WrappedResultSet): PlayMeta = {
+    new PlayMeta(
+      id = resultSet.string("id"),
+      date = DateUtils.fromDateTime(resultSet.jodaDateTime("date")),
+      show = resultSet.string("title"),
+      showId = resultSet.string("showId"),
+      company = resultSet.string("companyId")
+    )
   }
 }

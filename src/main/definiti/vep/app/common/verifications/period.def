@@ -1,0 +1,13 @@
+package vep.app.common.verifications
+
+import vep.app.common.types.Period
+import vep.app.common.verifications.dateIsBeforeOrEqual
+import vep.app.common.verifications.dateIsAfterOrEqual
+
+def periodIsIncluded(period: Period, reference: Period): Boolean => {
+  dateIsAfterOrEqual(period.start, reference.start) && dateIsBeforeOrEqual(period.end, reference.end)
+}
+
+def dateIsIncluded(date: Date, reference: Period): Boolean => {
+  dateIsAfterOrEqual(date, reference.start) && dateIsBeforeOrEqual(date, reference.end)
+}

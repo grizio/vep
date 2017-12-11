@@ -62,6 +62,6 @@ trait ShowRender extends Render {
   }
 
   private def getFuturePlays(show: ShowWithDependencies): Seq[PlayView] = {
-    show.plays.filter(play => play.date.isAfterNow)
+    show.plays.filter(play => DateUtils.isAfterNow(play.date))
   }
 }

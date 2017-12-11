@@ -18,6 +18,8 @@ libraryDependencies += "org.apache.commons" % "commons-email" % "1.4"
 libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.3.5"
 libraryDependencies += "org.scala-lang.modules" % "scala-xml_2.12" % "1.0.6"
 
+unmanagedSourceDirectories in Compile += baseDirectory.value / "src" / "main" / "scala-definiti"
+
 lazy val installClient = TaskKey[Unit]("installClient", "Install all elements for client part")
 lazy val buildClient = TaskKey[Unit]("buildClient", "Build client part")
 lazy val prod = TaskKey[Unit]("prod", "Build the application for production usage")

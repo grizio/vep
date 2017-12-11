@@ -1,0 +1,33 @@
+package vep.app.common.verifications
+
+type Email = String verifying IsEmail
+verification IsEmail {
+  "L'adresse e-mail est invalide"
+  (string: String) => {
+    string.matches("^([a-zA-Z0-9.!#$%&’'*+/=?^_`{|}~-]+)@([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*)$")
+  }
+}
+
+type NonEmptyString = String verifying IsNonEmptyString
+verification IsNonEmptyString {
+  "Veuillez renseigner le champ"
+  (string: String) => {
+    string.nonEmpty()
+  }
+}
+
+type RequiredString = String verifying IsNonBlank
+verification IsNonBlank {
+  "Veuillez renseigner le champ"
+  (string: String) => {
+    string.trim().nonEmpty()
+  }
+}
+
+type Canonical = String verifying IsCanonical
+verification IsCanonical {
+  "Le format d'url est invalide (caractères autorisés: lettres minuscules, chiffres et -)"
+  (string: String) => {
+    string.matches("^[a-zA-Z0-9-]+$")
+  }
+}

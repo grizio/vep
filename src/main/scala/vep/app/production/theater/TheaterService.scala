@@ -5,16 +5,18 @@ import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Valid, Validation}
 
 class TheaterService() extends DatabaseContainer {
+  import TheaterService._
+
   def findAll(): Seq[Theater] = withQueryConnection { implicit session =>
     findAllTheaters()
-      .map(theater => theater.copy(seats = findSeatsByTheater(theater.id)))
+      .map(theater => theater.copy(seats = findSeatsByTheater(theater.id).toList))
   }
 
   private def findAllTheaters()(implicit session: DBSession): Seq[Theater] = {
     sql"""
       SELECT * FROM theater
     """
-      .map(Theater.apply)
+      .map(toTheater)
       .list()
       .apply()
   }
@@ -24,14 +26,14 @@ class TheaterService() extends DatabaseContainer {
       SELECT * FROM theater_seat
       WHERE theater_id = ${theaterId}
     """
-      .map(Seat.apply)
+      .map(toSeat)
       .list()
       .apply()
   }
 
   def find(id: String): Option[Theater] = withQueryConnection { implicit session =>
     findTheater(id)
-      .map(theater => theater.copy(seats = findSeatsByTheater(theater.id)))
+      .map(theater => theater.copy(seats = findSeatsByTheater(theater.id).toList))
   }
 
   private def findTheater(id: String)(implicit session: DBSession): Option[Theater] = {
@@ -39,7 +41,7 @@ class TheaterService() extends DatabaseContainer {
       SELECT * FROM theater
       WHERE id = $id
     """
-      .map(Theater.apply)
+      .map(toTheater)
       .single()
       .apply()
   }
@@ -110,5 +112,28 @@ class TheaterService() extends DatabaseContainer {
     """
       .execute()
       .apply()
+  }
+}
+
+object TheaterService {
+  def toTheater(resultSet: WrappedResultSet): Theater = {
+    new Theater(
+      id = resultSet.string("id"),
+      name = resultSet.string("name"),
+      address = resultSet.string("address"),
+      content = resultSet.string("content"),
+      seats = List.empty
+    )
+  }
+
+  def toSeat(resultSet: WrappedResultSet): Seat = {
+    new Seat(
+      c = resultSet.string("c"),
+      x = resultSet.int("x"),
+      y = resultSet.int("y"),
+      w = resultSet.int("w"),
+      h = resultSet.int("h"),
+      t = resultSet.string("t")
+    )
   }
 }

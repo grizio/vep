@@ -1,0 +1,11 @@
+package vep.app.common.contact
+
+import vep.app.common.verifications.Email
+import vep.app.common.verifications.RequiredString
+
+type Contact {
+  name: RequiredString
+  email: Email
+  title: RequiredString
+  content: RequiredString
+}

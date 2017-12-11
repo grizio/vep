@@ -1,0 +1,32 @@
+package vep.app.production.theater
+
+import vep.app.common.verifications.RequiredString
+import vep.app.common.verifications.ListIsNonEmpty
+import vep.app.common.verifications.ListHasUniqueElements
+import vep.app.common.verifications.PositiveNumber
+
+type Theater {
+  id: RequiredString
+  name: RequiredString
+  address: RequiredString
+  content: RequiredString
+  seats: Seats
+}
+
+type Seats = List[Seat] verifying ListIsNonEmpty verifying ListHasUniqueElements
+
+type TheaterCreation {
+  name: RequiredString
+  address: RequiredString
+  content: RequiredString
+  seats: Seats
+}
+
+type Seat {
+  c: RequiredString
+  x: PositiveNumber
+  y: PositiveNumber
+  w: PositiveNumber
+  h: PositiveNumber
+  t: RequiredString
+}

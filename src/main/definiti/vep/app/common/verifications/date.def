@@ -1,0 +1,21 @@
+package vep.app.common.verifications
+
+def dateIsBefore(date: Date, referenceDate: Date): Boolean => {
+  date.timestamp < referenceDate.timestamp
+}
+
+def dateIsAfter(date: Date, referenceDate: Date): Boolean => {
+  date.timestamp > referenceDate.timestamp
+}
+
+def dateIsEqual(date: Date, referenceDate: Date): Boolean => {
+  date.timestamp == referenceDate.timestamp
+}
+
+def dateIsBeforeOrEqual(date: Date, referenceDate: Date): Boolean => {
+  date.timestamp <= referenceDate.timestamp
+}
+
+def dateIsAfterOrEqual(date: Date, referenceDate: Date): Boolean => {
+  date.timestamp >= referenceDate.timestamp
+}

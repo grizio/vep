@@ -7,6 +7,8 @@ import vep.framework.validation.{Valid, Validation}
 
 class ReservationService(
 ) extends DatabaseContainer {
+  import ReservationService._
+
   def findReservedSeats(playId: String): Seq[String] = withQueryConnection { implicit session =>
     findReservedSeatsFromPlay(playId)
   }
@@ -40,7 +42,7 @@ class ReservationService(
         AND play_id = ${playId}
       )
     """
-      .map(Reservation.apply)
+      .map(toReservation)
       .list()
       .apply()
   }
@@ -62,7 +64,7 @@ class ReservationService(
       FROM reservation_price
       WHERE reservation_id = ${reservation.id}
     """
-      .map(ReservationPrice.apply)
+      .map(toReservationPrice)
       .list()
       .apply()
   }
@@ -86,7 +88,7 @@ class ReservationService(
         AND play_id = ${playId}
       )
     """
-      .map(Reservation.apply)
+      .map(toReservation)
       .single()
       .apply()
   }
@@ -175,5 +177,27 @@ class ReservationService(
         deleteReservation(reservation.id)
       }
     Valid()
+  }
+}
+
+object ReservationService {
+  def toReservation(resultSet: WrappedResultSet): Reservation = {
+    new Reservation(
+      id = resultSet.string("id"),
+      firstName = resultSet.string("first_name"),
+      lastName = resultSet.string("last_name"),
+      email = resultSet.string("email"),
+      city = resultSet.stringOpt("city"),
+      comment = resultSet.stringOpt("comment"),
+      seats = List.empty,
+      prices = List.empty
+    )
+  }
+
+  def toReservationPrice(resultSet: WrappedResultSet): ReservationPrice = {
+    new ReservationPrice(
+      price = resultSet.string("price"),
+      count = resultSet.int("seatsCount")
+    )
   }
 }

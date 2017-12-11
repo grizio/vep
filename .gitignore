@@ -1,3 +1,4 @@
+/.definiti
 /.idea
 /notes
 /target
@@ -5,4 +6,5 @@
 /project/project/target
 /src/main/resources/local.conf
 /src/main/client/node_modules
+/src/main/scala-definiti
 /node_modules

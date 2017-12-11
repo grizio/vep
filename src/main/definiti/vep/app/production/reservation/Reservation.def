@@ -1,0 +1,30 @@
+package vep.app.production.reservation
+
+import vep.app.common.verifications.RequiredString
+import vep.app.common.verifications.ListIsNonEmpty
+import vep.app.common.verifications.ListHasUniqueElements
+import vep.app.common.verifications.Email
+
+type ReservationCreation {
+  firstName: RequiredString
+  lastName: RequiredString
+  email: Email
+  city: Option[String]
+  comment: Option[String]
+  seats: List[String]
+  prices: List[ReservationPrice]
+
+  verify {
+    "Veuillez répartir l'ensemble des sièges dans les tarifs et vérifier à ne pas dépasser."
+    (reservation) => {
+      reservation.seats.size == reservation.prices.foldLeft(0, (acc: Number, price: ReservationPrice) => {acc + price.count})
+    }
+  }
+}
+
+type ReservedSeats = List[String] verifying ListIsNonEmpty verifying ListHasUniqueElements
+
+type ReservationPrice {
+  price: RequiredString
+  count: Number
+}

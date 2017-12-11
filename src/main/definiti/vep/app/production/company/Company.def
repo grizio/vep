@@ -1,0 +1,18 @@
+package vep.app.production.company
+
+import vep.app.common.verifications.RequiredString
+
+type Company {
+  id: RequiredString
+  name: RequiredString
+  address: RequiredString
+  isVep: Boolean
+  content: RequiredString
+}
+
+type CompanyCreation {
+  name: RequiredString
+  address: RequiredString
+  isVep: Boolean
+  content: RequiredString
+}
