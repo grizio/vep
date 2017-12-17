@@ -1,18 +1,18 @@
 package vep.app.production.company
 
-import vep.app.common.verifications.RequiredString
+import vep.app.common.verifications.IsNonBlank
 
 type Company {
-  id: RequiredString
-  name: RequiredString
-  address: RequiredString
+  id: String verifying IsNonBlank("Veuillez renseigner l'identifiant de la companie")
+  name: String verifying IsNonBlank("Veuillez renseigner le nom")
+  address: String verifying IsNonBlank("Veuillez renseigner l'adresse")
   isVep: Boolean
-  content: RequiredString
+  content: String verifying IsNonBlank("Veuillez renseigner le contenu")
 }
 
 type CompanyCreation {
-  name: RequiredString
-  address: RequiredString
+  name: String verifying IsNonBlank("Veuillez renseigner le nom")
+  address: String verifying IsNonBlank("Veuillez renseigner l'adresse")
   isVep: Boolean
-  content: RequiredString
+  content: String verifying IsNonBlank("Veuillez renseigner le contenu")
 }

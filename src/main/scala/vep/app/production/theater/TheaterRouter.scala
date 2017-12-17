@@ -7,6 +7,7 @@ import vep.app.user.UserService
 import vep.framework.router.RouterComponent
 
 import scala.concurrent.ExecutionContext
+import java.util.UUID
 
 class TheaterRouter(
   theaterVerifications: TheaterVerifications,
@@ -30,10 +31,15 @@ class TheaterRouter(
   }
 
   def create: Route = adminPost("production" / "theaters", as[TheaterCreation]) { (theaterCreation, _) =>
-    verifying(theaterVerifications.verifyCreation(theaterCreation)) { theater =>
-      verifying(theaterService.create(theater)) { theater =>
-        Ok(theater)
-      }
+    val theater = Theater(
+      id = UUID.randomUUID().toString,
+      name = theaterCreation.name,
+      address = theaterCreation.address,
+      content = theaterCreation.content,
+      seats = theaterCreation.seats
+    )
+    verifying(theaterService.create(theater)) { theater =>
+      Ok(theater)
     }
   }
 

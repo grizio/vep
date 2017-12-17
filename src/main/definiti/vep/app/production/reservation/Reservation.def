@@ -1,13 +1,13 @@
 package vep.app.production.reservation
 
-import vep.app.common.verifications.RequiredString
+import vep.app.common.verifications.IsNonBlank
 import vep.app.common.verifications.ListIsNonEmpty
 import vep.app.common.verifications.ListHasUniqueElements
 import vep.app.common.verifications.Email
 
 type ReservationCreation {
-  firstName: RequiredString
-  lastName: RequiredString
+  firstName: String verifying IsNonBlank("Veuillez renseigner le prénom")
+  lastName: String verifying IsNonBlank("Veuillez renseigner le nom")
   email: Email
   city: Option[String]
   comment: Option[String]
@@ -25,6 +25,6 @@ type ReservationCreation {
 type ReservedSeats = List[String] verifying ListIsNonEmpty verifying ListHasUniqueElements
 
 type ReservationPrice {
-  price: RequiredString
+  price: String verifying IsNonBlank("Veuillez sélectionner le prix")
   count: Number
 }

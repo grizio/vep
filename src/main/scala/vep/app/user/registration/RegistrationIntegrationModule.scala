@@ -18,14 +18,10 @@ trait RegistrationIntegrationModule {
     mailer,
     configuration
   )
-  lazy val registrationVerifications = new RegistrationVerifications(
-    commonVerifications
-  )
   lazy val registrationService = new RegistrationService(
     userService
   )
   lazy val registrationRouter = new RegistrationRouter(
-    registrationVerifications,
     registrationService,
     registrationMailer,
     configuration,

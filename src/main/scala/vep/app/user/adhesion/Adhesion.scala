@@ -1,53 +1,15 @@
 package vep.app.user.adhesion
 
-import java.time.LocalDateTime
-
-import scalikejdbc.WrappedResultSet
-import spray.json.{JsonFormat, JsonParser, RootJsonFormat}
-import vep.app.common.types.Period
+import spray.json.RootJsonFormat
 import vep.app.user.UserView
 import vep.framework.utils.{DateUtils, JsonProtocol}
 
-case class PeriodAdhesion(
+case class AdhesionEntry(
   id: String,
-  period: Period,
-  registrationPeriod: Period,
-  activities: Seq[String]
+  period: String,
+  user: String,
+  accepted: Boolean
 )
-
-object PeriodAdhesion {
-  import JsonProtocol._
-
-  def apply(resultSet: WrappedResultSet): PeriodAdhesion = {
-    new PeriodAdhesion(
-      id = resultSet.string("id"),
-      period = Period(
-        start = DateUtils.fromDateTime(resultSet.jodaDateTime("startPeriod")),
-        end = DateUtils.fromDateTime(resultSet.jodaDateTime("endPeriod"))
-      ),
-      registrationPeriod = Period(
-        start = DateUtils.fromDateTime(resultSet.jodaDateTime("startRegistration")),
-        end = DateUtils.fromDateTime(resultSet.jodaDateTime("endRegistration"))
-      ),
-      activities = activitiesFormat.read(JsonParser(resultSet.string("activities")))
-    )
-  }
-
-  implicit val periodAdhesionFormat: RootJsonFormat[PeriodAdhesion] = jsonFormat4(PeriodAdhesion.apply)
-  val activitiesFormat: JsonFormat[Seq[String]] = seqFormat[String]
-}
-
-case class PeriodAdhesionCreation(
-  period: Period,
-  registrationPeriod: Period,
-  activities: Seq[String]
-)
-
-object PeriodAdhesionCreation {
-  import JsonProtocol._
-
-  implicit val periodAdhesionCreationFormat: RootJsonFormat[PeriodAdhesionCreation] = jsonFormat3(PeriodAdhesionCreation.apply)
-}
 
 case class Adhesion(
   id: String,
@@ -60,57 +22,6 @@ object Adhesion {
   import JsonProtocol._
 
   implicit val adhesionFormat: RootJsonFormat[Adhesion] = jsonFormat4(Adhesion.apply)
-}
-
-case class AdhesionMember(
-  firstName: String,
-  lastName: String,
-  birthday: LocalDateTime,
-  activity: String
-)
-
-object AdhesionMember {
-  import definiti.native.JsonSpraySupport._
-
-  def apply(resultSet: WrappedResultSet): AdhesionMember = {
-    new AdhesionMember(
-      firstName = resultSet.string("first_name"),
-      lastName = resultSet.string("last_name"),
-      birthday = DateUtils.fromDateTime(resultSet.jodaDateTime("birthday")),
-      activity = resultSet.string("activity")
-    )
-  }
-
-  implicit val adhesionMemberFormat: RootJsonFormat[AdhesionMember] = jsonFormat4(AdhesionMember.apply)
-}
-
-case class RequestAdhesion(
-  period: String,
-  members: Seq[AdhesionMember]
-)
-
-object RequestAdhesion {
-  import JsonProtocol._
-
-  implicit val requestAdhesionFormat: RootJsonFormat[RequestAdhesion] = jsonFormat2(RequestAdhesion.apply)
-}
-
-case class AdhesionEntry(
-  id: String,
-  period: String,
-  user: String,
-  accepted: Boolean
-)
-
-object AdhesionEntry {
-  def apply(resultSet: WrappedResultSet): AdhesionEntry = {
-    new AdhesionEntry(
-      id = resultSet.string("id"),
-      user = resultSet.string("user_id"),
-      period = resultSet.string("period"),
-      accepted = resultSet.boolean("accepted")
-    )
-  }
 }
 
 case class AdhesionView(

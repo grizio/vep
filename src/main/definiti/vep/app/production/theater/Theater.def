@@ -1,9 +1,10 @@
 package vep.app.production.theater
 
+import vep.app.common.verifications.IsNonBlank
+import vep.app.common.verifications.IsPositive
 import vep.app.common.verifications.RequiredString
 import vep.app.common.verifications.ListIsNonEmpty
 import vep.app.common.verifications.ListHasUniqueElements
-import vep.app.common.verifications.PositiveNumber
 
 type Theater {
   id: RequiredString
@@ -13,20 +14,20 @@ type Theater {
   seats: Seats
 }
 
-type Seats = List[Seat] verifying ListIsNonEmpty verifying ListHasUniqueElements
+type Seats = List[Seat] verifying ListIsNonEmpty("Veuillez renseigner au moins un siège") verifying ListHasUniqueElements
 
 type TheaterCreation {
-  name: RequiredString
-  address: RequiredString
-  content: RequiredString
+  name: String verifying IsNonBlank("Veuillez renseigner un nom")
+  address: String verifying IsNonBlank("Veuillez renseigner une adresse")
+  content: String verifying IsNonBlank("Veuillez renseigner un contenu")
   seats: Seats
 }
 
 type Seat {
-  c: RequiredString
-  x: PositiveNumber
-  y: PositiveNumber
-  w: PositiveNumber
-  h: PositiveNumber
-  t: RequiredString
+  c: String verifying IsNonBlank("Veuillez indiquer le code du siège")
+  x: Number verifying IsPositive("Veuillez indiquer une abscisse positive")
+  y: Number verifying IsPositive("Veuillez indiquer une ordonnée positive")
+  w: Number verifying IsPositive("Veuillez indiquer une largeur positive")
+  h: Number verifying IsPositive("Veuillez indiquer une hauteur positive")
+  t: String verifying IsNonBlank("Veuillez indiquer un type de siège")
 }

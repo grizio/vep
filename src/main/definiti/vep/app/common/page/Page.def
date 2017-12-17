@@ -1,11 +1,11 @@
 package vep.app.common.page
 
-import vep.app.common.verifications.RequiredString
+import vep.app.common.verifications.IsNonBlank
 import vep.app.common.verifications.Canonical
 
 type Page {
   canonical: Canonical
-  title: RequiredString
+  title: String verifying IsNonBlank("Veuillez renseigner un titre")
   order: Number
-  content: RequiredString
+  content: String verifying IsNonBlank("Veuillez renseigner un contenu")
 }

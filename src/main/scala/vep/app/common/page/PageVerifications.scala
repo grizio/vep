@@ -10,20 +10,13 @@ class PageVerifications(
   def verify(page: Page, canonical: String): Validation[Page] = {
     (
       commonVerifications.verifyEquals(page.canonical, canonical)
-        ~ commonVerifications.verifyCanonical(page.canonical)
-        ~ commonVerifications.verifyNonBlank(page.title)
-        ~ commonVerifications.verifyNonBlank(page.content)
         ~ verifyNotDuplicatedCanonical(page.canonical)
       ) map { _ => page }
   }
 
   def verifyUpdate(page: Page, canonical: String): Validation[Page] = {
-    (
-      commonVerifications.verifyEquals(page.canonical, canonical)
-        ~ commonVerifications.verifyCanonical(page.canonical)
-        ~ commonVerifications.verifyNonBlank(page.title)
-        ~ commonVerifications.verifyNonBlank(page.content)
-      ) map { _ => page }
+    commonVerifications.verifyEquals(page.canonical, canonical)
+      .map { _ => page }
   }
 
   private def verifyNotDuplicatedCanonical(canonical: String): Validation[String] = {

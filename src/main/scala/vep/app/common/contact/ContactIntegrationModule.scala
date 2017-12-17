@@ -22,11 +22,7 @@ trait ContactIntegrationModule {
     mailer,
     configuration
   )
-  lazy val contactVerifications = new ContactVerifications(
-    commonVerifications
-  )
   lazy val contactRouter = new ContactRouter(
-    contactVerifications,
     contactMailer,
     configuration,
     userService,

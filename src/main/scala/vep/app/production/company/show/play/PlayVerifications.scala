@@ -14,28 +14,13 @@ class PlayVerifications(
     Validation.all(
       commonVerifications.verifyIsDefined(theaterService.find(playCreation.theater), TheaterMessage.unknownTheater),
       commonVerifications.verifyIsAfterNow(playCreation.date),
-      commonVerifications.verifyIsBefore(playCreation.reservationEndDate, playCreation.date),
-      verifyPrices(playCreation.prices)
+      commonVerifications.verifyIsBefore(playCreation.reservationEndDate, playCreation.date)
     ) map {
-      case theater ~ date ~ reservationEndDate ~ prices => Play(
+      case theater ~ date ~ reservationEndDate => Play(
         UUID.randomUUID().toString,
-        theater.id, date, reservationEndDate, prices.toList
+        theater.id, date, reservationEndDate, playCreation.prices
       )
     }
-  }
-
-  private def verifyPrices(prices: Seq[PlayPrice]): Validation[Seq[PlayPrice]] = {
-    Validation.all(
-      commonVerifications.verifyNonEmptySeq(prices),
-      Validation.sequence(prices.map(verifyPrice))
-    ) map { _ => prices }
-  }
-
-  private def verifyPrice(price: PlayPrice): Validation[PlayPrice] = {
-    Validation.all(
-      commonVerifications.verifyNonBlank(price.name),
-      commonVerifications.verifyIsPositive(price.value)
-    ) map { _ => price }
   }
 
   def verify(play: Play, playId: String): Validation[Play] = {
@@ -43,8 +28,7 @@ class PlayVerifications(
       commonVerifications.verifyEquals(play.id, playId),
       commonVerifications.verifyIsDefined(theaterService.find(play.theater), TheaterMessage.unknownTheater),
       commonVerifications.verifyIsAfterNow(play.date),
-      commonVerifications.verifyIsBefore(play.reservationEndDate, play.date),
-      verifyPrices(play.prices)
+      commonVerifications.verifyIsBefore(play.reservationEndDate, play.date)
     ) map { _ => play }
   }
 }

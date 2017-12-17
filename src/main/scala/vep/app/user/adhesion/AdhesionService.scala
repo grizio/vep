@@ -1,15 +1,20 @@
 package vep.app.user.adhesion
 
-import scalikejdbc._
-import vep.framework.database.DatabaseContainer
-import vep.framework.validation.{Valid, Validation}
 import java.util.UUID
 
-import vep.app.user.{User, UserService}
+import scalikejdbc._
+import spray.json.{JsArray, JsString, JsonParser}
+import vep.app.common.types.Period
+import vep.app.user.UserService
+import vep.framework.database.DatabaseContainer
+import vep.framework.utils.DateUtils
+import vep.framework.validation.{Valid, Validation}
 
 class AdhesionService(
   userService: UserService
 ) extends DatabaseContainer {
+  import AdhesionService._
+
   def findAllPeriods(): Seq[PeriodAdhesion] = withQueryConnection { implicit session =>
     findAllPeriodsAdhesion()
   }
@@ -18,7 +23,7 @@ class AdhesionService(
     sql"""
       SELECT * FROM period_adhesion
     """
-      .map(PeriodAdhesion.apply)
+      .map(toPeriodAdhesion)
       .list()
       .apply()
   }
@@ -32,7 +37,7 @@ class AdhesionService(
       SELECT * FROM period_adhesion
       WHERE id = ${id}
     """
-      .map(PeriodAdhesion.apply)
+      .map(toPeriodAdhesion)
       .single()
       .apply()
   }
@@ -46,7 +51,7 @@ class AdhesionService(
       SELECT * FROM period_adhesion
       WHERE current_timestamp BETWEEN startRegistration and endRegistration
     """
-      .map(PeriodAdhesion.apply)
+      .map(toPeriodAdhesion)
       .list()
       .apply()
   }
@@ -61,7 +66,7 @@ class AdhesionService(
       SELECT * FROM adhesion
       WHERE period = ${periodId}
     """
-      .map(AdhesionEntry.apply)
+      .map(toAdhesionEntry)
       .list()
       .apply()
   }
@@ -76,7 +81,7 @@ class AdhesionService(
       SELECT * FROM adhesion
       WHERE user_id = ${userId}
     """
-      .map(AdhesionEntry.apply)
+      .map(toAdhesionEntry)
       .list()
       .apply()
   }
@@ -92,7 +97,7 @@ class AdhesionService(
       WHERE period = ${period.id}
       AND   id = ${id}
     """
-      .map(AdhesionEntry.apply)
+      .map(toAdhesionEntry)
       .single()
       .apply()
   }
@@ -116,7 +121,7 @@ class AdhesionService(
       SELECT * FROM adhesion_member
       WHERE adhesion = ${adhesionId}
     """
-      .map(AdhesionMember.apply)
+      .map(toAdhesionMember)
       .list()
       .apply()
   }
@@ -127,7 +132,7 @@ class AdhesionService(
   }
 
   private def createPeriodAdhesion(periodAdhesion: PeriodAdhesion)(implicit session: DBSession): Unit = {
-    val activities = PeriodAdhesion.activitiesFormat.write(periodAdhesion.activities).compactPrint
+    val activities = JsArray(periodAdhesion.activities.map(JsString(_)): _*).compactPrint
     sql"""
       INSERT INTO period_adhesion(id, startPeriod, endPeriod, startRegistration, endRegistration, activities)
       VALUES (
@@ -149,7 +154,7 @@ class AdhesionService(
   }
 
   private def updatePeriodAdhesion(periodAdhesion: PeriodAdhesion)(implicit session: DBSession): Unit = {
-    val activities = PeriodAdhesion.activitiesFormat.write(periodAdhesion.activities).compactPrint
+    val activities = JsArray(periodAdhesion.activities.map(JsString(_)): _*).compactPrint
     sql"""
       UPDATE period_adhesion
       SET startPeriod = ${periodAdhesion.period.start},
@@ -225,5 +230,40 @@ class AdhesionService(
     """
       .execute()
       .apply()
+  }
+}
+
+object AdhesionService {
+  def toPeriodAdhesion(resultSet: WrappedResultSet): PeriodAdhesion = {
+    PeriodAdhesion(
+      id = resultSet.string("id"),
+      period = Period(
+        start = DateUtils.fromDateTime(resultSet.jodaDateTime("startPeriod")),
+        end = DateUtils.fromDateTime(resultSet.jodaDateTime("endPeriod"))
+      ),
+      registrationPeriod = Period(
+        start = DateUtils.fromDateTime(resultSet.jodaDateTime("startRegistration")),
+        end = DateUtils.fromDateTime(resultSet.jodaDateTime("endRegistration"))
+      ),
+      activities = resultSet.stringOpt("activities").map(activities => JsonParser(activities).asInstanceOf[JsArray].elements.collect { case JsString(v) => v }.toList).getOrElse(List.empty)
+    )
+  }
+
+  def toAdhesionMember(resultSet: WrappedResultSet): AdhesionMember = {
+    AdhesionMember(
+      firstName = resultSet.string("first_name"),
+      lastName = resultSet.string("last_name"),
+      birthday = DateUtils.fromDateTime(resultSet.jodaDateTime("birthday")),
+      activity = resultSet.string("activity")
+    )
+  }
+
+  def toAdhesionEntry(resultSet: WrappedResultSet): AdhesionEntry = {
+    AdhesionEntry(
+      id = resultSet.string("id"),
+      user = resultSet.string("user_id"),
+      period = resultSet.string("period"),
+      accepted = resultSet.boolean("accepted")
+    )
   }
 }

@@ -1,16 +1,18 @@
 package vep.app.user.registration
 
+import java.util.UUID
+
 import akka.http.scaladsl.model.Uri
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import vep.Configuration
-import vep.app.user.UserService
+import vep.app.user.{User, UserRegistration, UserRole, UserService}
 import vep.framework.router.RouterComponent
+import vep.framework.utils.StringUtils
 
 import scala.concurrent.ExecutionContext
 
 class RegistrationRouter(
-  registrationVerifications: RegistrationVerifications,
   registrationService: RegistrationService,
   registrationMailer: RegistrationMailer,
   val configuration: Configuration,
@@ -22,11 +24,18 @@ class RegistrationRouter(
   }
 
   def register: Route = publicPost("user" / "register", as[UserRegistration]) { userRegistration =>
-    verifying(registrationVerifications.verify(userRegistration)) { user =>
-      verifying(registrationService.create(user)) { user =>
-        registrationMailer.send(user)
-        Ok("")
-      }
+    val user = User(
+      id = UUID.randomUUID().toString,
+      email = userRegistration.email,
+      password = userRegistration.password,
+      role = UserRole.user,
+      authentications = Seq.empty,
+      activationKey = Some(StringUtils.randomString()),
+      resetPasswordKey = None
+    )
+    verifying(registrationService.create(user)) { user =>
+      registrationMailer.send(user)
+      Ok("")
     }
   }
 

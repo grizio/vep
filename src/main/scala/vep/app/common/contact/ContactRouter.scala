@@ -9,7 +9,6 @@ import vep.framework.router.RouterComponent
 import scala.concurrent.ExecutionContext
 
 class ContactRouter(
-  contactVerifications: ContactVerifications,
   contactMailer: ContactMailer,
   val configuration: Configuration,
   val userService: UserService,
@@ -20,9 +19,7 @@ class ContactRouter(
   }
 
   def contact: Route = publicPost("contact", as[Contact]) { contact =>
-    verifying(contactVerifications.verify(contact)) { validContact =>
-      contactMailer.send(validContact)
-      Ok("")
-    }
+    contactMailer.send(contact)
+    Ok("")
   }
 }

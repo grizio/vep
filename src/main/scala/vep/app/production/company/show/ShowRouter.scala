@@ -1,5 +1,7 @@
 package vep.app.production.company.show
 
+import java.util.UUID
+
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import vep.Configuration
@@ -45,16 +47,21 @@ class ShowRouter(
 
   def create: Route = adminPost("production" / "companies" / Segment / "shows", as[ShowCreation]).apply { (companyId, showCreation, _) =>
     found(companyService.find(companyId)) { company =>
-      verifying(showVerifications.verifyCreation(showCreation)) { show =>
-        verifying(showService.create(show, company)) { show =>
-          Ok(show)
-        }
+      val show = Show(
+        id = UUID.randomUUID().toString,
+        title = showCreation.title,
+        author = showCreation.author,
+        director = showCreation.director,
+        content = showCreation.content
+      )
+      verifying(showService.create(show, company)) { show =>
+        Ok(show)
       }
     }
   }
 
   def update: Route = adminPut("production" / "companies" / Segment / "shows" / Segment, as[Show]).apply { (companyId, showId, show, _) =>
-    found(companyService.find(companyId)) { company =>
+    found(companyService.find(companyId)) { _ =>
       verifying(showVerifications.verify(show, showId)) { show =>
         verifying(showService.update(show)) { show =>
           Ok(show)

@@ -1,9 +1,10 @@
 package vep.app.production.company
 
+import java.util.UUID
+
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import vep.Configuration
-import vep.app.production.theater.{Theater, TheaterCreation, TheaterMessage}
 import vep.app.user.UserService
 import vep.framework.router.RouterComponent
 
@@ -31,10 +32,15 @@ class CompanyRouter(
   }
 
   def create: Route = adminPost("production" / "companies", as[CompanyCreation]) { (companyCreation, _) =>
-    verifying(companyVerifications.verifyCreation(companyCreation)) { company =>
-      verifying(companyService.create(company)) { company =>
-        Ok(company)
-      }
+    val company = Company(
+      id = UUID.randomUUID().toString,
+      name = companyCreation.name,
+      address = companyCreation.address,
+      isVep = companyCreation.isVep,
+      content = companyCreation.content
+    )
+    verifying(companyService.create(company)) { company =>
+      Ok(company)
     }
   }
 

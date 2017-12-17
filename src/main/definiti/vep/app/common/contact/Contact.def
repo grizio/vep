@@ -1,11 +1,11 @@
 package vep.app.common.contact
 
 import vep.app.common.verifications.Email
-import vep.app.common.verifications.RequiredString
+import vep.app.common.verifications.IsNonBlank
 
 type Contact {
-  name: RequiredString
+  name: String verifying IsNonBlank("Veuillez renseigner un nom")
   email: Email
-  title: RequiredString
-  content: RequiredString
+  title: String verifying IsNonBlank("Veuillez renseigner un titre")
+  content: String verifying IsNonBlank("Veuillez renseigner un contenu")
 }

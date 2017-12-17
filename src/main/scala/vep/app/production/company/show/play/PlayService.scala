@@ -338,7 +338,7 @@ object PlayService {
     new PlayPrice(
       name = resultSet.string("name"),
       value = resultSet.bigDecimal("value"),
-      condition = resultSet.stringOpt("condition")
+      condition = resultSet.string("condition")
     )
   }
 

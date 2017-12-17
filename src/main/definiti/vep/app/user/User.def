@@ -1,6 +1,6 @@
 package vep.app.user
 
-import vep.app.common.verifications.RequiredString
+import vep.app.common.verifications.IsNonBlank
 import vep.app.common.verifications.Email
 import vep.app.common.verifications.Password
 import vep.app.common.verifications.NonEmptyList
@@ -12,15 +12,15 @@ type UserRegistration {
 
 type Profile {
   email: Email
-  firstName: RequiredString
-  lastName: RequiredString
-  address: RequiredString
-  zipCode: RequiredString
-  city: RequiredString
+  firstName: String verifying IsNonBlank("Veuillez renseigner un prénom")
+  lastName: String verifying IsNonBlank("Veuillez renseigner un nom")
+  address: String verifying IsNonBlank("Veuillez renseigner une adresse")
+  zipCode: String verifying IsNonBlank("Veuillez renseigner un code postal")
+  city: String verifying IsNonBlank("Veuillez renseigner une ville")
   phones: NonEmptyList[Phone]
 }
 
 type Phone {
-  name: RequiredString
-  number: RequiredString
+  name: String verifying IsNonBlank("Veuillez renseigner un nom de téléphone")
+  number: String verifying IsNonBlank("Veuillez renseigner un numéro de téléphone")
 }

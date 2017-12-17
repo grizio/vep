@@ -1,5 +1,7 @@
 package vep.app.user.adhesion
 
+import java.util.UUID
+
 import akka.http.scaladsl.model.{ContentTypes, MediaTypes}
 import akka.http.scaladsl.model.headers.{Accept, ContentDispositionTypes, `Content-Disposition`, `Content-Type`}
 import akka.http.scaladsl.server.Directives._
@@ -62,11 +64,15 @@ class AdhesionRouter(
     }
   }
 
-  def createPeriod: Route = adminPost("user" / "adhesions", as[PeriodAdhesionCreation]) { (periodAdhesion, _) =>
-    verifying(adhesionVerifications.verifyPeriod(periodAdhesion)) { validPeriodAdhesion =>
-      verifying(adhesionService.createPeriod(validPeriodAdhesion)) { savedPeriodAdhesion =>
-        Ok(savedPeriodAdhesion)
-      }
+  def createPeriod: Route = adminPost("user" / "adhesions", as[PeriodAdhesionCreation]) { (periodAdhesionCreation, _) =>
+    val periodAdhesion = PeriodAdhesion(
+      id = UUID.randomUUID().toString,
+      period = periodAdhesionCreation.period,
+      registrationPeriod = periodAdhesionCreation.registrationPeriod,
+      activities = periodAdhesionCreation.activities
+    )
+    verifying(adhesionService.createPeriod(periodAdhesion)) { savedPeriodAdhesion =>
+      Ok(savedPeriodAdhesion)
     }
   }
 

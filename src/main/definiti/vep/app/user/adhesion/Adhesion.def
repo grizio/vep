@@ -1,7 +1,8 @@
-package vep.app.user
+package vep.app.user.adhesion
 
 import vep.app.common.verifications.NonEmptyList
 import vep.app.common.verifications.RequiredString
+import vep.app.common.verifications.IsNonBlank
 import vep.app.common.types.Period
 
 type PeriodAdhesion {
@@ -18,13 +19,13 @@ type PeriodAdhesionCreation {
 }
 
 type RequestAdhesion {
-  period: RequiredString
+  period: String verifying IsNonBlank("Veuillez renseigner la période")
   members: NonEmptyList[AdhesionMember]
 }
 
 type AdhesionMember {
-  firstName: RequiredString
-  lastName: RequiredString
+  firstName: String verifying IsNonBlank("Veuillez renseigner le prénom")
+  lastName: String verifying IsNonBlank("Veuillez renseigner le nom")
   birthday: Date
-  activity: RequiredString
+  activity: String verifying IsNonBlank("Veuillez renseigner l'activité")
 }

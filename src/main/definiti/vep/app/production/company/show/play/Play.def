@@ -1,13 +1,14 @@
 package vep.app.production.company.show.play
 
 import vep.app.common.verifications.RequiredString
+import vep.app.common.verifications.IsNonBlank
 import vep.app.common.verifications.NonEmptyList
-import vep.app.common.verifications.PositiveNumber
+import vep.app.common.verifications.IsPositive
 import vep.app.common.verifications.dateIsBefore
 
 type Play {
   id: RequiredString
-  theater: RequiredString
+  theater: String verifying IsNonBlank("Veuillez renseigner le théâtre")
   date: Date
   reservationEndDate: Date
   prices: NonEmptyList[PlayPrice]
@@ -21,13 +22,13 @@ type Play {
 }
 
 type PlayPrice {
-  name: RequiredString
-  value: PositiveNumber
-  condition: Option[String]
+  name: String verifying IsNonBlank("Veuillez renseigner le nom du prix")
+  value: Number verifying IsPositive("Veuillez indiquer un prix strictement positif")
+  condition: String
 }
 
 type PlayCreation {
-  theater: RequiredString
+  theater: String verifying IsNonBlank("Veuillez renseigner le théâtre")
   date: Date
   reservationEndDate: Date
   prices: NonEmptyList[PlayPrice]

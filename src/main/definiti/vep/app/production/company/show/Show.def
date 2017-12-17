@@ -1,18 +1,18 @@
 package vep.app.production.company.show
 
-import vep.app.common.verifications.RequiredString
+import vep.app.common.verifications.IsNonBlank
 
 type Show {
-  id: RequiredString
-  title: RequiredString
-  author: RequiredString
-  director: RequiredString
-  content: RequiredString
+  id: String verifying IsNonBlank("Veuillez renseigner l'identifiant de la pièce")
+  title: String verifying IsNonBlank("Veuillez renseigner le titre")
+  author: String verifying IsNonBlank("Veuillez renseigner l'auteur")
+  director: String verifying IsNonBlank("Veuillez renseigner le metteur en scène")
+  content: String verifying IsNonBlank("Veuillez renseigner le contenu")
 }
 
 type ShowCreation {
-  title: RequiredString
-  author: RequiredString
-  director: RequiredString
-  content: RequiredString
+  title: String verifying IsNonBlank("Veuillez renseigner le titre")
+  author: String verifying IsNonBlank("Veuillez renseigner l'auteur")
+  director: String verifying IsNonBlank("Veuillez renseigner le metteur en scène")
+  content: String verifying IsNonBlank("Veuillez renseigner le contenu")
 }
