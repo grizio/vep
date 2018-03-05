@@ -193,7 +193,7 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
             <div class="col-1">
               <InputNumber
                 id="comment"
-                label={price.price.name}
+                label={`${price.price.name} (${price.price.value}€)`}
                 name="comment"
                 min={0}
                 max={state.seats.value.length}
