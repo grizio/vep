@@ -1,18 +1,16 @@
-syntax_version: "6"
+syntax_version: "7"
 project_name: nut
 
-docker_image: definiti/definiti:snapshot
+docker_image: definiti/definiti:0.3.0-SNAPSHOT
 
 macros:
   run:
     usage: Run the compiler with configuration from `definiti.conf`
-    actions:
-    - definiti
 
-mount:
+volumes:
   main:
-    - .
-    - /definiti
+    host_path: .
+    container_path: /definiti
 
 container_working_directory: /definiti
 work_in_project_folder_as: /definiti

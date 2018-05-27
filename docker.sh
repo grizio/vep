@@ -7,13 +7,7 @@ if [[ "$1" = "start" ]]
 then
   if [[ -z "$CONTAINER" ]]
   then
-    docker run \
-      -p 5432:5432 \
-      --name vep \
-      -e POSTGRES_PASSWORD=vep \
-      -e POSTGRES_USER=vep \
-      -e POSTGRES_DB=vep \
-      -d postgres:9.5
+    docker run -p 5432:5432/tcp --name vep -e POSTGRES_PASSWORD=vep -e POSTGRES_USER=vep -e POSTGRES_DB=vep -d postgres:9.5
   elif [[ -z "$RUNNING_CONTAINER" ]]
   then
     docker start "$CONTAINER"

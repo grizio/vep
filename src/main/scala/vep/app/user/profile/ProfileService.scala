@@ -30,7 +30,7 @@ class ProfileService() extends DatabaseContainer {
   }
 
   private def updateProfile(profile: Profile, user: User)(implicit session: DBSession): Unit = {
-    val phones = JsArray(profile.phones.map(Phone.PhoneFormat.write): _*).compactPrint
+    val phones = JsArray(profile.phones.map(Phone.format.write): _*).compactPrint
     sql"""
       UPDATE users
       SET first_name = ${profile.firstName},
@@ -54,6 +54,6 @@ object ProfileService {
     address = rs.stringOpt("address").getOrElse(""),
     zipCode = rs.stringOpt("zip_code").getOrElse(""),
     city = rs.stringOpt("city").getOrElse(""),
-    phones = rs.stringOpt("phones").map(phones => JsonParser(phones).asInstanceOf[JsArray].elements.map(Phone.PhoneFormat.read).toList).getOrElse(List.empty)
+    phones = rs.stringOpt("phones").map(phones => JsonParser(phones).asInstanceOf[JsArray].elements.map(Phone.format.read).toList).getOrElse(List.empty)
   )
 }

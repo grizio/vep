@@ -17,7 +17,7 @@ type ReservationCreation {
   verify {
     "Veuillez répartir l'ensemble des sièges dans les tarifs et vérifier à ne pas dépasser."
     (reservation) => {
-      reservation.seats.size == reservation.prices.foldLeft(0, (acc: Number, price: ReservationPrice) => {acc + price.count})
+      reservation.seats.size == reservation.prices.foldLeft[Number](0, (acc: Number, price: ReservationPrice) => {acc + price.count})
     }
   }
 }
