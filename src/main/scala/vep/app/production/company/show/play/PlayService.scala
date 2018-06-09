@@ -2,6 +2,7 @@ package vep.app.production.company.show.play
 
 import java.util.UUID
 
+import org.joda.time.DateTime
 import scalikejdbc._
 import vep.app.production.company.Company
 import vep.app.production.company.show.Show
@@ -193,6 +194,23 @@ class PlayService(
     """
       .map(Theater.apply)
       .single()
+      .apply()
+  }
+
+  def findToAnonymize(): Seq[Play] = withQueryConnection { implicit session =>
+    findPlaysToAnonymize()
+      .map(play => play.copy(prices = findPricesByPlay(play)))
+  }
+
+  private def findPlaysToAnonymize()(implicit session: DBSession): Seq[Play] = {
+    val lastMonth = DateTime.now().minusMonths(1)
+    sql"""
+      SELECT * FROM play
+      WHERE date < ${lastMonth}
+      AND anonymized = false
+    """
+      .map(Play.apply)
+      .list()
       .apply()
   }
 

@@ -13,7 +13,8 @@ case class Play(
   theater: String,
   date: DateTime,
   reservationEndDate: DateTime,
-  prices: Seq[PlayPrice]
+  prices: Seq[PlayPrice],
+  anonymized: Boolean
 )
 
 object Play {
@@ -25,11 +26,12 @@ object Play {
       theater = resultSet.string("theater"),
       date = resultSet.jodaDateTime("date"),
       reservationEndDate = resultSet.jodaDateTime("reservationEndDate"),
-      prices = Seq.empty
+      prices = Seq.empty,
+      anonymized = resultSet.boolean("anonymized")
     )
   }
 
-  implicit val playFormat: RootJsonFormat[Play] = jsonFormat5(Play.apply)
+  implicit val playFormat: RootJsonFormat[Play] = jsonFormat6(Play.apply)
 }
 
 case class PlayPrice(

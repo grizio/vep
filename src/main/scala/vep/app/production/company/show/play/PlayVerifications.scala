@@ -19,7 +19,8 @@ class PlayVerifications(
     ) map {
       case theater ~ date ~ reservationEndDate ~ prices => Play(
         UUID.randomUUID().toString,
-        theater.id, date, reservationEndDate, prices
+        theater.id, date, reservationEndDate, prices,
+        anonymized = false
       )
     }
   }

@@ -133,6 +133,24 @@ class ReservationService(
       .apply()
   }
 
+  def update(reservation: Reservation): Validation[Unit] = withCommandTransaction { implicit session =>
+    updateReservation(reservation)
+    Valid()
+  }
+
+  private def updateReservation(reservation: Reservation)(implicit session: DBSession): Unit = {
+    sql"""
+      UPDATE reservation SET
+        first_name = ${reservation.firstName},
+        last_name = ${reservation.lastName},
+        email = ${reservation.email},
+        city = ${reservation.city},
+        newsletter = ${reservation.newsletter}
+    """
+      .execute()
+      .apply()
+  }
+
   def delete(playId: String, reservationId: String): Validation[Unit] = withCommandTransaction { implicit session =>
     if (findReservationByPlay(reservationId, playId).isDefined) {
       deleteSeatsByReservation(reservationId)

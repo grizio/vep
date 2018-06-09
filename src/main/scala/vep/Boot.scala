@@ -17,6 +17,7 @@ object Boot extends App with AppIntegrationModule {
   implicit val executionContext = system.dispatcher
 
   new DatabaseEvolution().setup()
+  reservationAnonymizer.start()
 
   val bindingFuture = Http().bindAndHandle(route, configuration.server.host, configuration.server.port)
 

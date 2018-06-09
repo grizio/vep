@@ -1,5 +1,6 @@
 package vep.app.production.reservation
 
+import akka.actor.ActorSystem
 import vep.Configuration
 import vep.app.common.verifications.CommonVerifications
 import vep.app.production.company.show.play.PlayService
@@ -12,6 +13,7 @@ trait ReservationIntegrationModule {
   def configuration: Configuration
   def userService: UserService
   def commonVerifications: CommonVerifications
+  def system: ActorSystem
   def executionContext: ExecutionContext
   def playService: PlayService
   def mailer: Mailer
@@ -34,4 +36,5 @@ trait ReservationIntegrationModule {
     userService,
     executionContext
   )
+  lazy val reservationAnonymizer = new ReservationAnonymizer(playService, reservationService, system, executionContext)
 }
