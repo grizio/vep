@@ -24,6 +24,7 @@ import {PeriodAdhesionCreation, PeriodAdhesionUpdate} from "./user/adhesion/peri
 import PeriodAdhesionList from "./user/adhesion/periodAdhesionList/periodAdhesionList";
 import RequestAdhesionForm from "./user/adhesion/requestAdhesion/requestAdhesionForm";
 import ProfilePage from "./user/profile/profilePage/profilePage";
+import DeleteAccount from './user/profile/deleteAccount/deleteAccount'
 import AdhesionList from "./user/adhesion/adhesionList/adhesionList";
 import ResetPassword from "./user/session/resetPassword/resetPassword";
 import Sitemap from "./common/sitemap/sitemap";
@@ -61,6 +62,7 @@ export default class App extends preact.Component<any, AppState> {
             <ProfilePage path="/personal/profile/read/:id" />
             <ProfileForm path="/personal/profile/update" />
             <RequestAdhesionForm path="/personal/adhesions/register" />
+            <DeleteAccount path="/personal/delete" />
 
             <TheaterList path="/production/theaters" />
             <TheaterCreation path="/production/theaters/create" />

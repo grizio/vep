@@ -22,3 +22,11 @@ export function updateProfile(profile: Profile) {
     entity: profile
   })
 }
+
+export function deleteAccount(email: string, password: string) {
+  return request({
+    method: "POST",
+    url: `user/delete`,
+    entity: { email, password }
+  })
+}

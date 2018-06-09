@@ -16,7 +16,7 @@ class ProfileRouter(
   val executionContext: ExecutionContext
 ) extends RouterComponent {
   lazy val route: Route = {
-    specificProfile ~ currentProfile ~ update
+    specificProfile ~ currentProfile ~ update ~ delete
   }
 
   def specificProfile: Route = adminGet("user" / "profile" / Segment).apply { (id, user) =>
@@ -31,6 +31,14 @@ class ProfileRouter(
     verifying(profileVerifications.verify(profile, user)) { _ =>
       verifying(profileService.update(profile, user)) { savedProfile =>
         Ok(savedProfile)
+      }
+    }
+  }
+
+  def delete: Route = userPost("user" / "delete", as[AccountDeletion]) { (accountDeletion, user) =>
+    verifying(profileVerifications.verifyDeletion(accountDeletion, user)) { _ =>
+      verifying(profileService.delete(user)) { _ =>
+        Ok("")
       }
     }
   }

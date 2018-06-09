@@ -2,10 +2,13 @@ package vep.app.user.profile
 
 import scalikejdbc._
 import vep.app.user._
+import vep.app.user.adhesion.AdhesionService
 import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Valid, Validation}
 
-class ProfileService() extends DatabaseContainer {
+class ProfileService(
+  adhesionService: AdhesionService
+) extends DatabaseContainer {
   def findByUser(userId: String): Profile = withQueryConnection { implicit session =>
     findProfileByUser(userId)
   }
@@ -36,6 +39,22 @@ class ProfileService() extends DatabaseContainer {
           zip_code = ${profile.zipCode},
           city = ${profile.city},
           phones = ${phones}
+      WHERE id = ${user.id}
+    """
+      .update()
+      .apply()
+  }
+
+  def delete(user: User): Validation[Unit] = withCommandTransaction { implicit session =>
+    adhesionService.findByUser(user.id)
+        .foreach(adhesion => adhesionService.removeAdhesion(adhesion.id))
+    deleteUser(user)
+    Valid()
+  }
+
+  private def deleteUser(user: User)(implicit session: DBSession): Unit = {
+    sql"""
+      DELETE FROM users
       WHERE id = ${user.id}
     """
       .update()

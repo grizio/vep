@@ -153,6 +153,7 @@ function renderMySpace(state: NavigationState) {
       <MenuGroup name={`Mon espace (${state.session.user.email})`} href="/personal/profile" regex="/personal(/.*)?">
         <MenuItem name="Mon profil" href="/personal/profile"/>
         <MenuItem name="(Ré)inscription aux activités" href="/personal/adhesions/register"/>
+        <MenuItem name="Supprimer mon compte" href="/personal/delete"/>
         <MenuItem name="Déconnexion" action={logout}/>
       </MenuGroup>
     )

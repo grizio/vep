@@ -5,6 +5,8 @@ object UserMessages {
 
   val invalidLogin = "L'identifiant ou le mot de passe est invalide."
 
+  val invalidPassword = "Le mot de passe est invalide."
+
   val inactive = "Votre compte n'est pas encore actif. Veuillez accéder au lien fourni dans le mail de validation."
 
   val unknown = "L'utilisateur n'existe pas"

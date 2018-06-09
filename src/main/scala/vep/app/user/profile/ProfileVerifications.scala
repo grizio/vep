@@ -1,7 +1,8 @@
 package vep.app.user.profile
 
+import org.mindrot.jbcrypt.BCrypt
 import vep.app.common.verifications.CommonVerifications
-import vep.app.user.{Phone, Profile, User}
+import vep.app.user.{Phone, Profile, User, UserMessages}
 import vep.framework.validation._
 
 class ProfileVerifications(
@@ -29,5 +30,12 @@ class ProfileVerifications(
       commonVerification.verifyNonBlank(phone.name),
       commonVerification.verifyNonBlank(phone.number)
     ) map { _ => phone }
+  }
+
+  def verifyDeletion(accountDeletion: AccountDeletion, user: User): Validation[AccountDeletion] = {
+    Validation.all(
+      commonVerification.verifyEquals(accountDeletion.email, user.email),
+      Valid(accountDeletion.password).filter(BCrypt.checkpw(_, user.password), UserMessages.invalidPassword)
+    ) map { _ => accountDeletion }
   }
 }
