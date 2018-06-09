@@ -21,7 +21,8 @@ class ReservationVerifications(
     ) map {
       case firstName ~ lastName ~ email ~ seats ~ prices ~ _ => Reservation(
         UUID.randomUUID().toString,
-        firstName, lastName, email, reservationCreation.city, reservationCreation.comment, seats, prices
+        firstName, lastName, email, reservationCreation.city, reservationCreation.comment, reservationCreation.newsletter,
+        seats, prices
       )
     }
   }

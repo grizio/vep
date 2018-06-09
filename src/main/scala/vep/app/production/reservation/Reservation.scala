@@ -11,6 +11,7 @@ case class Reservation(
   email: String,
   city: Option[String],
   comment: Option[String],
+  newsletter: Boolean,
   seats: Seq[String],
   prices: Seq[ReservationPrice]
 )
@@ -26,12 +27,13 @@ object Reservation {
       email = resultSet.string("email"),
       city = resultSet.stringOpt("city"),
       comment = resultSet.stringOpt("comment"),
+      newsletter = resultSet.boolean("newsletter"),
       seats = Seq.empty,
       prices = Seq.empty
     )
   }
 
-  implicit val reservationFormat: RootJsonFormat[Reservation] = jsonFormat8(Reservation.apply)
+  implicit val reservationFormat: RootJsonFormat[Reservation] = jsonFormat9(Reservation.apply)
 }
 
 case class ReservationPrice(
@@ -58,6 +60,7 @@ case class ReservationCreation(
   email: String,
   city: Option[String],
   comment: Option[String],
+  newsletter: Boolean,
   seats: Seq[String],
   prices: Seq[ReservationPrice]
 )
@@ -65,5 +68,5 @@ case class ReservationCreation(
 object ReservationCreation {
   import JsonProtocol._
 
-  implicit val reservationCreationFormat: RootJsonFormat[ReservationCreation] = jsonFormat7(ReservationCreation.apply)
+  implicit val reservationCreationFormat: RootJsonFormat[ReservationCreation] = jsonFormat8(ReservationCreation.apply)
 }

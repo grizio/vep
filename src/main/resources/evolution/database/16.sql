@@ -1,0 +1,2 @@
+ALTER TABLE reservation
+  ADD COLUMN newsletter BOOLEAN NOT NULL DEFAULT false;

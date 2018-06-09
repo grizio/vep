@@ -1,4 +1,5 @@
 import preact from "preact"
+import Switch from '../../../framework/components/form/Switch'
 import {ReservationFormState, reservationFormStore} from "./reservationFormStore";
 import * as actions from "./reservationFormActions"
 import classnames from "classnames"
@@ -180,6 +181,16 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
           onUpdate={actions.updateComment}
           fieldValidation={state.comment}
         />
+
+        <Switch
+          id="newsletter"
+          label="Je souhaite recevoir la newsletter de Voir & Entendre (vous pourrez vous désinscrire à tout moment)"
+          name="newsletter"
+          placeholderOff="Non"
+          placeholderOn="Oui"
+          onUpdate={actions.updateNewsletter}
+          fieldValidation={state.newsletter}
+        />
       </div>
     )
   }
@@ -238,6 +249,7 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
       email: this.state.email.value,
       city: this.state.city.value,
       comment: this.state.comment.value,
+      newsletter: this.state.newsletter.value,
       seats: this.state.seats.value,
       prices: this.state.prices.value.map(_ => ({price: _.price.name, count: _.count.value}))
     }

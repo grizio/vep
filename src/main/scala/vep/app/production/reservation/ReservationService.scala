@@ -100,14 +100,15 @@ class ReservationService(
 
   private def insertReservation(reservation: Reservation)(implicit session: DBSession): Unit = {
     sql"""
-      INSERT INTO reservation(id, first_name, last_name, email, city, comment)
+      INSERT INTO reservation(id, first_name, last_name, email, city, comment, newsletter)
       VALUES (
         ${reservation.id},
         ${reservation.firstName},
         ${reservation.lastName},
         ${reservation.email},
         ${reservation.city},
-        ${reservation.comment}
+        ${reservation.comment},
+        ${reservation.newsletter}
       )
     """
       .execute()

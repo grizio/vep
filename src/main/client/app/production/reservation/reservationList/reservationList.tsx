@@ -60,6 +60,7 @@ class ReservationListComponent extends StoreListenerComponent<ReservationListPro
             ))
           }
           {reservation.comment ? <p>{reservation.comment}</p> : null}
+          <p>Newsletter : {reservation.newsletter ? "Oui" : "Non"}</p>
         </CardContent>
         <CardAction href={`mailto:${reservation.email}`}>📧</CardAction>
         <CardAction action={() => this.deleteReservation(reservation)}>Supprimer</CardAction>

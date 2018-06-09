@@ -13,6 +13,8 @@ export const updateEmail = Action<string>("updateEmail")
 
 export const updateCity = Action<string>("updateCity")
 
+export const updateNewsletter = Action<boolean>("updateNewsletter")
+
 export const updateComment = Action<string>("updateComment")
 
 export const updatePrice = Action<{price: string, value: number}>("updateComment")

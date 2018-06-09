@@ -5,6 +5,7 @@ export interface Reservation {
   email: string
   city: string
   comment: string
+  newsletter: boolean
   seats: Array<string>
   prices: Array<ReservationPrice>
 }
@@ -19,6 +20,7 @@ export interface ReservationCreation {
   lastName: string
   email: string
   city: string
+  newsletter: boolean
   comment: string
   seats: Array<string>
   prices: Array<ReservationPrice>

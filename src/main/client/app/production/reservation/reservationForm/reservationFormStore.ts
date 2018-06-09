@@ -23,6 +23,7 @@ export interface ReservationFormState {
   lastName: FieldValidation<string>
   email: FieldValidation<string>
   city: FieldValidation<string>
+  newsletter: FieldValidation<boolean>
   comment: FieldValidation<string>
   seats: FieldValidation<Array<string>>
   prices: FieldValidation<Array<ReservationPriceValidation>>
@@ -43,6 +44,7 @@ const initialState: ReservationFormState = {
   lastName: defaultFieldValidation(""),
   email: defaultFieldValidation(""),
   city: defaultFieldValidation(""),
+  newsletter: defaultFieldValidation(false),
   comment: defaultFieldValidation(""),
   seats: defaultFieldValidation([]),
   prices: defaultFieldValidation([])
@@ -82,6 +84,12 @@ export const reservationFormStore = () => LocalStore(initialState, on => {
   on(actions.updateCity, (state, value) => {
     return copy(state, {
       city: updateFieldValidation(state.city, value, Valid(value))
+    })
+  })
+
+  on(actions.updateNewsletter, (state, value) => {
+    return copy(state, {
+      newsletter: updateFieldValidation(state.newsletter, value, Valid(value))
     })
   })
 
