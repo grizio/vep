@@ -7,4 +7,5 @@
 /src/main/resources/local.conf
 /src/main/client/node_modules
 /src/main/scala-definiti
+/src/test/scala-definiti
 /node_modules

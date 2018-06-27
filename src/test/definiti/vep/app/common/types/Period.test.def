@@ -1,0 +1,24 @@
+package vep.app.common.types
+
+import vep.app.common.types.Period
+
+context tests {{{
+  test type Period {
+    accept anyValidPeriod()
+    refuse anyInvalidPeriod()
+  }
+
+  generator anyValidPeriod(): Period = createValidPeriod(anyDate(), anyDate())
+
+  generator createValidPeriod(first: Date, second: Date): Period = Period {
+    start: if (first.isBefore(second)) first else second
+    end: if (first.isBefore(second)) second else first
+  }
+
+  generator anyInvalidPeriod(): Period = createInvalidPeriod(anyDate(), anyDate())
+
+  generator createInvalidPeriod(first: Date, second: Date): Period = Period {
+    start: if (first.isAfter(second)) first else second
+    end: if (first.isAfter(second)) second else first
+  }
+}}}

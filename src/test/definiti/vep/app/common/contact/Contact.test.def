@@ -1,0 +1,14 @@
+package vep.app.common.contact
+
+import vep.app.common.contact.Contact
+
+context tests {{{
+  test type Contact {
+    accept Contact {
+      name: nonEmptyString()
+      email: "my@ema.il"
+      title: nonEmptyString()
+      content: nonEmptyString()
+    }
+  }
+}}}

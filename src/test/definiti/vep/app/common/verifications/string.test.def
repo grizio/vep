@@ -1,0 +1,70 @@
+package vep.app.common.verifications
+
+import vep.app.common.verifications.Email
+import vep.app.common.verifications.NonEmptyString
+import vep.app.common.verifications.RequiredString
+import vep.app.common.verifications.IsNonBlank
+import vep.app.common.verifications.Canonical
+
+context tests {{{
+  generator nonEmptyStringWithPrefix(prefix: String): String = prefix.append(nonEmptyAlphaNumericString())
+
+  test type Email {
+    accept "a@b.c"
+    accept
+       nonEmptyAlphaString()
+        .append(nonEmptyStringWithPrefix("@"))
+        .append(nonEmptyStringWithPrefix("."))
+    accept
+      nonEmptyAlphaString()
+        .append(nonEmptyStringWithPrefix("+"))
+        .append(nonEmptyStringWithPrefix("@"))
+        .append(nonEmptyStringWithPrefix("."))
+
+    refuse
+      ""
+      alphaString()
+      alphaNumericString()
+    refuse
+      nonEmptyAlphaString().append(nonEmptyStringWithPrefix("."))
+  }
+
+  test type NonEmptyString {
+    accept nonEmptyString()
+    refuse ""
+  }
+
+  test type RequiredString {
+    accept
+      nonEmptyAlphaNumericString()
+      " ".append(nonEmptyAlphaNumericString())
+      nonEmptyAlphaNumericString().append(" ")
+    refuse
+      ""
+      " "
+      "\t"
+      "\n"
+  }
+
+  test verification IsNonBlank {
+    accept
+      nonEmptyAlphaNumericString()
+      " ".append(nonEmptyAlphaNumericString())
+      nonEmptyAlphaNumericString().append(" ")
+    refuse
+      ""
+      " "
+      "\t"
+      "\n"
+  }
+
+  test type Canonical {
+    accept
+      nonEmptyAlphaNumericString()
+      "-".append(nonEmptyAlphaNumericString())
+      nonEmptyAlphaNumericString().append("-")
+    refuse
+      ""
+      oneOf[String]("+", "/", "*", "=", "%", "@", "<")
+  }
+}}}

@@ -1,0 +1,21 @@
+package vep.app.common.page
+
+import vep.app.common.page.Page
+
+context tests {{{
+  test type Page {
+    accept Page {
+      canonical: "abc-def"
+      title: "This is a title"
+      order: 0
+      content: "This is a content"
+    }
+
+    refuse Page {
+      canonical: ""
+      title: ""
+      order: 0
+      content: ""
+    }
+  }
+}}}

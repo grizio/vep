@@ -4,7 +4,6 @@ import vep.app.common.verifications.RequiredString
 import vep.app.common.verifications.IsNonBlank
 import vep.app.common.verifications.NonEmptyList
 import vep.app.common.verifications.IsPositive
-import vep.app.common.verifications.dateIsBefore
 
 type Play {
   id: RequiredString
@@ -16,7 +15,7 @@ type Play {
   verify {
     "La date de fin de réservation doit être avant la date de la séance"
     (play) => {
-      dateIsBefore(play.reservationEndDate, play.date)
+      play.reservationEndDate.isBefore(play.date)
     }
   }
 }
@@ -36,7 +35,7 @@ type PlayCreation {
   verify {
     "La date de fin de réservation doit être avant la date de la séance"
     (play) => {
-      dateIsBefore(play.reservationEndDate, play.date)
+      play.reservationEndDate.isBefore(play.date)
     }
   }
 }

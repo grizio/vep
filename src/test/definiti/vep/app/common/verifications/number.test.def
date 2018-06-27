@@ -1,0 +1,11 @@
+package vep.app.common.verifications
+
+import vep.app.common.verifications.IsPositive
+
+context tests {{{
+  test verification IsPositive {
+    accept positiveNumber()
+    refuse 0
+    refuse negativeNumber()
+  }
+}}}

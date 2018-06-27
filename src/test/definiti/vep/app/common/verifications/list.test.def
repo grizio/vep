@@ -1,0 +1,22 @@
+package vep.app.common.verifications
+
+import vep.app.common.verifications.ListIsNonEmpty
+import vep.app.common.verifications.ListHasUniqueElements
+
+context tests {{{
+  test verification ListIsNonEmpty {
+    accept nonEmptyListOf[String](anyString())
+    accept nonEmptyListOf[Number](anyNumber())
+    refuse list[String]()
+    refuse list[Number]()
+  }
+
+  test verification ListHasUniqueElements {
+    accept list[String]()
+    accept list[String]("", "a", "b")
+    refuse list[String]("a", "a")
+    refuse duplicateList[String](nonEmptyListOf[String](anyString()))
+  }
+
+  generator duplicateList[A](list: List[A]): List[A] = list.appendAll(list)
+}}}

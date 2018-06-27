@@ -1,7 +1,5 @@
 package vep.app.common.types
 
-import vep.app.common.verifications.dateIsBeforeOrEqual
-
 type Period {
   start: Date
   end: Date
@@ -9,7 +7,7 @@ type Period {
   verify {
     "The start of the period should be before the end"
     (period) => {
-      dateIsBeforeOrEqual(period.start, period.end)
+      period.start.isBeforeOrEqual(period.end)
     }
   }
 }

@@ -2,7 +2,7 @@ name := "vep"
 
 version := "1.3.2"
 
-scalaVersion := "2.12.2"
+scalaVersion := "2.12.6"
 
 libraryDependencies += "com.typesafe" % "config" % "1.3.1"
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0"
@@ -18,25 +18,11 @@ libraryDependencies += "org.apache.commons" % "commons-email" % "1.4"
 libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.3.5"
 libraryDependencies += "org.scala-lang.modules" % "scala-xml_2.12" % "1.0.6"
 
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % "test"
+libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.13.5" % "test"
+
 unmanagedSourceDirectories in Compile += baseDirectory.value / "src" / "main" / "scala-definiti"
-
-lazy val installClient = TaskKey[Unit]("installClient", "Install all elements for client part")
-lazy val buildClient = TaskKey[Unit]("buildClient", "Build client part")
-lazy val prod = TaskKey[Unit]("prod", "Build the application for production usage")
-
-installClient := {
-  streams.value.log.info("Installing client")
-  "npm i".!
-}
-
-buildClient := {
-  streams.value.log.info("Building client")
-  "npm run build".!
-}
-
-prod := {}
-
-prod <<= prod.dependsOn(buildClient, compile in Compile)
+unmanagedSourceDirectories in Test += baseDirectory.value / "src" / "test" / "scala-definiti"
 
 enablePlugins(JavaAppPackaging)
 mappings in (Compile, packageDoc) := Seq()
