@@ -1,0 +1,9 @@
+package vep.app.common.generators
+
+context tests {{{
+  generator listOfUniqueElements[A](elements: A?): List[A] =
+    listOf[A](elements).distinct()
+
+  generator nonEmptyListOfUniqueElements[A](elements: A?): List[A] =
+    nonEmptyListOf[A](elements).distinct()
+}}}

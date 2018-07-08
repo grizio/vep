@@ -3,7 +3,7 @@ package vep.app.production.company
 import vep.app.common.verifications.IsNonBlank
 
 type Company {
-  id: String verifying IsNonBlank("Veuillez renseigner l'identifiant de la companie")
+  id: String verifying IsNonBlank("Veuillez renseigner l'identifiant de la compagnie")
   name: String verifying IsNonBlank("Veuillez renseigner le nom")
   address: String verifying IsNonBlank("Veuillez renseigner l'adresse")
   isVep: Boolean

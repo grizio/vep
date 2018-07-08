@@ -23,7 +23,7 @@ type Play {
 type PlayPrice {
   name: String verifying IsNonBlank("Veuillez renseigner le nom du prix")
   value: Number verifying IsPositive("Veuillez indiquer un prix strictement positif")
-  condition: String
+  condition: Option[String]
 }
 
 type PlayCreation {

@@ -1,0 +1,69 @@
+package vep.app.production.reservation
+
+import vep.app.production.reservation.ReservationCreation
+import vep.app.production.reservation.ReservationPrice
+import vep.app.common.generators.boundedListOfUniqueElements
+
+context tests {{{
+  test type ReservationCreation {
+    /** Nominal case */
+    accept ReservationCreation {
+      firstName: nonEmptyString()
+      lastName: nonEmptyString()
+      email: "ab@cd.ef"
+      city: optionOf[String](anyString())
+      comment: optionOf[String](anyString())
+      seats: list[String]("A1", "A2", "B1")
+      prices: list[ReservationPrice](
+        ReservationPrice {
+          price: "full"
+          count: 2
+        },
+        ReservationPrice {
+          price: "reduced"
+          count: 1
+        }
+      )
+    }
+
+    /** Empty fields */
+    refuse ReservationCreation {
+      firstName: ""
+      lastName: ""
+      email: "ab@cd.ef"
+      city: optionOf[String](anyString())
+      comment: optionOf[String](anyString())
+      seats: list[String]("A1", "A2", "B1")
+      prices: list[ReservationPrice](
+        ReservationPrice {
+          price: "full"
+          count: 2
+        },
+        ReservationPrice {
+          price: "reduced"
+          count: 1
+        }
+      )
+    }
+
+    /** The number of seats and the count of prices differs */
+    refuse ReservationCreation {
+      firstName: ""
+      lastName: ""
+      email: "ab@cd.ef"
+      city: optionOf[String](anyString())
+      comment: optionOf[String](anyString())
+      seats: list[String]("A1", "A2", "B1")
+      prices: list[ReservationPrice](
+        ReservationPrice {
+          price: "full"
+          count: 1
+        },
+        ReservationPrice {
+          price: "reduced"
+          count: 1
+        }
+      )
+    }
+  }
+}}}

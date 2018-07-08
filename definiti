@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -e
+
+docker run --rm --interactive -v ${PWD}:/definiti -w /definiti definiti/definiti:0.3.0-SNAPSHOT definiti

@@ -1,0 +1,54 @@
+package vep.app.production.company.show.play
+
+import vep.app.production.company.show.play.Play
+import vep.app.production.company.show.play.PlayPrice
+import vep.app.production.company.show.play.validPlayPrice
+import vep.app.production.company.show.play.invalidPlayPrice
+
+context tests {{{
+  test type Play {
+    accept validPlay()
+
+    refuse Play {
+      id: ""
+      theater: ""
+      date: anyDate()
+      reservationEndDate: anyDate()
+      prices: listOf[PlayPrice](validPlayPrice())
+    }
+
+    refuse validPlayButDates()
+
+    refuse validPlayButPrices()
+  }
+
+  generator validPlay(): Play = createValidPlayWithDates(anyDate(), anyDate())
+
+  generator createValidPlayWithDates(first: Date, second: Date): Play = Play {
+    id: nonEmptyString()
+    theater: nonEmptyString()
+    date: if (first.isBefore(second)) second else first
+    reservationEndDate: if (first.isBefore(second)) first else second
+    prices: nonEmptyListOf[PlayPrice](validPlayPrice())
+  }
+
+  generator validPlayButDates(): Play = createValidPlayButDates(anyDate(), anyDate())
+
+  generator createValidPlayButDates(first: Date, second: Date): Play = Play {
+    id: nonEmptyString()
+    theater: nonEmptyString()
+    date: if (first.isBefore(second)) first else second
+    reservationEndDate: if (first.isBefore(second)) second else first
+    prices: nonEmptyListOf[PlayPrice](validPlayPrice())
+  }
+
+  generator validPlayButPrices(): Play = createValidPlayButPrices(anyDate(), anyDate())
+
+  generator createValidPlayButPrices(first: Date, second: Date): Play = Play {
+    id: nonEmptyString()
+    theater: nonEmptyString()
+    date: if (first.isBefore(second)) second else first
+    reservationEndDate: if (first.isBefore(second)) first else second
+    prices: nonEmptyListOf[PlayPrice](invalidPlayPrice())
+  }
+}}}

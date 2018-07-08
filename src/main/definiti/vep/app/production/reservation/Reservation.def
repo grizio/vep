@@ -4,6 +4,7 @@ import vep.app.common.verifications.IsNonBlank
 import vep.app.common.verifications.ListIsNonEmpty
 import vep.app.common.verifications.ListHasUniqueElements
 import vep.app.common.verifications.Email
+import vep.app.common.verifications.PositiveNumber
 
 type ReservationCreation {
   firstName: String verifying IsNonBlank("Veuillez renseigner le prénom")
@@ -11,7 +12,7 @@ type ReservationCreation {
   email: Email
   city: Option[String]
   comment: Option[String]
-  seats: List[String]
+  seats: ReservedSeats
   prices: List[ReservationPrice]
 
   verify {
@@ -26,5 +27,5 @@ type ReservedSeats = List[String] verifying ListIsNonEmpty verifying ListHasUniq
 
 type ReservationPrice {
   price: String verifying IsNonBlank("Veuillez sélectionner le prix")
-  count: Number
+  count: PositiveNumber
 }

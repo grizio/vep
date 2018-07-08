@@ -1,0 +1,40 @@
+package vep.app.production.company.show
+
+import vep.app.production.company.show.Show
+import vep.app.production.company.show.ShowCreation
+
+context tests {{{
+  test type Show {
+    accept Show {
+      id: nonEmptyString()
+      title: nonEmptyString()
+      author: nonEmptyString()
+      director: nonEmptyString()
+      content: nonEmptyString()
+    }
+
+    refuse Show {
+      id: ""
+      title: ""
+      author: ""
+      director: ""
+      content: ""
+    }
+  }
+
+  test type ShowCreation {
+    accept ShowCreation {
+      title: nonEmptyString()
+      author: nonEmptyString()
+      director: nonEmptyString()
+      content: nonEmptyString()
+    }
+
+    refuse ShowCreation {
+      title: ""
+      author: ""
+      director: ""
+      content: ""
+    }
+  }
+}}}

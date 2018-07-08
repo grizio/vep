@@ -1,0 +1,42 @@
+package vep.app.production.company
+
+import vep.app.production.company.Company
+import vep.app.production.company.CompanyCreation
+
+context tests {{{
+  test type Company {
+    accept Company {
+      id: nonEmptyString()
+      name: nonEmptyString()
+      address: nonEmptyString()
+      isVep: anyBoolean()
+      content: nonEmptyString()
+    }
+
+    refuse Company {
+      id: ""
+      name: ""
+      address: ""
+      isVep: anyBoolean()
+      content: ""
+    }
+  }
+
+  test type CompanyCreation {
+    accept CompanyCreation {
+      name: nonEmptyString()
+      address: nonEmptyString()
+      isVep: anyBoolean()
+      content: nonEmptyString()
+    }
+
+    refuse CompanyCreation {
+      name: ""
+      address: ""
+      isVep: anyBoolean()
+      content: ""
+    }
+  }
+
+
+}}}

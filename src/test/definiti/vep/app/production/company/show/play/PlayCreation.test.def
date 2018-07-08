@@ -1,0 +1,50 @@
+package vep.app.production.company.show.play
+
+import vep.app.production.company.show.play.PlayCreation
+import vep.app.production.company.show.play.PlayPrice
+import vep.app.production.company.show.play.validPlayPrice
+import vep.app.production.company.show.play.invalidPlayPrice
+
+context tests {{{
+  test type PlayCreation {
+    accept validPlayCreation()
+
+    refuse PlayCreation {
+      theater: ""
+      date: anyDate()
+      reservationEndDate: anyDate()
+      prices: listOf[PlayPrice](validPlayPrice())
+    }
+
+    refuse validPlayCreationButDates()
+
+    refuse validPlayCreationButPrices()
+  }
+
+  generator validPlayCreation(): PlayCreation = createValidPlayCreationWithDates(anyDate(), anyDate())
+
+  generator createValidPlayCreationWithDates(first: Date, second: Date): PlayCreation = PlayCreation {
+    theater: nonEmptyString()
+    date: if (first.isBefore(second)) second else first
+    reservationEndDate: if (first.isBefore(second)) first else second
+    prices: nonEmptyListOf[PlayPrice](validPlayPrice())
+  }
+
+  generator validPlayCreationButDates(): PlayCreation = createValidPlayCreationButDates(anyDate(), anyDate())
+
+  generator createValidPlayCreationButDates(first: Date, second: Date): PlayCreation = PlayCreation {
+    theater: nonEmptyString()
+    date: if (first.isBefore(second)) first else second
+    reservationEndDate: if (first.isBefore(second)) second else first
+    prices: nonEmptyListOf[PlayPrice](validPlayPrice())
+  }
+
+  generator validPlayCreationButPrices(): PlayCreation = createValidPlayCreationButPrices(anyDate(), anyDate())
+
+  generator createValidPlayCreationButPrices(first: Date, second: Date): PlayCreation = PlayCreation {
+    theater: nonEmptyString()
+    date: if (first.isBefore(second)) second else first
+    reservationEndDate: if (first.isBefore(second)) first else second
+    prices: nonEmptyListOf[PlayPrice](invalidPlayPrice())
+  }
+}}}

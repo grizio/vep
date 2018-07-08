@@ -1,0 +1,17 @@
+package vep.app.production.company.show.play
+
+import vep.app.production.company.show.play.PlayPrice
+
+context tests {{{
+  generator validPlayPrice(): PlayPrice = PlayPrice {
+    name: nonEmptyString()
+    value: positiveNumber()
+    condition: optionOf[String](anyString())
+  }
+
+  generator invalidPlayPrice(): PlayPrice = PlayPrice {
+    name: ""
+    value: -1
+    condition: optionOf[String](anyString())
+  }
+}}}

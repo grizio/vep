@@ -1,0 +1,22 @@
+package vep.app.production.reservation
+
+import vep.app.production.reservation.ReservationPrice
+
+context tests {{{
+  test type ReservationPrice {
+    accept ReservationPrice {
+      price: nonEmptyString()
+      count: positiveNumber()
+    }
+
+    refuse ReservationPrice {
+      price: ""
+      count: anyNumber()
+    }
+
+    refuse ReservationPrice {
+      price: anyString()
+      count: negativeNumber()
+    }
+  }
+}}}
