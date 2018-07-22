@@ -7,3 +7,11 @@ verification IsPositive {
     number > 0
   }
 }
+
+type PositiveOrNullNumber = Number verifying IsPositiveOrNull
+verification IsPositiveOrNull {
+  "Veuillez indiquer un nombre positif ou nul"
+  (number: Number) => {
+    number >= 0
+  }
+}

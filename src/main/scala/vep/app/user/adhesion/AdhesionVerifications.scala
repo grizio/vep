@@ -1,11 +1,11 @@
 package vep.app.user.adhesion
 
+import java.time.LocalDateTime
+import java.util.UUID
+
 import vep.app.common.verifications.CommonVerifications
 import vep.app.user.User
 import vep.framework.validation._
-import java.util.UUID
-
-import org.joda.time.DateTime
 
 class AdhesionVerifications(
   commonVerification: CommonVerifications
@@ -19,7 +19,7 @@ class AdhesionVerifications(
     Validation.all(
       commonVerification.verifyEquals(requestAdhesion.period, period.id),
       verifyMembers(requestAdhesion.members, period),
-      commonVerification.verifyDateIncluded(DateTime.now(), period.registrationPeriod)
+      commonVerification.verifyDateIncluded(LocalDateTime.now(), period.registrationPeriod)
     ) map {
       case _ ~ members ~ _ =>
         Adhesion(
