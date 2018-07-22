@@ -1,0 +1,17 @@
+package vep.app.user
+
+import vep.app.user.Phone
+
+context tests {{{
+  test type Phone {
+    accept Phone {
+      name: nonEmptyString()
+      number: nonEmptyString()
+    }
+
+    refuse Phone {
+      name: ""
+      number: ""
+    }
+  }
+}}}

@@ -2,13 +2,8 @@ package vep.app.user
 
 import vep.app.common.verifications.IsNonBlank
 import vep.app.common.verifications.Email
-import vep.app.common.verifications.Password
 import vep.app.common.verifications.NonEmptyList
-
-type UserRegistration {
-  email: Email
-  password: Password
-}
+import vep.app.user.Phone
 
 type Profile {
   email: Email
@@ -18,9 +13,4 @@ type Profile {
   zipCode: String verifying IsNonBlank("Veuillez renseigner un code postal")
   city: String verifying IsNonBlank("Veuillez renseigner une ville")
   phones: NonEmptyList[Phone]
-}
-
-type Phone {
-  name: String verifying IsNonBlank("Veuillez renseigner un nom de téléphone")
-  number: String verifying IsNonBlank("Veuillez renseigner un numéro de téléphone")
 }

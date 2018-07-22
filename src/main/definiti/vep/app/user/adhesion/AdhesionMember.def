@@ -1,0 +1,10 @@
+package vep.app.user.adhesion
+
+import vep.app.common.verifications.IsNonBlank
+
+type AdhesionMember {
+  firstName: String verifying IsNonBlank("Veuillez renseigner le prénom")
+  lastName: String verifying IsNonBlank("Veuillez renseigner le nom")
+  birthday: Date
+  activity: String verifying IsNonBlank("Veuillez renseigner l'activité")
+}

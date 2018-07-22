@@ -1,0 +1,25 @@
+package vep.app.user.adhesion
+
+import vep.app.user.adhesion.RequestAdhesion
+import vep.app.user.adhesion.AdhesionMember
+import vep.app.user.adhesion.validAdhesionMember
+import vep.app.user.adhesion.invalidAdhesionMember
+
+context tests {{{
+  test type RequestAdhesion {
+    accept RequestAdhesion {
+      period: nonEmptyString()
+      members: nonEmptyListOf[AdhesionMember](validAdhesionMember())
+    }
+
+    refuse RequestAdhesion {
+      period: nonEmptyString()
+      members: list[AdhesionMember]()
+    }
+
+    refuse RequestAdhesion {
+      period: nonEmptyString()
+      members: listOf[AdhesionMember](invalidAdhesionMember())
+    }
+  }
+}}}

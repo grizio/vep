@@ -1,0 +1,36 @@
+package vep.app.user.adhesion
+
+import vep.app.user.adhesion.Adhesion
+import vep.app.user.adhesion.AdhesionMember
+
+context tests {{{
+  test type Adhesion {
+    accept Adhesion {
+      id: anyString()
+      user: anyString()
+      accepted: anyBoolean()
+      members: listOf[AdhesionMember](
+        AdhesionMember {
+          firstName: nonEmptyString()
+          lastName: nonEmptyString()
+          birthday: anyDate()
+          activity: nonEmptyString()
+        }
+      )
+    }
+
+    refuse Adhesion {
+      id: anyString()
+      user: anyString()
+      accepted: anyBoolean()
+      members: nonEmptyListOf[AdhesionMember](
+        AdhesionMember {
+          firstName: ""
+          lastName: ""
+          birthday: anyDate()
+          activity: ""
+        }
+      )
+    }
+  }
+}}}

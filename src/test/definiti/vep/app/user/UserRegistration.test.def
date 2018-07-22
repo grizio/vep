@@ -1,0 +1,17 @@
+package vep.app.user
+
+import vep.app.user.UserRegistration
+
+context tests {{{
+  test type UserRegistration {
+    accept UserRegistration {
+      email: "abc@def.ghi"
+      password: "This password is complex enough"
+    }
+
+    refuse UserRegistration {
+      email: ""
+      password: ""
+    }
+  }
+}}}

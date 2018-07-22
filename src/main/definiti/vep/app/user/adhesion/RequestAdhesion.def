@@ -1,0 +1,10 @@
+package vep.app.user.adhesion
+
+import vep.app.common.verifications.IsNonBlank
+import vep.app.common.verifications.NonEmptyList
+import vep.app.user.adhesion.AdhesionMember
+
+type RequestAdhesion {
+  period: String verifying IsNonBlank("Veuillez renseigner la période")
+  members: NonEmptyList[AdhesionMember]
+}

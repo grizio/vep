@@ -1,0 +1,33 @@
+package vep.app.production.theater
+
+import vep.app.production.theater.Theater
+import vep.app.production.theater.Seat
+
+context tests {{{
+  test type Theater {
+    accept Theater {
+      id: nonEmptyString()
+      name: nonEmptyString()
+      address: nonEmptyString()
+      content: nonEmptyString()
+      seats: nonEmptyListOf[Seat](
+        Seat {
+          c: nonEmptyString()
+          x: positiveNumber()
+          y: positiveNumber()
+          w: positiveNumber()
+          h: positiveNumber()
+          t: nonEmptyString()
+        }
+      )
+    }
+
+    refuse Theater {
+      id: ""
+      name: ""
+      address: ""
+      content: ""
+      seats: list[Seat]()
+    }
+  }
+}}}

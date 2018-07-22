@@ -1,0 +1,24 @@
+package vep.app.user.adhesion
+
+import vep.app.user.adhesion.PeriodAdhesion
+import vep.app.common.types.Period
+import vep.app.common.types.anyValidPeriod
+import vep.app.common.types.anyInvalidPeriod
+
+context tests {{{
+  test type PeriodAdhesion {
+    accept PeriodAdhesion {
+      id: nonEmptyString()
+      period: anyValidPeriod()
+      registrationPeriod: anyValidPeriod()
+      activities: nonEmptyListOf[String](nonEmptyString())
+    }
+
+    refuse PeriodAdhesion {
+      id: ""
+      period: anyInvalidPeriod()
+      registrationPeriod: anyInvalidPeriod()
+      activities: list[String]()
+    }
+  }
+}}}

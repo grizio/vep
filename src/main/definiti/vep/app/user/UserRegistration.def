@@ -1,0 +1,9 @@
+package vep.app.user
+
+import vep.app.common.verifications.Email
+import vep.app.common.verifications.Password
+
+type UserRegistration {
+  email: Email
+  password: Password
+}

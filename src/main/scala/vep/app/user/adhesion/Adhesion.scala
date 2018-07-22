@@ -11,19 +11,6 @@ case class AdhesionEntry(
   accepted: Boolean
 )
 
-case class Adhesion(
-  id: String,
-  user: String,
-  accepted: Boolean,
-  members: Seq[AdhesionMember]
-)
-
-object Adhesion {
-  import JsonProtocol._
-
-  implicit val adhesionFormat: RootJsonFormat[Adhesion] = jsonFormat4(Adhesion.apply)
-}
-
 case class AdhesionView(
   id: String,
   period: PeriodAdhesion,

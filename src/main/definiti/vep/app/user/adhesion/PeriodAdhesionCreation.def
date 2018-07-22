@@ -1,0 +1,11 @@
+package vep.app.user.adhesion
+
+import vep.app.common.verifications.NonEmptyList
+import vep.app.common.verifications.RequiredString
+import vep.app.common.types.Period
+
+type PeriodAdhesionCreation {
+  period: Period
+  registrationPeriod: Period
+  activities: NonEmptyList[RequiredString]
+}

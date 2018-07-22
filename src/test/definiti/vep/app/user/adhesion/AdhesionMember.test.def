@@ -1,0 +1,25 @@
+package vep.app.user.adhesion
+
+import vep.app.user.adhesion.AdhesionMember
+
+context tests {{{
+  test type AdhesionMember {
+    accept validAdhesionMember()
+
+    refuse invalidAdhesionMember()
+  }
+
+  generator validAdhesionMember(): AdhesionMember = AdhesionMember {
+    firstName: nonEmptyString()
+    lastName: nonEmptyString()
+    birthday: anyDate()
+    activity: nonEmptyString()
+  }
+
+  generator invalidAdhesionMember(): AdhesionMember = AdhesionMember {
+    firstName: ""
+    lastName: ""
+    birthday: anyDate()
+    activity: ""
+  }
+}}}

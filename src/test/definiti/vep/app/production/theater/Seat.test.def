@@ -1,0 +1,25 @@
+package vep.app.production.theater
+
+import vep.app.production.theater.Seat
+
+context tests {{{
+  test type Seat {
+    accept Seat {
+      c: nonEmptyString()
+      x: positiveNumber()
+      y: positiveNumber()
+      w: positiveNumber()
+      h: positiveNumber()
+      t: nonEmptyString()
+    }
+
+    refuse Seat {
+      c: ""
+      x: negativeNumber()
+      y: negativeNumber()
+      w: negativeNumber()
+      h: negativeNumber()
+      t: ""
+    }
+  }
+}}}

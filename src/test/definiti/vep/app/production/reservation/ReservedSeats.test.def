@@ -1,0 +1,17 @@
+package vep.app.production.reservation
+
+import vep.app.production.reservation.ReservedSeats
+
+context tests {{{
+  test type ReservedSeats {
+
+    /** accept a non empty list with distinct seats */
+    accept list[String]("A1", "B1")
+
+    /** refuse a non empty list with two identical seats */
+    refuse list[String]("A1", "A1")
+
+    /** refuse an empty list */
+    refuse list[String]()
+  }
+}}}

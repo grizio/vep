@@ -1,31 +1,10 @@
 package vep.app.user.adhesion
 
-import vep.app.common.verifications.NonEmptyList
-import vep.app.common.verifications.RequiredString
-import vep.app.common.verifications.IsNonBlank
-import vep.app.common.types.Period
+import vep.app.user.adhesion.AdhesionMember
 
-type PeriodAdhesion {
-  id: RequiredString
-  period: Period
-  registrationPeriod: Period
-  activities: NonEmptyList[RequiredString]
-}
-
-type PeriodAdhesionCreation {
-  period: Period
-  registrationPeriod: Period
-  activities: NonEmptyList[RequiredString]
-}
-
-type RequestAdhesion {
-  period: String verifying IsNonBlank("Veuillez renseigner la période")
-  members: NonEmptyList[AdhesionMember]
-}
-
-type AdhesionMember {
-  firstName: String verifying IsNonBlank("Veuillez renseigner le prénom")
-  lastName: String verifying IsNonBlank("Veuillez renseigner le nom")
-  birthday: Date
-  activity: String verifying IsNonBlank("Veuillez renseigner l'activité")
+type Adhesion {
+  id: String
+  user: String
+  accepted: Boolean
+  members: List[AdhesionMember]
 }

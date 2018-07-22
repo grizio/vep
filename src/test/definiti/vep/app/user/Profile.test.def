@@ -1,0 +1,33 @@
+package vep.app.user
+
+import vep.app.user.Profile
+import vep.app.user.Phone
+
+context tests {{{
+  test type Profile {
+    accept Profile {
+      email: "abc@def.ghi"
+      firstName: nonEmptyString()
+      lastName: nonEmptyString()
+      address: nonEmptyString()
+      zipCode: nonEmptyString()
+      city: nonEmptyString()
+      phones: nonEmptyListOf[Phone](
+        Phone {
+          name: nonEmptyString()
+          number: nonEmptyString()
+        }
+      )
+    }
+
+    refuse Profile {
+      email: ""
+      firstName: ""
+      lastName: ""
+      address: ""
+      zipCode: ""
+      city: ""
+      phones: list[Phone]()
+    }
+  }
+}}}

@@ -1,0 +1,9 @@
+package vep.app.user
+
+import vep.app.common.verifications.IsNonBlank
+
+
+type Phone {
+  name: String verifying IsNonBlank("Veuillez renseigner un nom de téléphone")
+  number: String verifying IsNonBlank("Veuillez renseigner un numéro de téléphone")
+}

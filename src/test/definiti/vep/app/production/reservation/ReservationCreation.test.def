@@ -6,7 +6,7 @@ import vep.app.common.generators.boundedListOfUniqueElements
 
 context tests {{{
   test type ReservationCreation {
-    /** Nominal case */
+    /** accept a nominal case */
     accept ReservationCreation {
       firstName: nonEmptyString()
       lastName: nonEmptyString()
@@ -26,7 +26,7 @@ context tests {{{
       )
     }
 
-    /** Empty fields */
+    /** refuse when a field is empty */
     refuse ReservationCreation {
       firstName: ""
       lastName: ""
@@ -46,7 +46,7 @@ context tests {{{
       )
     }
 
-    /** The number of seats and the count of prices differs */
+    /** refuse when the number of seats and the count of prices differs */
     refuse ReservationCreation {
       firstName: ""
       lastName: ""
