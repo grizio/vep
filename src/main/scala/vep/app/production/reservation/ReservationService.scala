@@ -146,6 +146,7 @@ class ReservationService(
         email = ${reservation.email},
         city = ${reservation.city},
         newsletter = ${reservation.newsletter}
+      WHERE id = ${reservation.id}
     """
       .execute()
       .apply()
