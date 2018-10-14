@@ -1,0 +1,13 @@
+version: '3'
+services:
+  postgresql:
+    image: postgres:9.2
+    container_name: vep
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "vep"
+      POSTGRES_PASSWORD: "vep"
+      POSTGRES_DB: "vep"
+    #volumes:
+    #  - .docker-data/postgresql:/var/lib/postgresql/data:z
