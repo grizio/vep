@@ -55,14 +55,6 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
         showErrorBottom
         closeErrors={actions.closeErrors}
       >
-        {
-          state.success
-            ? (
-              <Panel type="success" onClose={actions.closeSuccess}>
-                <p>Vos places ont été réservées</p>
-              </Panel>
-            ) : null
-        }
         <div class="row">
           <div class="col-2">
             {this.renderPlan(props, state)}
@@ -72,6 +64,14 @@ export default class ReservationForm extends StoreListenerComponent<ReservationF
           </div>
         </div>
         {this.renderPrices(props, state)}
+        {
+          state.success
+            ? (
+              <Panel type="success" onClose={actions.closeSuccess}>
+                <p>Vos places ont été réservées</p>
+              </Panel>
+            ) : null
+        }
       </Form>
     )
   }
