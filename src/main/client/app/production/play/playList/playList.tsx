@@ -23,7 +23,7 @@ export default class PlayList extends AsyncPage<PlayListProps, PlayListState> {
   }
 
   getTitle() {
-    return "Liste des prochaines pièces"
+    return "Liste des prochains spectacles"
   }
 
   getLoadingMessage() {
@@ -47,7 +47,7 @@ export default class PlayList extends AsyncPage<PlayListProps, PlayListState> {
           <RichContent content={play.show.content} limit={100}/>
         </CardContent>
         <CardAction href={`/production/companies/${play.company.id}/shows/${play.show.id}/plays/page/${play.play.id}`}>Réserver</CardAction>
-        <CardAction href={`/production/companies/${play.company.id}/shows/page/${play.show.id}`}>Voir la pièce</CardAction>
+        <CardAction href={`/production/companies/${play.company.id}/shows/page/${play.show.id}`}>Voir le spectacle</CardAction>
       </Card>
     )
   }

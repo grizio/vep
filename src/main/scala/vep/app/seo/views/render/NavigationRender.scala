@@ -52,13 +52,13 @@ trait NavigationRender {
 
   def renderNextShows(shows: Seq[ShowMeta]): NodeSeq = {
     if (shows.nonEmpty) {
-      renderMenuGroup("Les prochaines pièces", "/shows") {
+      renderMenuGroup("Les prochains spectacles", "/shows") {
         shows.map { show =>
           renderMenuItem(show.title, seo.showUrl(show))
         }
       }
     } else {
-      renderEmptyMenuGroup("Les prochaines pièces", "/shows")
+      renderEmptyMenuGroup("Les prochains spectacles", "/shows")
     }
   }
 

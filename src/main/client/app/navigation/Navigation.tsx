@@ -99,14 +99,14 @@ function renderNav(state: NavigationState) {
 function renderNextShows(state: NavigationState) {
   if (state.shows && state.shows.length) {
     return (
-      <MenuGroup name="Les prochaines pièces" href="/production/shows" regex="/production/show(s|/.*)">
+      <MenuGroup name="Les prochains spectacles" href="/production/shows" regex="/production/show(s|/.*)">
         {arrays.take(state.shows, 5).map(show =>
           <MenuItem name={show.title} href={`/production/companies/${show.company}/shows/page/${show.id}`}/>
         )}
       </MenuGroup>
     )
   } else {
-    return <MenuGroup name="Les prochaines pièces" href="/shows" regex="/show(s|/.*)"/>
+    return <MenuGroup name="Les prochains spectacles" href="/shows" regex="/show(s|/.*)"/>
   }
 }
 

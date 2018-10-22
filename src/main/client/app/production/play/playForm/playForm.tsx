@@ -243,7 +243,7 @@ export default class PlayForm extends StoreListenerComponent<PlayFormProps, Play
 
   renderShowCard(show: Show) {
     return (
-      <Card title="Pièce">
+      <Card title="Spectacle">
         <CardContent>
           <p>{show.title}</p>
           <p>✍️ {show.author}</p>

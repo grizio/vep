@@ -50,7 +50,7 @@ export default class Sitemap extends AsyncPage<SitemapProps, SitemapState> {
   renderShows(state: SitemapState) {
     return (
       <section>
-        <h2>Pièces</h2>
+        <h2>Spectacles</h2>
 
         {state.shows.map(_ => this.renderShow(_))}
       </section>

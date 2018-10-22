@@ -77,7 +77,7 @@ export default class CompanyPage extends StoreListenerComponent<CompanyPageProps
   renderShows(shows: Array<Show>, company: Company) {
     return (
       <section>
-        <h2>Pièces jouées par {company.name}</h2>
+        <h2>Spectacles jouées par {company.name}</h2>
         <CardCollection columns={3}>
           {shows.map(show => (
             <Card title={show.title} href={`/production/companies/${company.id}/shows/page/${show.id}`}>
@@ -91,7 +91,7 @@ export default class CompanyPage extends StoreListenerComponent<CompanyPageProps
             </Card>
           ))}
         </CardCollection>
-        <AdminPrimaryButton message="Ajouter une pièce" href={`/production/companies/${company.id}/shows/create`}/>
+        <AdminPrimaryButton message="Ajouter un spectacle" href={`/production/companies/${company.id}/shows/create`}/>
       </section>
     )
   }

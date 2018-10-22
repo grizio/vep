@@ -62,10 +62,10 @@ const messages = {
     },
     show: {
       list: {
-        loading: "Veuillez patienter pendant que nous cherchons toutes les pièces."
+        loading: "Veuillez patienter pendant que nous cherchons tous les spectacles."
       },
       page: {
-        loading: "Veuillez patienter pendant que montons la pièce.",
+        loading: "Veuillez patienter pendant que montons le spectacle.",
         plays: {
           deletion: {
             title: "Supprimer la séance ?",

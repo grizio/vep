@@ -34,7 +34,7 @@ class ReservationMailer(
       |<ul>
       |    <li>Date : ${DateUtils.longDate(play.play.date)}</li>
       |    <li>Salle : ${play.theater.name} (${play.theater.address})</li>
-      |    <li>Pièce(s) : ${play.show.title} par ${play.company.name}</li>
+      |    <li>Spectacle(s) : ${play.show.title} par ${play.company.name}</li>
       |    <li>Nom : ${reservation.firstName} ${reservation.lastName}</li>
       |    <li>Places réservées : ${reservation.seats.mkString(", ")}</li>
       |</ul>

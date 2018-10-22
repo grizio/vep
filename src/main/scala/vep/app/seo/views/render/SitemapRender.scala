@@ -33,7 +33,7 @@ trait SitemapRender extends Render {
 
   private def renderShows(shows: Seq[ShowWithDependencies]): NodeSeq = {
     <section>
-      <h2>Pièces</h2>
+      <h2>Spectacles</h2>
 
       {shows.map(renderShow)}
     </section>

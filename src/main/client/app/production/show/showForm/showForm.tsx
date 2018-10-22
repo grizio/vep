@@ -44,7 +44,7 @@ export default class ShowForm extends StoreListenerComponent<ShowFormProps, Show
   render(props: ShowFormProps, state: ShowFormState) {
     if (this.mounted) {
       return (
-        <Page title={props.id ? "Modifier une pièce" : "Créer une nouvelle pièce"} role="admin">
+        <Page title={props.id ? "Modifier un spectacle" : "Créer un nouveau spectacle"} role="admin">
           <Loading loading={state.step === "loading"} message={messages.production.show.form.loading}>
             { state.step === "form" &&  this.renderEdition(props, state) }
             { state.step === "success" && this.renderSuccess(props, state) }
@@ -83,7 +83,7 @@ export default class ShowForm extends StoreListenerComponent<ShowFormProps, Show
   renderForm(props: ShowFormProps, state: ShowFormState) {
     return (
       <Form
-        submit={props.id ? "Modifier la pièce" : "Créer la pièce"}
+        submit={props.id ? "Modifier le spectacle" : "Créer le spectacle"}
         onSubmit={this.onSubmit}
         cancel={`Revenir sur la fiche de ${state.company.name}`}
         onCancel={`/production/companies/page/${state.company.id}`}
@@ -95,7 +95,7 @@ export default class ShowForm extends StoreListenerComponent<ShowFormProps, Show
           label="Titre"
           name="title"
           type="text"
-          placeholder="Titre de la pièce"
+          placeholder="Titre du spectacle"
           required
           onUpdate={actions.updateTitle}
           fieldValidation={state.title}
@@ -106,7 +106,7 @@ export default class ShowForm extends StoreListenerComponent<ShowFormProps, Show
           label="Auteur"
           name="author"
           type="text"
-          placeholder="Auteur de la pièce"
+          placeholder="Auteur du spectacle"
           required
           onUpdate={actions.updateAuthor}
           fieldValidation={state.author}
@@ -117,7 +117,7 @@ export default class ShowForm extends StoreListenerComponent<ShowFormProps, Show
           label="Metteur en scène"
           name="director"
           type="text"
-          placeholder="Metteur en scène de la pièce"
+          placeholder="Metteur en scène du spectacle"
           required
           onUpdate={actions.updateDirector}
           fieldValidation={state.director}
@@ -127,7 +127,7 @@ export default class ShowForm extends StoreListenerComponent<ShowFormProps, Show
           id="content"
           label="Description"
           name="content"
-          placeholder="Description de la pièce, informations complémentaires"
+          placeholder="Description du spectacle, informations complémentaires"
           required
           onUpdate={actions.updateContent}
           fieldValidation={state.content}
@@ -140,7 +140,7 @@ export default class ShowForm extends StoreListenerComponent<ShowFormProps, Show
     return (
       <Panel type="success">
         <p>
-          {props.id ? "La pièce a bien été modifiée." : "La pièce a bien été créée."}
+          {props.id ? "Le spectacle a bien été modifié." : "Le spectacle a bien été créé."}
         </p>
         <p>
           <PrimaryButton message={`Revenir sur la fiche de ${state.company.name}`}

@@ -25,7 +25,7 @@ export default class ShowList extends AsyncPage<ShowListProps, ShowListState> {
   }
 
   getTitle() {
-    return "Liste des prochaines pièces"
+    return "Liste des prochains spectacles"
   }
 
   getLoadingMessage() {
@@ -35,8 +35,8 @@ export default class ShowList extends AsyncPage<ShowListProps, ShowListState> {
   renderPage(props: ShowListProps, state: ShowListState) {
     return (
       <div>
-        {this.renderShows(state.nextShows, "Prochaines pièces")}
-        {this.renderShows(state.previousShows, "Précédentes pièces")}
+        {this.renderShows(state.nextShows, "Prochains spectacles")}
+        {this.renderShows(state.previousShows, "Précédents spectacles")}
       </div>
     )
   }
