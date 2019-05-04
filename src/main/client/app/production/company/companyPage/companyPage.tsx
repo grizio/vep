@@ -77,7 +77,7 @@ export default class CompanyPage extends StoreListenerComponent<CompanyPageProps
   renderShows(shows: Array<Show>, company: Company) {
     return (
       <section>
-        <h2>Spectacles jouées par {company.name}</h2>
+        <h2>Spectacles joués par {company.name}</h2>
         <CardCollection columns={3}>
           {shows.map(show => (
             <Card title={show.title} href={`/production/companies/${company.id}/shows/page/${show.id}`}>
