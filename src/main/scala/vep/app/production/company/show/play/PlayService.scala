@@ -250,22 +250,35 @@ class PlayService(
       .apply()
   }
 
-  def update(play: Play): Validation[Play] = withCommandTransaction { implicit session =>
-    val savedPlay = findPlay(play.id)
-    lazy val theaterIsUpdated = savedPlay.exists(_.theater != play.theater)
-    lazy val existingReservation = savedPlay.exists(p => existsReservedSeatsFromPlay(p.id))
-    if (theaterIsUpdated && existingReservation) {
-      Invalid(PlayMessages.existingReservation)
-    } else {
-      updatePlay(play)
-      removePricesFromPlay(play.id)
-      play.prices.foreach(insertPrice(_, play))
-      if (theaterIsUpdated) {
-        deleteTheaterFromPlay(play.id)
-        duplicateTheaterForPlay(play.id, play.theater)
-      }
-      Valid(play)
+  def updateFromApi(playUpdate: PlayUpdate): Validation[Play] = withCommandTransaction { implicit session =>
+    findPlay(playUpdate.id) match {
+      case Some(savedPlay) =>
+        lazy val theaterIsUpdated = savedPlay.theater != playUpdate.theater
+        lazy val existingReservation = existsReservedSeatsFromPlay(savedPlay.id)
+        if (theaterIsUpdated && existingReservation) {
+          Invalid(PlayMessages.existingReservation)
+        } else {
+          val play = savedPlay.copy(
+            date = playUpdate.date,
+            reservationEndDate = playUpdate.reservationEndDate,
+            prices = playUpdate.prices
+          )
+          updatePlay(play)
+          removePricesFromPlay(play.id)
+          play.prices.foreach(insertPrice(_, play))
+          if (theaterIsUpdated) {
+            deleteTheaterFromPlay(play.id)
+            duplicateTheaterForPlay(play.id, play.theater)
+          }
+          Valid(play)
+        }
+      case None =>
+        Invalid(PlayMessages.existingReservation)
     }
+  }
+
+  def update(play: Play): Unit = withCommandTransaction { implicit session =>
+    updatePlay(play)
   }
 
   private def existsReservedSeatsFromPlay(playId: String)(implicit session: DBSession): Boolean = {
@@ -288,7 +301,7 @@ class PlayService(
       .apply()
   }
 
-  private def updatePlay(play: Play)(implicit session: DBSession): Unit = {
+  def updatePlay(play: Play)(implicit session: DBSession): Unit = {
     sql"""
       UPDATE play
       SET theater = ${play.theater},

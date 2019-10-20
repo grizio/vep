@@ -61,11 +61,11 @@ class PlayRouter(
     }
   }
 
-  def update: Route = adminPut("production" / "companies" / Segment / "shows" / Segment / "plays" / Segment, as[Play]).apply { (companyId, showId, playId, play, _) =>
+  def update: Route = adminPut("production" / "companies" / Segment / "shows" / Segment / "plays" / Segment, as[PlayUpdate]).apply { (companyId, showId, playId, play, _) =>
     found(companyService.find(companyId)) { company =>
       found(showService.findFromCompany(company, showId)) { _ =>
         verifying(playVerifications.verify(play, playId)) { play =>
-          verifying(playService.update(play)) { play =>
+          verifying(playService.updateFromApi(play)) { play =>
             Ok(play)
           }
         }

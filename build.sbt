@@ -2,7 +2,7 @@ name := "vep"
 
 version := "1.4.3"
 
-scalaVersion := "2.12.2"
+scalaVersion := "2.12.10"
 
 libraryDependencies += "com.typesafe" % "config" % "1.3.1"
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0"

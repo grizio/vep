@@ -39,7 +39,7 @@ class PlayVerifications(
     ) map { _ => price }
   }
 
-  def verify(play: Play, playId: String): Validation[Play] = {
+  def verify(play: PlayUpdate, playId: String): Validation[PlayUpdate] = {
     Validation.all(
       commonVerifications.verifyEquals(play.id, playId),
       commonVerifications.verifyIsDefined(theaterService.find(play.theater), TheaterMessage.unknownTheater),
