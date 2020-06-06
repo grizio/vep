@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@webpack-blocks/webpack2": "0.4.0",
-    "eslint": "4.1.1",
+    "eslint": "4.18.2",
     "eslint-config-synacor": "1.0.1",
     "if-env": "1.0.0",
     "node-sass": "4.5.3",
