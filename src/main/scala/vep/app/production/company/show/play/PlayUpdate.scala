@@ -1,13 +1,14 @@
 package vep.app.production.company.show.play
 
-import org.joda.time.DateTime
+import java.time.LocalDateTime
+
 import spray.json.RootJsonFormat
 
 case class PlayUpdate(
   id: String,
   theater: String,
-  date: DateTime,
-  reservationEndDate: DateTime,
+  date: LocalDateTime,
+  reservationEndDate: LocalDateTime,
   prices: Seq[PlayPrice]
 )
 

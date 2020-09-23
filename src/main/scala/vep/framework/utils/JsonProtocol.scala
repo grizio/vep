@@ -1,21 +1,23 @@
 package vep.framework.utils
 
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 import spray.json._
 
 trait JsonProtocol extends DefaultJsonProtocol {
-  private val datetimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss")
+  private val datetimeFormatter = DateTimeFormatter.ISO_DATE_TIME
 
-  implicit val dateTimeFormat: JsonFormat[DateTime] = new JsonFormat[DateTime] {
-    override def write(obj: DateTime): JsValue = JsString(obj.toString(datetimeFormatter))
+  implicit val dateTimeFormat: JsonFormat[LocalDateTime] = new JsonFormat[LocalDateTime] {
+    override def write(obj: LocalDateTime): JsValue = JsString(obj.format(datetimeFormatter))
 
-    override def read(json: JsValue): DateTime = json match {
+    override def read(json: JsValue): LocalDateTime = json match {
       case JsString(jsString) =>
         try {
-          DateTime.parse(jsString, datetimeFormatter)
+          LocalDateTime.parse(jsString, datetimeFormatter)
         } catch {
-          case _: Throwable => deserializationError(s"Expected ISO date, got: $jsString")
+          case t: Throwable =>
+            deserializationError(s"Expected ISO date, got: $jsString")
         }
       case x =>
         deserializationError(s"String expected, got: $x")
@@ -35,6 +37,8 @@ trait JsonProtocol extends DefaultJsonProtocol {
       case x => deserializationError(s"String expected, got: $x")
     }
   }
+
+  def seqJsonFormat[A](implicit internal: JsonFormat[A]): RootJsonFormat[Seq[A]] = viaSeq[scala.collection.immutable.Seq[A], A](seq => Seq(seq: _*))(internal)
 }
 
 object JsonProtocol extends JsonProtocol

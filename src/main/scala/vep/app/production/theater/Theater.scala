@@ -41,7 +41,7 @@ object Seat {
   import JsonProtocol._
 
   implicit val seatFormat: RootJsonFormat[Seat] = jsonFormat6(Seat.apply)
-  implicit val seqSeatFormat: RootJsonFormat[Seq[Seat]] = seqFormat[Seat]
+  //implicit val seqSeatFormat: RootJsonFormat[Seq[Seat]] = seqFormat[Seat]
 
   def apply(resultSet: WrappedResultSet): Seat = {
     new Seat(

@@ -60,7 +60,7 @@ class DatabaseEvolution() extends DatabaseContainer {
         evolutions.append(EvolutionScript(version, content))
       }
     } while (inputStream != null)
-    evolutions
+    evolutions.toSeq
   }
 
   private def runEvolution(evolutionScript: EvolutionScript)(implicit session: DBSession): Unit = {

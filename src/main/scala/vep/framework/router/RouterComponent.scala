@@ -215,7 +215,7 @@ trait RouterComponent extends JsonProtocol with SprayJsonSupport {
       entity = "",
       headers = Seq(Location(
         buildUri(Uri(configuration.server.public))
-      )).to[immutable.Seq]
+      ))
     )
   }
 

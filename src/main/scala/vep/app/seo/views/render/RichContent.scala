@@ -25,7 +25,7 @@ object RichContent {
       group.foreach(result.append(_))
       remainingLines = nextLines
     }
-    result
+    result.toSeq
   }
 
   def processNextGroup(lines: Seq[String]): (Option[Group], Seq[String]) = {
@@ -61,7 +61,7 @@ object RichContent {
       groupLines.append(lines(i).substring(prefix.length))
       i = i + 1
     }
-    (groupLines, lines.drop(i))
+    (groupLines.toSeq, lines.drop(i))
   }
 
   def formatGroup(group: Group): Node = {

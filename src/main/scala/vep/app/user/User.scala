@@ -1,6 +1,7 @@
 package vep.app.user
 
-import org.joda.time.DateTime
+import java.time.LocalDateTime
+
 import org.mindrot.jbcrypt.BCrypt
 import scalikejdbc.WrappedResultSet
 import spray.json.{JsonFormat, JsonParser, RootJsonFormat}
@@ -50,7 +51,7 @@ object UserRole extends Enumeration {
 
 case class Authentication(
   token: String,
-  date: DateTime
+  date: LocalDateTime
 ) {
   def crypt(): Authentication = copy(
     token = BCrypt.hashpw(token, BCrypt.gensalt())
@@ -61,7 +62,7 @@ object Authentication {
   import JsonProtocol._
 
   implicit val authenticationFormat: JsonFormat[Authentication] = jsonFormat2(Authentication.apply)
-  implicit val authenticationSeqFormat: JsonFormat[Seq[Authentication]] = seqFormat(authenticationFormat)
+  implicit val authenticationSeqFormat: JsonFormat[Seq[Authentication]] = seqJsonFormat(authenticationFormat)
 }
 
 case class Profile(
@@ -99,7 +100,7 @@ object Phone {
   import JsonProtocol._
 
   implicit val phoneFormat: JsonFormat[Phone] = jsonFormat2(Phone.apply)
-  implicit val phoneSeqFormat: JsonFormat[Seq[Phone]] = seqFormat(phoneFormat)
+  implicit val phoneSeqFormat: JsonFormat[Seq[Phone]] = seqJsonFormat(phoneFormat)
 }
 
 case class UserView(

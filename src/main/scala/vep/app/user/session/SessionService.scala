@@ -1,6 +1,7 @@
 package vep.app.user.session
 
-import org.joda.time.DateTime
+import java.time.LocalDateTime
+
 import org.mindrot.jbcrypt.BCrypt
 import scalikejdbc._
 import vep.app.user.{Authentication, User, UserMessages, UserService}
@@ -30,7 +31,7 @@ class SessionService(
   private def createAuthentication(email: String)(implicit session: DBSession): Authentication = {
     val authentication = Authentication(
       token = StringUtils.randomString(),
-      date = DateTime.now()
+      date = LocalDateTime.now()
     )
     insertAuthentication(email, authentication)
     authentication

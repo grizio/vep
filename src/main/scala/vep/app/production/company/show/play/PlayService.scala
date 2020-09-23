@@ -306,7 +306,8 @@ class PlayService(
       UPDATE play
       SET theater = ${play.theater},
           date = ${play.date},
-          reservationEndDate = ${play.reservationEndDate}
+          reservationEndDate = ${play.reservationEndDate},
+          anonymized = ${play.anonymized}
        WHERE id = ${play.id}
     """
       .execute()

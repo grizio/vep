@@ -24,7 +24,7 @@ object CollectionUtils {
     if (stream != null) {
       val buffer = ListBuffer[A]()
       stream.forEach((a) => buffer.append(a))
-      buffer
+      buffer.toSeq
     } else {
       Seq.empty
     }

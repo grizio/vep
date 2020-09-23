@@ -1,5 +1,7 @@
 package vep.app.seo.views.render
 
+import java.time.LocalDateTime
+
 import vep.app.production.company.show.play.{PlayView, PlayWithDependencies}
 import vep.framework.utils.{DateUtils, StringUtils}
 
@@ -36,7 +38,7 @@ trait PlayRender extends Render {
   }
 
   private def renderOtherPlays(play: PlayWithDependencies, playsOfShow: Seq[PlayView]): Node = {
-    val otherPlays = playsOfShow.filter(_.id != play.play.id).filter(_.date.isAfterNow)
+    val otherPlays = playsOfShow.filter(_.id != play.play.id).filter(_.date.isAfter(LocalDateTime.now()))
     if (otherPlays.nonEmpty) {
       <div>
         <h3>Autres séances</h3>

@@ -1,10 +1,11 @@
 package vep.app.user.adhesion
 
-import org.joda.time.DateTime
+import java.time.LocalDateTime
+
 import scalikejdbc.WrappedResultSet
 import spray.json.{JsonFormat, JsonParser, RootJsonFormat}
 import vep.app.common.types.Period
-import vep.app.user.{User, UserView}
+import vep.app.user.UserView
 import vep.framework.utils.{DateUtils, JsonProtocol}
 
 case class PeriodAdhesion(
@@ -15,25 +16,26 @@ case class PeriodAdhesion(
 )
 
 object PeriodAdhesion {
+
   import JsonProtocol._
 
   def apply(resultSet: WrappedResultSet): PeriodAdhesion = {
     new PeriodAdhesion(
       id = resultSet.string("id"),
       period = Period(
-        start = resultSet.jodaDateTime("startPeriod"),
-        end = resultSet.jodaDateTime("endPeriod")
+        start = resultSet.localDateTime("startPeriod"),
+        end = resultSet.localDateTime("endPeriod")
       ),
       registrationPeriod = Period(
-        start = resultSet.jodaDateTime("startRegistration"),
-        end = resultSet.jodaDateTime("endRegistration")
+        start = resultSet.localDateTime("startRegistration"),
+        end = resultSet.localDateTime("endRegistration")
       ),
       activities = activitiesFormat.read(JsonParser(resultSet.string("activities")))
     )
   }
 
   implicit val periodAdhesionFormat: RootJsonFormat[PeriodAdhesion] = jsonFormat4(PeriodAdhesion.apply)
-  val activitiesFormat: JsonFormat[Seq[String]] = seqFormat[String]
+  val activitiesFormat: JsonFormat[Seq[String]] = seqJsonFormat[String]
 }
 
 case class PeriodAdhesionCreation(
@@ -43,6 +45,7 @@ case class PeriodAdhesionCreation(
 )
 
 object PeriodAdhesionCreation {
+
   import JsonProtocol._
 
   implicit val periodAdhesionCreationFormat: RootJsonFormat[PeriodAdhesionCreation] = jsonFormat3(PeriodAdhesionCreation.apply)
@@ -56,6 +59,7 @@ case class Adhesion(
 )
 
 object Adhesion {
+
   import JsonProtocol._
 
   implicit val adhesionFormat: RootJsonFormat[Adhesion] = jsonFormat4(Adhesion.apply)
@@ -64,18 +68,19 @@ object Adhesion {
 case class AdhesionMember(
   firstName: String,
   lastName: String,
-  birthday: DateTime,
+  birthday: LocalDateTime,
   activity: String
 )
 
 object AdhesionMember {
+
   import JsonProtocol._
 
   def apply(resultSet: WrappedResultSet): AdhesionMember = {
     new AdhesionMember(
       firstName = resultSet.string("first_name"),
       lastName = resultSet.string("last_name"),
-      birthday = resultSet.jodaDateTime("birthday"),
+      birthday = resultSet.localDateTime("birthday"),
       activity = resultSet.string("activity")
     )
   }
@@ -89,6 +94,7 @@ case class RequestAdhesion(
 )
 
 object RequestAdhesion {
+
   import JsonProtocol._
 
   implicit val requestAdhesionFormat: RootJsonFormat[RequestAdhesion] = jsonFormat2(RequestAdhesion.apply)
@@ -132,6 +138,7 @@ case class AdhesionView(
 }
 
 object AdhesionView {
+
   import JsonProtocol._
 
   implicit val adhesionViewFormat: RootJsonFormat[AdhesionView] = jsonFormat5(AdhesionView.apply)

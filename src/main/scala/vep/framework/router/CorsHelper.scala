@@ -3,13 +3,12 @@ package vep.framework.router
 import akka.http.scaladsl.model.{HttpMethods, HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directives.{complete, handleRejections}
 import akka.http.scaladsl.server._
-import ch.megard.akka.http.cors.CorsDirectives.cors
-import ch.megard.akka.http.cors.CorsSettings
+import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
+import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
 
 object CorsHelper {
-  private val corsSettings = CorsSettings.defaultSettings.copy(
-    allowedMethods = CorsSettings.defaultSettings.allowedMethods ++ Seq(HttpMethods.PUT, HttpMethods.DELETE)
-  )
+  private val corsSettings = CorsSettings.defaultSettings
+    .withAllowedMethods(CorsSettings.defaultSettings.allowedMethods ++ Seq(HttpMethods.PUT, HttpMethods.DELETE))
 
   def withCors(route: Route): Route = {
     cors(corsSettings) {

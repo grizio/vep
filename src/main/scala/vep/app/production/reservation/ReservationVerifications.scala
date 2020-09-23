@@ -1,5 +1,6 @@
 package vep.app.production.reservation
 
+import java.time.LocalDateTime
 import java.util.UUID
 
 import vep.app.common.verifications.CommonVerifications
@@ -37,7 +38,7 @@ class ReservationVerifications(
 
   private def verifyReservationsNotClosed(play: Play): Validation[Unit] = {
     Valid()
-      .filter(_ => play.reservationEndDate.isAfterNow, ReservationMessages.closedReservation)
+      .filter(_ => play.reservationEndDate.isAfter(LocalDateTime.now()), ReservationMessages.closedReservation)
   }
 
   private def verifyPrices(creation: ReservationCreation, play: Play): Validation[Seq[ReservationPrice]] = {

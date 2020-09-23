@@ -1,5 +1,7 @@
 package vep.app.seo.sitemap
 
+import java.time.LocalDateTime
+
 import akka.http.scaladsl.model.ContentTypes
 import akka.http.scaladsl.model.headers.`Content-Type`
 import akka.http.scaladsl.server.Route
@@ -53,8 +55,8 @@ class SitemapRouter(
   }
 
   private def sitemapShow(show: ShowWithDependencies): Seq[SitemapUrl] = {
-    val hasPastPlays = show.plays.exists(_.date.isBeforeNow)
-    val hasFuturePlays = show.plays.exists(_.date.isAfterNow)
+    val hasPastPlays = show.plays.exists(_.date.isBefore(LocalDateTime.now()))
+    val hasFuturePlays = show.plays.exists(_.date.isAfter(LocalDateTime.now()))
     val baseSitemap =
       if (hasPastPlays && hasFuturePlays) baseSitemapCurrentShow
       else if (hasFuturePlays) baseSitemapFutureShow
@@ -63,7 +65,7 @@ class SitemapRouter(
     val showSitemap = baseSitemap.copy(
       url = seoCommon.showUrl(show)
     )
-    val playsSitemap = show.plays.filter(_.date.isAfterNow).map { play =>
+    val playsSitemap = show.plays.filter(_.date.isAfter(LocalDateTime.now())).map { play =>
       baseSitemap.copy(
         url = seoCommon.playUrl(show, play),
         priority = baseSitemap.priority.map(_ - 0.1)

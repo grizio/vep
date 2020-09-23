@@ -107,5 +107,5 @@ object Invalid {
 
   def apply(errors: String*)(implicit dummyImplicit: DummyImplicit): Invalid = new Invalid(errors)
 
-  implicit def invalidFormat: JsonFormat[Invalid] = jsonFormat1(Invalid.apply)
+  implicit def invalidFormat: JsonFormat[Invalid] = jsonFormat((errors: Seq[String]) => new Invalid(errors), "errors")
 }

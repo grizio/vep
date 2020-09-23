@@ -28,7 +28,7 @@ class PageVerifications(
 
   private def verifyNotDuplicatedCanonical(canonical: String): Validation[String] = {
     pageService.find(canonical) match {
-      case Some(_) => Invalid(PageMessages.duplicatedCanonical)
+      case Some(_) => Invalid(Seq(PageMessages.duplicatedCanonical))
       case None => Valid(canonical)
     }
   }

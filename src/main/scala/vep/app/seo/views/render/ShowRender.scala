@@ -1,5 +1,7 @@
 package vep.app.seo.views.render
 
+import java.time.LocalDateTime
+
 import vep.app.production.company.show.ShowWithDependencies
 import vep.app.production.company.show.play.PlayView
 import vep.framework.utils.DateUtils
@@ -62,6 +64,6 @@ trait ShowRender extends Render {
   }
 
   private def getFuturePlays(show: ShowWithDependencies): Seq[PlayView] = {
-    show.plays.filter(play => play.date.isAfterNow)
+    show.plays.filter(play => play.date.isAfter(LocalDateTime.now()))
   }
 }

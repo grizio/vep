@@ -1,6 +1,7 @@
 package vep.app.common.verifications
 
-import org.joda.time.DateTime
+import java.time.LocalDateTime
+
 import vep.app.common.CommonMessages
 import vep.app.common.types.Period
 import vep.framework.validation.{Invalid, Valid, Validation}
@@ -24,7 +25,7 @@ trait PeriodVerifications {
     }
   }
 
-  def verifyDateIncluded(date: DateTime, reference: Period): Validation[DateTime] = {
+  def verifyDateIncluded(date: LocalDateTime, reference: Period): Validation[LocalDateTime] = {
     val isAfterOrEqualsStart = date.isAfter(reference.start) || date.isEqual(reference.start)
     val isBeforeOrEqualsEnd = date.isBefore(reference.end) || date.isEqual(reference.end)
     if (isAfterOrEqualsStart && isBeforeOrEqualsEnd) {

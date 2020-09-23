@@ -1,5 +1,7 @@
 package vep.app.production.company.show.play
 
+import java.time.LocalDateTime
+
 import org.joda.time.DateTime
 import scalikejdbc.WrappedResultSet
 import spray.json.RootJsonFormat
@@ -11,21 +13,22 @@ import vep.framework.utils.JsonProtocol
 case class Play(
   id: String,
   theater: String,
-  date: DateTime,
-  reservationEndDate: DateTime,
+  date: LocalDateTime,
+  reservationEndDate: LocalDateTime,
   prices: Seq[PlayPrice],
   anonymized: Boolean
 )
 
 object Play {
+
   import JsonProtocol._
 
   def apply(resultSet: WrappedResultSet): Play = {
     new Play(
       id = resultSet.string("id"),
       theater = resultSet.string("theater"),
-      date = resultSet.jodaDateTime("date"),
-      reservationEndDate = resultSet.jodaDateTime("reservationEndDate"),
+      date = resultSet.localDateTime("date"),
+      reservationEndDate = resultSet.localDateTime("reservationEndDate"),
       prices = Seq.empty,
       anonymized = resultSet.boolean("anonymized")
     )
@@ -41,6 +44,7 @@ case class PlayPrice(
 )
 
 object PlayPrice {
+
   import JsonProtocol._
 
   def apply(resultSet: WrappedResultSet): PlayPrice = {
@@ -56,12 +60,13 @@ object PlayPrice {
 
 case class PlayCreation(
   theater: String,
-  date: DateTime,
-  reservationEndDate: DateTime,
+  date: LocalDateTime,
+  reservationEndDate: LocalDateTime,
   prices: Seq[PlayPrice]
 )
 
 object PlayCreation {
+
   import JsonProtocol._
 
   implicit val playCreationFormat: RootJsonFormat[PlayCreation] = jsonFormat4(PlayCreation.apply)
@@ -70,12 +75,13 @@ object PlayCreation {
 case class PlayView(
   id: String,
   theater: Theater,
-  date: DateTime,
-  reservationEndDate: DateTime,
+  date: LocalDateTime,
+  reservationEndDate: LocalDateTime,
   prices: Seq[PlayPrice]
 )
 
 object PlayView {
+
   import JsonProtocol._
 
   def apply(play: Play, theater: Theater): PlayView = {
@@ -87,19 +93,20 @@ object PlayView {
 
 case class PlayMeta(
   id: String,
-  date: DateTime,
+  date: LocalDateTime,
   show: String,
   showId: String,
   company: String
 )
 
 object PlayMeta {
+
   import JsonProtocol._
 
   def apply(resultSet: WrappedResultSet): PlayMeta = {
     new PlayMeta(
       id = resultSet.string("id"),
-      date = resultSet.jodaDateTime("date"),
+      date = resultSet.localDateTime("date"),
       show = resultSet.string("title"),
       showId = resultSet.string("showId"),
       company = resultSet.string("companyId")
@@ -117,6 +124,7 @@ case class PlayWithDependencies(
 )
 
 object PlayWithDependencies {
+
   import JsonProtocol._
 
   implicit val playWithDependenciesFormat: RootJsonFormat[PlayWithDependencies] = jsonFormat4(PlayWithDependencies.apply)

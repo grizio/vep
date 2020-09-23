@@ -2,6 +2,7 @@ package vep.app.user.registration
 
 import org.mindrot.jbcrypt.BCrypt
 import scalikejdbc._
+import spray.json.JsonFormat
 import vep.app.user.{Authentication, User, UserMessages, UserService}
 import vep.framework.database.DatabaseContainer
 import vep.framework.validation.{Invalid, Valid, Validation}
@@ -21,7 +22,7 @@ class RegistrationService(
       activationKey = user.activationKey.map(BCrypt.hashpw(_, BCrypt.gensalt())),
       password = BCrypt.hashpw(user.password, BCrypt.gensalt())
     )
-    val authentications = Authentication.authenticationSeqFormat.write(insertedUser.authentications).compactPrint
+    val authentications = implicitly[JsonFormat[Seq[Authentication]]].write(insertedUser.authentications).compactPrint
     sql"""
       INSERT INTO users(id, email, password, role, authentications, activationkey)
       VALUES (${insertedUser.id}, ${insertedUser.email}, ${insertedUser.password}, ${insertedUser.role.toString}, $authentications, ${insertedUser.activationKey})
