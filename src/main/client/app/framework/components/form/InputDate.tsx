@@ -1,12 +1,15 @@
 import preact from "preact"
-import {FieldValidation} from "../../utils/Validation"
-import * as compatibility from "../../utils/compatibility";
+import { FieldValidation } from "../../utils/Validation"
+import * as compatibility from "../../utils/compatibility"
 import {
   localDateIsoFormat,
-  localDateTimeIsoFormat, localIsoFormatToDate,
-  shortDateFormat, shortDateFormatToDate, shortDateTimeFormat,
-  shortDateTimeFormatToDate, timeFormat, timeFormatToDate
-} from "../../utils/dates";
+  localDateTimeIsoFormat,
+  localIsoFormatToDate,
+  shortDateFormat,
+  shortDateFormatToDate,
+  timeFormat,
+  timeFormatToDate
+} from "../../utils/dates"
 
 interface InputDateFieldProps {
   id: string
@@ -69,22 +72,109 @@ export function InputDate(props: InputDateProps) {
   )
 }
 
-export function InputDateTime(props: InputDateTimeProps) {
-  return (
-    <InputDateField
-      type="datetime-local"
-      id={props.id}
-      label={props.label}
-      name={props.name}
-      placeholder={compatibility.acceptInputDate ? "" : "jj/mm/aaaa hh:mm"}
-      required={props.required}
-      disabled={props.disabled}
-      fieldValidation={props.fieldValidation}
-      onUpdate={props.onUpdate}
-      normalizeToDate={(text) => compatibility.acceptInputDateTimeLocal ? localIsoFormatToDate(text) : shortDateTimeFormatToDate(text)}
-      normalizeFromDate={(date) => compatibility.acceptInputDateTimeLocal ? localDateTimeIsoFormat(date) : shortDateTimeFormat(date)}
-    />
-  )
+interface InputDateTimeState {
+  mounted: boolean
+  datePart: string
+  timePart: string
+  focus: boolean
+}
+
+export class InputDateTime extends preact.Component<InputDateTimeProps, InputDateTimeState> {
+  constructor() {
+    super()
+    this.setState({ mounted: false })
+  }
+
+  componentDidMount() {
+    if (this.props.fieldValidation.value !== null) {
+      const datePart = localDateIsoFormat(this.props.fieldValidation.value)
+      const timePart = timeFormat(this.props.fieldValidation.value)
+      this.setState({ datePart, timePart, mounted: true })
+    } else {
+      this.setState({ datePart: null, timePart: null, mounted: true })
+    }
+  }
+
+  componentWillReceiveProps(nextProps: InputFieldProps) {
+    if (nextProps.fieldValidation && nextProps.fieldValidation.value) {
+      const datePart = localDateIsoFormat(nextProps.fieldValidation.value)
+      const timePart = timeFormat(nextProps.fieldValidation.value)
+      if (datePart !== this.state.datePart || timePart !== this.state.timePart) {
+        this.setState({ datePart, timePart })
+      }
+    }
+  }
+
+  shouldComponentUpdate(nextProps: InputDateTimeProps, nextState: InputDateTimeState) {
+    const datePart = this.props.fieldValidation.value !== null ? localDateIsoFormat(this.props.fieldValidation.value) : null
+    const timePart = this.props.fieldValidation.value !== null ? timeFormat(this.props.fieldValidation.value) : null
+    return nextProps.id !== this.props.id ||
+      nextProps.label !== this.props.label ||
+      nextProps.name !== this.props.name ||
+      nextProps.required !== this.props.required ||
+      nextProps.disabled !== this.props.disabled ||
+      datePart !== this.state.datePart && datePart !== nextState.datePart ||
+      timePart !== this.state.timePart && timePart !== nextState.timePart ||
+      nextState.focus !== this.state.focus ||
+      nextState.mounted !== this.state.mounted
+  }
+
+  render(props: InputDateTimeProps, state: InputDateTimeState) {
+    const label = props.required ? `${props.label} *` : props.label
+    const className = errorIsShown(props.fieldValidation)
+      ? "error"
+      : successIsShown(props.fieldValidation) ? "success" : ""
+    return (
+      <div class="field">
+        <div class="datetime">
+          <input
+            type="date"
+            name={`${props.name}-date`}
+            id={`${props.id}-date`}
+            required={props.required}
+            disabled={props.disabled}
+            onInput={this.onUpdateDate}
+            value={state.datePart}
+            class={className}
+            onFocus={() => this.setState({ focus: true })}
+            onBlur={() => this.setState({ focus: false })}
+          />
+          <input
+            type="time"
+            name={`${props.name}-time`}
+            id={`${props.id}-time`}
+            required={props.required}
+            disabled={props.disabled}
+            onInput={this.onUpdateTime}
+            value={state.timePart}
+            class={className}
+            onFocus={() => this.setState({ focus: true })}
+            onBlur={() => this.setState({ focus: false })}
+          />
+        </div>
+        <label for={props.id}>{label}</label>
+        {renderError(props.fieldValidation)}
+      </div>
+    )
+  }
+
+  onUpdateDate = (e: Event) => {
+    const value = (e.target as HTMLInputElement).value
+    this.setState({ datePart: value })
+    this.onUpdate()
+  }
+
+  onUpdateTime = (e: Event) => {
+    const value = (e.target as HTMLInputElement).value
+    this.setState({ timePart: value })
+    this.onUpdate()
+  }
+
+  onUpdate = () => {
+    if (this.state.datePart !== null && this.state.timePart !== null) {
+      this.props.onUpdate(new Date(Date.parse(`${this.state.datePart}T${this.state.timePart}Z`)))
+    }
+  }
 }
 
 export function InputTime(props: InputTimeProps) {
@@ -108,19 +198,19 @@ export function InputTime(props: InputTimeProps) {
 class InputDateField extends preact.Component<InputFieldProps, InputFieldState> {
   constructor() {
     super()
-    this.setState({mounted: false})
+    this.setState({ mounted: false })
   }
 
   componentDidMount() {
     const value = this.props.normalizeFromDate(this.props.fieldValidation.value)
-    this.setState({value, mounted: true})
+    this.setState({ value, mounted: true })
   }
 
   componentWillReceiveProps(nextProps: InputFieldProps) {
     if (nextProps.fieldValidation) {
       const newValue = this.props.normalizeFromDate(nextProps.fieldValidation.value)
       if (newValue !== this.state.value) {
-        this.setState({value: newValue})
+        this.setState({ value: newValue })
       }
     }
   }
@@ -156,8 +246,8 @@ class InputDateField extends preact.Component<InputFieldProps, InputFieldState> 
           onInput={this.onUpdate}
           value={state.value}
           class={className}
-          onFocus={() => this.setState({focus: true})}
-          onBlur={() => this.setState({focus: false})}
+          onFocus={() => this.setState({ focus: true })}
+          onBlur={() => this.setState({ focus: false })}
         />
         <label for={props.id}>{label}</label>
         {renderError(props.fieldValidation)}
@@ -167,7 +257,7 @@ class InputDateField extends preact.Component<InputFieldProps, InputFieldState> 
 
   onUpdate = (e: Event) => {
     const value = (e.target as HTMLInputElement).value
-    this.setState({value})
+    this.setState({ value })
     this.props.onUpdate(this.props.normalizeToDate(value))
   }
 }

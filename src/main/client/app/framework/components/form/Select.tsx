@@ -68,7 +68,6 @@ function renderPlaceholder(props: SelectProps) {
 
 function isValueValid(props: SelectProps) {
   const value = props.fieldValidation.value
-  console.log(`"${value}"`)
   if (value === null || value === undefined) {
     return false
   } else {

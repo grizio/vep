@@ -22,16 +22,19 @@ form {
       }
     }
 
-    input, textarea, select, .switch {
+    input, textarea, select, .switch, .datetime {
       font-size: 18px;
       padding: 8px 0;
       border: none;
-      border-bottom: 1px solid $color-primary;
       background-color: transparent;
       width: 100%;
       outline: none;
       order: 2;
       overflow-y: hidden;
+
+      &:not(.datetime) {
+        border-bottom: 1px solid $color-primary;
+      }
 
       &, &::placeholder, & ~ label, & ~ .error-message {
         transition: $form-transition;
@@ -201,6 +204,11 @@ form {
           height: 36px;
           top: -11px;
         }
+      }
+
+      &.datetime {
+        display: flex;
+        flex-direction: row;
       }
     }
 
